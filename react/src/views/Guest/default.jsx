@@ -1,23 +1,29 @@
 import { useEffect, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import "../../assets/css/app.css";
+import "../../assets/css/navbar.css";
 
 export default function GuestDefault() {
-    const [count, setCount] = useState(0);
-
+    const location = useLocation(); // once ready it returns the 'window.location' object
+    const [url, setUrl] = useState(null);
     useEffect(() => {
-        alert('effect');
-    }, [count]);
-
+        setUrl(location.pathname);
+    }, [location]);
     return(
-        <>
-            <h1>NAVBAR GUSET</h1>
-            
-            <Link to={'/Pets'}>Pets</Link> <br/>
+        <><div className="nav nav1">
+        <div className="nav1-logo-div">
+        <img src="assets/media/logos/paw.png" className="nav1-logo" alt="logo"/>
+        </div>
+        <div className="nav1-links">
+             <Link to={'/GuestIndex'} className="nav2-link"><div className="wx"><img src="assets/media/icons/home.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Home</p><div className={`nav1-line${url === "/" ? " active" : ""}`} ></div></div></Link>
+        </div>
 
-            Count: {count}
-            <button onClick={() => setCount(count+1)}>add</button>
-
-            <Outlet/>
+          <div className="nav1-sign">
+            <Link to={'/GuestIndex'} className="nav1-link">Sign In</Link>
+        </div>
+        </div>
+        <Outlet/>
         </>
+
     );
 }
