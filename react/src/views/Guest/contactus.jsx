@@ -1,4 +1,4 @@
-export default function ClientContactUs() {
+export default function GuestContactUs() {
     return(
         <>
         Contact Us + Feedback</>

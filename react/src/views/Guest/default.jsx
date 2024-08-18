@@ -12,10 +12,11 @@ export default function GuestDefault() {
     return(
         <><div className="nav nav1">
         <div className="nav1-logo-div">
-        <img src="assets/media/logos/paw.png" className="nav1-logo" alt="logo"/>
+        <img src="/assets/media/logos/paw.png" className="nav1-logo" alt="logo"/>
         </div>
         <div className="nav1-links">
-             <Link to={'/GuestIndex'} className="nav2-link"><div className="wx"><img src="assets/media/icons/home.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Home</p><div className={`nav1-line${url === "/" ? " active" : ""}`} ></div></div></Link>
+             <Link to={'/GuestIndex'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/home.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Home</p><div className={`nav1-line${url === "/" ? " active" : ""}`} ></div></div></Link>
+             <Link to={'/GuestContactUs'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/user.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Contact Us</p><div className={`nav1-line${url === "/ClientIndex/GuestContactUs" ? " active" : ""}`} ></div></div></Link>
         </div>
 
           <div className="nav1-sign">

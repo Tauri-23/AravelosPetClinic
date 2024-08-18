@@ -1,11 +1,11 @@
 import {createBrowserRouter} from "react-router-dom"
 import GuestDefault from "./views/Guest/default";
 import GuestIndex from "./views/Guest";
-import GuestPets from "./views/Guest/pets";
+import GuestContactUs from "./views/Guest/contactus";
 import ClientDefault from "./views/Client/default";
 import ClientIndex from "./views/Client";
 import BookAppointment from "./views/Client/bookappointment";
-import ContactUs from "./views/Client/contactus";
+import ClientContactUs from "./views/Client/contactus";
 import AdminDefault from "./views/Admin/default";
 import AdminIndex from "./views/Admin";
 
@@ -24,8 +24,8 @@ const router = createBrowserRouter([
                 element: <GuestIndex/>
             },
             {
-                path: 'Pets',
-                element: <GuestPets/>
+                path:'GuestContactUs',
+                element: <GuestContactUs/>
             }
         ]
     },
@@ -44,12 +44,12 @@ const router = createBrowserRouter([
                 element: <ClientIndex/>
             },
             {
-                path:'BookAppointment',
+                path:'/ClientIndex/BookAppointment',
                 element: <BookAppointment/>
             },
             {
-                path:'ContactUs',
-                element: <ContactUs/>
+                path:'/ClientIndex/ClientContactUs',
+                element: <ClientContactUs/>
             }
         ]
     },
