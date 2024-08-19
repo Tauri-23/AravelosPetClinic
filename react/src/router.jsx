@@ -8,6 +8,8 @@ import BookAppointment from "./views/Client/bookappointment";
 import ClientContactUs from "./views/Client/contactus";
 import AdminDefault from "./views/Admin/default";
 import AdminIndex from "./views/Admin";
+import Sign from "./views/Sign/sign";
+import ForgotPassword from "./views/Sign/forgot_password";
 
 const router = createBrowserRouter([
     /*
@@ -26,6 +28,14 @@ const router = createBrowserRouter([
             {
                 path:'GuestContactUs',
                 element: <GuestContactUs/>
+            },
+            {
+                path:'Sign',
+                element: <Sign/>
+            },
+            {
+                path:'ForgotPassword',
+                element: <ForgotPassword/>
             }
         ]
     },
