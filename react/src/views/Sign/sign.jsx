@@ -13,12 +13,15 @@ export default function Sign() {
     const handleSignInClick = () => {
       setIsSignUp(false);
     };
+    const onSubmit = (ev) => {
+        ev.preventDefault();
+    }
 
     return (
       <div className="signin-child">
         <div className={`container ${isSignUp ? 'right-panel-active' : ''}`} id="container">
           <div className={`form-container sign-up-container ${isSignUp ? 'active' : ''}`}>
-            <form action="#">
+            <form onSubmit={onSubmit}>
               <h1 style={{ marginBottom: '20px' }}>Create Account</h1>
               <input type="text" placeholder="Name" />
               <input type="email" placeholder="Email" />
