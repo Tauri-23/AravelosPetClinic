@@ -25,7 +25,10 @@ export default function Sign() {
           <div className={`form-container sign-up-container ${isSignUp ? 'active' : ''}`}>
             <form onSubmit={onSubmit}>
               <h1 style={{ marginBottom: '20px' }}>Sign Up</h1>
-              <input type="text" placeholder="Name" />
+              <input type="text" placeholder="First Name" />
+              <input type="text" placeholder="Middle Name (Optional)" />
+              <input type="text" placeholder="Last Name" />
+              <input type="tel" pattern ="09[0-9]{9}" placeholder="Contact Number" />
               <input type="email" placeholder="Email" />
               <input type="password" placeholder="Password" />
               <button type="submit">Sign Up</button>
