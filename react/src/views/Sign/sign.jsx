@@ -25,9 +25,9 @@ export default function Sign() {
 
 
 
-    const handleSignUpClick = () => {
-      setIsSignUp(true);
-    };
+    // const handleSignUpClick = () => {
+    //   setIsSignUp(true);
+    // };
 
     const handleSignInClick = () => {
       setIsSignUp(false);
@@ -110,12 +110,12 @@ export default function Sign() {
               <div className="overlay-panel overlay-left">
                 <h1>Welcome Back!</h1>
                 <p>To keep connected with us please login with your personal info</p>
-                <button className="ghost" onClick={handleSignInClick}>Sign In</button>
+                <button className="ghost" onClick={() => setIsSignUp(false)}>Sign In</button>
               </div>
               <div className="overlay-panel overlay-right">
                 <h3>Don't have an account?</h3>
                 <p>Sign up now to ensure your pet receives the best care at Arevalo's Animal Clinic!</p>
-                <button className="ghost" onClick={handleSignUpClick}>Sign Up</button>
+                <button className="ghost" onClick={() => setIsSignUp(true)}>Sign Up</button>
               </div>
             </div>
           </div>
