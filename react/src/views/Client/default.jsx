@@ -1,15 +1,49 @@
 import { useEffect, useState } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import "../../assets/css/app.css";
 import "../../assets/css/navbar.css";
+import axiosClient from "../../axios-client";
+import { useStateContext } from "../../contexts/ContextProvider";
 
 export default function ClientDefault () {
+    const { user, userType, token, setUserType, setUser, setToken } = useStateContext();
     const location = useLocation();
-    const [url, setUrl] = useState(null);
-    useEffect(() => {
-        setUrl(location.pathname);
+    const url = location.pathname;
 
-    }, [location]);
+
+    useEffect(() => {
+        if (token) {            
+            axiosClient.get('/user')
+            .then(({ data }) => {
+                setUser(data.user);
+            })
+            .catch((error) => {
+                console.error(error);
+                if (error.response && error.response.status === 401) {
+                    setUser({});
+                    setToken(null);
+                    setUserType(null);
+                }
+            });
+        }
+    }, []);
+
+
+    const onLogout = (ev) => {
+        axiosClient.post('/logout')
+            .then(() => {
+                setUser({});
+                setToken(null);
+                setUserType(null);
+            });
+    };
+
+    // Handle redirection in the component body
+    if (!token || userType !== 'client') {
+        return <Navigate to="/" />;
+    }
+
+
     return(
         <><div className="nav nav1">
         <div className="nav1-logo-div">
@@ -22,8 +56,8 @@ export default function ClientDefault () {
 
         </div>
 
-          <div className="nav1-sign">
-            <Link to={'/GuestIndex'} className="nav1-link">Sign In</Link>
+        <div className="nav1-sign">
+            <div className="nav1-link" onClick={onLogout}>Sign out</div>
         </div>
         </div>
         <Outlet/>

@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('lname');
             $table->string('email')->unique();
             $table->string('password')->unique();
-            $table->date('bday');
-            $table->string('gender');
-            $table->string('address');
+            $table->date('bday')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('address')->nullable();
             $table->string('phone');
             $table->timestamps();
         });

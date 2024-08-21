@@ -1,16 +1,42 @@
 import { useEffect, useState } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import "../../assets/css/app.css";
 import "../../assets/css/navbar.css";
+import { useStateContext } from "../../contexts/ContextProvider";
+import axiosClient from "../../axios-client";
 
 export default function GuestDefault() {
-    const location = useLocation(); // once ready it returns the 'window.location' object
-    const [url, setUrl] = useState(null);
+    const location = useLocation();
+    const {token, setUser, userType, setUserType, setToken} = useStateContext();
+    const url = location.pathname;
+
     useEffect(() => {
-        setUrl(location.pathname);
-    }, [location]);
+        console.log(token);
+        if(token) {
+            axiosClient.get('/user')
+            .then(({data}) => {
+                setUserType(data.user_type);
+                setUser(data.user);
+            }).catch((error) => {
+                if (error.response && error.response.status === 401) {
+                    setUserType(null);
+                    setUser({});
+                    setToken(null);
+                }
+            });
+        }
+    }, []);
+
+    if(token) {
+        console.log(userType);
+        if (userType === 'client') {
+            return <Navigate to="/ClientIndex" />;
+        }
+    }
+    
     return(
-        <><div className="nav nav1">
+        <>
+        <div className="nav nav1">
         <div className="nav1-logo-div">
         <img src="/assets/media/logos/paw.png" className="nav1-logo" alt="logo"/>
         </div>
