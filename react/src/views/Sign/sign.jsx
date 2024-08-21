@@ -6,6 +6,7 @@ import "../../assets/css/app.css";
 export default function Sign() {
     const [isSignUp, setIsSignUp] = useState(false);
 
+
     const handleSignUpClick = () => {
       setIsSignUp(true);
     };
@@ -20,6 +21,7 @@ export default function Sign() {
     return (
       <div className="signin-child">
         <div className={`container ${isSignUp ? 'right-panel-active' : ''}`} id="container">
+          {/* SignUpContainer */}
           <div className={`form-container sign-up-container ${isSignUp ? 'active' : ''}`}>
             <form onSubmit={onSubmit}>
               <h1 style={{ marginBottom: '20px' }}>Sign Up</h1>
@@ -29,6 +31,8 @@ export default function Sign() {
               <button type="submit">Sign Up</button>
             </form>
           </div>
+
+          {/* SignIn */}
           <div className={`form-container sign-in-container ${!isSignUp ? 'active' : ''}`}>
             <form action="#">
               <h1 style={{ marginBottom: '20px' }}>Sign In</h1>
@@ -38,6 +42,7 @@ export default function Sign() {
               <button type="submit">Sign In</button>
             </form>
           </div>
+
           <div className="overlay-container">
             <div className="overlay">
               <div className="overlay-panel overlay-left">
