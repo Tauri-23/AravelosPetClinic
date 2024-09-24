@@ -1,3 +1,4 @@
+
 .nav1{
     background-color: white;
     width: 100%;
@@ -23,8 +24,7 @@
 }
 .nav1-logo{
     object-fit: contain;
-    width: -webkit-fill-available;
-    height: -webkit-fill-available;
+    height: 100%;
     margin-left: .5vw;
     margin-right: .5vw;
 }

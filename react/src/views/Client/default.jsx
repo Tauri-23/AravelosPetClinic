@@ -12,7 +12,7 @@ export default function ClientDefault () {
 
 
     useEffect(() => {
-        if (token) {            
+        if (token) {
             axiosClient.get('/user')
             .then(({ data }) => {
                 setUser(data.user);
@@ -57,7 +57,7 @@ export default function ClientDefault () {
         </div>
 
         <div className="nav1-sign">
-            <div className="nav1-link" onClick={onLogout}>Sign out</div>
+            <Link to={''} className="nav1-link" onClick={onLogout}>Sign out</Link>
         </div>
         </div>
         <Outlet/>

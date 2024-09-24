@@ -17,7 +17,7 @@ Route::middleware('auth:sanctum')
 
 /*
 |----------------------------------------
-| Public 
+| Public
 |----------------------------------------
 */
 Route::post('/signup', [AuthController::class, 'signupPost']);

@@ -1,14 +1,9 @@
 
 .small{
     margin-left: 1vw;
-    font-size: 1.3vw;
-    font-family: Anybody;
 }
 .big{
-    font-weight: 700;
-    font-size: 5vw;
     line-height: 1;
-    font-family: Anybody;
     margin-bottom:20px;
 }
 .container{

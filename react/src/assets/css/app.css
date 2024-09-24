@@ -8,3 +8,35 @@ body{
     flex-direction: column;
     height: 100vh;
 }
+.indx{
+    margin-left:1vw;
+    margin-right:1vw;
+}
+.small
+{
+    font-size:1vw;
+}
+.medium{
+    font-size:3vw;
+}
+.big{
+    font-size:5vw;
+}
+.bold{
+    font-weight: 700;
+}
+.inter{
+    font-family: Inter;
+}
+.anybody{
+    font-family: anybody;
+}
+*{
+    color:#1D3675;
+}
+.white{
+    color: white!important;
+}
+.gen-margin{
+    margin: 2vw;
+}

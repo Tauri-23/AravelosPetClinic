@@ -9,9 +9,9 @@ export default function GuestContactUs() {
         <div className = "contact-us">
             <div className = "container">
                 <div className = "left">
-                    <div className = "big">Find us at</div>
-                    <div className = "small">1300, 108 E Cornejo St, Pasay, Metro Manila</div>
-                    <div className = "small">8854 2539 / 0929 3143616</div>
+                    <div className = "big bold anybody">Find us at</div>
+                    <div className = "small anybody">1300, 108 E Cornejo St, Pasay, Metro Manila</div>
+                    <div className = "small anybody">8854 2539 / 0929 3143616</div>
                     <img src="/assets/media/pictures/clinicpic.svg" className="clinic"/>
                 </div>
                 <div className = "right">

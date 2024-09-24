@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-    baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`
+    baseURL: `http://localhost:8000/api`
 });
 
 axiosClient.interceptors.request.use((config) => {
@@ -18,12 +18,25 @@ axiosClient.interceptors.response.use(
     },
     (error) => {
         const { response } = error;
-        if (response && response.status === 401) {
-            // Handle 401 Unauthorized: clear token and log user out
-            localStorage.removeItem('ACCESS_TOKEN');
-            // Optionally redirect or perform other actions
+
+        // Log the error response for debugging
+        if (response) {
+            console.error('Error status:', response.status);
+            console.error('Error data:', response.data);  // Logs the response data
+        } else if (error.request) {
+            console.error('No response received:', error.request);
+        } else {
+            console.error('Error message:', error.message);
         }
-        return Promise.reject(error);
+
+        // Handle specific status codes (401 Unauthorized)
+        if (response && response.status === 401) {
+            // Handle 401: clear token and log user out
+            localStorage.removeItem('ACCESS_TOKEN');
+            // Optionally, you can add a redirect here if necessary
+        }
+
+        return Promise.reject(error); // Propagate the error for further handling
     }
 );
 

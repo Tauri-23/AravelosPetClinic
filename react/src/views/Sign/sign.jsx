@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import "../../assets/css/sign.css";
 import "../../assets/css/app.css";
+import "../../assets/css/sign.css";
 import axiosClient from "../../axios-client.js";
 import { useStateContext } from "../../contexts/ContextProvider.jsx";
 
@@ -32,7 +32,7 @@ export default function Sign() {
     const handleSignInClick = () => {
       setIsSignUp(false);
     };
-    
+
     const handleSignupPost = (ev) => {
         ev.preventDefault();
 
@@ -108,13 +108,13 @@ export default function Sign() {
           <div className="overlay-container">
             <div className="overlay">
               <div className="overlay-panel overlay-left">
-                <h1>Welcome Back!</h1>
-                <p>To keep connected with us please login with your personal info</p>
+                <h1 className="white">Welcome Back!</h1>
+                <p className="white">To keep connected with us please login with your personal info</p>
                 <button className="ghost" onClick={() => setIsSignUp(false)}>Sign In</button>
               </div>
               <div className="overlay-panel overlay-right">
-                <h3>Don't have an account?</h3>
-                <p>Sign up now to ensure your pet receives the best care at Arevalo's Animal Clinic!</p>
+                <h3 className="white">Don't have an account?</h3>
+                <p className="white">Sign up now to ensure your pet receives the best care at Arevalo's Animal Clinic!</p>
                 <button className="ghost" onClick={() => setIsSignUp(true)}>Sign Up</button>
               </div>
             </div>
