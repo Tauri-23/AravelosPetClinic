@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../assets/css/app.css";
-import "../../assets/css/bookappointment.css";
+import "../../assets/css/bookappointment.module.css";
 import ClientCalendar from "../../components/calendar.jsx";
 import Dropdown from "../../components/dropdowns.jsx";
 
