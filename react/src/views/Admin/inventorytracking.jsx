@@ -8,37 +8,28 @@ import { fetchAllMedicines } from '../../services/InventoryServices';
 export default function AdminInventoryTracking() {
   const [meds, setMeds] = useState(null)
 
-  useEffect(() => {
-    const getAll = async() => {
-      const data = await fetchAllMedicines();
-      setMeds(data);
-    }
-    
-    getAll();
-  }, []);
+ return(
+  <div className='content1'>
+      <h1>Inventory Tracking</h1>
+  
+      <div className="d-flex" style={{gap: 80}}>
+        <div style={{width: "300px", height: "100vh", background: "aliceblue", padding: 20, position: "fixed"}}>
+          Side Navb
+        </div>
+  
+        {/* Content */}
+        <div className='admin-inventory-contents'>
+        <InventoryBox link={"/AdminIndex"}/>
+        <InventoryBox link={"/AdminIndex"}/>
+        <InventoryBox link={"/AdminIndex"}/>
+        <InventoryBox link={"/AdminIndex"}/>
+        <InventoryBox link={"/AdminIndex"}/>
+        <InventoryBox link={"/AdminIndex"}/>
+        <InventoryBox link={"/AdminIndex"}/>
 
-  if(meds) {
-    return (
-      <div className='content1'>
-        <h1>Inventory Tracking</h1>
-  
-        <div className="d-flex" style={{gap: 80}}>
-          <div style={{width: "300px", height: "100vh", background: "aliceblue", padding: 20}}>
-            Side Navb
-          </div>
-  
-          {/* Content */}
-          <div className='admin-inventory-contents'>
-            {meds?.map(med => (
-              <InventoryBox key={med.id} med={med} link={"/AdminIndex"}/>
-            ))}
-          </div>
         </div>
       </div>
-    )
-  } else {
-    return(
-      <h1>Loading</h1>
-    )
-  }
+    </div>
+  
+        )
 }
