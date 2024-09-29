@@ -1,6 +1,8 @@
 import React from 'react'
 import "../../assets/css/inventorytracking.css";
-export default function inventoryTracking() {
+
+
+export default function AdminInventoryTracking() {
   return (
     <div>inventoryTracking</div>
   )

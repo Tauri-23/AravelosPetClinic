@@ -11,6 +11,7 @@ import AdminDefault from "./views/Admin/default";
 import AdminIndex from "./views/Admin";
 import Sign from "./views/Sign/sign";
 import ForgotPassword from "./views/Sign/forgot_password";
+import AdminInventoryTracking from "./views/Admin/inventorytracking";
 
 const router = createBrowserRouter([
     /*
@@ -84,8 +85,8 @@ const router = createBrowserRouter([
                 element: <AdminIndex/>
             },
             {
-                path: 'InventoryTracking', // Remove leading `/`
-                element: <InventoryTracking />
+                path: 'InventoryTracking',
+                element: <AdminInventoryTracking />
             }
         ]
     }
