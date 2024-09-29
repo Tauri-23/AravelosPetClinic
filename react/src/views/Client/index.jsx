@@ -5,7 +5,8 @@ import "../../assets/css/index.css";
 
 export default function ClientIndex() {
     return(
-        <body>
+
+        <div className = "page">
             <div className= "index guest-index">
                 <div className= "banner" >
                     <img src="/assets/media/pictures/dog.png" className="dog"/>
@@ -18,7 +19,7 @@ export default function ClientIndex() {
                     aaaa
                 </div>
             </div>
-        </body>
+        </div>
     );
 }
 

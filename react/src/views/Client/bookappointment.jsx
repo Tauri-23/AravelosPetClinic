@@ -75,7 +75,7 @@ export default function BookAppointment() {
     };
 
     return (
-        <body>
+        <div className = "page">
             <div className="bg book-appointment gen-margin">
                 <div className="mini-nav bottom-margin">
                     <div className="anybody medium bold">Book Appointment</div>
@@ -109,6 +109,6 @@ export default function BookAppointment() {
                     </div>
                 </div>
             </div>
-        </body>
+        </div>
     );
 }

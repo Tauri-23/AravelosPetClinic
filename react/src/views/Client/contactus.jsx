@@ -9,9 +9,10 @@ export default function ClientContactUs() {
     }, []);
 
     return(
-        <body>
+
+        <div className = "page">
             <>
             Contact Us + Feedback</>
-        </body>
+        </div>
     );
 }
