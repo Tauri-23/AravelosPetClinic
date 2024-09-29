@@ -1,0 +1,72 @@
+.d-flex.add.small-form {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px; /* Reduced gap size */
+    height:min-content;
+}
+
+.image-upload {
+    width: 40%;
+    text-align: center;
+}
+
+.image-preview {
+    width: 100%;
+    height: 450px;
+    background-color: #f4f4f9;
+    border: 1px solid #ccc;
+    margin-bottom: 10px; /* Space below the image preview */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.placeholder {
+    color: #aaa;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.addItemDetails {
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Adjust gap between input fields and dropdown */
+}
+
+.addItemDetails label {
+    margin-bottom: 5px; /* Space below each label */
+    font-weight: bold; /* Make labels bold for better visibility */
+}
+
+input, textarea {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+textarea {
+    height: 100px;
+    resize: none;
+}
+.submit-button {
+    padding: 10px 15px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff; /* Bootstrap primary color */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px; /* Add some space above the button */
+}
+
+.submit-button:hover {
+    background-color: #0056b3; /* Darker shade for hover effect */
+}

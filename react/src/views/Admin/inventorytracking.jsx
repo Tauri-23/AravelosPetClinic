@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import "../../assets/css/app.css";
 import "../../assets/css/inventorytracking.css";
-import { NavLink, Routes, Route, useNavigate } from 'react-router-dom';
-import InventoryDisplay from "../../components/inventorydisplay.jsx"; // Corrected import
+import { NavLink, Link, Routes, Route, useNavigate } from 'react-router-dom';
+import InventoryDisplay from "../../components/inventorydisplay.jsx";
+
 
 export default function AdminInventoryTracking() {
   const [categories, setCategories] = useState([
@@ -29,63 +30,73 @@ export default function AdminInventoryTracking() {
 
   return (
     <div className='page'>
-        <div className='inventory-tracking gen-margin'>
-            <h1>Inventory Tracking</h1>
+      <div className='inventory-tracking gen-margin'>
+        <h1>Inventory Tracking</h1>
 
+        <div className="d-flex inv small-form">
+          {/* Sidebar with Categories */}
+          <div className="sidebar">
+            <h3>Categories</h3>
+            <ul>
+              {categories.map((category) => (
+                <li key={category.path}>
+                  <NavLink 
+                    to={`${category.path}`} 
+                    className={({ isActive }) => (isActive ? "active" : "")} // Dynamic class assignment
+                  >
+                    {category.name}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
 
-            <div className="d-flex inv small-form">
-                 {/* Navbar with Search and Action Buttons */}
-                <div className="sidebar">
-                    <h3>Categories</h3>
-                    <ul>
-                        {categories.map((category) => (
-                            <li key={category.path}>
-                                <NavLink to={`/inventory/${category.path}`} activeClassName="active">
-                                {category.name}
-                                </NavLink>
-                            </li>
-                        ))}
-                    </ul>
+            <div style={{ marginTop: 20 }}>
+              <h4>Add Category</h4>
+              <input className="categoryInput"
+                type="text"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                placeholder="New category"
 
-                    <div style={{ marginTop: 20 }}>
-                    <h4>Add Category</h4>
-                    <input
-                        type="text"
-                        value={newCategory}
-                        onChange={(e) => setNewCategory(e.target.value)}
-                        placeholder="New category"
-                    />
-                    <button onClick={handleAddCategory}>Add</button>
-                    </div>
-                </div>
-                <div className='right-side'>
-                    <div className="top-nav" >
-                        <input
-                        type="text"
-                        placeholder="Search inventory..."
-                        value={searchQuery}
-                        onChange={handleSearch}
-                        className="search-bar"
-                        style={{ width: '300px', padding: '8px', marginRight: '10px' }}
-                        />
-                        <button className="action-button">Add Stock</button>
-                        <button className="action-button">Add Product</button>
-                    </div>
-                    <div className='bottom-content'>
+              />
+              <button onClick={handleAddCategory}>Add</button>
+            </div>
+          </div>
 
-                        <div className='admin-inventory-contents' style={{ marginLeft: "320px" }}>
-                            <Routes>
-                            {categories.map((category) => (
-                                <Route
-                                key={category.path}
-                                path={`/inventory/:category`}
-                                element={<InventoryDisplay category={category.name} />}
-                                />
-                            ))}
-                            </Routes>
-                        </div>
-                    </div>
-                </div>
+          {/* Right Side with Search and Inventory Display */}
+          <div className='right-side'>
+            {/* Navbar with Search and Action Buttons */}
+            <div className="top-nav">
+              <input
+                type="text"
+                placeholder="Search inventory..."
+                value={searchQuery}
+                onChange={handleSearch}
+                className="search-bar"
+              />
+              <button className="action-button">Add Stock</button>
+             <Link to ="addItem"> <button className="action-button">Add Item</button> </Link>
+            </div>
+
+            <div className='bottom-content'>
+              {/* Route for Inventory Display */}
+              <div className='admin-inventory-contents left-margin'>
+                <Routes>
+                  {/* Define the route pattern for dynamic category matching */}
+                  <Route
+                    path="inventory/:category"
+                    element={<InventoryDisplay />}
+                  />
+
+                  {/* Optional: Catch-all route for invalid paths */}
+                  <Route
+                    path="*"
+                    element={<h2>404 Not Found</h2>}
+                  />
+                </Routes>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

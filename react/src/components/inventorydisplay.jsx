@@ -1,26 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchCategoryData } from "../components/content.jsx"; // Ensure the path is correct
+import { fetchCategoryData } from "../components/content.jsx"; // Correct the path if necessary
 
-const InventoryDisplay = ({ category }) => {
+const InventoryDisplay = () => {
   const [items, setItems] = useState([]);
-  const { category: paramCategory } = useParams();
+  const { category } = useParams(); // Get the category from the URL
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchCategoryData(category || paramCategory);
-      setItems(data);
+      if (category) {
+        const data = await fetchCategoryData(category); // Fetch data for the category
+        setItems(data); // Set fetched items in state
+      }
     };
     fetchData();
-  }, [category, paramCategory]);
+  }, [category]); // Re-run when the category changes
 
   return (
     <div>
-      <h2>{category || paramCategory} Items</h2>
-      <div>
-        {items.map((item) => (
-          <div key={item.id}>{item.name}</div>
-        ))}
+      <h2>{category} Items</h2>
+      <div className="inventory-boxes">
+        {items.length > 0 ? (
+          items.map((item) => (
+            <div key={item.id} className="inventory-box">
+              {item.name}
+            </div>
+          ))
+        ) : (
+          <p>No items available for this category.</p>
+        )}
       </div>
     </div>
   );

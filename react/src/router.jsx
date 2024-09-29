@@ -12,6 +12,7 @@ import AdminIndex from "./views/Admin";
 import Sign from "./views/Sign/sign";
 import ForgotPassword from "./views/Sign/forgot_password";
 import AdminInventoryTracking from "./views/Admin/inventorytracking";
+import AddItem from "./views/Admin/addItem";
 
 const router = createBrowserRouter([
     /*
@@ -87,6 +88,10 @@ const router = createBrowserRouter([
             {
                 path: 'InventoryTracking',
                 element: <AdminInventoryTracking />
+            },
+            {
+                path: 'InventoryTracking/AddItem',
+                element: <AddItem/>
             }
         ]
     }
