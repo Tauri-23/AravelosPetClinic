@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/app.css";
 import "../../assets/css/bookappointment.css";
 import ClientCalendar from "../../components/calendar.jsx";
 import Dropdown from "../../components/dropdowns.jsx";
+import Button from "../../components/button.jsx";
+import CustomToolbar from "../../components/custom_toolbar.jsx";
 
 export default function BookAppointment() {
+    const navigate = useNavigate(); // Initialize useNavigate
+
     const petOptions = [
         { id: "chuchay", label: "Chuchay" },
         { id: "piola", label: "Piola" },
     ];
-
     const serviceOptions = [
         { id: "checkup", label: "Check-up" },
         { id: "deworming", label: "Deworming" },
@@ -60,7 +63,7 @@ export default function BookAppointment() {
 
         // Simple validation
         if (!pet || !service || !selectedDateTime) {
-            setSubmissionMessage("Please select a pet, type of service, and date.");
+            alert("Please select a pet, type of service, and date.");
             return;
         }
 
@@ -68,7 +71,7 @@ export default function BookAppointment() {
         console.log("Form Data:", formData);
 
         // Display success message
-        setSubmissionMessage("Appointment booked successfully!");
+        alert("Appointment booked successfully!");
 
         // Reset form
         setFormData({
@@ -76,7 +79,7 @@ export default function BookAppointment() {
             service: "",
             schedule: "month", // Reset to default
         });
-        setSelectedDateTime(""); // Reset selected date and time
+        navigate("MyAppointments"); // Reset selected date and time
     };
 
     // Function to handle the selected date from ClientCalendar
@@ -109,13 +112,14 @@ export default function BookAppointment() {
                     <div className="anybody medium bold">Book Appointment</div>
                     <div className="separator"></div>
                     <Link to={'MyAppointments'}>
-                        <div className="anybody small sem-bold">My Appointments</div>
+                        <div className="anybody small semi-bold">My Appointments</div>
                     </Link>
                 </div>
                 <div className="grid inter">
                     <ClientCalendar
                         onDateSelect={handleDateSelect}
-                        calendarView={calendarView} // Pass the calendar view state as a prop
+                        calendarView={calendarView}
+                        CustomToolbar={CustomToolbar} // Pass the custom toolbar here
                     />
                     <div className="bookapt small-form">
                         <div className="bottom-margin semi-bold anybody semi-medium">Appointment Details</div>
@@ -143,9 +147,15 @@ export default function BookAppointment() {
                                 onChange={handleDropdownChange}
                                 placeholder="Choose Service"
                             />
-                            <button type="submit">Book Appointment</button>
+                            <div class="d-flex justify-content-center">
+                                <Button
+                                    label="Click Me"
+                                    onClick={handleSubmit}
+                                    className="main-button" // Optional: Add additional class
+                                    style={{ margin: '10px' }} // Optional: Inline styles
+                                />
+                                </div>
                         </form>
-                        {submissionMessage && <p>{submissionMessage}</p>} {/* Display submission message */}
                     </div>
                 </div>
             </div>

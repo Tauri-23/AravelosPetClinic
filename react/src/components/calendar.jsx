@@ -12,7 +12,7 @@ const events = [
     }
 ];
 
-export default function ClientCalendar({ onDateSelect, calendarView }) { // Accept the view as a prop
+export default function ClientCalendar({ onDateSelect, calendarView, CustomToolbar }) { // Accept the view as a prop
     const dayPropGetter = (date) => {
         const day = date.getDay();
         let style = {};
@@ -51,6 +51,15 @@ export default function ClientCalendar({ onDateSelect, calendarView }) { // Acce
             min={new Date(2024, 0, 1, 8, 0)} // 8:00 AM
             max={new Date(2025, 0, 1, 15, 0)} // 3:00 PM
             view={calendarView} // Dynamically set the view (day or week)
+            components={{
+                toolbar: CustomToolbar, // Replace toolbar with CustomToolbar
+            }}
         />
     );
 }
+
+ClientCalendar.propTypes = {
+    onDateSelect: PropTypes.func.isRequired,
+    calendarView: PropTypes.string.isRequired,
+    CustomToolbar: PropTypes.elementType, // Optional
+};

@@ -19,4 +19,7 @@
     margin-left: 1vw;
     background-color: #1D3675;
 }
-
+.main-button{
+    width: 30%!important;
+    height: 6vh!important;
+}

@@ -1,0 +1,17 @@
+.main-button{ /*for submission or confirm btns example: yes/submit/confirm*/
+    font-family: Inter;
+    font-weight: 700;
+    border-radius: 20px;
+    border: 2px white solid;
+    background-color: #1D3675;
+    color:white;
+}
+
+.sub-button{ /*for cancel btns example: no/back/cancel*/
+    font-family: Inter;
+    font-weight: 700;
+    border-radius: 20px;
+    border: 2px white solid;
+    background-color: #a3a3a3;
+    color:white;
+}
