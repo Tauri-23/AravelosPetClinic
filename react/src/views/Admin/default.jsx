@@ -19,6 +19,7 @@ export default function AdminDefault () {
              <Link to={'/AdminIndex'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/appointment.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Appointments</p><div className={`nav1-line${url === "/" ? " active" : ""}`} ></div></div></Link>
              <Link to={'/AdminIndex'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/user.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Users</p><div className={`nav1-line${url === "/" ? " active" : ""}`} ></div></div></Link>
              <Link to={'/AdminIndex'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/feedback.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Feedbacks</p><div className={`nav1-line${url === "/" ? " active" : ""}`} ></div></div></Link>
+             <Link to={'/InventoryTracking'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/appointment.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Inventory Tracking</p><div className={`nav1-line${url === "/InventoryTracking" ? " active" : ""}`} ></div></div></Link>
 
         </div>
 
