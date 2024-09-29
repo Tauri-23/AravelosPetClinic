@@ -38,7 +38,7 @@ export default function Dropdown({ label, options, name, onChange, placeholder }
 
   return (
     <div className="dropdown-container bottom-margin-s">
-      {label && <span className="choose">{label}</span>}
+      {label && <span className="choose semi-bold">{label}</span>}
 
       <div
         className={`dropdown ${isActive ? "active" : ""}`}

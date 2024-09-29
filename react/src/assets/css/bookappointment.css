@@ -5,7 +5,8 @@
     height: 100vh
 }
 .small-form{
-    height: 95vh;
+    height: 70%;
+    width:40vw;
 }
 .mini-nav{
     display: flex;

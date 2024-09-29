@@ -19,17 +19,26 @@ export default function BookAppointment() {
         { id: "vaccination", label: "Vaccination" },
     ];
 
+    const schedOptions = [
+        { id: "month", label: "By Month" },
+        { id: "time", label: "By Day Timeslot" },
+    ];
+
     // State to hold form data
     const [formData, setFormData] = useState({
         pet: "",
         service: "",
+        schedule: "month", // Default to "By Month"
     });
 
     // State to hold submission message
     const [submissionMessage, setSubmissionMessage] = useState("");
 
-    // State to hold selected date
-    const [selectedDate, setSelectedDate] = useState("");
+    // State to hold selected date and time
+    const [selectedDateTime, setSelectedDateTime] = useState("");
+
+    // State to hold calendar view
+    const [calendarView, setCalendarView] = useState("month"); // Default to "month" view
 
     // Handle changes from Dropdown components
     const handleDropdownChange = (name, value) => {
@@ -37,6 +46,11 @@ export default function BookAppointment() {
             ...prevData,
             [name]: value,
         }));
+
+        // Switch calendar view based on schedule type
+        if (name === "schedule") {
+            setCalendarView(value === "time" ? "week" : "month");
+        }
     };
 
     // Handle form submission
@@ -45,7 +59,7 @@ export default function BookAppointment() {
         const { pet, service } = formData;
 
         // Simple validation
-        if (!pet || !service || !selectedDate) {
+        if (!pet || !service || !selectedDateTime) {
             setSubmissionMessage("Please select a pet, type of service, and date.");
             return;
         }
@@ -60,22 +74,36 @@ export default function BookAppointment() {
         setFormData({
             pet: "",
             service: "",
+            schedule: "month", // Reset to default
         });
-        setSelectedDate(""); // Reset selected date
+        setSelectedDateTime(""); // Reset selected date and time
     };
 
     // Function to handle the selected date from ClientCalendar
-    const handleDateSelect = (date) => {
-        const formattedDate = new Date(date).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-        });
-        setSelectedDate(formattedDate); // Update selected date state
+    const handleDateSelect = (dateTime) => {
+        const date = new Date(dateTime);
+        if (formData.schedule === "month") {
+            const formattedDate = date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            });
+            setSelectedDateTime(formattedDate); // Update selected date state
+        } else if (formData.schedule === "time") {
+            const formattedDateTime = date.toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                hour12: true,
+            });
+            setSelectedDateTime(formattedDateTime); // Update selected date and time state
+        }
     };
 
     return (
-        <div className = "page">
+        <div className="page">
             <div className="bg book-appointment gen-margin">
                 <div className="mini-nav bottom-margin">
                     <div className="anybody medium bold">Book Appointment</div>
@@ -85,9 +113,22 @@ export default function BookAppointment() {
                     </Link>
                 </div>
                 <div className="grid inter">
-                    <ClientCalendar onDateSelect={handleDateSelect} />
+                    <ClientCalendar
+                        onDateSelect={handleDateSelect}
+                        calendarView={calendarView} // Pass the calendar view state as a prop
+                    />
                     <div className="small-form">
-                        <form onSubmit={handleSubmit}>
+                        <div className="bottom-margin semi-bold anybody semi-medium">Appointment Details</div>
+                        <form className="d-flex row"onSubmit={handleSubmit}>
+                            <div class=" bottom-margin-s"><span className="semi-bold">Date: </span><span className="bottom-margin">{selectedDateTime || 'Select a date'}</span></div>
+
+                             <Dropdown
+                                label="Choose Scheduling"
+                                options={schedOptions}
+                                name="schedule"
+                                onChange={handleDropdownChange}
+                                placeholder="Choose Scheduling"
+                            />
                             <Dropdown
                                 label="Choose Pet"
                                 options={petOptions}
@@ -102,7 +143,6 @@ export default function BookAppointment() {
                                 onChange={handleDropdownChange}
                                 placeholder="Choose Service"
                             />
-                            <span className="choose">Date: {selectedDate || 'Select a date'}</span> {/* Display selected date */}
                             <button type="submit">Book Appointment</button>
                         </form>
                         {submissionMessage && <p>{submissionMessage}</p>} {/* Display submission message */}

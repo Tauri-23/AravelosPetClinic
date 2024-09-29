@@ -19,7 +19,7 @@ export default function AdminNavbar() {
             </div>
 
             <div className="nav1-sign">
-                <Link to={'/GuestIndex'} className="nav1-link">Sign Out</Link>
+                <Link to={'/'} className="nav1-link">Sign Out</Link>
             </div>
         </div>
     );

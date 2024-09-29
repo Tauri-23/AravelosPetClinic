@@ -21,8 +21,14 @@
 {
     font-size:1vw;
 }
+.semi-medium{
+    font-size:2vw;
+}
 .medium{
     font-size:3vw;
+}
+.semi-big{
+    font-size:4vw;
 }
 .big{
     font-size:5vw;
@@ -78,7 +84,6 @@
 }
 .small-form{
  background-color: white;
- 
  border-radius:20px;
  border:1px solid rgb(144, 144, 144, 0.48);
  padding: 2vw;

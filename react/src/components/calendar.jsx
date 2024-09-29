@@ -6,13 +6,13 @@ import moment from 'moment';
 const localizer = momentLocalizer(moment);
 const events = [
     {
-        start: moment("2024-09-29T19:00:00").toDate(),
-        end: moment("2024-09-29T23:00:00").toDate(),
+        start: moment("2024-09-29T15:00:00").toDate(),
+        end: moment("2024-09-29T11:00:00").toDate(),
         title: "hahaha"
     }
 ];
 
-export default function ClientCalendar({ onDateSelect }) { // Accept the callback as a prop
+export default function ClientCalendar({ onDateSelect, calendarView }) { // Accept the view as a prop
     const dayPropGetter = (date) => {
         const day = date.getDay();
         let style = {};
@@ -48,6 +48,9 @@ export default function ClientCalendar({ onDateSelect }) { // Accept the callbac
             dayPropGetter={dayPropGetter}
             selectable
             onSelectSlot={handleSelectSlot}
+            min={new Date(2024, 0, 1, 8, 0)} // 8:00 AM
+            max={new Date(2025, 0, 1, 15, 0)} // 3:00 PM
+            view={calendarView} // Dynamically set the view (day or week)
         />
     );
 }
