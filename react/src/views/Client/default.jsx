@@ -51,7 +51,7 @@ export default function ClientDefault () {
         </div>
         <div className="nav1-links">
              <Link to={'/ClientIndex'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/home.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Home</p><div className={`nav1-line${url === "/ClientIndex" ? " active" : ""}`} ></div></div></Link>
-             <Link to={'BookAppointment'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/appointment.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Book Appointment</p><div className={`nav1-line${url === "/ClientIndex/BookAppointment" ? " active" : ""}`} ></div></div></Link>
+             <Link to={'BookAppointment'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/appointment.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Book Appointment</p><div className={`nav1-line${url.startsWith("/ClientIndex/BookAppointment") ? " active" : ""}`} ></div></div></Link>
              <Link to={'ClientContactUs'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/user.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Contact Us</p><div className={`nav1-line${url === "/ClientIndex/ClientContactUs" ? " active" : ""}`} ></div></div></Link>
 
         </div>

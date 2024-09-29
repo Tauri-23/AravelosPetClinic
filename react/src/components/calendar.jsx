@@ -1,3 +1,5 @@
+
+import "../assets/css/calendar.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
@@ -15,6 +17,7 @@ export default function ClientCalendar(){
         <Calendar events={events} localizer={localizer}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: 500 }}/>
+        style={{height:470}}
+        />
     );
 }

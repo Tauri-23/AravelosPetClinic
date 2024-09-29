@@ -7,9 +7,11 @@ export default function ClientContactUs() {
     useEffect(() => {
         console.log(user);
     }, []);
-    
+
     return(
-        <>
-        Contact Us + Feedback</>
+        <body>
+            <>
+            Contact Us + Feedback</>
+        </body>
     );
 }

@@ -1,12 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 body{
     min-height: 100vh;
     margin:0;
+    background-color: #f8f8f8!important;
+    overflow: overlay; /* Works in Chrome, Edge */
+    scrollbar-gutter: stable; /* Ensures scrollbar doesn't shift content */
 }
 #root{
     display: flex;
     flex-direction: column;
     height: 100vh;
+    overflow-y: hidden;
 }
 .indx{
     margin-left:1vw;
@@ -21,6 +26,10 @@ body{
 }
 .big{
     font-size:5vw;
+}
+
+.semi-bold{
+    font-weight: 600;
 }
 .bold{
     font-weight: 700;
@@ -39,4 +48,40 @@ body{
 }
 .gen-margin{
     margin: 2vw;
+}
+.bottom-margin{
+    margin-bottom: 2vw;
+}
+.top-margin{
+    margin-top: 2vw;
+}
+.left-margin{
+    margin-left: 2vw;
+}
+.right-margin{
+    margin-right: 2vw;
+}
+.gen-margin-s{
+    margin: 1vw;
+}
+.bottom-margin-s{
+    margin-bottom: 1vw;
+}
+.top-margin-s{
+    margin-top: 1vw;
+}
+.left-margin-s{
+    margin-left: 1vw;
+}
+.right-margin-s{
+    margin-right: 1vw;
+}
+.small-form{
+ background-color: white;
+ width:40vw;
+ border-radius:20px;
+ border:1px solid rgb(144, 144, 144, 0.48);
+ padding: 2vw;
+}
+.bg{
 }

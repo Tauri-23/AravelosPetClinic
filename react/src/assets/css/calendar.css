@@ -1,0 +1,14 @@
+.rbc-calendar{
+    width:55%!important;
+    height: 95vh!important;
+    margin-right:2vw;
+    background-color: white;
+    border-radius:20px;
+    border:1px solid rgb(144, 144, 144, 0.48);
+    padding: 2vw;
+}
+.rbc-toolbar-label{
+font-weight:700;
+font-family: Anybody;
+}
+

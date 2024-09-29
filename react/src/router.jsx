@@ -5,6 +5,7 @@ import GuestContactUs from "./views/Guest/contactus";
 import ClientDefault from "./views/Client/default";
 import ClientIndex from "./views/Client";
 import BookAppointment from "./views/Client/bookappointment";
+import MyAppointments from "./views/Client/myappointments";
 import ClientContactUs from "./views/Client/contactus";
 import AdminDefault from "./views/Admin/default";
 import AdminIndex from "./views/Admin";
@@ -47,19 +48,24 @@ const router = createBrowserRouter([
     */
     {
         path: '/ClientIndex',
-        element: <ClientDefault/>,
+        element: <ClientDefault />,
         children: [
             {
-                index:true,
-                element: <ClientIndex/>
+                index: true,
+                element: <ClientIndex />
             },
             {
-                path:'/ClientIndex/BookAppointment',
-                element: <BookAppointment/>
+                path: 'BookAppointment', // Remove leading `/`
+                element: <BookAppointment />
+            },
+
+            {
+                path: 'BookAppointment/MyAppointments', // Remove leading `/`
+                element: <MyAppointments />
             },
             {
-                path:'/ClientIndex/ClientContactUs',
-                element: <ClientContactUs/>
+                path: 'ClientContactUs', // Remove leading `/`
+                element: <ClientContactUs />
             }
         ]
     },

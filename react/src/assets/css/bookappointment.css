@@ -1,4 +1,21 @@
 .bookappointment{
-
+}
+.grid{
+    display: flex;
+    height: 100vh
+}
+.small-form{
+    height: 95vh;
+}
+.mini-nav{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+.separator{
+    height: 33px;
+    width: 1px;
+    margin-left: 1vw;
+    background-color: #1D3675;
 }
 
