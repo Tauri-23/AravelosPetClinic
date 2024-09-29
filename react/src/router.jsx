@@ -82,6 +82,10 @@ const router = createBrowserRouter([
             {
                 index:true,
                 element: <AdminIndex/>
+            },
+            {
+                path: 'Inventory Tracking', // Remove leading `/`
+                element: <InventoryTracking />
             }
         ]
     }
