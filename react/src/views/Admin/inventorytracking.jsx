@@ -1,29 +1,44 @@
 import React, { useEffect, useRef, useState } from 'react'
 import "../../assets/css/inventorytracking.css";
 import { useOutletContext } from 'react-router-dom';
+import InventoryBox from '../../components/inventory_box';
+import { fetchAllMedicines } from '../../services/InventoryServices';
 
 
 export default function AdminInventoryTracking() {
-  const [counter, setCounter] = useState(1); // local
-  const {name, setName,
-        tempName, setTempName} = useOutletContext(); // Getters and setters from parent
+  const [meds, setMeds] = useState(null)
 
-  return (
-    <>
-      <div>inventoryTracking</div>
-      {/* <h1>{counter}</h1>
-      <button onClick={() => setCounter(counter+1)}>increment</button>
-      <button onClick={() => setCounter(counter-1)}>dec</button> */}
+  useEffect(() => {
+    const getAll = async() => {
+      const data = await fetchAllMedicines();
+      setMeds(data);
+    }
+    
+    getAll();
+  }, []);
 
-      <h3>{name}</h3>
-
-      <input 
-        type="text" 
-        value={tempName} 
-        onInput={(e) => setTempName(e.target.value)}
-        />
-
-      <button onClick={() => setName(tempName)}>change name</button>
-    </>
-  )
+  if(meds) {
+    return (
+      <div className='content1'>
+        <h1>Inventory Tracking</h1>
+  
+        <div className="d-flex" style={{gap: 80}}>
+          <div style={{width: "300px", height: "100vh", background: "aliceblue", padding: 20}}>
+            Side Navb
+          </div>
+  
+          {/* Content */}
+          <div className='admin-inventory-contents'>
+            {meds?.map(med => (
+              <InventoryBox key={med.id} med={med} link={"/AdminIndex"}/>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  } else {
+    return(
+      <h1>Loading</h1>
+    )
+  }
 }

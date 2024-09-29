@@ -1,0 +1,13 @@
+.admin-inventory-contents {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.inventory-box {
+    width: 300px;
+    height: 200px;
+    background: lightblue;
+    font-size: 30px;
+    text-align: center;
+    border-radius: 20px;
+}
