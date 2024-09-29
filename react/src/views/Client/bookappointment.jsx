@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../assets/css/app.css";
-import "../../assets/css/bookappointment.module.css";
+import "../../assets/css/bookappointment.css";
 import ClientCalendar from "../../components/calendar.jsx";
 import Dropdown from "../../components/dropdowns.jsx";
 
@@ -117,7 +117,7 @@ export default function BookAppointment() {
                         onDateSelect={handleDateSelect}
                         calendarView={calendarView} // Pass the calendar view state as a prop
                     />
-                    <div className="small-form">
+                    <div className="bookapt small-form">
                         <div className="bottom-margin semi-bold anybody semi-medium">Appointment Details</div>
                         <form className="d-flex row"onSubmit={handleSubmit}>
                             <div class=" bottom-margin-s"><span className="semi-bold">Date: </span><span className="bottom-margin">{selectedDateTime || 'Select a date'}</span></div>

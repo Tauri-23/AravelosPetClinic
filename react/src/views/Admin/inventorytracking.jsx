@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import "../../assets/css/inventorytracking.css";
 import "../../assets/css/app.css";
+import "../../assets/css/inventorytracking.css";
 import { NavLink, Routes, Route, useNavigate } from 'react-router-dom';
 import InventoryDisplay from "../../components/inventorydisplay.jsx"; // Corrected import
 
@@ -33,7 +33,7 @@ export default function AdminInventoryTracking() {
             <h1>Inventory Tracking</h1>
 
 
-            <div className="d-flex small-form">
+            <div className="d-flex inv small-form">
                  {/* Navbar with Search and Action Buttons */}
                 <div className="sidebar">
                     <h3>Categories</h3>
