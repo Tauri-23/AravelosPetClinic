@@ -9,12 +9,10 @@ export default function Dropdown({ label, options, name, onChange, placeholder }
   const [selected, setSelected] = useState("");
   const dropdownRef = useRef(null);
 
-  // Toggle dropdown menu
   const toggleDropdown = () => {
     setIsActive(!isActive);
   };
 
-  // Close dropdown when clicking outside
   const handleClickOutside = (event) => {
     if (
       dropdownRef.current &&
@@ -27,13 +25,11 @@ export default function Dropdown({ label, options, name, onChange, placeholder }
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Cleanup event listener on unmount
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
-  // Handle selection of an option
   const handleSelect = (option) => {
     setSelected(option.label);
     setIsActive(false);
@@ -64,11 +60,6 @@ export default function Dropdown({ label, options, name, onChange, placeholder }
           ))}
         </ul>
       </div>
-
-      {/* Message Display
-      <span className="msg">
-        {selected && `Selected ${label}: ${selected}`}
-      </span>*/}
     </div>
   );
 }
