@@ -13,6 +13,7 @@ import Sign from "./views/Sign/sign";
 import ForgotPassword from "./views/Sign/forgot_password";
 import AdminInventoryTracking from "./views/Admin/inventorytracking";
 import AddItem from "./views/Admin/addItem";
+import ClientuserProfile from "./views/Client/userprofiles";
 
 const router = createBrowserRouter([
     /*
@@ -68,6 +69,10 @@ const router = createBrowserRouter([
             {
                 path: 'ClientContactUs', // Remove leading `/`
                 element: <ClientContactUs />
+            },
+            {
+                path: 'ClientUserProfile', // Remove leading `/`
+                element: <ClientuserProfile />
             }
         ]
     },
