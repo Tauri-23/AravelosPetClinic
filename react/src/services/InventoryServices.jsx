@@ -15,7 +15,7 @@ export const fetchAllInventoryCategories = async() => {
 
 
 
-export const fetchAllMedicines = async() => {
+export const fetchAllInventoryItems = async() => {
     try {
         const response = await axiosClient.get('/get-all-inventory');
         return response.data;

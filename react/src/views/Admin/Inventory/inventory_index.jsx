@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { fetchAllInventoryCategories } from '../../../services/InventoryServices.jsx';
+import { fetchAllInventoryCategories, fetchAllInventoryItems } from '../../../services/InventoryServices.jsx';
 import axiosClient from '../../../axios-client.js';
 import { notify } from '../../../assets/js/utils.jsx';
 import '../../../assets/css/InventoryTracking.css';
 import InventoryBox from '../../../components/inventory_box.jsx';
+import { useModal } from '../../../contexts/ModalContext.jsx';
 
 export default function AdminInventoryIndex() {
+  const {showModal} = useModal();
   const [categories, setCategories] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [newCategory, setNewCategory] = useState('');
+  const [inventoryItems, setInventoryItems] = useState(null);
+
+  const [activeCategory, setActiveCategory] = useState(null);
   const navigate = useNavigate();
 
   // Get All Items From DB
@@ -22,11 +26,39 @@ export default function AdminInventoryIndex() {
         console.error(error);
       }
     };
+    const getAllInventoryItems = async() => {
+      try {
+        const data = await fetchAllInventoryItems();
+        setInventoryItems(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
-    getAllCategories();
+    const getAll = async() => {
+      getAllCategories();
+      getAllInventoryItems();
+    }
+
+    getAll();
   }, []);
+  
+  // SetActive Category
+  useEffect(() => {
+    if(categories?.length > 0 && inventoryItems?.length > 0) {
+      setActiveCategory(categories[0].id);
+    }
+  }, [categories])
 
-  const handleAddCategory = () => {
+
+  /* 
+  | Debugging
+  */
+  useEffect(() => {
+    console.log(inventoryItems);
+  }, [inventoryItems])
+
+  const handleAddCategoryPost = (newCategory) => {
     const formData = new FormData();
     formData.append('name', newCategory);
     axiosClient.post('/add-inventory-categories', formData)
@@ -41,7 +73,12 @@ export default function AdminInventoryIndex() {
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  const handleAddCategory = () => {
+    showModal('AddCategoryModal1', {handleAddCategoryPost})
   };
+
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -78,22 +115,21 @@ export default function AdminInventoryIndex() {
                 />
               </div>
 
-            <ul>
+            <div className='category-nav-links'>
               {categories?.length > 0 && categories.map((category) => (
-                <li key={category.id}>
-                  <NavLink
-                    to={`${category.path}`}
-                    className={({ isActive }) => (isActive ? 'active' : '')} // Dynamic class assignment
-                  >
-                    {category.name}
-                  </NavLink>
-                </li>
+                <Link 
+                className={`category-nav-link ${activeCategory === category.id ? 'active' : ''}`} 
+                onClick={() => setActiveCategory(category.id)} 
+                key={category.id}
+                >
+                  {category.name}
+                </Link>
               ))}
 
               {categories?.length < 1 && <>No Categories</>}
-            </ul>
+            </div>
 
-            <div style={{ marginTop: 20 }}>
+            {/* <div style={{ marginTop: 20 }}>
               <h4>Add Category</h4>
               <input
                 className="categoryInput"
@@ -103,7 +139,7 @@ export default function AdminInventoryIndex() {
                 placeholder="New category"
               />
               <button onClick={handleAddCategory}>Add</button>
-            </div>
+            </div> */}
           </div>
 
           {/* Right Side with Search and Inventory Display */}
@@ -126,18 +162,11 @@ export default function AdminInventoryIndex() {
             <div className="bottom-content">
               {/* Route for Inventory Display */}
               <div className="admin-inventory-contents left-margin">
-                <InventoryBox itemName={"Med1"} itemImage={"sd2m2nvHCWUHr1FYowRKXjKv.webp"} itemQuantity={3} />
-                <InventoryBox itemName={"Med2"} itemImage={"med_placeholder.jpg"} itemQuantity={3} />
-                <InventoryBox itemName={"Med1"} itemImage={"sd2m2nvHCWUHr1FYowRKXjKv.webp"} itemQuantity={3} />
-                <InventoryBox itemName={"Med2"} itemImage={"med_placeholder.jpg"} itemQuantity={3} />
-                <InventoryBox itemName={"Med1"} itemImage={"sd2m2nvHCWUHr1FYowRKXjKv.webp"} itemQuantity={3} />
-                <InventoryBox itemName={"Med2"} itemImage={"med_placeholder.jpg"} itemQuantity={3} />
-                <InventoryBox itemName={"Med1"} itemImage={"sd2m2nvHCWUHr1FYowRKXjKv.webp"} itemQuantity={3} />
-                <InventoryBox itemName={"Med2"} itemImage={"med_placeholder.jpg"} itemQuantity={3} />
-                <InventoryBox itemName={"Med1"} itemImage={"sd2m2nvHCWUHr1FYowRKXjKv.webp"} itemQuantity={3} />
-                <InventoryBox itemName={"Med2"} itemImage={"med_placeholder.jpg"} itemQuantity={3} />
-                <InventoryBox itemName={"Med1"} itemImage={"sd2m2nvHCWUHr1FYowRKXjKv.webp"} itemQuantity={3} />
-                <InventoryBox itemName={"Med2"} itemImage={"med_placeholder.jpg"} itemQuantity={3} />
+                {inventoryItems?.length > 0 && inventoryItems.map(item => 
+                  item.category == activeCategory &&
+                  (<InventoryBox key={item.id} itemName={item.name} itemImage={item.picture} itemQuantity={item.qty} />)
+                )}
+                
                 
                 {/* Inventory items would be displayed here */}
               </div>

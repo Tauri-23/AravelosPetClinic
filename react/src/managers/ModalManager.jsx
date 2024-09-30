@@ -1,4 +1,5 @@
 import { AddAppointmentConfirmationModal1 } from "../components/Modals/addAppointmentConfirmationModal1";
+import AddCategoryModal1 from "../components/Modals/addCategoryModal1";
 import { useModal } from "../contexts/ModalContext";
 
 const ModalManager = () => {
@@ -12,6 +13,9 @@ const ModalManager = () => {
             // Listings
             case 'AgentDelListingConfirmationModal1':
                 return <AddAppointmentConfirmationModal1 {...modalState.props} onClose={hideModal}/>;
+
+            case 'AddCategoryModal1':
+                return <AddCategoryModal1 {...modalState.props} onClose={hideModal}/>;
 
 
 

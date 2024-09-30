@@ -1,17 +1,21 @@
+:root {
+    --box-width: 300px;
+    --box-height: 300px;
+}
+
 .inventory-box {
     display: flex;
     flex-direction: column; /* Align items vertically */
-    align-items: center; /* Center items horizontally */
-    justify-content: center; /* Center items vertically */
-    width: 300px; /* Adjust width as needed */
-    height: 500px; /* Adjust height as needed */
-    background: lightblue; /* Background color */
+    gap: 20px;
+    width: var(--box-width); /* Adjust width as needed */
+    height: var(--box-height); /* Adjust height as needed */
+    background: white; /* Background color */
     border-radius: 20px; /* Rounded corners */
     text-decoration: none; /* Remove underline from the link */
     color: #333; /* Text color */
     padding: 20px; /* Padding for inner spacing */
     transition: transform 0.3s; /* Smooth hover effect */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+    filter: drop-shadow(0 0 1px var(--grey1));
     
 }
 
@@ -21,13 +25,14 @@
 
 .inventory-image {
     width: 100%;  /* Set a width for the image */
-    aspect-ratio: 1/1; 
+    height: calc(var(--box-width) - 100px);
+    border-radius: 10px;
     display: block; /* Center image in its container */
     margin: 0 auto; /* Centering the image horizontally */
 }
 
 .item-details {
-    text-align: center; /* Center text */
+    width: 100%;
 }
 
 .item-name {
