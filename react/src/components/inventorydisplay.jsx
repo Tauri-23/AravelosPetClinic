@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchCategoryData } from "../components/content.jsx"; // Correct the path if necessary
+import { fetchCategoryData } from "../components/inventory_box"; // Correct the path if necessary
 
 const InventoryDisplay = () => {
   const [items, setItems] = useState([]);
