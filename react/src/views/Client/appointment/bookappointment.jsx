@@ -76,6 +76,7 @@ export default function BookAppointment() {
     const handleDateSelect = (dateTime) => {
         const date = new Date(dateTime);
         if (calendarView === "month") {
+            const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);//CONVERT TO UTC >:(
             setDateUnformatted(date.toISOString().slice(0, 10));
             const formattedDate = date.toLocaleDateString('en-US', {
                 year: 'numeric',
@@ -83,9 +84,12 @@ export default function BookAppointment() {
                 day: 'numeric',
                 timeZone: 'Asia/Manila'
             });
+
+            alert(localDate, 'andaaaa', date);
+            setDateUnformatted(localDate.toISOString().slice(0, 19).replace('T', ' '));
             setSelectedDateTime(formattedDate);
         } else if (calendarView === "week") {
-            const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000); //CONVERT TO UTC >:(
+            const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);//CONVERT TO UTC >:(
             const formattedDateTime = date.toLocaleString('en-US', {
                 year: 'numeric',
                 month: 'long',
@@ -97,7 +101,7 @@ export default function BookAppointment() {
             });
             setSelectedDateTime(formattedDateTime);
             setDateUnformatted(localDate.toISOString().slice(0, 19).replace('T', ' '));
-             alert(date);
+            alert('localDate: '+localDate+ ' and Date: '+ date);
         }
     };
 

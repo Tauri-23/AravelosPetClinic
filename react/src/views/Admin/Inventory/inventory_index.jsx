@@ -42,7 +42,7 @@ export default function AdminInventoryIndex() {
 
     getAll();
   }, []);
-  
+
   // SetActive Category
   useEffect(() => {
     if(categories?.length > 0 && inventoryItems?.length > 0) {
@@ -51,7 +51,7 @@ export default function AdminInventoryIndex() {
   }, [categories])
 
 
-  /* 
+  /*
   | Debugging
   */
   useEffect(() => {
@@ -96,10 +96,7 @@ export default function AdminInventoryIndex() {
             {/* Header with icons */}
             <div className="category-header">
               <h3>Categories</h3>
-
-              
             </div>
-            <hr />
             <div className="icons">
                 <img
                   src="/assets/media/icons/add_btn.svg" // Add your add icon path here
@@ -117,9 +114,9 @@ export default function AdminInventoryIndex() {
 
             <div className='category-nav-links'>
               {categories?.length > 0 && categories.map((category) => (
-                <Link 
-                className={`category-nav-link ${activeCategory === category.id ? 'active' : ''}`} 
-                onClick={() => setActiveCategory(category.id)} 
+                <Link
+                className={`category-nav-link ${activeCategory === category.id ? 'active' : ''}`}
+                onClick={() => setActiveCategory(category.id)}
                 key={category.id}
                 >
                   {category.name}
@@ -153,21 +150,21 @@ export default function AdminInventoryIndex() {
                 onChange={handleSearch}
                 className="search-bar"
               />
-              
+
               <Link to="AddItem">
-                <button className="action-button">Add Item</button>
+                <button className="primary-btn-blue1 action-button">Add Item</button>
               </Link>
             </div>
 
             <div className="bottom-content">
               {/* Route for Inventory Display */}
               <div className="admin-inventory-contents left-margin">
-                {inventoryItems?.length > 0 && inventoryItems.map(item => 
+                {inventoryItems?.length > 0 && inventoryItems.map(item =>
                   item.category == activeCategory &&
                   (<InventoryBox key={item.id} itemName={item.name} itemImage={item.picture} itemQuantity={item.qty} />)
                 )}
-                
-                
+
+
                 {/* Inventory items would be displayed here */}
               </div>
             </div>

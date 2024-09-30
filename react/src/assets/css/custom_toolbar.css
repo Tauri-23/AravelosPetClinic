@@ -2,3 +2,7 @@
 .toolbar-label{
     color: #1D3675;
 }
+.arrows{
+
+    cursor: pointer;
+}

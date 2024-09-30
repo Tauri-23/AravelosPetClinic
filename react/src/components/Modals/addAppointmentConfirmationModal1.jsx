@@ -19,20 +19,20 @@ export const AddAppointmentConfirmationModal1 = ({ handleYesConfirmationPost, on
                 {/* Desc */}
                 <div className="text-center mar-bottom-1 d-flex flex-direction-y ">
                     <div className="text-m1 fw-bold semi-medium-f w-100 anybody">Schedule an Appointment?</div><hr></hr>
-                    <div className="text-m2 w-50 m-auto">appointment will be scheduled</div>
+                    <div className="text-m2 w-100 m-auto">An appointment will be requested with the clinic. Proceed?</div>
                 </div>
 
                 {/* Btns */}
-                <div className="d-flex flex-direction-y gap3">
+                <div className="d-flex flex-direction-x flex-row-reverse gap3">
 
                     <div
                     onClick={() => {handleYesConfirmationPost(); onClose();}}
-                    className="primary-btn-blue1 text-center"
+                    className="primary-btn-blue1 w-100 text-center"
                     >
                         Yes
                     </div>
 
-                    <div className="secondary-btn-black2 text-center d-flex gap3 align-items-center justify-content-center" onClick={onClose}>
+                    <div className="sub-button w-100 text-center d-flex gap3 align-items-center justify-content-center" onClick={onClose}>
                         Cancel
                     </div>
                 </div>

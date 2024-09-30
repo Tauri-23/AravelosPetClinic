@@ -21,7 +21,7 @@ a{
     height: 100vh;
     margin:0;
     background-color: #f8f8f8!important;
-    overflow: overlay; /* Works in Chrome, Edge */
+    overflow: scroll; /* Works in Chrome, Edge */
     scrollbar-gutter: stable; /* Ensures scrollbar doesn't shift content */
 }
 #root{

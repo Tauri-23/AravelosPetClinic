@@ -6,8 +6,11 @@
     background-color: var(--blue1);
     color:white;
     padding: 10px 20px;
+    cursor: pointer;
 }
-
+.primary-btn-blue1:hover {
+    background-color: #3058bb;
+  }
 .primary-btn-blue1.disabled {
     opacity: .5;
     user-select: none;
@@ -21,5 +24,8 @@
     border: 2px white solid;
     background-color: #a3a3a3;
     color:white;
+    cursor: pointer;
 }
-
+.sub-button:hover {
+    background-color: #bebebe;
+  }

@@ -36,7 +36,7 @@ export default function AddItem() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         const formData = new FormData();
         formData.append('category', categoryValue);
         formData.append('name', itemName);
@@ -59,7 +59,7 @@ export default function AddItem() {
             <div className='page'>
                 <div className='inventory-tracking gen-margin'>
                     <h1>Add Item</h1>
-    
+
                     <div className="d-flex add small-form">
                         {/* Left Side - Image with Upload */}
                         <div className="image-upload">
@@ -72,7 +72,7 @@ export default function AddItem() {
                                 )}
                             </div>
                         </div>
-    
+
                         {/* Right Side - Dropdown and Text Fields */}
                         <div className="addItemDetails">
                             <label htmlFor="category">Category</label>
@@ -82,7 +82,7 @@ export default function AddItem() {
                                 onChange={setCategoryValues}
                                 placeholder="Choose Category"
                             />
-    
+
                             <label htmlFor="itemName">Item Name</label>
                             <input
                                 type="text"
@@ -91,7 +91,7 @@ export default function AddItem() {
                                 value={itemName}
                                 onChange={(e) => setItemName(e.target.value)}
                             />
-    
+
                             <label htmlFor="itemStock">Item Stock</label>
                             <input
                                 type="number"
@@ -101,7 +101,7 @@ export default function AddItem() {
                                 onChange={(e) => setItemStock(e.target.value)}
                                 min={0}
                             />
-    
+
                             <label htmlFor="itemDescription">Item Description</label>
                             <textarea style={{resize: "none"}}
                                 name="itemDescription"
@@ -109,9 +109,9 @@ export default function AddItem() {
                                 value={itemDesc}
                                 onChange={(e) => setItemDesc(e.target.value)}
                             />
-    
+
                             {/* Submit Button */}
-                            <button type="submit" onClick={handleSubmit} className="submit-button">
+                            <button type="submit" onClick={handleSubmit} className="primary-btn-blue1">
                                 Submit
                             </button>
                         </div>
