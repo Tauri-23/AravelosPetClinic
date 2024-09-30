@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
-import "../../assets/css/app.css";
-import "../../assets/css/navbar.css";
 import { useStateContext } from "../../contexts/ContextProvider";
 import axiosClient from "../../axios-client";
+
 
 export default function GuestDefault() {
     const location = useLocation();

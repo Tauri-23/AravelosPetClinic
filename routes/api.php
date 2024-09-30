@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\inventoryCategoriesController;
 use App\Http\Controllers\Api\InventoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,7 +31,20 @@ Route::post('/login', [AuthController::class, 'login']);
 
 /*
 |----------------------------------------
-| Public
+| Inventory Items
 |----------------------------------------
 */
 Route::get('/get-all-inventory', [InventoryController::class,'GetAllInventory']);
+Route::post('/add-inventory-item', [InventoryController::class,'createInventoryItem']);
+
+
+
+
+
+/*
+|----------------------------------------
+| Inventory Categories
+|----------------------------------------
+*/
+Route::post('/add-inventory-categories', [inventoryCategoriesController::class,'createCategory']);
+Route::get('/get-all-inventory-categories', [inventoryCategoriesController::class,'getAllCategories']);

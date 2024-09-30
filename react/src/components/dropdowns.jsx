@@ -31,9 +31,9 @@ export default function Dropdown({ label, options, name, onChange, placeholder }
   }, []);
 
   const handleSelect = (option) => {
-    setSelected(option.label);
+    setSelected(option.name);
     setIsActive(false);
-    onChange(name, option.id);
+    onChange(option.id);
   };
 
   return (
@@ -55,7 +55,7 @@ export default function Dropdown({ label, options, name, onChange, placeholder }
               key={option.id}
               onClick={() => handleSelect(option)}
             >
-              {option.label}
+              {option.name}
             </li>
           ))}
         </ul>

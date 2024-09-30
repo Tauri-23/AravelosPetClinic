@@ -1,26 +1,55 @@
-import React, { useState } from 'react';
-import "../../assets/css/app.css";
-import "../../assets/css/inventorytracking.css";
-import { NavLink, Link, Routes, Route, useNavigate } from 'react-router-dom';
-import InventoryDisplay from "../../components/inventorydisplay.jsx";
+import React, { useEffect, useState } from 'react';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { fetchAllInventoryCategories } from '../../../services/InventoryServices.jsx';
+import axiosClient from '../../../axios-client.js';
+import { notify } from '../../../assets/js/utils.jsx';
+import '../../../assets/css/InventoryTracking.css'
 
 
-export default function AdminInventoryTracking() {
-  const [categories, setCategories] = useState([
-    { name: 'Medicine', path: 'medicine' },
-    { name: 'Supplies', path: 'supplies' }
-  ]);
-  const [newCategory, setNewCategory] = useState('');
+export default function AdminInventoryIndex() {
+  const [categories, setCategories] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const [newCategory, setNewCategory] = useState('');
   const navigate = useNavigate();
 
-  const handleAddCategory = () => {
-    if (newCategory.trim()) {
-      const newCategoryObj = { name: newCategory, path: newCategory.toLowerCase() };
-      setCategories([...categories, newCategoryObj]);
-      setNewCategory('');
-      navigate(`/inventory/${newCategoryObj.path}`);
+
+
+  // Get All Items From DB
+  useEffect(() => {
+    const getAllCategories = async() => {
+      try {
+        const data = await fetchAllInventoryCategories();
+        setCategories(data)
+      } catch(error) { console.error(error);}
     }
+
+    getAllCategories();
+  }, []);
+
+  const handleAddCategory = () => {
+    // if (newCategory.trim()) {
+    //   const newCategoryObj = { name: newCategory, path: newCategory.toLowerCase() };
+    //   setCategories([...categories, newCategoryObj]);
+    //   setNewCategory('');
+    //   // navigate(`/inventory/${newCategoryObj.path}`);
+    // }
+
+    
+    const formData = new FormData();
+    formData.append('name', newCategory);
+    axiosClient.post('/add-inventory-categories', formData)
+    .then(({data}) => {
+      if(data.status === 200) {
+        setCategories(prev => 
+          [...prev, data.category]
+        );
+        notify('success', data.message, 'top-center', 3000);
+      }
+      else {
+        notify('error', data.message, 'top-center', 3000);
+      }
+    }).catch(error => {console.error(error)})
   };
 
   const handleSearch = (e) => {
@@ -34,12 +63,13 @@ export default function AdminInventoryTracking() {
         <h1>Inventory Tracking</h1>
 
         <div className="d-flex inv small-form">
+
           {/* Sidebar with Categories */}
           <div className="sidebar">
             <h3>Categories</h3>
             <ul>
-              {categories.map((category) => (
-                <li key={category.path}>
+              {categories?.length > 0 && categories.map((category) => (
+                <li key={category.id}>
                   <NavLink 
                     to={`${category.path}`} 
                     className={({ isActive }) => (isActive ? "active" : "")} // Dynamic class assignment
@@ -48,6 +78,10 @@ export default function AdminInventoryTracking() {
                   </NavLink>
                 </li>
               ))}
+
+              {categories?.length < 1 && (
+                <>No Categories</>
+              )}
             </ul>
 
             <div style={{ marginTop: 20 }}>
@@ -81,19 +115,7 @@ export default function AdminInventoryTracking() {
             <div className='bottom-content'>
               {/* Route for Inventory Display */}
               <div className='admin-inventory-contents left-margin'>
-                <Routes>
-                  {/* Define the route pattern for dynamic category matching */}
-                  <Route
-                    path="inventory/:category"
-                    element={<InventoryDisplay />}
-                  />
-
-                  {/* Optional: Catch-all route for invalid paths */}
-                  <Route
-                    path="*"
-                    element={<h2>404 Not Found</h2>}
-                  />
-                </Routes>
+                
               </div>
             </div>
           </div>

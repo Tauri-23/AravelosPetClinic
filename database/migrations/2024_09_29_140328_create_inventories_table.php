@@ -13,9 +13,18 @@ return new class extends Migration
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger("category")->nullable();
             $table->string('name');
             $table->integer('qty');
+            $table->longText('desc');
+            $table->longText('picture');
             $table->timestamps();
+
+            $table->foreign('category')
+            ->references('id')
+            ->on('inventory_categories')
+            ->nullOnDelete()
+            ->cascadeOnUpdate();
         });
     }
 

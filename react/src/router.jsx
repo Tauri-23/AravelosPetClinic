@@ -11,9 +11,10 @@ import AdminDefault from "./views/Admin/default";
 import AdminIndex from "./views/Admin";
 import Sign from "./views/Sign/sign";
 import ForgotPassword from "./views/Sign/forgot_password";
-import AdminInventoryTracking from "./views/Admin/inventorytracking";
-import AddItem from "./views/Admin/addItem";
 import ClientuserProfile from "./views/Client/userprofiles";
+import AdminInventoryDefault from "./views/Admin/Inventory/inventory_default";
+import AdminInventoryIndex from "./views/Admin/Inventory/inventory_index";
+import AddItem from "./views/Admin/Inventory/addItem";
 
 const router = createBrowserRouter([
     /*
@@ -92,12 +93,19 @@ const router = createBrowserRouter([
             },
             {
                 path: 'InventoryTracking',
-                element: <AdminInventoryTracking />
+                element: <AdminInventoryDefault />,
+                children: [
+                    {
+                        index: true,
+                        element: <AdminInventoryIndex/>
+                    },
+                    {
+                        path: 'AddItem',
+                        element: <AddItem/>
+                    }
+                ]
             },
-            {
-                path: 'InventoryTracking/AddItem',
-                element: <AddItem/>
-            }
+            
         ]
     }
 ]);
