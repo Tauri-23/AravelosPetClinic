@@ -49,6 +49,6 @@ class AppointmentsController extends Controller
     // GET
     public function getAllAppointmentWhereClient($clientId)
     {
-        return response()->json(appointments::all());
+        return response()->json(appointments::where('client', $clientId)->get());
     }
 }
