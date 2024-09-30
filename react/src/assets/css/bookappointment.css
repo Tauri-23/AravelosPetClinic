@@ -5,8 +5,9 @@
     height: 100vh
 }
 .bookapt.small-form{
-    height: 70%;
+    height: fit-content;
     width:40vw;
+    overflow-y: hidden;
 }
 .mini-nav{
     display: flex;
@@ -19,7 +20,11 @@
     margin-left: 1vw;
     background-color: #1D3675;
 }
-.main-button{
-    width: 30%!important;
-    height: 6vh!important;
+.main-button, .sub-button{
+    width: fit-content;
+    padding: .5vw 2vw;
+}
+
+.modal-footer{
+    justify-content: space-between!important;
 }

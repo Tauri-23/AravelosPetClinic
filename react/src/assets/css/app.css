@@ -22,20 +22,20 @@ a{
     margin-left:1vw;
     margin-right:1vw;
 }
-.small
+.small-f
 {
     font-size:1vw;
 }
-.semi-medium{
+.semi-medium-f{
     font-size:2vw;
 }
-.medium{
+.medium-f{
     font-size:3vw;
 }
-.semi-big{
+.semi-big-f{
     font-size:4vw;
 }
-.big{
+.big-f{
     font-size:5vw;
 }
 

@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../../assets/css/app.css";
-import "../../assets/css/bookappointment.css";
-import ClientCalendar from "../../components/calendar.jsx";
-import Dropdown from "../../components/dropdowns.jsx";
-import Button from "../../components/button.jsx";
-import CustomToolbar from "../../components/custom_toolbar.jsx";
+import "../../../assets/css/bookappointment.css";
+import ClientCalendar from "../../../components/calendar.jsx";
+import Dropdown from "../../../components/dropdowns.jsx";
+import Button from "../../../components/button.jsx";
+import CustomToolbar from "../../../components/custom_toolbar.jsx";
 
 export default function BookAppointment() {
     const navigate = useNavigate(); // Initialize useNavigate
@@ -55,17 +54,18 @@ export default function BookAppointment() {
             setCalendarView(value === "time" ? "week" : "month");
         }
     };
-
-    // Handle form submission
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const validate=(e)=>{
         const { pet, service } = formData;
 
         // Simple validation
         if (!pet || !service || !selectedDateTime) {
             alert("Please select a pet, type of service, and date.");
-            return;
+            return false;
         }
+        return true;
+    }
+    // Handle form submission
+    const handleSubmit = (e) => {
 
         // Here you can handle form submission, e.g., send data to an API
         console.log("Form Data:", formData);
@@ -104,7 +104,12 @@ export default function BookAppointment() {
             setSelectedDateTime(formattedDateTime); // Update selected date and time state
         }
     };
-
+    const modalHeader = "Confirm Appointment";
+    const modalText = "Are you sure you want to book this appointment?";
+    const leftBTNLBL = "Cancel";
+    const rightBTNLBL = "Confirm";
+    const leftBTN = "sub-button"; // Optional: Customize class
+    const rightBTN = "main-button"; // Optional: Customize class
     return (
         <div className="page">
             <div className="bg book-appointment gen-margin">
@@ -112,7 +117,7 @@ export default function BookAppointment() {
                     <div className="anybody medium bold">Book Appointment</div>
                     <div className="separator"></div>
                     <Link to={'MyAppointments'}>
-                        <div className="anybody small semi-bold">My Appointments</div>
+                        <div className="anybody small-f semi-bold">My Appointments</div>
                     </Link>
                 </div>
                 <div className="grid inter">
@@ -147,14 +152,20 @@ export default function BookAppointment() {
                                 onChange={handleDropdownChange}
                                 placeholder="Choose Service"
                             />
-                            <div class="d-flex justify-content-center">
-                                <Button
-                                    label="Click Me"
+                            <div className="d-flex justify-content-center">
+                            <Button
+                                    label="Book Appointment"
                                     onClick={handleSubmit}
-                                    className="main-button" // Optional: Add additional class
-                                    style={{ margin: '10px' }} // Optional: Inline styles
+                                    validate={validate}
+                                    className="main-button top-margin" // Optional: Add additional class
+                                    modalHeader={modalHeader} // Pass modalHeader
+                                    modalText={modalText} // Pass modalText
+                                    leftBTN={leftBTN} // Pass left button class
+                                    rightBTN={rightBTN} // Pass right button class
+                                    leftBTNLBL={leftBTNLBL} // Pass left button label
+                                    rightBTNLBL={rightBTNLBL} // Pass right button label
                                 />
-                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>

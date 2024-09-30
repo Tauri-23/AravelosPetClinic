@@ -4,8 +4,6 @@ import GuestIndex from "./views/Guest";
 import GuestContactUs from "./views/Guest/contactus";
 import ClientDefault from "./views/Client/default";
 import ClientIndex from "./views/Client";
-import BookAppointment from "./views/Client/bookappointment";
-import MyAppointments from "./views/Client/myappointments";
 import ClientContactUs from "./views/Client/contactus";
 import AdminDefault from "./views/Admin/default";
 import AdminIndex from "./views/Admin";
@@ -15,6 +13,8 @@ import ClientuserProfile from "./views/Client/userprofiles";
 import AdminInventoryDefault from "./views/Admin/Inventory/inventory_default";
 import AdminInventoryIndex from "./views/Admin/Inventory/inventory_index";
 import AddItem from "./views/Admin/Inventory/addItem";
+import BookAppointment from "./views/Client/appointment/bookappointment";
+import MyAppointments from "./views/Client/appointment/myappointments";
 
 const router = createBrowserRouter([
     /*
@@ -105,7 +105,7 @@ const router = createBrowserRouter([
                     }
                 ]
             },
-            
+
         ]
     }
 ]);
