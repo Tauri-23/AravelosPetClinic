@@ -70,3 +70,30 @@ export function notify(type, message, position, ms) {
         });
     }
 }
+
+
+
+
+
+/*
+|----------------------------------------
+| Date format
+|----------------------------------------
+*/
+export const formatDateForMySQL = (dateString) => {
+    // Parse the input date string into a JavaScript Date object
+    const date = new Date(dateString);
+
+    // Extract year, month, and day
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, add 1
+    const day = String(date.getDate()).padStart(2, '0');
+
+    // Set time to 00:00:00 since only the date is given
+    const time = '00:00:00';
+
+    // Construct the MySQL DATETIME format
+    const mysqlDateTime = `${year}-${month}-${day} ${time}`;
+
+    return mysqlDateTime;
+}

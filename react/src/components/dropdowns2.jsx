@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import "../assets/css/dropdown.css";
 
-export default function Dropdown({ label, options, name, onChange, placeholder }) {
+export default function Dropdown2({ label, options, name, onChange, placeholder }) {
   const [isActive, setIsActive] = useState(false);
   const [selected, setSelected] = useState("");
   const dropdownRef = useRef(null);
@@ -33,7 +33,7 @@ export default function Dropdown({ label, options, name, onChange, placeholder }
   const handleSelect = (option) => {
     setSelected(option.name);
     setIsActive(false);
-    onChange(name, option.label);
+    onChange(option.id);
   };
 
   return (
@@ -55,7 +55,7 @@ export default function Dropdown({ label, options, name, onChange, placeholder }
               key={option.id}
               onClick={() => handleSelect(option)}
             >
-              {option.label} 
+              {option.name}
             </li>
           ))}
         </ul>
@@ -64,7 +64,7 @@ export default function Dropdown({ label, options, name, onChange, placeholder }
   );
 }
 
-Dropdown.propTypes = {
+Dropdown2.propTypes = {
   label: PropTypes.string.isRequired,
   options: PropTypes.arrayOf(
     PropTypes.shape({
@@ -77,7 +77,7 @@ Dropdown.propTypes = {
   placeholder: PropTypes.string, // Placeholder text
 };
 
-Dropdown.defaultProps = {
+Dropdown2.defaultProps = {
   placeholder: "Select an option",
 };
 

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import "../../../assets/css/addItem.css";
-import Dropdown from "../../../components/dropdowns.jsx";
 import { fetchAllInventoryCategories } from '../../../services/InventoryServices.jsx';
 import axiosClient from '../../../axios-client.js';
 import { isEmptyOrSpaces, notify } from '../../../assets/js/utils.jsx';
+import Dropdown2 from '../../../components/dropdowns2.jsx';
 
 export default function AddItem() {
     const [categoryOptions, setCategoryOptions] = useState(null);
@@ -36,12 +36,6 @@ export default function AddItem() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        // if(isEmptyOrSpaces(categoryValue) || isEmptyOrSpaces(itemName) ||
-        // isEmptyOrSpaces(itemDesc) || itemImage == null) {
-        //     notify('error', 'Please fill up all the fields.', 'top-center', 3000);
-        //     return;
-        // }
         
         const formData = new FormData();
         formData.append('category', categoryValue);
@@ -49,12 +43,6 @@ export default function AddItem() {
         formData.append('stock', itemStock);
         formData.append('desc', itemDesc);
         formData.append('img', itemImage);
-
-        // console.log(categoryValue);
-        // console.log(itemName);
-        // console.log(itemStock);
-        // console.log(itemDesc);
-        // console.log(itemImage);
 
         axiosClient.post('/add-inventory-item', formData)
         .then(({data}) => {
@@ -88,7 +76,7 @@ export default function AddItem() {
                         {/* Right Side - Dropdown and Text Fields */}
                         <div className="addItemDetails">
                             <label htmlFor="category">Category</label>
-                            <Dropdown
+                            <Dropdown2
                                 options={categoryOptions}
                                 name="category"
                                 onChange={setCategoryValues}

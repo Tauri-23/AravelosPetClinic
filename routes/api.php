@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AppointmentsController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\inventoryCategoriesController;
 use App\Http\Controllers\Api\InventoryController;
@@ -48,3 +49,15 @@ Route::post('/add-inventory-item', [InventoryController::class,'createInventoryI
 */
 Route::post('/add-inventory-categories', [inventoryCategoriesController::class,'createCategory']);
 Route::get('/get-all-inventory-categories', [inventoryCategoriesController::class,'getAllCategories']);
+
+
+
+
+
+/*
+|----------------------------------------
+| Appointments
+|----------------------------------------
+*/
+Route::get('/get-all-appointments-where-client/{clientId}', [AppointmentsController::class,'getAllAppointmentWhereClient']);
+Route::post('/add-appointment', [AppointmentsController::class,'createAppointment']);
