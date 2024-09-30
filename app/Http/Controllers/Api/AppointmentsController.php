@@ -24,6 +24,7 @@ class AppointmentsController extends Controller
         $appointmentId = $this->generateId->generate(appointments::class, 12);
         $appointment = new appointments();
         $appointment->id = $appointmentId;
+        $appointment->client = $request->client;
         $appointment->pet = $request->pet;
         $appointment->service = $request->service;
         $appointment->date_time = $request->dateTime;

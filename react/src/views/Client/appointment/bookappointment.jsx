@@ -6,6 +6,7 @@ import CustomToolbar from "../../../components/custom_toolbar.jsx";
 import { formatDateForMySQL, isEmptyOrSpaces, notify } from "../../../assets/js/utils.jsx";
 import axiosClient from "../../../axios-client.js";
 import { useModal } from "../../../contexts/ModalContext.jsx";
+import { useStateContext } from "../../../contexts/ContextProvider.jsx";
 
 export default function BookAppointment() {
     // VALIDATION:
@@ -16,6 +17,7 @@ export default function BookAppointment() {
     // NO OVERLAP APPOINTMENTS
     const navigate = useNavigate(); // Initialize useNavigate
     const {showModal} = useModal();
+    const {user} = useStateContext();
 
     const petOptions = [
         { id: 1, name: "Chuchay" },
@@ -51,6 +53,7 @@ export default function BookAppointment() {
         const formData = new FormData();
         formData.append("dateTime", dateUnformatted);
         formData.append("pet", selectedPet);
+        formData.append('client', user.id);
         formData.append("service", selectedService);
 
         axiosClient.post('/add-appointment', formData)
