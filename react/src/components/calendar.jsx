@@ -2,7 +2,7 @@ import "../assets/css/calendar.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { useEffect, useState } from "react";
 import { useStateContext } from "../contexts/ContextProvider";
 import { fetchAllClientAppointments } from "../services/AppointmentServices";
@@ -37,14 +37,14 @@ export default function ClientCalendar({ onDateSelect, calendarView, CustomToolb
 
     useEffect(() => {
         setEvents(appointments.map(appointment => ({
-            start: appointment.date_time, // You might need to format this depending on your UI library
-            end: appointment.date_time,   // Same for end, if it's the same as start, it'll be a single point event
+            start: moment(appointment.date_time, "YYYY-MM-DD HH:mm:ss","Asia/Manila").toDate(), // Format and convert to Date
+            end: moment(appointment.date_time, "YYYY-MM-DD HH:mm:ss","Asia/Manila").toDate(),   // Same for end
             title: `${appointment.service} ${appointment.pet}`
         })));
     }, [appointments]);
 
 
-    /* 
+    /*
     | Debugging
     */
     useEffect(() => {
@@ -75,7 +75,7 @@ export default function ClientCalendar({ onDateSelect, calendarView, CustomToolb
             return; // Exit if the selected day is Tuesday
         }
 
-        const selectedDate = start.toISOString(); // Get ISO string for full date
+        const selectedDate = moment.tz(start, "Asia/Manila").toISOString();
         onDateSelect(selectedDate); // Call the callback function with the selected date
     };
 

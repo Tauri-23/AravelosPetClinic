@@ -12,7 +12,7 @@ export default function ClientIndex() {
                     <img src="/assets/media/pictures/dog.png" className="dog"/>
                     <div className = "banner-text">
                         <div className = "small1 anybody">Keepin' their furry tails waggin' at</div>
-                        <div className = "big bold anybody">Arevalo's Animal Clinic</div>
+                        <div className = "big-f bold anybody">Arevalo's Animal Clinic</div>
                     </div>
                 </div>
                 <div className = "details-sec">

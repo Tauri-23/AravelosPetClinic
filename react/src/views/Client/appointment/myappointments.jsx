@@ -7,7 +7,7 @@ export default function MyAppointments() {
 
     <div className = "page">
         <div className="bg book-appointment gen-margin">
-            <div className="mini-nav bottom-margin"><div className="anybody medium bold">My Appointment</div><div className="separator"></div><Link to={'../BookAppointment'}><div className="anybody small semi-bold">Book Appointment</div></Link></div>
+            <div className="mini-nav bottom-margin"><div className="anybody medium-f bold">My Appointment</div><div className="separator left-margin-s right-margin-s"></div><Link to={'../BookAppointment'}><div className="anybody small-f semi-bold">Book Appointment</div></Link></div>
             <div className="myappt small-form">
                 sasda
             </div>

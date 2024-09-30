@@ -17,7 +17,6 @@
 .separator{
     height: 33px;
     width: 1px;
-    margin-left: 1vw;
     background-color: #1D3675;
 }
 .main-button, .sub-button{

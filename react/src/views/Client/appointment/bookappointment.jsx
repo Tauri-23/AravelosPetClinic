@@ -2,14 +2,18 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../../assets/css/bookappointment.css";
 import ClientCalendar from "../../../components/calendar.jsx";
-import Dropdown from "../../../components/dropdowns.jsx";
-import Button from "../../../components/button.jsx";
 import CustomToolbar from "../../../components/custom_toolbar.jsx";
 import { formatDateForMySQL, isEmptyOrSpaces, notify } from "../../../assets/js/utils.jsx";
 import axiosClient from "../../../axios-client.js";
 import { useModal } from "../../../contexts/ModalContext.jsx";
 
 export default function BookAppointment() {
+    // VALIDATION:
+    // 30 MINUTES CHECKUP PARASITIC CONTROL VACINNATION DEWORMING
+    // 1 HR GROOMING
+    // ONLY 8AM TO 3PM
+    // CANT BOOK 3PM APPOINTMENT BC LAGPAS NA
+    // NO OVERLAP APPOINTMENTS
     const navigate = useNavigate(); // Initialize useNavigate
     const {showModal} = useModal();
 
@@ -25,7 +29,7 @@ export default function BookAppointment() {
         { id: "vaccination", label: "Vaccination" },
     ];
     const schedOptions = [
-        { value: "month", label: "By Month" },
+        { value: "month", label: "By Day" },
         { value: "week", label: "By Day Timeslot" },
     ];
 
@@ -33,22 +37,19 @@ export default function BookAppointment() {
     const [submitBtnActive, setSubmitBtnActive] = useState(false);
 
     // selecteds
-    const [selectedDateTime, setSelectedDateTime] = useState("");
+    const [selectedDateTime, setSelectedDateTime] = useState(null);
     const [calendarView, setCalendarView] = useState("month"); // Default to "month" view // State to hold calendar view
     const [selectedPet, setSelectedPet] = useState('');
     const [selectedService, setSelectedService] = useState('');
+    const [dateUnformatted, setDateUnformatted] = useState(null); // Add this line for unformatted date
 
     // State to hold submission message
     const [submissionMessage, setSubmissionMessage] = useState("");
-    
-
-    
-    
 
     // Handle form submission
     const handleSubmitPost = () => {
         const formData = new FormData();
-        formData.append("dateTime", formatDateForMySQL(selectedDateTime));
+        formData.append("dateTime", dateUnformatted);
         formData.append("pet", selectedPet);
         formData.append("service", selectedService);
 
@@ -56,7 +57,7 @@ export default function BookAppointment() {
         .then(({data}) => {
             if(data.status === 200) {
                 notify('success', data.message, 'top-center', 3000);
-                navigate("MyAppointments"); // Reset selected date and time
+                navigate("MyAppointments");
             } else {
                 notify('success', data.message, 'top-center', 3000);
             }
@@ -66,20 +67,22 @@ export default function BookAppointment() {
     const handleSubmit = (e) => {
         e.preventDefault();
         showModal('AgentDelListingConfirmationModal1', {handleYesConfirmationPost: handleSubmitPost});
-        
+
     };
 
-    // Function to handle the selected date from ClientCalendar
     const handleDateSelect = (dateTime) => {
         const date = new Date(dateTime);
         if (calendarView === "month") {
+            setDateUnformatted(date.toISOString().slice(0, 10));
             const formattedDate = date.toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
+                timeZone: 'Asia/Manila'
             });
-            setSelectedDateTime(formattedDate); // Update selected date state
-        } else if (calendarView === "time") {
+            setSelectedDateTime(formattedDate);
+        } else if (calendarView === "week") {
+            const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000); //CONVERT TO UTC >:(
             const formattedDateTime = date.toLocaleString('en-US', {
                 year: 'numeric',
                 month: 'long',
@@ -87,12 +90,16 @@ export default function BookAppointment() {
                 hour: 'numeric',
                 minute: 'numeric',
                 hour12: true,
+                timeZone: 'Asia/Manila'
             });
-            setSelectedDateTime(formattedDateTime); // Update selected date and time state
+            setSelectedDateTime(formattedDateTime);
+            setDateUnformatted(localDate.toISOString().slice(0, 19).replace('T', ' '));
+             alert(date);
         }
     };
 
-    /* 
+
+    /*
     |Degubbing
     */
     // useEffect(() => {
@@ -116,14 +123,14 @@ export default function BookAppointment() {
     const modalText = "Are you sure you want to book this appointment?";
     const leftBTNLBL = "Cancel";
     const rightBTNLBL = "Confirm";
-    const leftBTN = "sub-button"; // Optional: Customize class
-    const rightBTN = "main-button"; // Optional: Customize class
+    const leftBTN = "sub-button";
+    const rightBTN = "main-button";
     return (
         <div className="page">
             <div className="bg book-appointment gen-margin">
                 <div className="mini-nav bottom-margin">
-                    <div className="anybody medium bold">Book Appointment</div>
-                    <div className="separator"></div>
+                    <div className="anybody medium-f bold">Book Appointment</div>
+                    <div className="separator left-margin-s right-margin-s"></div>
                     <Link to={'MyAppointments'}>
                         <div className="anybody small-f semi-bold">My Appointments</div>
                     </Link>
@@ -135,7 +142,7 @@ export default function BookAppointment() {
                         CustomToolbar={CustomToolbar} // Pass the custom toolbar here
                     />
                     <div className="bookapt small-form">
-                        <div className="bottom-margin semi-bold anybody semi-medium">Appointment Details</div>
+                        <div className="bottom-margin semi-bold anybody semi-medium-f">Appointment Details</div>
                         <form className="d-flex row"onSubmit={handleSubmit}>
                             <div className="bottom-margin-s"><span className="semi-bold">Date: </span><span className="bottom-margin">{selectedDateTime || 'Select a date'}</span></div>
 
@@ -169,26 +176,13 @@ export default function BookAppointment() {
                             </div>
                             <div className="d-flex justify-content-center">
 
-                            <button 
+                            <button
                                 disabled={!submitBtnActive}
                                 className={`primary-btn-blue1 ${submitBtnActive ? '' : 'disabled'}`}
                                 onClick={handleSubmit}
                             >
                                 Book Appointment
                             </button>
-
-                            {/* <Button
-                                    label="Book Appointment"
-                                    onClick={handleSubmit}
-                                    validate={validate}
-                                    className="main-button top-margin" // Optional: Add additional class
-                                    modalHeader={modalHeader} // Pass modalHeader
-                                    modalText={modalText} // Pass modalText
-                                    leftBTN={leftBTN} // Pass left button class
-                                    rightBTN={rightBTN} // Pass right button class
-                                    leftBTNLBL={leftBTNLBL} // Pass left button label
-                                    rightBTNLBL={rightBTNLBL} // Pass right button label
-                                /> */}
                             </div>
                         </form>
                     </div>
