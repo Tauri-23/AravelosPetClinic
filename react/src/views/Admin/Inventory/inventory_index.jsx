@@ -90,15 +90,15 @@ export default function AdminInventoryIndex() {
 
   return (
     <div className="page">
-      <div className="inventory-tracking gen-margin">
-        <h1>Inventory Tracking</h1>
+      <div className="inventory-tracking  gen-margin">
+        <h1 className='anybody' >Inventory Tracking</h1>
 
         <div className="d-flex inv small-form">
 
           {/* Sidebar with Categories */}
           <div className="sidebar">
             {/* Header with icons */}
-            <div className="category-header">
+            <div className="category-header anybody">
               <h3>Categories</h3>
             </div>
             <div className="icons">
@@ -155,7 +155,7 @@ export default function AdminInventoryIndex() {
               <div className="admin-inventory-contents left-margin">
                 {inventoryItems?.length > 0 && inventoryItems.map(item =>
                   item.category == activeCategory &&
-                  (<InventoryBox key={item.id} handleInventoryBoxClick={handleInventoryBoxClick} itemName={item.name} itemImage={item.picture} itemQuantity={item.qty} />)
+                  (<InventoryBox key={item.id} handleInventoryBoxClick={handleInventoryBoxClick} itemName={item.name} itemImage={item.picture} itemQuantity={item.qty} itemDescription={item.desc}/>)
                 )}
 
 

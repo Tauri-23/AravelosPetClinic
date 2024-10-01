@@ -10,17 +10,16 @@ export default function AddItem() {
     const [categoryValue, setCategoryValues] = useState('');
     const [itemName, setItemName] = useState('');
     const [itemStock, setItemStock] = useState(0);
-    const [itemDesc, setItemDesc] = useState('');
+    const [itemDesc, setItemDesc] = useState(''); // Holds item description
     const [itemImagePrev, setItemImagePrev] = useState(null);
     const [itemImage, setItemImage] = useState(null);
 
-
     useEffect(() => {
-        const getAllCategories = async() => {
+        const getAllCategories = async () => {
             try {
                 const data = await fetchAllInventoryCategories();
                 setCategoryOptions(data);
-            } catch(error) { console.error(error)}
+            } catch (error) { console.error(error) }
         }
 
         getAllCategories();
@@ -41,20 +40,20 @@ export default function AddItem() {
         formData.append('category', categoryValue);
         formData.append('name', itemName);
         formData.append('stock', itemStock);
-        formData.append('desc', itemDesc);
+        formData.append('desc', itemDesc); // Append the description
         formData.append('img', itemImage);
 
         axiosClient.post('/add-inventory-item', formData)
-        .then(({data}) => {
-            if(data.status === 200) {
-                notify('success', data.message, 'top-center', 3000);
-            } else {
-                notify('error', data.message, 'top-center', 3000);
-            }
-        }).catch(error => {console.error(error)})
+            .then(({ data }) => {
+                if (data.status === 200) {
+                    notify('success', data.message, 'top-center', 3000);
+                } else {
+                    notify('error', data.message, 'top-center', 3000);
+                }
+            }).catch(error => { console.error(error) })
     };
 
-    if(categoryOptions) {
+    if (categoryOptions) {
         return (
             <div className='page'>
                 <div className='inventory-tracking gen-margin'>
@@ -103,7 +102,7 @@ export default function AddItem() {
                             />
 
                             <label htmlFor="itemDescription">Item Description</label>
-                            <textarea style={{resize: "none"}}
+                            <textarea style={{ resize: "none" }}
                                 name="itemDescription"
                                 placeholder="Item Description"
                                 value={itemDesc}
@@ -121,6 +120,6 @@ export default function AddItem() {
         );
     }
     else {
-        <>Loading</>
+        return <>Loading</>;
     }
 }
