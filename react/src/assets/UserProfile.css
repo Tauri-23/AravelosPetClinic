@@ -1,0 +1,111 @@
+/* Modal container */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent background */
+  z-index: 1000;
+}
+
+/* Modal content box */
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+  position: relative;
+  text-align: center;
+}
+
+/* Input styles in modal */
+.modal-content input {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Save and Cancel button styles */
+.save-button, .cancel-button {
+  padding: 10px 20px;
+  margin: 10px 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.save-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Add pet button styling */
+.pet-profile.add-pet {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  border: 2px dashed #999;
+  border-radius: 10px;
+}
+
+.add-icon {
+  font-size: 36px;
+  color: #666;
+}
+
+/* Pet profile styles */
+.pets-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.pet-profile {
+  margin: 10px;
+  text-align: center;
+}
+
+.pet-picture {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.pet-picture-large {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+/* Add spacing between input fields */
+input {
+  margin-bottom: 10px;
+}
+
+/* Modal close button (optional to add 'x' button) */
+.modal-content .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #555;
+}
