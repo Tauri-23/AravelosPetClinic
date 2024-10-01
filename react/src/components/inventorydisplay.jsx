@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchCategoryData } from "../components/inventory_box"; // Correct the path if necessary
 
+const {showModal} = useModal();
+
+
+showModal('',{});
+
 const InventoryDisplay = () => {
   const [items, setItems] = useState([]);
   const { category } = useParams(); // Get the category from the URL
@@ -24,7 +29,7 @@ const InventoryDisplay = () => {
           items.map((item) => (
             <div key={item.id} className="inventory-box">
               {item.name}
-            </div>
+            </div>  
           ))
         ) : (
           <p>No items available for this category.</p>

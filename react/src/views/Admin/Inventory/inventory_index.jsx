@@ -84,6 +84,10 @@ export default function AdminInventoryIndex() {
     setSearchQuery(e.target.value);
   };
 
+  const handleInventoryBoxClick=(itemName, itemImage, itemQuantity, itemDescription) => {
+    showModal('InventoryBoxModal1', {itemName, itemImage, itemQuantity, itemDescription})
+  }
+
   return (
     <div className="page">
       <div className="inventory-tracking gen-margin">
@@ -126,17 +130,7 @@ export default function AdminInventoryIndex() {
               {categories?.length < 1 && <>No Categories</>}
             </div>
 
-            {/* <div style={{ marginTop: 20 }}>
-              <h4>Add Category</h4>
-              <input
-                className="categoryInput"
-                type="text"
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-                placeholder="New category"
-              />
-              <button onClick={handleAddCategory}>Add</button>
-            </div> */}
+           
           </div>
 
           {/* Right Side with Search and Inventory Display */}
@@ -161,7 +155,7 @@ export default function AdminInventoryIndex() {
               <div className="admin-inventory-contents left-margin">
                 {inventoryItems?.length > 0 && inventoryItems.map(item =>
                   item.category == activeCategory &&
-                  (<InventoryBox key={item.id} itemName={item.name} itemImage={item.picture} itemQuantity={item.qty} />)
+                  (<InventoryBox key={item.id} handleInventoryBoxClick={handleInventoryBoxClick} itemName={item.name} itemImage={item.picture} itemQuantity={item.qty} />)
                 )}
 
 

@@ -1,7 +1,9 @@
 import { AddAppointmentConfirmationModal1 } from "../components/Modals/addAppointmentConfirmationModal1";
 import AddCategoryModal1 from "../components/Modals/addCategoryModal1";
 import AddPetModal1 from "../components/Modals/addPetModal1";
+import InventoryBoxModal1 from "../components/Modals/inventoryBoxModal1";
 import { useModal } from "../contexts/ModalContext";
+
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -21,6 +23,10 @@ const ModalManager = () => {
             case 'AddPetModal1':
                 return <AddPetModal1 {...modalState.props} onClose={hideModal}/>;
 
+            case 'InventoryBoxModal1':
+                return <InventoryBoxModal1 {...modalState.props} onClose={hideModal}/>;
+            
+
 
 
             /*
@@ -38,4 +44,4 @@ const ModalManager = () => {
     )
 }
 
-export default ModalManager
+export default ModalManager;
