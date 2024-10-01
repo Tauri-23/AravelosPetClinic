@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AppointmentsController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\inventoryCategoriesController;
 use App\Http\Controllers\Api\InventoryController;
+use App\Http\Controllers\Api\PetsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -61,3 +62,15 @@ Route::get('/get-all-inventory-categories', [inventoryCategoriesController::clas
 */
 Route::get('/get-all-appointments-where-client/{clientId}', [AppointmentsController::class,'getAllAppointmentWhereClient']);
 Route::post('/add-appointment', [AppointmentsController::class,'createAppointment']);
+
+
+
+
+
+/*
+|----------------------------------------
+| Pets
+|----------------------------------------
+*/
+Route::post('/add-pet', [PetsController::class,'CreatePet']);
+Route::get('/retrieve-pet-where-client/{clientId}', [PetsController::class,'GetPetWhereClient']);

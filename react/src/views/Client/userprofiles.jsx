@@ -1,37 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import "../../assets/css/app.css";
 import "../../assets/UserProfile.css";
+import { useModal } from '../../contexts/ModalContext';
+import axiosClient from '../../axios-client';
+import { notify } from '../../assets/js/utils';
+import { useStateContext } from '../../contexts/ContextProvider';
+import { fetchAllPetsWhereClient } from '../../services/PetServices';
 
 const userprofiles = () => {
-  const [user, setUser] = useState(null);
+  const {showModal} = useModal();
+  const {user} = useStateContext();
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
-  const [showModal, setShowModal] = useState(false); // For any modal visibility
   const [selectedPet, setSelectedPet] = useState(null); // For pet modal
   const [newProfilePicture, setNewProfilePicture] = useState(null); // For user's profile picture
-  const [newPet, setNewPet] = useState({ petName: '', petType: '', petBreed: '', petPicture: '' }); // For new pet details
+  const [pets, setPets] = useState(null);
 
   // Simulate fetching data from the database
   useEffect(() => {
-    const fetchData = async () => {
-      const userData = {
-        profilePicture: 'https://via.placeholder.com/150',
-        name: 'John Doe',
-        email: 'johndoe@example.com',
-        gender: 'Male',
-        birthday: '1990-01-01',
-        address: '123 Main St, Springfield, USA',
-        phone: '+1 123-456-7890',
-        pets: [
-          { petId: 1, petPicture: 'https://via.placeholder.com/100', petName: 'Chuchay', petType: 'Dog', petBreed: 'Golden Retriever' },
-          { petId: 2, petPicture: 'https://via.placeholder.com/100', petName: 'Mark', petType: 'Cat', petBreed: 'Siamese' },
-        ],
-      };
-      setUser(userData);
-      setEditData(userData);
-    };
+    const getAllPets = async() => {
+      try {
+        const data = await fetchAllPetsWhereClient(user.id);
+        setPets(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
-    fetchData();
+    getAllPets();
   }, []);
 
   const handleProfilePictureChange = (e) => {
@@ -57,45 +53,30 @@ const userprofiles = () => {
     setShowModal(true);
   };
 
-  const handlePetInputChange = (e) => {
-    const { name, value } = e.target;
-    setSelectedPet({ ...selectedPet, [name]: value });
-  };
+  const handleAddPetPost = (petName, petType, petBreed, petPic) => {
+    const formData = new FormData();
+    formData.append('client', user.id);
+    formData.append('petName', petName);
+    formData.append('petType', petType);
+    formData.append('petBreed', petBreed);
+    formData.append('pic', petPic);
 
-  const handleSavePet = () => {
-    const updatedPets = user.pets.map((pet) =>
-      pet.petId === selectedPet.petId ? selectedPet : pet
-    );
-    setUser({ ...user, pets: updatedPets });
-    setShowModal(false); // Close the modal after saving
-  };
+    axiosClient.post('/add-pet', formData)
+    .then(({data}) => {
+      if(data.status === 200) {
+        notify('success', data.message, 'top-center', 3000);
+        setPets(prev => 
+          [...prev, data.pet]
+        )
+      } else {
+        notify('error', data.message, 'top-center', 3000);
+      }
+    }).catch(error => console.error(error));
+    
+  }
 
   const handleAddPetClick = () => {
-    setSelectedPet(null); // Reset selected pet (new pet mode)
-    setShowModal(true); // Open modal for adding a new pet
-  };
-
-  const handleModalChange = (e) => {
-    const { name, value } = e.target;
-    setNewPet({ ...newPet, [name]: value });
-  };
-
-  const handleAddPet = () => {
-    if (!newPet.petName || !newPet.petType || !newPet.petBreed) {
-      alert('Please fill all fields');
-      return;
-    }
-
-    const petId = user.pets.length + 1;
-    const newPetData = {
-      petId,
-      petPicture: 'https://via.placeholder.com/100', // Placeholder for now
-      ...newPet,
-    };
-
-    setUser({ ...user, pets: [...user.pets, newPetData] });
-    setShowModal(false); // Close the modal after adding the pet
-    setNewPet({ petName: '', petType: '', petBreed: '', petPicture: '' }); // Reset the form
+    showModal('AddPetModal1', {handleAddPetPost});
   };
 
   const handleCloseModal = () => {
@@ -131,7 +112,7 @@ const userprofiles = () => {
             </>
           ) : (
             <>
-              <h2>{user.name}</h2>
+              <h2>{user.fname} {user.mname} {user.lname}</h2>
               <p>Email: {user.email}</p>
               <p>Gender: {user.gender}</p>
               <p>Birthday: {user.birthday}</p>
@@ -148,14 +129,14 @@ const userprofiles = () => {
       <div className="pet-profiles">
         <h3>Your Pets</h3>
         <div className="pets-container">
-          {user.pets.map((pet) => (
+          {pets?.length > 0 && pets.map((pet) => (
             <div
-              key={pet.petId}
+              key={pet.id}
               className="pet-profile"
               onClick={() => handlePetClick(pet)}
             >
-              <img src={pet.petPicture} alt={pet.petName} className="pet-picture" />
-              <p>{pet.petName}</p>
+              <img src={`/assets/media/pets/${pet.picture}`} alt={pet.name} className="pet-picture" />
+              <p>{pet.name}</p>
             </div>
           ))}
           {/* Add New Pet button */}
@@ -167,7 +148,7 @@ const userprofiles = () => {
       </div>
 
       {/* Modal for adding/editing pets */}
-      {showModal && (
+      {/* {showModal && (
         <div className="modal">
           <div className="modal-content">
             {selectedPet ? (
@@ -227,7 +208,7 @@ const userprofiles = () => {
             <button onClick={handleCloseModal} className="cancel-button">Close</button>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

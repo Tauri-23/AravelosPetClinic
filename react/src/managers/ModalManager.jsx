@@ -1,5 +1,6 @@
 import { AddAppointmentConfirmationModal1 } from "../components/Modals/addAppointmentConfirmationModal1";
 import AddCategoryModal1 from "../components/Modals/addCategoryModal1";
+import AddPetModal1 from "../components/Modals/addPetModal1";
 import { useModal } from "../contexts/ModalContext";
 
 const ModalManager = () => {
@@ -16,6 +17,9 @@ const ModalManager = () => {
 
             case 'AddCategoryModal1':
                 return <AddCategoryModal1 {...modalState.props} onClose={hideModal}/>;
+
+            case 'AddPetModal1':
+                return <AddPetModal1 {...modalState.props} onClose={hideModal}/>;
 
 
 
