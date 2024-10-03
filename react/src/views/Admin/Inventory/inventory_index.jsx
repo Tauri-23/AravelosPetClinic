@@ -88,6 +88,35 @@ export default function AdminInventoryIndex() {
     showModal('InventoryBoxModal1', {itemName, itemImage, itemQuantity, itemDescription})
   }
 
+  const handleEditCategoryPost = (updatedCategoryId, updatedCategoryName) => {
+    const formData = new FormData();
+    formData.append('id', updatedCategoryId);
+    formData.append('name', updatedCategoryName);
+
+    axiosClient.post('/edit-inventory-categories', formData)
+      .then(({ data }) => {
+        if (data.status === 200) {
+          setCategories((prev) =>
+            prev.map((category) =>
+              category.id === updatedCategoryId
+                ? { ...category, name: updatedCategoryName }
+                : category
+            )
+          );
+          notify('success', data.message, 'top-center', 3000);
+        } else {
+          notify('error', data.message, 'top-center', 3000);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  
+  const handleEditCategoryClick = () => {
+    showModal('EditCategoryModal1', {categories, handleEditCategoryPost})
+  }
+
   return (
     <div className="page">
       <div className="inventory-tracking  gen-margin">
@@ -112,7 +141,7 @@ export default function AdminInventoryIndex() {
                   src="/assets/media/icons/edit_btn.svg" // Add your edit icon path here
                   alt="Edit"
                   title="Edit Categories"
-                  // Add any functionality if needed for editing categories
+                  onClick={() => handleEditCategoryClick()} // Add any functionality if needed for editing categories
                 />
               </div>
 

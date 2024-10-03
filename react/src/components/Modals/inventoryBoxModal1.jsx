@@ -15,7 +15,7 @@ const InventoryBoxModal1 = ({ itemName, itemImage, itemQuantity, itemDescription
                         <img
                             src="/assets/media/icons/edit_btn.svg"
                             alt="Edit"
-                            title="Edit Item"
+                            title="Edit Item Details"
                         />
                     </div>
                 </div>
