@@ -14,14 +14,25 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->string('id', 12)->primary();
             $table->string('client', 6)->nullable();
-            $table->string('pet');
+            $table->string('pet', 6)->nullable();
             $table->string('service');
             $table->dateTime('date_time');
+            $table->dateTime('approved_at');
+            $table->dateTime('rejected_at');
+            $table->dateTime('cancelled_at');
+            $table->text('reason');
+            $table->string('status');
             $table->timestamps();
 
             $table->foreign('client')
             ->references('id')
             ->on('user_clients')
+            ->nullOnDelete()
+            ->cascadeOnUpdate();
+
+            $table->foreign('pet')
+            ->references('id')
+            ->on('pets')
             ->nullOnDelete()
             ->cascadeOnUpdate();
         });
