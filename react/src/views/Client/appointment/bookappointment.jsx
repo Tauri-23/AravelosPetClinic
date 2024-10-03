@@ -7,6 +7,7 @@ import { formatDateForMySQL, isEmptyOrSpaces, notify } from "../../../assets/js/
 import axiosClient from "../../../axios-client.js";
 import { useModal } from "../../../contexts/ModalContext.jsx";
 import { useStateContext } from "../../../contexts/ContextProvider.jsx";
+import { fetchAllPetsWhereClient } from '../../../services/PetServices';
 
 export default function BookAppointment() {
     // VALIDATION:
@@ -18,7 +19,7 @@ export default function BookAppointment() {
     const navigate = useNavigate(); // Initialize useNavigate
     const {showModal} = useModal();
     const {user} = useStateContext();
-
+    const [pets, setPets] = useState(null);
     const petOptions = [
         { id: 1, name: "Chuchay" },
         { id: 2, name: "Piola" },
@@ -55,6 +56,7 @@ export default function BookAppointment() {
         formData.append("pet", selectedPet);
         formData.append('client', user.id);
         formData.append("service", selectedService);
+        formData.append("status", "Pending");
 
         axiosClient.post('/add-appointment', formData)
         .then(({data}) => {
@@ -69,7 +71,7 @@ export default function BookAppointment() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        showModal('AgentDelListingConfirmationModal1', {handleYesConfirmationPost: handleSubmitPost});
+        showModal('AddAppointmentConfirmationModal1', {handleYesConfirmationPost: handleSubmitPost});
 
     };
 
@@ -84,8 +86,6 @@ export default function BookAppointment() {
                 day: 'numeric',
                 timeZone: 'Asia/Manila'
             });
-
-            alert(localDate, 'andaaaa', date);
             setDateUnformatted(localDate.toISOString().slice(0, 19).replace('T', ' '));
             setSelectedDateTime(formattedDate);
         } else if (calendarView === "week") {
@@ -101,7 +101,6 @@ export default function BookAppointment() {
             });
             setSelectedDateTime(formattedDateTime);
             setDateUnformatted(localDate.toISOString().slice(0, 19).replace('T', ' '));
-            alert('localDate: '+localDate+ ' and Date: '+ date);
         }
     };
 
@@ -117,6 +116,19 @@ export default function BookAppointment() {
     // }, [selectedService])
 
     // Check the btn state
+
+    useEffect(() => {
+        const getAllPets = async() => {
+          try {
+            const data = await fetchAllPetsWhereClient(user.id);
+            setPets(data);
+          } catch (error) {
+            console.error(error);
+          }
+        }
+
+        getAllPets();
+      }, []);
     useEffect(() => {
         if(isEmptyOrSpaces(selectedDateTime) || isEmptyOrSpaces(selectedPet) || isEmptyOrSpaces(selectedService)) {
             setSubmitBtnActive(false);
@@ -165,17 +177,18 @@ export default function BookAppointment() {
                             <div className="d-flex flex-direction-y gap4 mar-bottom-3">
                                 <label htmlFor="petSelect" className="choose semi-bold">Choose Pet</label>
                                 <select id="petSelect" value={selectedPet} onChange={(e) => setSelectedPet(e.target.value)}>
-                                    <option value={''}>Select pet</option>
-                                    {petOptions.map(pet=> (
-                                        <option key={pet.id} value={pet.id}>{pet.name} {pet.id}</option>
+                                    <option value={''}>Select a pet</option>
+                                    {pets?.length > 0 && pets.map(pet => (
+                                        <option key={pet.id} value={pet.id}>{pet.name}</option>
                                     ))}
+                                    {pets?.length < 1 && <option value={''}>No registered pets</option>}
                                 </select>
                             </div>
 
                             <div className="d-flex flex-direction-y gap4 mar-bottom-3">
                                 <label htmlFor="serviceType" className="choose semi-bold">Choose Service</label>
                                 <select id="serviceType" value={selectedService} onChange={(e) => setSelectedService(e.target.value)}>
-                                    <option value={''}>Select service</option>
+                                    <option value={''}>Select a service</option>
                                     {serviceOptions.map(service=> (
                                         <option key={service.id} value={service.id}>{service.label}</option>
                                     ))}

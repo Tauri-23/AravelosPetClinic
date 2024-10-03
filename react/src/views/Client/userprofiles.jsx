@@ -65,14 +65,14 @@ const userprofiles = () => {
     .then(({data}) => {
       if(data.status === 200) {
         notify('success', data.message, 'top-center', 3000);
-        setPets(prev => 
+        setPets(prev =>
           [...prev, data.pet]
         )
       } else {
         notify('error', data.message, 'top-center', 3000);
       }
     }).catch(error => console.error(error));
-    
+
   }
 
   const handleAddPetClick = () => {

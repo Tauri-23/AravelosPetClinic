@@ -16,12 +16,12 @@ const ModalManager = () => {
             |   AGENT
             */
             // Listings
-            case 'AgentDelListingConfirmationModal1':
+            case 'AddAppointmentConfirmationModal1':
                 return <AddAppointmentConfirmationModal1 {...modalState.props} onClose={hideModal}/>;
 
             case 'AddCategoryModal1':
                 return <AddCategoryModal1 {...modalState.props} onClose={hideModal}/>;
-            
+
             case 'EditCategoryModal1':
                 return <EditCategoryModal1 {...modalState.props} onClose={hideModal}/>;
 
@@ -30,10 +30,10 @@ const ModalManager = () => {
 
             case 'InventoryBoxModal1':
                 return <InventoryBoxModal1 {...modalState.props} onClose={hideModal}/>;
-            
+
             case 'DeleteCategoryModal1':
                     return <DeleteCategoryModal1     {...modalState.props} onClose={hideModal}/>;
-                
+
 
 
 

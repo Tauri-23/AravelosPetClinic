@@ -57,9 +57,10 @@
     visibility: hidden;
     background-color: #1D3675;
     height: .2vw;
-    width: 1.7vw;
+    width: 40%;
     border-radius: 1vw;
     margin: 0.1vw auto;
+    transition: width 800ms ease;
 }
 .nv-line{
     height: .5vw;

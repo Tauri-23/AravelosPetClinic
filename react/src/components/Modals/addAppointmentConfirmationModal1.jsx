@@ -12,7 +12,7 @@ export const AddAppointmentConfirmationModal1 = ({ handleYesConfirmationPost, on
 
             {/* Box of modal */}
             <div className="modal-box3 inter">
-                <div className="circle-btn1 semi-big-f bottom-margin-s" >
+                <div className="circle-btn1 semi-medium-f bottom-margin-s" >
                     <Icon.X onClick={onClose}/>
                 </div>
 

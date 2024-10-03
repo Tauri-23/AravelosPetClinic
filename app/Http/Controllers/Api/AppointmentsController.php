@@ -28,6 +28,7 @@ class AppointmentsController extends Controller
         $appointment->pet = $request->pet;
         $appointment->service = $request->service;
         $appointment->date_time = $request->dateTime;
+        $appointment->status = $request->status;
 
         if($appointment->save())
         {
