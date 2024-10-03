@@ -114,9 +114,32 @@ export default function AdminInventoryIndex() {
   };
   
   const handleEditCategoryClick = () => {
-    showModal('EditCategoryModal1', {categories, handleEditCategoryPost})
+    showModal('EditCategoryModal1', {categories, handleEditCategoryPost, handleDeleteCategoryClick})
   }
-
+  
+  const handleDeleteCategoryClick = (categoryId) => {
+    axiosClient.delete(`/delete-inventory-categories/${categoryId}`)
+      .then(({ data }) => {
+        if (data.status === 200) {
+          // Update the state to remove the deleted category
+          setCategories(prevCategories => 
+            prevCategories.filter(category => category.id !== categoryId)
+          );
+          // Notify the user of successful deletion
+          notify('success', data.message, 'top-center', 3000);
+        } else {
+          // Notify the user of an unsuccessful attempt
+          notify('error', data.message, 'top-center', 3000);
+        }
+      })
+      .catch((error) => {
+        // Log the error to the console for debugging
+        console.error("Error deleting category:", error);
+        // Notify the user of the error
+        notify('error', 'Failed to delete category. Please try again.', 'top-center', 3000);
+      });
+  };
+  
   return (
     <div className="page">
       <div className="inventory-tracking  gen-margin">
