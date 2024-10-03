@@ -17,11 +17,13 @@ return new class extends Migration
             $table->string('pet', 6)->nullable();
             $table->string('service');
             $table->dateTime('date_time');
-            $table->dateTime('approved_at');
-            $table->dateTime('rejected_at');
-            $table->dateTime('cancelled_at');
-            $table->text('reason');
+
+            $table->dateTime('approved_at')->nullable();
+            $table->dateTime('rejected_at')->nullable();
+            $table->dateTime('cancelled_at')->nullable();
+            $table->text('reason')->nullable();
             $table->string('status');
+            
             $table->timestamps();
 
             $table->foreign('client')
