@@ -7,7 +7,13 @@ export const ConfirmActionModal1 = ({ handlePost, onClose, handleFunction}) => {
     const renderContent = () => {
         switch (handleFunction) {
             case 'handleCancelPost':
-                return <p>Are you sure you want to cancel this appointment?</p>;
+                return(
+                    <div className="text-center mar-bottom-1 d-flex flex-direction-y ">
+                        <div className="text-m1 fw-bold semi-medium-f w-100 anybody">Cancel Appointment?</div><hr></hr>
+                        <div className="text-m2 w-100 m-auto">Please provide a reason for cancelling your appointment.</div>
+
+                    </div>
+                );
             case 'handleAddPost':
                 return <p>Are you sure you want to add this appointment?</p>;
             // Add more cases for other functions as needed

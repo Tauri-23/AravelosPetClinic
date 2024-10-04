@@ -13,7 +13,7 @@ const InventoryBoxModal1 = ({ itemName, itemImage, itemQuantity, itemDescription
 
     return (
         <div className="modal2"> {/* Updated modal2 class for consistency */}
-            <div className="modal-content1">
+            <div className="box-modal modal-content1">
                 <div className="circle-btn1 semi-medium-f">
                     <Icon.X className="pointer" onClick={onClose} />
                 </div>

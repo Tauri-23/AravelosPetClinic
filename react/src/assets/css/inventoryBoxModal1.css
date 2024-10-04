@@ -20,7 +20,7 @@
     padding: 0 10px; /* Added horizontal padding */
 }
 
-.modal-content1 {
+.box-modal.modal-content1 {
     background-color: white;
     padding: 25px;
     border-radius: var(--rounded_conts);
