@@ -1,41 +1,101 @@
 import { useState } from "react";
 import * as Icon from "react-bootstrap-icons";
-import "../../assets/css/editCategoryModal1.css"; // Import the CSS file
+import "../../assets/css/editItemModal1.css"; // Import the CSS file
+import EditItemConfirmationModal1 from "./editItemConfirmationModal1"; // Import the confirmation modal
 
-export default function EditItemModal1({ item, onClose, handleEditItemClick }) {
+export default function EditItemModal1({ item, onClose, handleSaveChangesClick }) {
+  const [editedItem, setEditedItem] = useState({ ...item });
+  const [showConfirmation, setShowConfirmation] = useState(false); // New state for the confirmation modal
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedItem({
+      ...editedItem,
+      [name]: value,
+    });
+  };
+
+  // Trigger the confirmation modal
+  const handleSaveClick = () => {
+    setShowConfirmation(true); // Show the confirmation modal
+  };
+
+  // Confirm and save changes
+  const handleConfirmSave = () => {
+    handleSaveChangesClick(editedItem); // Save the item changes
+    setShowConfirmation(false); // Close the confirmation modal
+    onClose(); // Close the edit modal (optional)
+  };
+
+  // Cancel the confirmation modal
+  const handleCancelSave = () => {
+    setShowConfirmation(false); // Close the confirmation modal
+  };
+
   return (
-    <div className="edit-modal">
-      <div className="edit-modal-box">
-        <div className="circle-btn1 semi-medium-f">
-          <Icon.X className="pointer" onClick={onClose} />
-        </div>
+    <div className="modal-overlay">
+      <div className="edit-modal">
+        <div className="edit-modal-box">
+          <div className="circle-btn1 semi-medium-f">
+            <Icon.X className="pointer" onClick={onClose} />
+          </div>
 
-        <div className="text-center mar-bottom-1">
-          <div className="text-m1 anybody fw-bold">Edit Item</div>
-        </div>
+          <div className="text-center mar-bottom-1">
+            <div className="text-m1 anybody fw-bold">Edit Item</div>
+          </div>
 
-        {/* Item Details */}
-        <div className="category-list">
-          <div className="category-item">
-            <span>Name: {item.name}</span>
-          </div>
-          <div className="category-item">
-            <span>Quantity: {item.quantity}</span>
-          </div>
-          <div className="category-item">
-            <span>Description: {item.description}</span>
-          </div>
-          <div className="button-container">
-            <img
-              className="small-button edit-btn"
-              src="/assets/media/icons/edit_btn.svg" // Add your edit icon path here
-              alt="Edit"
-              title="Edit Item"
-              onClick={() => handleEditItemClick(item.id, item.name)}
-            />
+          {/* Item Details with editable inputs */}
+          <div className="category-list">
+            <div className="category-item">
+              <span>Name: </span>
+              <input
+                type="text"
+                name="name"
+                value={editedItem.name}
+                onChange={handleInputChange}
+                className="edit-input"
+              />
+            </div>
+            <div className="category-item">
+              <span>Quantity: </span>
+              <input
+                type="number"
+                name="quantity"
+                value={editedItem.quantity}
+                onChange={handleInputChange}
+                className="edit-input"
+              />
+            </div>
+            <div className="category-item">
+              <span>Description: </span>
+              <textarea
+                name="description"
+                value={editedItem.description}
+                onChange={handleInputChange}
+                className="edit-input"
+              />
+            </div>
+
+            {/* Save Changes Button */}
+            <div className="savebutton">
+              <button
+                className="editItemsave"
+                onClick={handleSaveClick} // Show the confirmation modal
+              >
+                Save Changes
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      {showConfirmation && (
+        <EditItemConfirmationModal1
+          onConfirm={handleConfirmSave} // Save the changes if confirmed
+          onCancel={handleCancelSave} // Close the confirmation modal on cancel
+        />
+      )}
     </div>
   );
 }

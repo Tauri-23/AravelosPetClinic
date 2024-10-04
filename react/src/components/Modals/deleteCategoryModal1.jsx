@@ -9,7 +9,7 @@ export default function DeleteCategoryModal1({ onConfirm, onCancel, categoryName
         <div className="circle-btn1 semi-medium-f">
           <Icon.X className="pointer" onClick={onCancel} />
         </div>
-        <div className="text-center mar-bottom-1">
+        <div className="text-center anybody mar-bottom-1">
           <h4>Confirm Deletion</h4>
         </div>
         <div className="confirmation-text">

@@ -9,7 +9,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Higher than edit modal */
+    z-index: 1000;
 }
 
 /* Edit Modal Styles */
@@ -22,7 +22,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1001; /* Ensures modal is on top of overlay */
+    z-index: 1001; 
 }
 
 .edit-modal-box {
@@ -34,7 +34,7 @@
     overflow-y: auto; /* Enable vertical scrolling for the modal */
     position: relative;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Adds shadow for focus */
-    z-index: 1002; /* Higher than the overlay */
+    z-index: 1000; /* Higher than the overlay */
 }
 
 /* Title Styling */
@@ -55,19 +55,45 @@
 /* Category Item */
 .category-item {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Aligns name and button container */
     align-items: center;
     padding: 5px;
     border-bottom: 1px solid #ccc; /* Separator between items */
 }
 
+/* Category Name */
+.category-item span {
+    margin-right: 8px; /* Slight margin to bring buttons closer */
+}
+
+/* Edit, Save and Delete Button Container */
+.editdeletebtns {
+    display: flex; /* Use flexbox for button alignment */
+    gap: 8px; /* Space between buttons */
+    margin-left: auto; /* Pushes the button container to the far right */
+}
+
 /* Button Styles */
 .edit-btn,
-.delete-btn {
+.delete-btn,
+.save-btn {
     background: none;
     border: none;
     cursor: pointer;
     padding: 5px;
+}
+
+.edit_savebtn {
+    background-color: #007bff; /* Button color */
+    color: white; /* Text color */
+    padding: 3px 6px; /* Smaller padding for a compact size */
+    border-radius: 5px; /* Rounded corners */
+    font-weight: bold; /* Bold text */
+    font-size: 12px; /* Smaller font size */
+}
+
+.edit_savebtn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
 }
 
 .edit-btn {
@@ -86,16 +112,21 @@
     color: #c82333; /* Darker red on hover */
 }
 
-/* Button Container */
-.button-container {
-    display: flex; /* Use flexbox for button alignment */
-    gap: 5px; /* Space between buttons */
-}
-
 /* Small Button Style */
 .small-button {
-    width: 24px;
-    height: 24px;
+    width: 30px; /* Adjust width as needed */
+    height: 30px; /* Adjust height as needed */
     cursor: pointer;
+    display: flex; /* Flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
 }
 
+.edit-input {
+    flex: 1; /* Allow the input to grow */
+    padding: 8px; /* Padding for the input */
+    border: 1px solid #ccc; /* Border for the input */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 14px; /* Font size */
+    margin-right: 10px; /* Space between input and buttons */
+}

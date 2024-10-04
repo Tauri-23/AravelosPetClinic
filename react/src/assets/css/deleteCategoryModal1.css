@@ -1,45 +1,55 @@
 .delete-confirmation-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+}
 
+.modal-box {
+  background: white;
+  padding: 15px; /* Reduce padding to make the modal more compact */
+  border-radius: 12px; /* Slightly larger border-radius for a softer look */
+  text-align: center;
+  width: 320px; /* Reduced width for a smaller modal */
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a slight shadow to elevate the modal */
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* Center the buttons */
+  gap: 10px; /* Add small gap between buttons */
+  margin-top: 10px;
+}
+
+.confirm-delete-button,
+.cancel-delete-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px; /* Reduce padding to make buttons smaller */
+  border-radius: 4px; /* Slightly reduced border-radius */
+  font-size: 14px; /* Smaller text size for compact buttons */
+  cursor: pointer;
+}
+
+.cancel-delete-button {
+  background: #dc3545;
+}
+
+.confirm-delete-button:hover,
+.cancel-delete-button:hover {
+  opacity: 0.85; /* Slight opacity change on hover for feedback */
+}
+
+@media (max-width: 400px) {
   .modal-box {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    position: relative;
+    width: 90%; /* Make the modal responsive on smaller screens */
   }
-
-  .button-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-  }
-
-  .confirm-delete-button,
-  .cancel-delete-button {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  .cancel-delete-button {
-    background: #dc3545;
-  }
-
-  .confirm-delete-button:hover,
-  .cancel-delete-button:hover {
-    opacity: 0.8;
-  }
+}
