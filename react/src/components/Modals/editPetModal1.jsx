@@ -6,7 +6,8 @@ const EditPetModal1 = ({ pet, onClose }) => {
         name: pet.name,
         type: pet.type,
         breed: pet.breed,
-        // Add other pet fields as needed
+        pic: pet.pic,
+        
     });
 
     const handleInputChange = (e) => {
@@ -46,10 +47,13 @@ const EditPetModal1 = ({ pet, onClose }) => {
                     <label htmlFor="breed">Breed:</label>
                     <input type="text" id="breed" name="breed" value={editPetData.breed} onChange={handleInputChange} />
                 </div>
-                {/* Add other input fields as needed */}
-                <button type="submit">Save Changes</button>
+                <div className="input-group">
+                    <label htmlFor="Picture">Pet Picture:</label>
+                    <input type="file" id="petPic" name="petPci" value={editPetData.pic} onChange={handleInputChange} />
+                </div>
+                <button type="submit" className="save-button">Save</button>
             </form>
-            <button onClick={onClose}>Cancel</button>
+            <button onClick={onClose} className="cancel-button">Cancel</button>
         </div>
         </div>
     );

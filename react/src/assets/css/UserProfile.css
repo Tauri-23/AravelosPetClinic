@@ -1,3 +1,82 @@
+/* Profile Header */
+.profile-header {
+  display: flex;
+  align-items: center; /* Align profile picture and user info vertically */
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Profile Picture */
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%; /* Make the image circular */
+  object-fit: cover;
+  margin-right: 20px; /* Add space between picture and user info */
+}
+
+/* User Information */
+.user-info {
+  flex: 1; /* Take up remaining space next to the picture */
+}
+
+/* Name Styling */
+.user-info h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* User Details Styling */
+.user-info p {
+  margin: 5px 0;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Edit Button Styling */
+.edit-button {
+  background-color: #008cba;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.edit-button:hover {
+  background-color: #005f5f;
+}
+
+/* Save Button for Editing Mode */
+.save-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.save-button:hover {
+  background-color: #388E3C;
+}
+
+/* Add margin to separate inputs in editing mode */
+.edit-input {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+
+
 /* Modal container */
 .modal {
   display: flex;
