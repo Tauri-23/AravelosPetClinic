@@ -14,12 +14,11 @@ import { isEmptyOrSpaces } from '../../../assets/js/utils.jsx';
 
 export default function MyAppointments() {
     const {showModal} = useModal();
-    const { user, userType, token, setUserType, setUser, setToken } = useStateContext();
+    const { user } = useStateContext();
     const location = useLocation();
     const url = location.pathname;
     const [activeTab, setActiveTab] = useState("Pending");
     const [appointments, setAppointments] = useState([]);
-    const [pets, setPets] = useState(null);
 
     const serviceOptions = [
         { id: "checkup", label: "Check-up" },
@@ -29,21 +28,43 @@ export default function MyAppointments() {
         { id: "vaccination", label: "Vaccination" },
     ];
 
-    const handleAppointmentRecordClick = (recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)=> {
-        showModal('AppointmentRecordModal1', {recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel})
-        console.log("Appointment Record Clicked", recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel);
+    useEffect(() => {
+        const getAllAppointments = async () => {
+            try {
+                const data = await fetchAllClientAppointments(user.id); // Pass clientId here
+                setAppointments(data);
+                console.log(data); // Log the received appointments
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        getAllAppointments();
+    }, []);
+
+
+    /* 
+    | Debugging
+    */
+    useEffect(() => {
+        console.log(appointments);
+    }, [appointments])
+
+
+
+
+    const handleAppointmentRecordClick = (record)=> {
+        showModal('AppointmentRecordModal1', {record, handleCancel})
     }
 
-    const handleCancelPost =(recordId, recordReason) => {
-        if (isEmptyOrSpaces(String(recordId))) {
-            console.error("No appointment selected for cancellation.");
-            return;
-        }
 
+    const handleCancelPost =(recordId, recordReason) => {
+        
         const formData=new FormData();
         formData.append('appointmentId', recordId);
         formData.append('reason', recordReason || 'No reason provided.');
 
+        console.log(recordId);
         axiosClient.post(`/cancel-appointment`, formData)
             .then(({ data }) => {
                 if (data.status === 200) {
@@ -65,37 +86,10 @@ export default function MyAppointments() {
             console.error("No appointment selected for cancellation.");
             return;
         }
-        showModal('ConfirmActionModal1',  {handleCancelPost:handleCancelPost} , recordId, recordReason, handleFunction);
+        showModal('ConfirmActionModal1',  {handleCancelPost, recordId, recordReason, handleFunction});
     }
-    useEffect(() => {
-        const getAllPets = async() => {
-          try {
-            const data = await fetchAllPetsWhereClient(user.id);
-            setPets(data);
-          } catch (error) {
-            console.error(error);
-          }
-        }
 
-        getAllPets();
-      }, []);
-    useEffect(() => {
-        const getAllAppointments = async () => {
-            try {
-                if (user && user.id) { // Ensure user and user ID exist
-                    const data = await fetchAllClientAppointments(user.id); // Pass clientId here
-                    setAppointments(data);
-                    console.log(data); // Log the received appointments
-                } else {
-                    console.log("User not found or user ID is missing");
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        getAllAppointments(); // Call the function directly
-    }, [user]); // Add user as a dependency
+    
 
 
       const renderHeaders = () => {
@@ -203,17 +197,7 @@ export default function MyAppointments() {
                             record.status === activeTab && (
                                 <AppointmentRecord e key={record.id}
                                 handleAppointmentRecordClick={handleAppointmentRecordClick}
-                                recordId={record.id}
-                                recordPetName={record.petName}
-                                recordPetPic={record.petPic}
-                                recordService={record.service}
-                                recordSchedule={record.date_time}
-                                recordRequestDate={record.created_at}
-                                recordCancelDate={record.cancelled_at}
-                                recordApprovedDate={record.approved_at}
-                                recordRejectDate={record.rejected_at}
-                                recordReason={record.reason}
-                                recordStatus={record.status}
+                                record={record}
                                 handleCancel={(e) => handleCancel(record.id, e)}/>
                                 // <div className='appt-record' key={record.id}>
                                 //     {serviceOptions.find(option => option.id === record.service)?.label}, {record.petName}, {record.date_time}

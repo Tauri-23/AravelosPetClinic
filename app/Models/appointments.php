@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class appointments extends Model
 {
     use HasFactory;
+
+    public function pet()
+    {
+        return $this->belongsTo(pets::class, 'pet', 'id');
+    }
 }

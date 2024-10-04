@@ -2,7 +2,7 @@ import React from 'react';
 import "../assets/css/appointmentRecord.css";
 
 export default function AppointmentRecord({
-    handleAppointmentRecordClick, recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel
+    handleAppointmentRecordClick, record, handleCancel
 }) {
     const serviceOptions = [
         { id: "checkup", label: "Check-up" },
@@ -11,16 +11,16 @@ export default function AppointmentRecord({
         { id: "parasiticControl", label: "Parasitic Control" },
         { id: "vaccination", label: "Vaccination" },
     ];
-    const serviceLabel = serviceOptions?.find(option => option.id === recordService)?.label || "Unknown Service";
+    const serviceLabel = serviceOptions?.find(option => option.id === record.service)?.label || "Unknown Service";
  // Function to render the record based on status
     const renderRecordByStatus = () => {
-        switch (recordStatus) {
+        switch (record.status) {
             case 'Pending':
                 return (
-                    <div className='appt-record-three pending' onClick={() => handleAppointmentRecordClick(recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)}>
-                        <div className='content-deet'>{recordPetName}</div>
+                    <div className='appt-record-three pending' onClick={() => handleAppointmentRecordClick(record)}>
+                        <div className='content-deet'>{record.pet.name}</div>
                         <div className='content-deet'>{serviceLabel}</div>
-                        <div className='content-deet'>{new Date(recordSchedule).toLocaleString('en-US', {
+                        <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
@@ -33,16 +33,16 @@ export default function AppointmentRecord({
                         <div>{recordCancelDate ? new Date(recordCancelDate).toLocaleString() : "N/A"}</div>
                         <div>{recordApprovedDate ? new Date(recordApprovedDate).toLocaleString() : "N/A"}</div>
                         <div>{recordRejectDate ? new Date(recordRejectDate).toLocaleString() : "N/A"}</div>
-                        <div>{recordReason}</div>
+                        <div>{record.reason}</div>
                         <div>Status: Pending</div> */}
                     </div>
                 );
             case 'Approved':
                 return (
-                    <div className='appt-record-four approved' onClick={() => handleAppointmentRecordClick(recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)}>
-                        <div className='content-deet'>{recordPetName}</div>
+                    <div className='appt-record-four approved' onClick={() => handleAppointmentRecordClick(record)}>
+                        <div className='content-deet'>{record.petName}</div>
                         <div className='content-deet'>{serviceLabel}</div>
-                        <div className='content-deet'>{new Date(recordSchedule).toLocaleString('en-US', {
+                        <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
@@ -63,16 +63,16 @@ export default function AppointmentRecord({
                         {/* <div>{new Date(recordRequestDate).toLocaleString()}</div>
                         <div>{recordCancelDate ? new Date(recordCancelDate).toLocaleString() : "N/A"}</div>
                         <div>{recordRejectDate ? new Date(recordRejectDate).toLocaleString() : "N/A"}</div>
-                        <div>{recordReason}</div>
+                        <div>{record.reason}</div>
                         <div>Status: Approved</div> */}
                     </div>
                 );
             case 'Completed':
                 return (
-                    <div className='appt-record-three rejected' onClick={() => handleAppointmentRecordClick(recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)}>
-                        <div className='content-deet'>{recordPetName}</div>
+                    <div className='appt-record-three rejected' onClick={() => handleAppointmentRecordClick(record)}>
+                        <div className='content-deet'>{record.petName}</div>
                         <div className='content-deet'>{serviceLabel}</div>
-                        <div className='content-deet'>{new Date(recordSchedule).toLocaleString('en-US', {
+                        <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
@@ -82,7 +82,7 @@ export default function AppointmentRecord({
                                     timeZone: 'Asia/Manila'
                                 })}</div>
                         {/* <div>{recordRejectDate ? new Date(recordRejectDate).toLocaleString() : "N/A"}</div>
-                        <div>{recordReason}</div>
+                        <div>{record.reason}</div>
                         <div>{new Date(recordRequestDate).toLocaleString()}</div>
                         <div>{recordCancelDate ? new Date(recordCancelDate).toLocaleString() : "N/A"}</div>
                         <div>{recordApprovedDate ? new Date(recordApprovedDate).toLocaleString() : "N/A"}</div>
@@ -91,11 +91,11 @@ export default function AppointmentRecord({
                 );
             case 'Cancelled':
                 return (
-                    <div className='appt-record-five rejected' onClick={() => handleAppointmentRecordClick(recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)}>
-                        <div className='content-deet'>{recordPetName}</div>
+                    <div className='appt-record-five rejected' onClick={() => handleAppointmentRecordClick(record)}>
+                        <div className='content-deet'>{record.petName}</div>
                         <div className='content-deet'>{serviceLabel}</div>
-                        <div className='content-deet'>{new Date(recordSchedule).toLocaleString()}</div>
-                        <div className='content-deet'>{recordCancelDate ? new Date(recordCancelDate).toLocaleString('en-US', {
+                        <div className='content-deet'>{new Date(record.date_time).toLocaleString()}</div>
+                        <div className='content-deet'>{record.cancelled_at ? new Date(record.cancelled_at).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
@@ -104,7 +104,7 @@ export default function AppointmentRecord({
                                     hour12: true,
                                     timeZone: 'Asia/Manila'
                                 }) : "N/A"}</div>
-                        <div className='content-deet'>{recordReason}</div>
+                        <div className='content-deet'>{record.reason}</div>
                         {/* <div>{recordRejectDate ? new Date(recordRejectDate).toLocaleString() : "N/A"}</div>
                         <div>{new Date(recordRequestDate).toLocaleString()}</div>
                         <div>{recordApprovedDate ? new Date(recordApprovedDate).toLocaleString() : "N/A"}</div>
@@ -113,11 +113,11 @@ export default function AppointmentRecord({
                 );
             case 'Rejected':
                 return (
-                    <div className='appt-record-five rejected' onClick={() => handleAppointmentRecordClick(recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)}>
-                        <div className='content-deet'>{recordPetName}</div>
+                    <div className='appt-record-five rejected' onClick={() => handleAppointmentRecordClick(record)}>
+                        <div className='content-deet'>{record.petName}</div>
                         <div className='content-deet'>{serviceLabel}</div>
-                        <div className='content-deet'>{new Date(recordSchedule).toLocaleString()}</div>
-                        <div className='content-deet'>{recordRejectDate ? new Date(recordRejectDate).toLocaleString('en-US', {
+                        <div className='content-deet'>{new Date(record.date_time).toLocaleString()}</div>
+                        <div className='content-deet'>{record.rejected_at ? new Date(record.rejected_at).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
@@ -126,7 +126,7 @@ export default function AppointmentRecord({
                                     hour12: true,
                                     timeZone: 'Asia/Manila'
                                 }) : "N/A"}</div>
-                        <div className='content-deet'>{recordReason}</div>
+                        <div className='content-deet'>{record.reason}</div>
                         {/* <div>{new Date(recordRequestDate).toLocaleString()}</div>
                         <div>{recordCancelDate ? new Date(recordCancelDate).toLocaleString() : "N/A"}</div>
                         <div>{recordApprovedDate ? new Date(recordApprovedDate).toLocaleString() : "N/A"}</div>
@@ -135,10 +135,10 @@ export default function AppointmentRecord({
                 );
             default:
                 return (
-                    <div className='appt-record' onClick={() => handleAppointmentRecordClick(recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)}>
-                        <div className='content-deet'>{recordPetName}</div>
+                    <div className='appt-record' onClick={() => handleAppointmentRecordClick(record)}>
+                        <div className='content-deet'>{record.petName}</div>
                         <div className='content-deet'>{serviceLabel}</div>
-                        <div className='content-deet'>{new Date(recordSchedule).toLocaleString('en-US', {
+                        <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
@@ -151,8 +151,8 @@ export default function AppointmentRecord({
                         <div className='content-deet'>{recordCancelDate ? new Date(recordCancelDate).toLocaleString() : "N/A"}</div>
                         <div className='content-deet'>{recordApprovedDate ? new Date(recordApprovedDate).toLocaleString() : "N/A"}</div>
                         <div className='content-deet'>{recordRejectDate ? new Date(recordRejectDate).toLocaleString() : "N/A"}</div>
-                        <div className='content-deet'>{recordReason}</div>
-                        <div className='content-deet'>Status: {recordStatus}</div>
+                        <div className='content-deet'>{record.reason}</div>
+                        <div className='content-deet'>Status: {record.status}</div>
                     </div>
                 );
         }

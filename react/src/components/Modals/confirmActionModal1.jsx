@@ -22,6 +22,7 @@ export const ConfirmActionModal1 = ({ handleCancelPost, recordId, recordReason, 
                 return <p>Are you sure you want to proceed?</p>;
         }
     };
+
     return(
         <div className= {`modal1`}>
 
@@ -44,7 +45,7 @@ export const ConfirmActionModal1 = ({ handleCancelPost, recordId, recordReason, 
                 <div className="d-flex flex-direction-x flex-row-reverse gap3">
 
                     <div
-                    onClick={ ()=>{handleCancelPost(recordId, recordReason);}}
+                    onClick={()=> {handleCancelPost(recordId, recordReason); onClose();}}
                     className="primary-btn-blue1 w-100 text-center"
                     >
                         Yes

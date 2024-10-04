@@ -62,11 +62,11 @@ const router = createBrowserRouter([
                 path: 'BookAppointment', // Remove leading `/`
                 element: <BookAppointment />
             },
-
             {
                 path: 'BookAppointment/MyAppointments', // Remove leading `/`
                 element: <MyAppointments />
             },
+
             {
                 path: 'ClientContactUs', // Remove leading `/`
                 element: <ClientContactUs />

@@ -2,7 +2,9 @@ import React from 'react'
 import * as Icon from 'react-bootstrap-icons'
 import Button from '../button';
 import { useEffect } from'react';
-export default function AppointmentRecordModal1({recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, onClose, handleCancel}) {
+export default function AppointmentRecordModal1({
+    record, onClose, handleCancel
+}) {
     const serviceOptions = [
         { id: "checkup", label: "Check-up" },
         { id: "deworming", label: "Deworming" },
@@ -10,16 +12,16 @@ export default function AppointmentRecordModal1({recordId, recordPetName, record
         { id: "parasiticControl", label: "Parasitic Control" },
         { id: "vaccination", label: "Vaccination" },
     ];
-    const serviceLabel = serviceOptions?.find(option => option.id === recordService)?.label || "Unknown Service";
+    const serviceLabel = serviceOptions?.find(option => option.id === record.service)?.label || "Unknown Service";
     const renderDetails = () => {
-        switch(recordStatus){
+        switch(record.status){
             case 'Pending':
                 return (
                     <div className='flex-grow'>
                         <div className='schedule bold inter d-flex'>
                             Schedule:
                             <div className='left-margin-s normal'>
-                                {new Date(recordSchedule).toLocaleString('en-US', {
+                                {new Date(record.date_time).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
@@ -31,7 +33,7 @@ export default function AppointmentRecordModal1({recordId, recordPetName, record
                             </div>
                         </div>
                         <div className='btn-row'>
-                            <button className='primary-btn-blue1 w-100' onClick={(e) => handleCancel(recordId,recordReason)}>
+                            <button className='primary-btn-blue1 w-100' onClick={(e) => handleCancel(record.id,record.reason)}>
                                 Cancel Appointment
                             </button>
                         </div>
@@ -43,7 +45,7 @@ export default function AppointmentRecordModal1({recordId, recordPetName, record
                         <div className='schedule bold inter d-flex'>
                             Schedule:
                             <div className='left-margin-s normal'>
-                                {new Date(recordSchedule).toLocaleString('en-US', {
+                                {new Date(record.date_time).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
@@ -55,7 +57,7 @@ export default function AppointmentRecordModal1({recordId, recordPetName, record
                             </div>
                         </div>
                         <div className='btn-row'>
-                            <button className='primary-btn-blue1 w-100' onClick={(e) => handleCancel(recordId, recordReason)}>
+                            <button className='primary-btn-blue1 w-100' onClick={(e) => handleCancel(record.id, record.reason)}>
                                 Cancel Appointment
                             </button>
                         </div>
@@ -67,7 +69,7 @@ export default function AppointmentRecordModal1({recordId, recordPetName, record
                         <div className='schedule bold inter d-flex'>
                             Schedule:
                             <div className='left-margin-s normal'>
-                                {new Date(recordSchedule).toLocaleString('en-US', {
+                                {new Date(record.date_time).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
@@ -91,7 +93,7 @@ export default function AppointmentRecordModal1({recordId, recordPetName, record
                         <div className='schedule bold inter d-flex'>
                             Schedule:
                             <div className='left-margin-s normal'>
-                                {new Date(recordSchedule).toLocaleString('en-US', {
+                                {new Date(record.date_time).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
@@ -105,7 +107,7 @@ export default function AppointmentRecordModal1({recordId, recordPetName, record
                         <div className='date-cancelled bold inter d-flex'>
                             Date Cancelled:
                             <div className='left-margin-s normal'>
-                                {new Date(recordCancelDate).toLocaleString('en-US', {
+                                {new Date(record.cancelled_at).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
@@ -119,7 +121,7 @@ export default function AppointmentRecordModal1({recordId, recordPetName, record
                         <div className='reason bold inter'>
                             Reason:
                             <div className='normal reasonCont'>
-                                {recordReason}
+                                {record.reason}
                             </div>
                         </div>
                         {/* <div className='btn-row'>
@@ -135,7 +137,7 @@ export default function AppointmentRecordModal1({recordId, recordPetName, record
                         <div className='schedule bold inter d-flex'>
                             Schedule:
                             <div className='left-margin-s normal'>
-                                {new Date(recordSchedule).toLocaleString('en-US', {
+                                {new Date(record.date_time).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
@@ -149,7 +151,7 @@ export default function AppointmentRecordModal1({recordId, recordPetName, record
                         <div className='date-rejected bold inter d-flex'>
                             Date Rejected:
                             <div className='left-margin-s normal'>
-                                {new Date(recordRejectDate).toLocaleString('en-US', {
+                                {new Date(record.rejected_at).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
@@ -163,7 +165,7 @@ export default function AppointmentRecordModal1({recordId, recordPetName, record
                         <div className='reason bold inter'>
                             Reason:
                             <div className='normal reasonCont'>
-                                {recordReason}
+                                {record.reason}
                             </div>
                         </div>
                         {/* <div className='btn-row'>
@@ -183,9 +185,9 @@ export default function AppointmentRecordModal1({recordId, recordPetName, record
                 </div>
                 <div className='semi-bold semi-medium-f anybody border-bottom bottom-margin-s'>Appointment Details</div>
                 <div className='d-flex'>
-                    <div className='petPictureCont right-margin'><img className="circle petPicture" src={`/assets/media/pets/${recordPetPic}`}/></div>
+                    <div className='petPictureCont right-margin'><img className="circle petPicture" src={`/assets/media/pets/${record.pet.picture}`}/></div>
                     <div className='appt-details top-margin-s'>
-                        <div className='pet-name bold inter d-flex'>Pet: <div className='left-margin-s normal'>{recordPetName}</div></div>
+                        <div className='pet-name bold inter d-flex'>Pet: <div className='left-margin-s normal'>{record.pet.name}</div></div>
                         <div className='service bold inter d-flex'>Service: <div className='left-margin-s normal'>{serviceLabel}</div></div>
                         {renderDetails()}
                     </div>

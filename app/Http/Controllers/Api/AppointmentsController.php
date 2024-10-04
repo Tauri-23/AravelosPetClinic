@@ -45,11 +45,8 @@ class AppointmentsController extends Controller
             ]);
         }
     }
+
     public function cancelAppointment(Request $request){
-        return response()->json([
-            'status' => 404,
-            'message' => $request->appointmentId,
-        ], 404);
         $appointment = appointments::find($request->appointmentId);
         if (!$appointment) {
             return response()->json([
@@ -67,7 +64,7 @@ class AppointmentsController extends Controller
         $appointment->cancelled_at = now();
 
         // Save the cancellation reason if provided
-        $appointment->cancellation_reason = $request->input('reason', 'No reason provided');
+        $appointment->reason = $request->reason;
         if ($appointment->save()) {
             return response()->json([
                 'status' => 200,
@@ -85,6 +82,6 @@ class AppointmentsController extends Controller
     // GET
     public function getAllAppointmentWhereClient($clientId)
     {
-        return response()->json(appointments::where('client', $clientId)->get());
+        return response()->json(appointments::where('client', $clientId)->with('pet')->get());
     }
 }
