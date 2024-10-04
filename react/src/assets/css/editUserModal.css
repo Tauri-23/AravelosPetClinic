@@ -1,0 +1,82 @@
+.modal2 {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 22;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+  }
+  
+  .modal-box4{
+    width: 35vw;
+    padding: 25px;
+    border-radius: var(--rounded_conts);
+    background: white;
+    filter: drop-shadow(0 0 10px var(--black2));
+    overflow-x: hidden;
+}
+  .edit-user-modal {
+    max-height: 80vh; /* Adjust max-height as needed */
+    overflow-y: auto; /* Enable vertical scrolling within the modal */
+    justify-content: center; /* Align vertically in the center */
+    align-items: center;
+
+
+  }
+  .edit-user-modal form {
+    display: flex; /* Make the form a flex container */
+    flex-direction: column; /* Arrange elements vertically */
+    overflow-x: hidden;
+  }
+  
+  .edit-user-modal button {
+    margin-top: 1rem; /* Add some space between buttons and form */
+    display: flex; /* Center the buttons horizontally */
+    justify-content: center;
+  }
+  .edit-user-modal .input-group {
+    display: flex;
+  margin-bottom: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 5px;
+  width: 97%;
+  }
+  
+  .edit-user-modal h2 {
+    text-align: center;
+    border-bottom: 1px solid black;
+  }
+  .edit-user-modal .input-group label {
+    width: 120px;
+    margin-right: 10px;
+  }
+  
+  
+  .edit-user-modal .input-group input[type="text"],
+  .edit-user-modal .input-group input[type="email"],
+  .edit-user-modal .input-group input[type="date"] {
+    flex: .7;
+  }
+  
+  /* Group specific layouts */
+  .edit-user-modal .input-group:nth-child(1),
+  .edit-user-modal .input-group:nth-child(2),
+  .edit-user-modal .input-group:nth-child(3) {
+    /* First 3 elements (Name fields) */
+  }
+  
+  .edit-user-modal .input-group:nth-child(4),
+  .edit-user-modal .input-group:nth-child(5) {
+    /* Email and Gender */
+    justify-content: space-between;
+  }
+  
+  .edit-user-modal .input-group:nth-child(6),
+  .edit-user-modal .input-group:nth-child(7) {
+    /* Birthday and Phone Number */
+    justify-content: space-between;
+  }

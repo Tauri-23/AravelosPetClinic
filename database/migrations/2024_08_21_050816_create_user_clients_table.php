@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->string('address')->nullable();
             $table->string('phone');
+            $table->longtext('picture')->nullable();
             $table->timestamps();
         });
     }

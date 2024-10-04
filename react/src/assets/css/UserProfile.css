@@ -50,6 +50,12 @@
   background-color: #005f5f;
 }
 
+.edit-button {
+  position: absolute;
+  top: 70px; /* Adjust top padding as needed */
+  right: 20px; /* Adjust right padding as needed */
+}
+
 /* Save Button for Editing Mode */
 .save-button {
   background-color: #4CAF50;
@@ -135,13 +141,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   background-color: #f0f0f0;
   cursor: pointer;
   border: 2px dashed #999;
   border-radius: 10px;
 }
+
+.pet-profiles {
+  display: flex;
+  flex-direction: column;
+  text-align: center; 
+}
+
 
 .add-icon {
   font-size: 36px;
@@ -160,8 +173,8 @@
 }
 
 .pet-picture {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
 }

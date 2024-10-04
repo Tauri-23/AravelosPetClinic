@@ -1,0 +1,52 @@
+
+  
+  .modal-box4 {
+    display: flex; /* Make the modal box a flex container */
+    flex-direction: column; /* Arrange elements vertically */
+    align-items: center; /* Center elements horizontally */
+    padding: 20px; /* Add some padding */
+    border-radius: 5px; /* Add rounded corners */
+    background-color: white; /* Set background color (optional) */
+  }
+  
+  .modal-box4 h2 {
+    text-align: center; 
+    margin-bottom: 15px;
+    border-bottom: 1px solid black; 
+    width: 100%;
+    
+  }
+  
+  .modal-box4 input {
+    width: 100%; /* Make input boxes fill the width */
+    margin-bottom: 10px; /* Add margin between input boxes */
+    padding: 10px; /* Add padding for better readability */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 4px; /* Add rounded corners */
+  }
+  
+  .modal-box4 button {
+    margin-top: 1rem; /* Add some space between buttons and form */
+    display: flex; /* Center the buttons horizontally */
+    justify-content: center;
+  }
+  
+  .save-button {
+    background-color: #4CAF50; /* Green color for save button */
+    color: white; /* White text color */
+    width: 100%;
+  }
+  
+  .cancel-button {
+    background-color: #f44336; /* Red color for cancel button */
+    color: white; /* White text color */
+    width: 100%;
+  }
+  .modal-box4 .button-container {
+    display: flex; 
+    justify-content: center; 
+    margin-top: 10px; 
+  }
+  .modal-box4 .button-container button {
+    margin: 0 5px; 
+  }

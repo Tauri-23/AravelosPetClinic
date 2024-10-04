@@ -36,32 +36,32 @@ const userprofiles = () => {
     showModal('EditPetModal1', { pet }); // Pass the entire pet object
   };
 
-  // const handleEditUserPost = (fname, mname, lname, email, password, bday, gender, address, phone, pic ) => {
-  //   const formData = new FormData();
-  //   formData.append('client', user.id);
-  //   formData.append('fname', user.fname);
-  //   formData.append('mname', user.mname);
-  //   formData.append('lname', user.lname);
-  //   formData.append('email', user.email);
-  //   formData.append('password', user.password);
-  //   formData.append('bday', user.bday);
-  //   formData.append('gender', user.gender);
-  //   formData.append('phone', user.phone);
-  //   formData.append('pic', user.pic);
+  const handleEditUserPost = (fname, mname, lname, email, password, bday, gender, address, phone, pic ) => {
+    const formData = new FormData();
+    formData.append('client', user.id);
+    formData.append('fname', user.fname);
+    formData.append('mname', user.mname);
+    formData.append('lname', user.lname);
+    formData.append('email', user.email);
+    formData.append('password', user.password);
+    formData.append('bday', user.bday);
+    formData.append('gender', user.gender);
+    formData.append('phone', user.phone);
+    formData.append('pic', user.pic);
 
-  //   axiosClient.post('/edit-iser', formData)
-  //     .then(({ data }) => {
-  //       if (data.status === 200) {
-  //         notify('success', data.message, 'top-center', 3000);
-  //         setPets(prev =>
-  //           [...prev, data.user]
-  //         );
-  //       } else {
-  //         notify('error', data.message, 'top-center', 3000);
-  //       }
-  //     })
-  //     .catch(error => console.error(error));
-  // };
+    axiosClient.post('/edit-user', formData)
+      .then(({ data }) => {
+        if (data.status === 200) {
+          notify('success', data.message, 'top-center', 3000);
+          setPets(prev =>
+            [...prev, data.user]
+          );
+        } else {
+          notify('error', data.message, 'top-center', 3000);
+        }
+      })
+      .catch(error => console.error(error));
+  };
 
   const handleAddPetPost = (petName, petType, petBreed, petPic) => {
     const formData = new FormData();
@@ -86,8 +86,11 @@ const userprofiles = () => {
   };
 
   const handleEditUserClick = () => {
-    showModal('EditUserModal1', )
-  }
+    setIsEditing(true); // Toggle editing state
+    setEditData(user); // Set initial edit data to user object
+    showModal('EditUserModal1', {user}); // Show the EditUserModal
+  };
+  
   const handleAddPetClick = () => {
     showModal('AddPetModal1', { handleAddPetPost });
   };
@@ -127,7 +130,6 @@ const userprofiles = () => {
           {/* Add New Pet button */}
           <div className="pet-profile add-pet" onClick={handleAddPetClick}>
             <div className="add-icon">+</div>
-            <p>Add New Pet</p>
           </div>
         </div>
       </div>

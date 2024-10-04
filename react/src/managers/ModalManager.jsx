@@ -8,7 +8,7 @@ import EditCategoryModal1 from "../components/Modals/editCategoryModal1";
 import EditPetModal1 from "../components/Modals/editPetModal1";
 import InventoryBoxModal1 from "../components/Modals/inventoryBoxModal1";
 import { useModal } from "../contexts/ModalContext";
-
+import EditUserModal1 from "../components/Modals/editUserModal1";
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -46,7 +46,8 @@ const ModalManager = () => {
             case 'ConfirmActionModal1':
             return <ConfirmActionModal1 {...modalState.props} onClose={hideModal} />;
 
-
+            case 'EditUserModal1': // Add the new EditPetModal1 case
+            return <EditUserModal1 {...modalState.props} onClose={hideModal} />;
 
             /*
             |   DEFAULT

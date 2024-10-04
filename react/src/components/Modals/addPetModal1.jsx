@@ -1,5 +1,7 @@
 import { useState } from "react";
 import * as Icon from "react-bootstrap-icons";
+import "../../assets/css/addPetModal1.css";
+
 
 export default function AddPetModal1({ handleAddPetPost, onClose }) {
   const [petName, setPetName] = useState('');
@@ -8,11 +10,11 @@ export default function AddPetModal1({ handleAddPetPost, onClose }) {
   const [petPic, setPetPic] = useState('');
 
     return(
-        <div className= {`modal1`}>
+        <div className= {`modal2`}>
 
 
             {/* Box of modal */}
-            <div className="modal-box3">
+            <div className="modal-box4">
               <h2>Add New Pet</h2>
               <input
                 type="text"

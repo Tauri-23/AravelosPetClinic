@@ -1,5 +1,7 @@
 import { useState } from "react";
 import * as Icon from "react-bootstrap-icons"; 
+import "../../assets/css/addPetModal1.css";
+
 
 const EditPetModal1 = ({ pet, onClose }) => {
     const [editPetData, setEditPetData] = useState({
@@ -31,8 +33,8 @@ const EditPetModal1 = ({ pet, onClose }) => {
     };
 
     return (
-        <div className="modal1">
-        <div className="modal-box3">
+        <div className="modal2">
+        <div className="modal-box4">
             <h2>Edit Pet Information</h2>
             <form onSubmit={handleSave}>
                 <div className="input-group">
@@ -52,8 +54,9 @@ const EditPetModal1 = ({ pet, onClose }) => {
                     <input type="file" id="petPic" name="petPci" value={editPetData.pic} onChange={handleInputChange} />
                 </div>
                 <button type="submit" className="save-button">Save</button>
+                <button onClick={onClose} className="cancel-button">Cancel</button>
             </form>
-            <button onClick={onClose} className="cancel-button">Cancel</button>
+           
         </div>
         </div>
     );
