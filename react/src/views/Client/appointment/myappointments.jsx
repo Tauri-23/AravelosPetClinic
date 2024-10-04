@@ -9,6 +9,7 @@ import { fetchAllPetsWhereClient } from '../../../services/PetServices';
 import AppointmentRecord from '../../../components/appointmentRecord.jsx';
 import { useModal } from '../../../contexts/ModalContext.jsx';
 import Button from '../../../components/button.jsx';
+import { isEmptyOrSpaces } from '../../../assets/js/utils.jsx';
 
 
 export default function MyAppointments() {
@@ -28,45 +29,43 @@ export default function MyAppointments() {
         { id: "vaccination", label: "Vaccination" },
     ];
 
-    const handleAppointmentRecordClick = (recordId, recordPetName, recordPetPic, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)=> {
-        showModal('AppointmentRecordModal1', {recordId, recordPetName, recordPetPic, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel})
-        console.log("Appointment Record Clicked", recordId, recordPetName, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel);
+    const handleAppointmentRecordClick = (recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)=> {
+        showModal('AppointmentRecordModal1', {recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel})
+        console.log("Appointment Record Clicked", recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel);
     }
 
-    const handleCancelPost =(recordId, recordReason, handleFunction) => {
-        if (!recordId) {
+    const handleCancelPost =(recordId, recordReason) => {
+        if (isEmptyOrSpaces(String(recordId))) {
             console.error("No appointment selected for cancellation.");
             return;
         }
 
-        const formData = {
-            appointment: recordId, // Pass the selected appointment ID
-            reason:recordReason || 'No reason provided.'
-        };
+        const formData=new FormData();
+        formData.append('appointmentId', recordId);
+        formData.append('reason', recordReason || 'No reason provided.');
 
-        axiosClient.post(`/cancel-appointment/${recordId}`, formData)
+        axiosClient.post(`/cancel-appointment`, formData)
             .then(({ data }) => {
                 if (data.status === 200) {
                     notify('success', data.message, 'top-center', 3000);
-                    setAppointments(prev => prev.filter(record => record.id !== selectedAppointmentId)); // Remove the canceled appointment from state
+                    setAppointments(prev => prev.filter(record => record.id !== recordId)); // Remove the canceled appointment from state
                 } else {
-                    notify('error', data.message, 'top-center', 3000);
+                    notify('error', data.message + record.id, 'top-center', 3000);
                 }
             }).catch(error => {
                 console.error(error);
-                notify('error', 'An error occurred. Please try again.', 'top-center', 3000);
+                notify('error', data.message, 'top-center', 3000);
             });
     }
-    const handleCancel = (e, recordId) =>{
-        e.preventDefault();
+    const handleCancel = (recordId, recordReason) =>{
+
+        console.log(recordId);
         const handleFunction = "handleCancelPost"
-        if (!recordId) {
+        if (isEmptyOrSpaces(String(recordId))) {
             console.error("No appointment selected for cancellation.");
             return;
         }
-        showModal('ConfirmActionModal1', {
-            handlePost: () => handleCancelPost(recordId), handleFunction // Pass appointmentId to handlePost
-        });
+        showModal('ConfirmActionModal1',  {handleCancelPost:handleCancelPost} , recordId, recordReason, handleFunction);
     }
     useEffect(() => {
         const getAllPets = async() => {
@@ -202,13 +201,12 @@ export default function MyAppointments() {
                     {appointments.length > 0 &&
                         appointments.map(record =>
                             record.status === activeTab && (
-                                <AppointmentRecord key={record.id}
-                                recordId={record.id}
+                                <AppointmentRecord e key={record.id}
                                 handleAppointmentRecordClick={handleAppointmentRecordClick}
-                                recordPetPic={record.petPic}
+                                recordId={record.id}
                                 recordPetName={record.petName}
+                                recordPetPic={record.petPic}
                                 recordService={record.service}
-                                serviceOptions={serviceOptions}
                                 recordSchedule={record.date_time}
                                 recordRequestDate={record.created_at}
                                 recordCancelDate={record.cancelled_at}
@@ -216,7 +214,7 @@ export default function MyAppointments() {
                                 recordRejectDate={record.rejected_at}
                                 recordReason={record.reason}
                                 recordStatus={record.status}
-                                handleCancel={(e) => handleCancel(e, record.id)}/>
+                                handleCancel={(e) => handleCancel(record.id, e)}/>
                                 // <div className='appt-record' key={record.id}>
                                 //     {serviceOptions.find(option => option.id === record.service)?.label}, {record.petName}, {record.date_time}
                                 // </div>

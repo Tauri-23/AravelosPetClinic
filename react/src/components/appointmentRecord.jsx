@@ -2,28 +2,22 @@ import React from 'react';
 import "../assets/css/appointmentRecord.css";
 
 export default function AppointmentRecord({
-    recordId,
-    handleAppointmentRecordClick,
-    recordPetName,
-    recordPetPic,
-    recordService,
-    serviceOptions,
-    recordSchedule,
-    recordRequestDate,
-    recordCancelDate,
-    recordApprovedDate,
-    recordRejectDate,
-    recordReason,
-    recordStatus,
-    handleCancel
+    handleAppointmentRecordClick, recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel
 }) {
+    const serviceOptions = [
+        { id: "checkup", label: "Check-up" },
+        { id: "deworming", label: "Deworming" },
+        { id: "grooming", label: "Grooming" },
+        { id: "parasiticControl", label: "Parasitic Control" },
+        { id: "vaccination", label: "Vaccination" },
+    ];
     const serviceLabel = serviceOptions?.find(option => option.id === recordService)?.label || "Unknown Service";
  // Function to render the record based on status
     const renderRecordByStatus = () => {
         switch (recordStatus) {
             case 'Pending':
                 return (
-                    <div className='appt-record-three pending' onClick={() => handleAppointmentRecordClick(recordId, recordPetName, recordPetPic, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)}>
+                    <div className='appt-record-three pending' onClick={() => handleAppointmentRecordClick(recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)}>
                         <div className='content-deet'>{recordPetName}</div>
                         <div className='content-deet'>{serviceLabel}</div>
                         <div className='content-deet'>{new Date(recordSchedule).toLocaleString('en-US', {
@@ -45,7 +39,7 @@ export default function AppointmentRecord({
                 );
             case 'Approved':
                 return (
-                    <div className='appt-record-four approved' onClick={() => handleAppointmentRecordClick(key, recordPetName, recordPetPic, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)}>
+                    <div className='appt-record-four approved' onClick={() => handleAppointmentRecordClick(recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)}>
                         <div className='content-deet'>{recordPetName}</div>
                         <div className='content-deet'>{serviceLabel}</div>
                         <div className='content-deet'>{new Date(recordSchedule).toLocaleString('en-US', {
@@ -75,7 +69,7 @@ export default function AppointmentRecord({
                 );
             case 'Completed':
                 return (
-                    <div className='appt-record-three rejected' onClick={() => handleAppointmentRecordClick(key, recordPetName, recordPetPic, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus)}>
+                    <div className='appt-record-three rejected' onClick={() => handleAppointmentRecordClick(recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)}>
                         <div className='content-deet'>{recordPetName}</div>
                         <div className='content-deet'>{serviceLabel}</div>
                         <div className='content-deet'>{new Date(recordSchedule).toLocaleString('en-US', {
@@ -97,7 +91,7 @@ export default function AppointmentRecord({
                 );
             case 'Cancelled':
                 return (
-                    <div className='appt-record-five rejected' onClick={() => handleAppointmentRecordClick(key, recordPetName, recordPetPic, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus)}>
+                    <div className='appt-record-five rejected' onClick={() => handleAppointmentRecordClick(recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)}>
                         <div className='content-deet'>{recordPetName}</div>
                         <div className='content-deet'>{serviceLabel}</div>
                         <div className='content-deet'>{new Date(recordSchedule).toLocaleString()}</div>
@@ -119,7 +113,7 @@ export default function AppointmentRecord({
                 );
             case 'Rejected':
                 return (
-                    <div className='appt-record-five rejected' onClick={() => handleAppointmentRecordClick(key, recordPetName, recordPetPic, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus)}>
+                    <div className='appt-record-five rejected' onClick={() => handleAppointmentRecordClick(recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)}>
                         <div className='content-deet'>{recordPetName}</div>
                         <div className='content-deet'>{serviceLabel}</div>
                         <div className='content-deet'>{new Date(recordSchedule).toLocaleString()}</div>
@@ -141,7 +135,7 @@ export default function AppointmentRecord({
                 );
             default:
                 return (
-                    <div className='appt-record' onClick={() => handleAppointmentRecordClick(key, recordPetName, recordPetPic, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus)}>
+                    <div className='appt-record' onClick={() => handleAppointmentRecordClick(recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)}>
                         <div className='content-deet'>{recordPetName}</div>
                         <div className='content-deet'>{serviceLabel}</div>
                         <div className='content-deet'>{new Date(recordSchedule).toLocaleString('en-US', {

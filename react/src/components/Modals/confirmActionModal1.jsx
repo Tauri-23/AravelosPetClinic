@@ -1,7 +1,8 @@
 import * as Icon from 'react-bootstrap-icons';
 import propTypes from 'prop-types';
+import { useEffect } from 'react';
 
-export const ConfirmActionModal1 = ({ handlePost, onClose, handleFunction}) => {
+export const ConfirmActionModal1 = ({ handleCancelPost, recordId, recordReason, onClose, handleFunction}) => {
 
     // useEffect(() => {console.log(listing);}, listing);
     const renderContent = () => {
@@ -43,7 +44,7 @@ export const ConfirmActionModal1 = ({ handlePost, onClose, handleFunction}) => {
                 <div className="d-flex flex-direction-x flex-row-reverse gap3">
 
                     <div
-                    onClick={() => {handlePost();}}
+                    onClick={ ()=>{handleCancelPost(recordId, recordReason);}}
                     className="primary-btn-blue1 w-100 text-center"
                     >
                         Yes
@@ -62,5 +63,5 @@ export const ConfirmActionModal1 = ({ handlePost, onClose, handleFunction}) => {
 
 ConfirmActionModal1.propTypes = {
     onClose: propTypes.func.isRequired,
-    handlePost: propTypes.func.isRequired
+    handleCancelPost: propTypes.func.isRequired
 };

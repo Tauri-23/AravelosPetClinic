@@ -46,17 +46,20 @@ class AppointmentsController extends Controller
         }
     }
     public function cancelAppointment(Request $request){
-        $appointment = appointments::where('id', $request->appointmentId)->first();
-        $request->validate([
-            'appointmentId' => 'required|exists:appointments,id', // Ensure the appointment exists
-            'reason' => 'nullable|string|max:255', // Optional reason for cancellation
-        ]);
+        return response()->json([
+            'status' => 404,
+            'message' => $request->appointmentId,
+        ], 404);
+        $appointment = appointments::find($request->appointmentId);
         if (!$appointment) {
             return response()->json([
                 'status' => 404,
                 'message' => 'Appointment not found.'
             ], 404);
-        } $appointment->status = 'Cancelled';
+        }
+
+        $appointment->status = 'Cancelled';
+
         // Update the status to 'Cancelled'
         $appointment->status = 'Cancelled';
 

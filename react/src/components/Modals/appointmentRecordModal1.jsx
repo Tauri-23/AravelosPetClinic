@@ -1,7 +1,15 @@
 import React from 'react'
 import * as Icon from 'react-bootstrap-icons'
 import Button from '../button';
-export default function AppointmentRecordModal1({recordPetName, recordPetPic, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, onClose, handleCancel}) {
+import { useEffect } from'react';
+export default function AppointmentRecordModal1({recordId, recordPetName, recordPetPic, recordService, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, onClose, handleCancel}) {
+    const serviceOptions = [
+        { id: "checkup", label: "Check-up" },
+        { id: "deworming", label: "Deworming" },
+        { id: "grooming", label: "Grooming" },
+        { id: "parasiticControl", label: "Parasitic Control" },
+        { id: "vaccination", label: "Vaccination" },
+    ];
     const serviceLabel = serviceOptions?.find(option => option.id === recordService)?.label || "Unknown Service";
     const renderDetails = () => {
         switch(recordStatus){
@@ -23,7 +31,7 @@ export default function AppointmentRecordModal1({recordPetName, recordPetPic, re
                             </div>
                         </div>
                         <div className='btn-row'>
-                            <button className='primary-btn-blue1 w-100' onClick={handleCancel}>
+                            <button className='primary-btn-blue1 w-100' onClick={(e) => handleCancel(recordId,recordReason)}>
                                 Cancel Appointment
                             </button>
                         </div>
@@ -47,7 +55,7 @@ export default function AppointmentRecordModal1({recordPetName, recordPetPic, re
                             </div>
                         </div>
                         <div className='btn-row'>
-                            <button className='primary-btn-blue1 w-100' onClick={onClose} handleCancel={handleCancel}>
+                            <button className='primary-btn-blue1 w-100' onClick={(e) => handleCancel(recordId, recordReason)}>
                                 Cancel Appointment
                             </button>
                         </div>
@@ -169,7 +177,7 @@ export default function AppointmentRecordModal1({recordPetName, recordPetPic, re
     };
   return (
     <div className="modal1"> {/* Updated modal2 class for consistency */}
-            <div className="modal-content1">
+            <div className="appRecModal modal-content1">
                 <div className="circle-btn1 semi-medium-f">
                     <Icon.X className="pointer" onClick={onClose} />
                 </div>
