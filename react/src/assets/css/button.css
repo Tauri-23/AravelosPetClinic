@@ -25,7 +25,9 @@
     border: 2px white solid;
     background-color: #a3a3a3;
     color:white;
+    padding: 10px 20px;
     cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition */
 }
 .sub-button:hover {
     background-color: #bebebe;

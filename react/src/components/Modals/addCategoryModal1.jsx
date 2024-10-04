@@ -8,15 +8,13 @@ export default function AddCategoryModal1({ handleAddCategoryPost, onClose }) {
   return (
     <div className={`modal1`}>
       {/* Box of modal */}
-      <div className="modal-box3">
+      <div className="addcat modal-box3">
         <div className="circle-btn1 semi-medium-f" >
                     <Icon.X className="pointer" onClick={onClose}/>
         </div>
 
         {/* Header */}
-        <div className="text-center mar-bottom-1">
-          <div className="text-m1 anybody fw-bold">Add Category</div>
-        </div>
+          <div className="addcat text-m1 anybody fw-bold border-bottom bottom-margin-s">Add Category</div>
 
         <input
           className="categoryInput"
@@ -27,11 +25,11 @@ export default function AddCategoryModal1({ handleAddCategoryPost, onClose }) {
         />
 
         {/* Buttons */}
-        <div className="button-container">
+        <div className="addcat button-container">
 
 
           <div
-            className="sub-button"
+            className="addcat text-center sub-button"
             onClick={onClose}
           >
             Cancel
@@ -41,7 +39,7 @@ export default function AddCategoryModal1({ handleAddCategoryPost, onClose }) {
               handleAddCategoryPost(newCategory);
               onClose();
             }}
-            className="primary-btn-blue1 text-center"
+            className="addcat primary-btn-blue1 text-center"
           >
             Yes
           </div>

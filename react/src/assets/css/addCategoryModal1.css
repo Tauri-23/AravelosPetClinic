@@ -1,24 +1,11 @@
-.modal1 {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Ensure modal is above other content */
-  }
-
-  .modal-box3 {
+  .addcat.modal-box3 {
     border-radius: 1.4vw;
     width: 300px !important; /* Fixed width for modal */
     text-align: center;
   }
 
 
-  .text-m1 {
+  .addcat.text-m1 {
     font-size: 20px; /* Font size for header */
   }
 
@@ -31,13 +18,17 @@
     font-size: 16px; /* Font size for input */
   }
 
-  .button-container {
+  .addcat.button-container {
     display: flex;
     justify-content: space-between; /* Spacing between buttons */
-    margin-top: 20px; /* Space above buttons */
+    margin-top: 10px; /* Space above buttons */
   }
 
-  .primary-btn-blue1 {
+  .addcat.primary-btn-blue1 {
+    flex: 1; /* Flex to take equal space */
+    margin-right: 10px; /* Space between buttons */
+  }
+  .addcat.sub-button {
     flex: 1; /* Flex to take equal space */
     margin-right: 10px; /* Space between buttons */
   }

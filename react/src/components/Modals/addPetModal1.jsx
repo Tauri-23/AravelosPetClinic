@@ -45,7 +45,7 @@ export default function AddPetModal1({ handleAddPetPost, onClose }) {
             <button onClick={onClose} className="cancel-button">Close</button>
           </div>
 
-            
+
         </div>
     )
 }

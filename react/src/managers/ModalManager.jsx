@@ -2,6 +2,7 @@ import { AddAppointmentConfirmationModal1 } from "../components/Modals/addAppoin
 import AddCategoryModal1 from "../components/Modals/addCategoryModal1";
 import AddPetModal1 from "../components/Modals/addPetModal1";
 import AppointmentRecordModal1 from "../components/Modals/appointmentRecordModal1";
+import { ConfirmActionModal1 } from "../components/Modals/confirmActionModal1";
 import DeleteCategoryModal1 from "../components/Modals/deleteCategoryModal1";
 import EditCategoryModal1 from "../components/Modals/editCategoryModal1";
 import EditPetModal1 from "../components/Modals/editPetModal1";
@@ -39,9 +40,12 @@ const ModalManager = () => {
             case 'DeleteCategoryModal1':
                 return <DeleteCategoryModal1     {...modalState.props} onClose={hideModal}/>;
 
-            case 'EditPetModal1': // Add the new EditPetModal1 case
+            case 'EditPetModal1':
                 return <EditPetModal1 {...modalState.props} onClose={hideModal} />;
-    
+
+            case 'ConfirmActionModal1':
+            return <ConfirmActionModal1 {...modalState.props} onClose={hideModal} />;
+
 
 
             /*

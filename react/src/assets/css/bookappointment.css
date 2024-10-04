@@ -19,11 +19,9 @@
     width: 1px;
     background-color: #1D3675;
 }
-.main-button, .sub-button{
-    width: fit-content;
-    padding: .5vw 2vw;
+.sub-button, .primary-btn-blue1{
+    width:fit-content;
 }
-
 .modal-footer{
     justify-content: space-between!important;
 }

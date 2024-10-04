@@ -24,9 +24,10 @@
     text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
+    overflow: hidden;
 }
 .modal-content1{
-    width: 40%!important;
+    width: 50%!important;
 }
 .petPictureCont{
     width:40%;
@@ -34,4 +35,34 @@
 }
 .petPicture{
     border-radius: 50%;
+}
+.appt-details {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}.flex-grow {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.schedule-info {
+    flex: 1;
+}
+.btn-row {
+    margin-top: auto;
+    padding-top: 20px;
+    display:flex;
+}
+.reasonCont{
+    border:1px var(--blue1) solid;
+    padding:10px 10px;
+    border-radius:5px;
+    overflow:auto;
+    height: 10vw;
+    margin-top: .5vw;
+}
+.reason{
+    display: flex;
+    height: 10vw;
+    flex-direction: column;
 }

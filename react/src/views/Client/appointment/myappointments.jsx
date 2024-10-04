@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import "../../../assets/css/myappointments.css";
+import { notify } from "../../../assets/js/utils.jsx";
 import { useStateContext } from '../../../contexts/ContextProvider';
 import { fetchAllClientAppointments } from '../../../services/AppointmentServices.jsx';
 import axiosClient from '../../../axios-client.js';
@@ -18,6 +19,7 @@ export default function MyAppointments() {
     const [activeTab, setActiveTab] = useState("Pending");
     const [appointments, setAppointments] = useState([]);
     const [pets, setPets] = useState(null);
+
     const serviceOptions = [
         { id: "checkup", label: "Check-up" },
         { id: "deworming", label: "Deworming" },
@@ -26,11 +28,46 @@ export default function MyAppointments() {
         { id: "vaccination", label: "Vaccination" },
     ];
 
-    const handleAppointmentRecordClick = (recordPetName, recordPetPic, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus)=> {
-        showModal('AppointmentRecordModal1', {recordPetName, recordPetPic, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus})
-        console.log("Appointment Record Clicked", recordPetName, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus);
+    const handleAppointmentRecordClick = (recordId, recordPetName, recordPetPic, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel)=> {
+        showModal('AppointmentRecordModal1', {recordId, recordPetName, recordPetPic, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel})
+        console.log("Appointment Record Clicked", recordId, recordPetName, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus, handleCancel);
     }
 
+    const handleCancelPost =(recordId, recordReason, handleFunction) => {
+        if (!recordId) {
+            console.error("No appointment selected for cancellation.");
+            return;
+        }
+
+        const formData = {
+            appointment: recordId, // Pass the selected appointment ID
+            reason:recordReason || 'No reason provided.'
+        };
+
+        axiosClient.post(`/cancel-appointment/${recordId}`, formData)
+            .then(({ data }) => {
+                if (data.status === 200) {
+                    notify('success', data.message, 'top-center', 3000);
+                    setAppointments(prev => prev.filter(record => record.id !== selectedAppointmentId)); // Remove the canceled appointment from state
+                } else {
+                    notify('error', data.message, 'top-center', 3000);
+                }
+            }).catch(error => {
+                console.error(error);
+                notify('error', 'An error occurred. Please try again.', 'top-center', 3000);
+            });
+    }
+    const handleCancel = (e, recordId) =>{
+        e.preventDefault();
+        const handleFunction = "handleCancelPost"
+        if (!recordId) {
+            console.error("No appointment selected for cancellation.");
+            return;
+        }
+        showModal('ConfirmActionModal1', {
+            handlePost: () => handleCancelPost(recordId), handleFunction // Pass appointmentId to handlePost
+        });
+    }
     useEffect(() => {
         const getAllPets = async() => {
           try {
@@ -165,7 +202,21 @@ export default function MyAppointments() {
                     {appointments.length > 0 &&
                         appointments.map(record =>
                             record.status === activeTab && (
-                                <AppointmentRecord key={record.id} handleAppointmentRecordClick={handleAppointmentRecordClick} recordPetPic={record.petPic} recordPetName={record.petName} recordService={record.service} serviceOptions={serviceOptions} recordSchedule={record.date_time} recordRequestDate={record.created_at} recordCancelDate={record.cancelled_at} recordApprovedDate={record.approved_at} recordRejectDate={record.rejected_at} recordReason={record.reason} recordStatus={record.status}/>
+                                <AppointmentRecord key={record.id}
+                                recordId={record.id}
+                                handleAppointmentRecordClick={handleAppointmentRecordClick}
+                                recordPetPic={record.petPic}
+                                recordPetName={record.petName}
+                                recordService={record.service}
+                                serviceOptions={serviceOptions}
+                                recordSchedule={record.date_time}
+                                recordRequestDate={record.created_at}
+                                recordCancelDate={record.cancelled_at}
+                                recordApprovedDate={record.approved_at}
+                                recordRejectDate={record.rejected_at}
+                                recordReason={record.reason}
+                                recordStatus={record.status}
+                                handleCancel={(e) => handleCancel(e, record.id)}/>
                                 // <div className='appt-record' key={record.id}>
                                 //     {serviceOptions.find(option => option.id === record.service)?.label}, {record.petName}, {record.date_time}
                                 // </div>

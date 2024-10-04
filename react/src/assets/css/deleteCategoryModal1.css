@@ -10,7 +10,7 @@
     align-items: center;
     z-index: 1000;
   }
-  
+
   .modal-box {
     background: white;
     padding: 20px;
@@ -18,13 +18,13 @@
     text-align: center;
     position: relative;
   }
-  
+
   .button-container {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 10px;
   }
-  
+
   .confirm-delete-button,
   .cancel-delete-button {
     background: #007bff;
@@ -34,13 +34,12 @@
     border-radius: 5px;
     cursor: pointer;
   }
-  
+
   .cancel-delete-button {
     background: #dc3545;
   }
-  
+
   .confirm-delete-button:hover,
   .cancel-delete-button:hover {
     opacity: 0.8;
   }
-  

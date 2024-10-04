@@ -62,6 +62,8 @@ Route::get('/get-all-inventory-categories', [inventoryCategoriesController::clas
 */
 Route::get('/get-all-appointments-where-client/{clientId}', [AppointmentsController::class,'getAllAppointmentWhereClient']);
 Route::post('/add-appointment', [AppointmentsController::class,'createAppointment']);
+Route::post('/cancel-appointment/{appointmentId}', [AppointmentsController::class,'cancelAppointment']);
+
 
 
 
