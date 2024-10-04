@@ -8,7 +8,7 @@ export default function AddPetModal1({ handleAddPetPost, onClose }) {
   const [petPic, setPetPic] = useState('');
 
     return(
-        <div className= {`modal1`}>
+        <div className= {`modal`}>
 
 
             {/* Box of modal */}

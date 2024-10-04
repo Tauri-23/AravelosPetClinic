@@ -4,6 +4,7 @@ import AddPetModal1 from "../components/Modals/addPetModal1";
 import AppointmentRecordModal1 from "../components/Modals/appointmentRecordModal1";
 import DeleteCategoryModal1 from "../components/Modals/deleteCategoryModal1";
 import EditCategoryModal1 from "../components/Modals/editCategoryModal1";
+import EditPetModal1 from "../components/Modals/editPetModal1";
 import InventoryBoxModal1 from "../components/Modals/inventoryBoxModal1";
 import { useModal } from "../contexts/ModalContext";
 
@@ -36,9 +37,11 @@ const ModalManager = () => {
                 return <InventoryBoxModal1 {...modalState.props} onClose={hideModal}/>;
 
             case 'DeleteCategoryModal1':
-                    return <DeleteCategoryModal1     {...modalState.props} onClose={hideModal}/>;
+                return <DeleteCategoryModal1     {...modalState.props} onClose={hideModal}/>;
 
-
+            case 'EditPetModal1': // Add the new EditPetModal1 case
+                return <EditPetModal1 {...modalState.props} onClose={hideModal} />;
+    
 
 
             /*

@@ -1,0 +1,58 @@
+import { useState } from "react";
+import * as Icon from "react-bootstrap-icons"; 
+
+const EditPetModal1 = ({ pet, onClose }) => {
+    const [editPetData, setEditPetData] = useState({
+        name: pet.name,
+        type: pet.type,
+        breed: pet.breed,
+        // Add other pet fields as needed
+    });
+
+    const handleInputChange = (e) => {
+        setEditPetData({ ...editPetData, [e.target.name]: e.target.value });
+    };
+
+    const handleSave = () => {
+        // Send API request to update pet information
+        axiosClient.put(`/update-pet/${pet.id}`, editPetData)
+            .then(({ data }) => {
+                if (data.status === 200) {
+                    notify('success', data.message, 'top-center', 3000);
+                    // Update the pet in the user's list
+                    setPets(prevPets => prevPets.map(p => p.id === pet.id ? { ...p, ...editPetData } : p));
+                    onClose();
+                } else {
+                    notify('error', data.message, 'top-center', 3000);
+                }
+            })
+            .catch(error => console.error(error));
+    };
+
+    return (
+        <div className="modal1">
+        <div className="modal-box3">
+            <h2>Edit Pet Information</h2>
+            <form onSubmit={handleSave}>
+                <div className="input-group">
+                    <label htmlFor="name">Name:</label>
+                    <input type="text" id="name" name="name" value={editPetData.name} onChange={handleInputChange} />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="type">Type:</label>
+                    <input type="text" id="type" name="type" value={editPetData.type} onChange={handleInputChange} />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="breed">Breed:</label>
+                    <input type="text" id="breed" name="breed" value={editPetData.breed} onChange={handleInputChange} />
+                </div>
+                {/* Add other input fields as needed */}
+                <button type="submit">Save Changes</button>
+            </form>
+            <button onClick={onClose}>Cancel</button>
+        </div>
+        </div>
+    );
+};
+
+export default EditPetModal1;
