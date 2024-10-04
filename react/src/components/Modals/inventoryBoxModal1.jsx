@@ -15,7 +15,7 @@ const InventoryBoxModal1 = ({ itemName, itemImage, itemQuantity, itemDescription
         <div className="modal2"> {/* Updated modal2 class for consistency */}
             <div className="modal-content1">
                 <div className="circle-btn1 semi-medium-f">
-                    <Icon.X onClick={onClose} />
+                    <Icon.X className="pointer" onClick={onClose} />
                 </div>
                 <div className='modalHeader1 bottom-margin-s bold anybody semi-medium-f'>
                     <span>Item Details</span>

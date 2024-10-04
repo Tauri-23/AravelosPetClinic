@@ -34,7 +34,7 @@ h3 {
   background: lightblue;
   font-size: 30px;
   text-align: center;
-  border-radius: 20px;
+  border-radius: var(--rounded_conts);
 }
 
 .right-side {

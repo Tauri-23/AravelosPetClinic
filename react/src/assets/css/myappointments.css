@@ -17,3 +17,6 @@ a{
     width: -webkit-fill-available;
     text-align: center;
 }
+.headers{
+    gap:20px;
+}

@@ -28,7 +28,7 @@
 .edit-modal-box {
     background-color: white;
     padding: 20px; /* Add space around content */
-    border-radius: 20px;
+    border-radius: var(--rounded_conts);
     width: 400px; /* You can adjust the width based on content */
     max-height: 80vh; /* Maximum height of the modal box */
     overflow-y: auto; /* Enable vertical scrolling for the modal */
@@ -38,7 +38,7 @@
 }
 
 /* Title Styling */
-.text-center {
+.text-center.header {
     text-align: center; /* Center title */
     margin-bottom: 15px; /* Space below the title */
 }
@@ -99,17 +99,3 @@
     cursor: pointer;
 }
 
-/* Primary Button */
-.primary-btn-blue1 {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px; /* Padding for primary button */
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s; /* Smooth transition */
-}
-
-.primary-btn-blue1:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-}

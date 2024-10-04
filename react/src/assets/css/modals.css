@@ -11,14 +11,13 @@
 .modal-box3{
     width: 35vw;
     padding: 25px;
-    border-radius: var(--radius);
+    border-radius: var(--rounded_conts);
     background: white;
     filter: drop-shadow(0 0 10px var(--black2));
 }
 .circle-btn1{
     display: flex;
     flex-direction: row-reverse;
-    cursor: pointer;
 }
 hr{
     margin:.5vw!important;

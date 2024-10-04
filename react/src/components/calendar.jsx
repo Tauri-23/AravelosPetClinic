@@ -1,4 +1,5 @@
 import "../assets/css/calendar.css";
+import "../assets/css/app.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import PropTypes from 'prop-types';

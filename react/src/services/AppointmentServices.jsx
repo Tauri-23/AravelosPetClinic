@@ -26,12 +26,16 @@ export const fetchAllClientAppointments = async(clientId) => {
         console.log('Appointments:', appointments); // Log all fetched appointments
 
         const pets = await fetchPetsByClientId(clientId);
-        const petMap = new Map(pets.map(pet => [String(pet.id), pet.name])); // Create a map of pet IDs to names
-
+        const petMap = new Map(pets.map(pet => [
+            String(pet.id),
+            { name: pet.name, picture: pet.picture }
+        ]));
         const updatedAppointments = appointments.map((appointment) => {
+            const petInfo = petMap.get(appointment.pet) || { name: 'Unknown Pet', picture: 'defaultPetPic.jpg' };
             return {
                 ...appointment,
-                petName: petMap.get(appointment.pet) || 'Unknown Pet', // Retrieve the pet name using the pet ID
+                petName: petInfo.name,
+                petPic: petInfo.picture
             };
         });
         console.log('Pets:', pets); // Log the pets data

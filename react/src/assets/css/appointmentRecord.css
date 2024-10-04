@@ -1,0 +1,37 @@
+.appt-record-three{
+    margin-bottom:20px;
+    display:grid;
+    grid-template-columns: repeat(3, minmax(100px,1fr));
+    gap:20px;
+    height:40px;
+    border-bottom: 1px solid #ccc;
+}.appt-record-four{
+    margin-bottom:20px;
+    display:grid;
+    grid-template-columns: repeat(4, minmax(100px,1fr));
+    gap:20px;
+    height:40px;
+    border-bottom: 1px solid #ccc;
+}.appt-record-five{
+    margin-bottom:20px;
+    display:grid;
+    grid-template-columns: repeat(5, minmax(100px,1fr));
+    gap:20px;
+    height:40px;
+    border-bottom: 1px solid #ccc;
+}
+.content-deet{
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.modal-content1{
+    width: 40%!important;
+}
+.petPictureCont{
+    width:40%;
+    border-radius: 50%;
+}
+.petPicture{
+    border-radius: 50%;
+}

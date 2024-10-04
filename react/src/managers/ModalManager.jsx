@@ -1,6 +1,7 @@
 import { AddAppointmentConfirmationModal1 } from "../components/Modals/addAppointmentConfirmationModal1";
 import AddCategoryModal1 from "../components/Modals/addCategoryModal1";
 import AddPetModal1 from "../components/Modals/addPetModal1";
+import AppointmentRecordModal1 from "../components/Modals/appointmentRecordModal1";
 import DeleteCategoryModal1 from "../components/Modals/deleteCategoryModal1";
 import EditCategoryModal1 from "../components/Modals/editCategoryModal1";
 import InventoryBoxModal1 from "../components/Modals/inventoryBoxModal1";
@@ -18,6 +19,9 @@ const ModalManager = () => {
             // Listings
             case 'AddAppointmentConfirmationModal1':
                 return <AddAppointmentConfirmationModal1 {...modalState.props} onClose={hideModal}/>;
+
+            case 'AppointmentRecordModal1':
+                    return <AppointmentRecordModal1 {...modalState.props} onClose={hideModal}/>;
 
             case 'AddCategoryModal1':
                 return <AddCategoryModal1 {...modalState.props} onClose={hideModal}/>;

@@ -3,7 +3,7 @@
 
 :root {
     --blue1: #1D3675;
-    --radius: 20px;
+    --rounded_conts: 1.4vw;
     --grey1: #585858;
 }
 
@@ -50,7 +50,7 @@ a{
 .big-f{
     font-size:5vw;
 }
-
+.normal{font-weight: normal;}
 .semi-bold{
     font-weight: 600;
 }
@@ -101,12 +101,20 @@ a{
 }
 .small-form{
  background-color: white;
- border-radius:20px;
+ border-radius: 1.4vw;
  border:1px solid rgb(144, 144, 144, 0.48);
  padding: 2vw;
 }
+.border-bottom{
+    border-bottom: 1px solid #ccc;
+}
 
-
+.pointer{
+    cursor: pointer;
+}
+.circle{
+    border-radius: 50%;
+}
 /*
 |----------------------------------------
 | Margins

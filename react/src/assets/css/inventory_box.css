@@ -10,13 +10,13 @@
     width: var(--box-width); /* Adjust width as needed */
     height: var(--box-height); /* Adjust height as needed */
     background: white; /* Background color */
-    border-radius: 20px; /* Rounded corners */
+    border-radius: var(--rounded_conts); /* Rounded corners */
     text-decoration: none; /* Remove underline from the link */
     color: #333; /* Text color */
     padding: 20px; /* Padding for inner spacing */
     transition: transform 0.3s; /* Smooth hover effect */
     filter: drop-shadow(0 0 1px var(--grey1));
-    
+
 }
 
 .inventory-box:hover {

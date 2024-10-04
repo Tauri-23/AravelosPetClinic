@@ -7,7 +7,7 @@ export default function EditItemModal1({ item, onClose, handleEditItemClick }) {
     <div className="edit-modal">
       <div className="edit-modal-box">
         <div className="circle-btn1 semi-medium-f">
-          <Icon.X onClick={onClose} />
+          <Icon.X className="pointer" onClick={onClose} />
         </div>
 
         <div className="text-center mar-bottom-1">

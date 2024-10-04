@@ -5,9 +5,13 @@ import { useStateContext } from '../../../contexts/ContextProvider';
 import { fetchAllClientAppointments } from '../../../services/AppointmentServices.jsx';
 import axiosClient from '../../../axios-client.js';
 import { fetchAllPetsWhereClient } from '../../../services/PetServices';
+import AppointmentRecord from '../../../components/appointmentRecord.jsx';
+import { useModal } from '../../../contexts/ModalContext.jsx';
+import Button from '../../../components/button.jsx';
 
 
 export default function MyAppointments() {
+    const {showModal} = useModal();
     const { user, userType, token, setUserType, setUser, setToken } = useStateContext();
     const location = useLocation();
     const url = location.pathname;
@@ -21,6 +25,12 @@ export default function MyAppointments() {
         { id: "parasiticControl", label: "Parasitic Control" },
         { id: "vaccination", label: "Vaccination" },
     ];
+
+    const handleAppointmentRecordClick = (recordPetName, recordPetPic, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus)=> {
+        showModal('AppointmentRecordModal1', {recordPetName, recordPetPic, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus})
+        console.log("Appointment Record Clicked", recordPetName, recordService, serviceOptions, recordSchedule, recordRequestDate, recordCancelDate, recordApprovedDate, recordRejectDate, recordReason, recordStatus);
+    }
+
     useEffect(() => {
         const getAllPets = async() => {
           try {
@@ -57,43 +67,44 @@ export default function MyAppointments() {
             case "Pending":
                 return (
                     <>
-                        <div className='detailHeader column semi-bold'>Appointment Type</div>
                         <div className='detailHeader column semi-bold'>Pet Name</div>
+                        <div className='detailHeader column semi-bold'>Appointment Type</div>
                         <div className='detailHeader column semi-bold'>Requested Schedule</div>
                     </>
                 );
             case "Approved":
                 return (
                     <>
-                        <div className='detailHeader column semi-bold'>Appointment Type</div>
                         <div className='detailHeader column semi-bold'>Pet Name</div>
+                        <div className='detailHeader column semi-bold'>Appointment Type</div>
                         <div className='detailHeader column semi-bold'>Scheduled Date</div>
                         <div className='detailHeader column semi-bold'>Date Approved</div>
-                    </>
-                );
-            case "Cancelled":
-                return (
-                    <>
-                        <div className='detailHeader column semi-bold'>Appointment Type</div>
-                        <div className='detailHeader column semi-bold'>Pet Name</div>
-                        <div className='detailHeader column semi-bold'>Date Cancelled</div>
-                        <div className='detailHeader column semi-bold'>Reason</div>
                     </>
                 );
             case "Completed":
                 return (
                     <>
-                        <div className='detailHeader column semi-bold'>Appointment Type</div>
                         <div className='detailHeader column semi-bold'>Pet Name</div>
-                        <div className='detailHeader column semi-bold'>Date Requested</div>
+                        <div className='detailHeader column semi-bold'>Appointment Type</div>
                         <div className='detailHeader column semi-bold'>Date Completed</div>
+                    </>
+                );
+            case "Cancelled":
+                return (
+                    <>
+                        <div className='detailHeader column semi-bold'>Pet Name</div>
+                        <div className='detailHeader column semi-bold'>Appointment Type</div>
+                        <div className='detailHeader column semi-bold'>Requested Schedule</div>
+                        <div className='detailHeader column semi-bold'>Date Cancelled</div>
+                        <div className='detailHeader column semi-bold'>Reason</div>
                     </>
                 );
             case "Rejected":
                 return (
                     <>
-                        <div className='detailHeader column semi-bold'>Appointment Type</div>
                         <div className='detailHeader column semi-bold'>Pet Name</div>
+                        <div className='detailHeader column semi-bold'>Appointment Type</div>
+                        <div className='detailHeader column semi-bold'>Requested Schedule</div>
                         <div className='detailHeader column semi-bold'>Date Rejected</div>
                         <div className='detailHeader column semi-bold'>Reason</div>
                     </>
@@ -124,15 +135,15 @@ export default function MyAppointments() {
                             </div>
                         </Link>
                         <Link to={''} className="anybody semi-bold right-margin">
-                            <div onClick={() => setActiveTab("Cancelled")}>
-                                Cancelled
-                                <div className={`nav1-line${activeTab === "Cancelled" ? " active" : ""}`}></div>
-                            </div>
-                        </Link>
-                        <Link to={''} className="anybody semi-bold right-margin">
                             <div onClick={() => setActiveTab("Completed")}>
                                 Completed
                                 <div className={`nav1-line${activeTab === "Completed" ? " active" : ""}`}></div>
+                            </div>
+                        </Link>
+                        <Link to={''} className="anybody semi-bold right-margin">
+                            <div onClick={() => setActiveTab("Cancelled")}>
+                                Cancelled
+                                <div className={`nav1-line${activeTab === "Cancelled" ? " active" : ""}`}></div>
                             </div>
                         </Link>
                         <Link to={''} className="anybody semi-bold right-margin">
@@ -147,21 +158,20 @@ export default function MyAppointments() {
                     <Link to={'../BookAppointment'}><button className="main-button">Book an Appointment</button></Link> */}
                 </div>
             </div>
-            <div className="myappt small-form d-flex bottom-margin-s">
+            <div className="myappt headers small-form d-flex bottom-margin-s">
                 {renderHeaders()}
             </div>
             <div className="myappt small-form">
-                <div className="appt-record">
                     {appointments.length > 0 &&
-                        appointments.map(item =>
-                            item.status === activeTab && (
-                                <div className='aa' key={item.id}>
-                                    {serviceOptions.find(option => option.id === item.service)?.label}, {item.petName}, {item.date_time}
-                                </div>
+                        appointments.map(record =>
+                            record.status === activeTab && (
+                                <AppointmentRecord key={record.id} handleAppointmentRecordClick={handleAppointmentRecordClick} recordPetPic={record.petPic} recordPetName={record.petName} recordService={record.service} serviceOptions={serviceOptions} recordSchedule={record.date_time} recordRequestDate={record.created_at} recordCancelDate={record.cancelled_at} recordApprovedDate={record.approved_at} recordRejectDate={record.rejected_at} recordReason={record.reason} recordStatus={record.status}/>
+                                // <div className='appt-record' key={record.id}>
+                                //     {serviceOptions.find(option => option.id === record.service)?.label}, {record.petName}, {record.date_time}
+                                // </div>
                             )
                         )
                     }
-                </div>
             </div>
 
         </div>

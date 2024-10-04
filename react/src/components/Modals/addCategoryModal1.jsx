@@ -10,7 +10,7 @@ export default function AddCategoryModal1({ handleAddCategoryPost, onClose }) {
       {/* Box of modal */}
       <div className="modal-box3">
         <div className="circle-btn1 semi-medium-f" >
-                    <Icon.X onClick={onClose}/>
+                    <Icon.X className="pointer" onClick={onClose}/>
         </div>
 
         {/* Header */}
@@ -28,8 +28,8 @@ export default function AddCategoryModal1({ handleAddCategoryPost, onClose }) {
 
         {/* Buttons */}
         <div className="button-container">
-          
-          
+
+
           <div
             className="sub-button"
             onClick={onClose}

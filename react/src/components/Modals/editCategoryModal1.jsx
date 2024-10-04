@@ -1,12 +1,12 @@
-import { useState } from "react"; 
+import { useState } from "react";
 import * as Icon from "react-bootstrap-icons";
 import DeleteCategoryModal1 from "./deleteCategoryModal1"; // Adjust the path as needed
 import "../../assets/css/editCategoryModal1.css"; // Import the CSS file
 
 export default function EditCategoryModal1({ categories, handleEditCategoryClick, handleDeleteCategoryClick, onClose }) {
-  const [confirmDeleteId, setConfirmDeleteId] = useState(null); 
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [categoryNameToDelete, setCategoryNameToDelete] = useState(""); 
+  const [categoryNameToDelete, setCategoryNameToDelete] = useState("");
 
   const handleConfirmDelete = (categoryId, categoryName) => {
     setConfirmDeleteId(categoryId);
@@ -26,9 +26,9 @@ export default function EditCategoryModal1({ categories, handleEditCategoryClick
     <div className="edit-modal">
       <div className="edit-modal-box">
         <div className="circle-btn1 semi-medium-f">
-          <Icon.X onClick={onClose} />
+          <Icon.X className="pointer" onClick={onClose} />
         </div>
-        <div className="text-center mar-bottom-1">
+        <div className="text-center header mar-bottom-1">
           <div className="text-m1 anybody fw-bold">Edit Categories</div>
         </div>
 
@@ -40,17 +40,17 @@ export default function EditCategoryModal1({ categories, handleEditCategoryClick
               <div className="button-container">
                 <img
                   className="small-button edit-btn"
-                  src="/assets/media/icons/edit_btn.svg" 
+                  src="/assets/media/icons/edit_btn.svg"
                   alt="Edit"
                   title="Edit Category"
                   onClick={() => handleEditCategoryClick(category.id, category.name)}
                 />
                 <img
                   className="small-button delete-btn"
-                  src="/assets/media/icons/delete.svg" 
+                  src="/assets/media/icons/delete.svg"
                   alt="Delete"
                   title="Delete Category"
-                  onClick={() => handleConfirmDelete(category.id, category.name)} 
+                  onClick={() => handleConfirmDelete(category.id, category.name)}
                 />
               </div>
             </div>
