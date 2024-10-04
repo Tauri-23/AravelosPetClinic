@@ -9,7 +9,7 @@ export default function EditItemConfirmationModal1({ onConfirm, onCancel }) {
         <div className="circle-btn1 semi-medium-f">
           <Icon.X className="pointer" onClick={onCancel} />
         </div>
-        <div className="text-center anybody mar-bottom-1">
+        <div className="editCatModal text-center anybody mar-bottom-1">
           <h4>Confirm Changes</h4>
         </div>
         <div className="confirmation-text">

@@ -43,7 +43,7 @@ export default function MyAppointments() {
     }, []);
 
 
-    /* 
+    /*
     | Debugging
     */
     useEffect(() => {
@@ -59,7 +59,7 @@ export default function MyAppointments() {
 
 
     const handleCancelPost =(recordId, recordReason) => {
-        
+
         const formData=new FormData();
         formData.append('appointmentId', recordId);
         formData.append('reason', recordReason || 'No reason provided.');
@@ -89,7 +89,7 @@ export default function MyAppointments() {
         showModal('ConfirmActionModal1',  {handleCancelPost, recordId, recordReason, handleFunction});
     }
 
-    
+
 
 
       const renderHeaders = () => {

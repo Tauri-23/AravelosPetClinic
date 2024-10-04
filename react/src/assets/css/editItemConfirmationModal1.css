@@ -32,7 +32,7 @@
 }
 
 /* Title Styling */
-.text-center {
+.editCatModal.text-center {
     text-align: center;
     margin-bottom: 20px;
 }

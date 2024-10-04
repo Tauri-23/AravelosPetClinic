@@ -40,7 +40,7 @@ export default function AppointmentRecord({
             case 'Approved':
                 return (
                     <div className='appt-record-four approved' onClick={() => handleAppointmentRecordClick(record)}>
-                        <div className='content-deet'>{record.petName}</div>
+                        <div className='content-deet'>{record.pet.name}</div>
                         <div className='content-deet'>{serviceLabel}</div>
                         <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
                                     year: 'numeric',
@@ -51,7 +51,7 @@ export default function AppointmentRecord({
                                     hour12: true,
                                     timeZone: 'Asia/Manila'
                                 })}</div>
-                        <div className='content-deet'>{recordApprovedDate ? new Date(recordApprovedDate).toLocaleString('en-US', {
+                        <div className='content-deet'>{record.approved_at ? new Date(record.approved_at).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',
@@ -70,7 +70,7 @@ export default function AppointmentRecord({
             case 'Completed':
                 return (
                     <div className='appt-record-three rejected' onClick={() => handleAppointmentRecordClick(record)}>
-                        <div className='content-deet'>{record.petName}</div>
+                        <div className='content-deet'>{record.pet.name}</div>
                         <div className='content-deet'>{serviceLabel}</div>
                         <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
                                     year: 'numeric',
@@ -92,7 +92,7 @@ export default function AppointmentRecord({
             case 'Cancelled':
                 return (
                     <div className='appt-record-five rejected' onClick={() => handleAppointmentRecordClick(record)}>
-                        <div className='content-deet'>{record.petName}</div>
+                        <div className='content-deet'>{record.pet.name}</div>
                         <div className='content-deet'>{serviceLabel}</div>
                         <div className='content-deet'>{new Date(record.date_time).toLocaleString()}</div>
                         <div className='content-deet'>{record.cancelled_at ? new Date(record.cancelled_at).toLocaleString('en-US', {
@@ -114,7 +114,7 @@ export default function AppointmentRecord({
             case 'Rejected':
                 return (
                     <div className='appt-record-five rejected' onClick={() => handleAppointmentRecordClick(record)}>
-                        <div className='content-deet'>{record.petName}</div>
+                        <div className='content-deet'>{record.pet.name}</div>
                         <div className='content-deet'>{serviceLabel}</div>
                         <div className='content-deet'>{new Date(record.date_time).toLocaleString()}</div>
                         <div className='content-deet'>{record.rejected_at ? new Date(record.rejected_at).toLocaleString('en-US', {
@@ -136,7 +136,7 @@ export default function AppointmentRecord({
             default:
                 return (
                     <div className='appt-record' onClick={() => handleAppointmentRecordClick(record)}>
-                        <div className='content-deet'>{record.petName}</div>
+                        <div className='content-deet'>{record.pet.name}</div>
                         <div className='content-deet'>{serviceLabel}</div>
                         <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
                                     year: 'numeric',
