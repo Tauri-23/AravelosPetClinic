@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function manageProfiles() {
+function ManageProfiles() {
   const [users, setUsers] = useState([]);
   const [newAdminEmail, setNewAdminEmail] = useState('');
 
@@ -122,4 +122,4 @@ function manageProfiles() {
   );
 }
 
-export default manageProfiles;
+export default ManageProfiles;
