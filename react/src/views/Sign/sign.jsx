@@ -4,6 +4,7 @@ import "../../assets/css/app.css";
 import "../../assets/css/sign.css";
 import axiosClient from "../../axios-client.js";
 import { useStateContext } from "../../contexts/ContextProvider.jsx";
+import { notify } from "../../assets/js/utils.jsx";
 
 
 export default function Sign() {
@@ -70,9 +71,9 @@ export default function Sign() {
         setToken(data.token);
         setUserType(data.user_type);
         if(data.status === 200) {
-          alert(data.message);
+          notify('success', data.message, 'top-center', 3000);
         } else {
-          alert(data.message);
+          notify('error', data.message, 'top-center', 3000);
         }
       }).catch(error => console.error(error));
     }

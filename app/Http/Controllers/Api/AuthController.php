@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Contracts\IGenerateIdService;
 use App\Http\Controllers\Controller;
+use App\Models\user_admins;
 use App\Models\user_clients;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -73,9 +74,18 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $client = user_clients::where('email', $request->email)->first();
+        $admin = user_admins::where('email', $request->email)->first();
 
         if($client && Hash::check($request->password, $client->password))
         {
+            if($client->status === 'suspended')
+            {
+                return response()->json([
+                    'status' => 401,
+                    'message' => "Account suspended."
+                ]);
+            }
+
             $token = $client->createToken('main')->plainTextToken;
 
             return response()->json([
@@ -84,6 +94,18 @@ class AuthController extends Controller
                 'user' => $client,
                 'token' => $token,
                 'user_type' => "client"
+            ]);
+        }
+        else if($admin && Hash::check($request->password, $admin->password))
+        {
+            $token = $admin->createToken('main')->plainTextToken;
+            return response()->json([
+                'status' => 200,
+                'message' => 'Success',
+                'user' => $admin,
+                'token' => $token,
+                'role' => $admin->role,
+                'user_type' => "admin"
             ]);
         }
         else {
@@ -119,7 +141,7 @@ class AuthController extends Controller
     public function getUser(Request $request) 
     {
         $user = $request->user();
-        $userType = $user instanceof user_clients ? 'client' : 'invalid'; //This is for now
+        $userType = $user instanceof user_clients ? 'client' : 'admin'; //This is for now
         return response()->json([
             'user' => $user,
             'user_type' => $userType,

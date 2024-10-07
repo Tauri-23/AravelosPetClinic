@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import { useStateContext } from "../../contexts/ContextProvider";
 import axiosClient from "../../axios-client";
+import { ToastContainer } from "react-toastify";
 
 
 export default function GuestDefault() {
@@ -31,6 +32,9 @@ export default function GuestDefault() {
         if (userType === 'client') {
             return <Navigate to="/ClientIndex" />;
         }
+        else if(userType === 'admin') {
+            return <Navigate to="/AdminIndex" />;
+        }
     }
     
     return(
@@ -49,6 +53,7 @@ export default function GuestDefault() {
         </div>
         </div>
         <Outlet/>
+        <ToastContainer/>
         </>
 
     );

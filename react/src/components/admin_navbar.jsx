@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 
-export default function AdminNavbar() {
+export default function AdminNavbar({onLogout}) {
 
     const location = useLocation();
 
@@ -19,7 +19,7 @@ export default function AdminNavbar() {
             </div>
 
             <div className="nav1-sign">
-                <Link to={'/'} className="nav1-link">Sign Out</Link>
+                <div onClick={onLogout} className="nav1-link">Sign Out</div>
             </div>
         </div>
     );
