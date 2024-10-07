@@ -10,33 +10,33 @@ function ManageProfiles() {
   const [admins, setAdmins] = useState([]);
 
 
-  useEffect(() => {
-    const getAllClients = async () => {
-        try {
-            const data = await fetchAllClientAppointments(user.id); // Pass clientId here
-            setAppointments(data);
-            console.log(data); // Log the received appointments
-        } catch (error) {
-            console.error(error);
-        }
-    };
+//   useEffect(() => {
+//     const getAllClients = async () => {
+//         try {
+//             const data = await fetchAllClientAppointments(user.id); // Pass clientId here
+//             setAppointments(data);
+//             console.log(data); // Log the received appointments
+//         } catch (error) {
+//             console.error(error);
+//         }
+//     };
 
-    getAllAppointments();
-}, []);
+//     getAllAppointments();
+// }, []);
 
-useEffect(() => {
-  const getAllAdmins = async () => {
-      try {
-          const data = await fetchAllClientAppointments(user.id); // Pass clientId here
-          setAppointments(data);
-          console.log(data); // Log the received appointments
-      } catch (error) {
-          console.error(error);
-      }
-  };
+// useEffect(() => {
+//   const getAllAdmins = async () => {
+//       try {
+//           const data = await fetchAllClientAppointments(user.id); // Pass clientId here
+//           setAppointments(data);
+//           console.log(data); // Log the received appointments
+//       } catch (error) {
+//           console.error(error);
+//       }
+//   };
 
-  getAllAppointments();
-}, []);
+//   getAllAppointments();
+// }, []);
   const renderHeaders = () => {
     switch (activeTab) {
         case "ManageClients":
