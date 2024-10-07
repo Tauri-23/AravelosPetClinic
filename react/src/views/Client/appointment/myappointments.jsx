@@ -5,10 +5,8 @@ import { notify } from "../../../assets/js/utils.jsx";
 import { useStateContext } from '../../../contexts/ContextProvider';
 import { fetchAllClientAppointments } from '../../../services/AppointmentServices.jsx';
 import axiosClient from '../../../axios-client.js';
-import { fetchAllPetsWhereClient } from '../../../services/PetServices';
 import AppointmentRecord from '../../../components/appointmentRecord.jsx';
 import { useModal } from '../../../contexts/ModalContext.jsx';
-import Button from '../../../components/button.jsx';
 import { isEmptyOrSpaces } from '../../../assets/js/utils.jsx';
 
 

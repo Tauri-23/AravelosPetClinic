@@ -1,0 +1,22 @@
+.myappt.small-form{
+    height: fit-content;
+    overflow-y: hidden;
+}
+a{
+    color: --blue1;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+.myappt.link{
+    transition: border-bottom 0.3s ease-in-out;
+    &:hover{
+        background-color: pink;
+    }
+}
+.column{
+    width: -webkit-fill-available;
+    text-align: center;
+}
+.headers{
+    gap:20px;
+}
