@@ -1,35 +1,59 @@
+.contact-us {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9; /* Light background for contrast */
+}
 
-.small{
-    margin-left: 1vw;
-}
-.big-f{
-    line-height: 1;
-    margin-bottom:20px;
-}
-.container{
+.container {
     display: flex;
-    align-items: center;
-    justify-content: space-around
+    max-width: 1200px; /* Set a max-width for larger screens */
+    width: 100%;
+    background-color: #ffffff; /* White background for the content area */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
-.contact-us{
-    margin-top: 40px;
-    flex-grow: 1;
+
+.left {
+    flex: 2; /* Take up more space than the right section */
+    padding: 20px;
+}
+
+.right {
+    flex: 1; /* Take up less space than the left section */
     display: flex;
-    flex-direction: column;
-}
-.left{
-    width:35vw;
-    height:100vh;
-}
-.right{
-    width:35w;
+    justify-content: center;
     align-items: center;
-    align-content: center;
-    height:100vh;
+    padding: 20px;
 }
-.map{
-    height:28vw;
+
+.big-f {
+    font-size: 24px; /* Large font size for titles */
+    margin-bottom: 10px;
 }
-.clinic{
-    height:28vw;
+
+.small-f {
+    font-size: 16px; /* Smaller font size for details */
+    margin: 5px 0; /* Margin for spacing between lines */
+    color: #555; /* Slightly darker text for readability */
+}
+
+.bold {
+    font-weight: bold; /* Bold text */
+}
+
+.anybody {
+    line-height: 1.5; /* Increase line height for better readability */
+}
+
+.clinic {
+    margin-top: 20px; /* Spacing above the image */
+    max-width: 100%; /* Responsive image */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.map {
+    max-width: 100%; /* Responsive image */
+    height: auto; /* Maintain aspect ratio */
 }
