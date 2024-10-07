@@ -35,7 +35,7 @@
   .edit-user-modal button {
     margin-top: 1rem; /* Add some space between buttons and form */
     display: flex; /* Center the buttons horizontally */
-    justify-content: center;
+  
   }
   .edit-user-modal .input-group {
     display: flex;

@@ -7,6 +7,8 @@ import { notify } from '../../assets/js/utils';
 import { useStateContext } from '../../contexts/ContextProvider';
 import { fetchAllPetsWhereClient } from '../../services/PetServices';
 import EditPetModal1 from '../../components/Modals/editPetModal1';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 const userprofiles = () => {
   const { showModal } = useModal();
@@ -16,6 +18,7 @@ const userprofiles = () => {
   const [selectedPet, setSelectedPet] = useState(null); // For pet modal
   const [newProfilePicture, setNewProfilePicture] = useState(null); // For user's profile picture
   const [pets, setPets] = useState(null);
+
 
   // Simulate fetching data from the database
   useEffect(() => {
@@ -100,7 +103,13 @@ const userprofiles = () => {
   return (
     <div className="profile-container">
       <div className="profile-header">
-        <img src={newProfilePicture || user.profilePicture} alt="Profile" className="profile-picture" />
+        <div className="profilepic">
+          {newProfilePicture || user.profilePicture ? (
+              <img src={newProfilePicture || user.profilePicture} alt="Profile" />
+            ) : (
+              <FontAwesomeIcon icon={faUserCircle} className="profilepic"/>
+            )}
+          </div>
         <div className="user-info">
             <>
               <h2>{user.fname} {user.mname} {user.lname}</h2>

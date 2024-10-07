@@ -1,26 +1,42 @@
+/* Overall Page Layout */
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
 /* Profile Header */
+
 .profile-header {
   display: flex;
-  align-items: center; /* Align profile picture and user info vertically */
+  justify-content: space-between;
+  align-items: center;
   padding: 20px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #ddd;
+  background-color: #fff;
 }
 
 /* Profile Picture */
-.profile-picture {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%; /* Make the image circular */
+
+.profilepic {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
   object-fit: cover;
-  margin-right: 20px; /* Add space between picture and user info */
+  margin-right: 20px;
 }
 
 /* User Information */
+
 .user-info {
-  flex: 1; /* Take up remaining space next to the picture */
+  flex: 1;
 }
 
 /* Name Styling */
+
 .user-info h2 {
   margin: 0;
   font-size: 24px;
@@ -29,6 +45,7 @@
 }
 
 /* User Details Styling */
+
 .user-info p {
   margin: 5px 0;
   font-size: 16px;
@@ -36,54 +53,97 @@
 }
 
 /* Edit Button Styling */
+
 .edit-button {
-  background-color: #008cba;
+  background-color: #007bff;
   color: white;
   border: none;
+  margin-top: 70px;
+  margin-right: 10px;
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 10px;
 }
 
 .edit-button:hover {
-  background-color: #005f5f;
+  background-color: #0056b3;
 }
 
 .edit-button {
   position: absolute;
-  top: 70px; /* Adjust top padding as needed */
+  top: 20px;
   right: 20px; /* Adjust right padding as needed */
 }
 
-/* Save Button for Editing Mode */
-.save-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px;
+/* Pet Profile Section */
+
+.pet-profiles {
+  display: flex;
+  flex-direction: column; /* Change to column for vertical layout */
+  justify-content: space-between;
+  margin-top: 20px;
+  border-bottom: 1px solid #ddd;
+  background-color: #fff;
 }
 
-.save-button:hover {
-  background-color: #388E3C;
-}
-
-/* Add margin to separate inputs in editing mode */
-.edit-input {
-  display: block;
-  width: 100%;
-  margin-bottom: 10px;
+.pet-profiles h3 {
+  margin: 0;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  text-align: center;
 }
 
+/* Add pet button styling (you can keep this section from your original CSS) */
 
+.pet-profile.add-pet {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  height: 120px;
+  background-color: #eee;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
 
+.pet-profile.add-pet:hover {
+  background-color: #ddd;
+  transform: scale(1.05);
+}
 
-/* Modal container */
+.add-icon {
+  font-size: 36px;
+  color: #999;
+}
+
+/* Pet profile styles (you can keep this section from your original CSS) */
+
+.pets-container {
+  display: flex;
+  flex-wrap: wrap;
+  
+}
+
+.pet-profile {
+  margin: 10px;
+  text-align: center;
+}
+
+.pet-picture {
+  width: 120px;
+  height: 120px;
+  border-radius: 10px; /* Adjust top radius to match container */
+  object-fit: cover;
+}
+
+.pet-name {
+  padding: 10px;
+}
+
+/* Modal container (you can keep this section from your original CSS) */
+
 .modal {
   display: flex;
   justify-content: center;
@@ -97,7 +157,8 @@
   z-index: 1000;
 }
 
-/* Modal content box */
+/* Modal content box (you can keep this section from your original CSS) */
+
 .modal-content {
   background-color: white;
   padding: 20px;
@@ -108,7 +169,8 @@
   text-align: center;
 }
 
-/* Input styles in modal */
+/* Input styles in modal (you can keep this section from your original CSS) */
+
 .modal-content input {
   width: 100%;
   margin: 10px 0;
@@ -117,7 +179,8 @@
   border-radius: 4px;
 }
 
-/* Save and Cancel button styles */
+/* Save and Cancel button styles (you can keep this section from your original CSS) */
+
 .save-button, .cancel-button {
   padding: 10px 20px;
   margin: 10px 5px;
@@ -136,68 +199,3 @@
   color: white;
 }
 
-/* Add pet button styling */
-.pet-profile.add-pet {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 120px;
-  height: 120px;
-  background-color: #f0f0f0;
-  cursor: pointer;
-  border: 2px dashed #999;
-  border-radius: 10px;
-}
-
-.pet-profiles {
-  display: flex;
-  flex-direction: column;
-  text-align: center; 
-}
-
-
-.add-icon {
-  font-size: 36px;
-  color: #666;
-}
-
-/* Pet profile styles */
-.pets-container {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.pet-profile {
-  margin: 10px;
-  text-align: center;
-}
-
-.pet-picture {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.pet-picture-large {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 10px;
-}
-
-/* Add spacing between input fields */
-input {
-  margin-bottom: 10px;
-}
-
-/* Modal close button (optional to add 'x' button) */
-.modal-content .close {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  cursor: pointer;
-  font-size: 18px;
-  color: #555;
-}
