@@ -15,7 +15,7 @@ export default function ClientContactUs() {
   }, [user]);
 
   return (
-    <div className="page">
+    <div className="client-contact-us page">
       <header className="contact-header">
         <h1>Contact Us + Feedback</h1>
         {/* Conditionally show whether the user is logged in (client) or guest */}
@@ -25,7 +25,7 @@ export default function ClientContactUs() {
           <p>Welcome, Guest! You can contact us or leave feedback below.</p>
         )}
       </header>
-      
+
       <div className="contact-content">
         <div className="contact-box">
           <div className="contact-icon">
