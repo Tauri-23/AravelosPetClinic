@@ -1,59 +1,92 @@
-.contact-us {
+.guest-contact-page {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     padding: 20px;
-    background-color: #f9f9f9; /* Light background for contrast */
 }
 
-.contact-us.container {
+.contact-header {
+    font-size: 36px; /* Adjust size as needed */
+    color: #1D3675;
+    margin-bottom: 20px; /* Spacing below the header */
+    text-align: left;
+}
+
+.guest-contact-us {
     display: flex;
-    max-width: 1200px; /* Set a max-width for larger screens */
+    justify-content: space-evenly;
+    align-items: stretch;
+    padding: 20px;
+    background-color: #ffffff;
+    color: #1D3675;
     width: 100%;
-    background-color: #ffffff; /* White background for the content area */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    min-height: 100vh;
+    gap: 5px;
 }
 
-.contact-us.left {
-    flex: 2; /* Take up more space than the right section */
+.guest-contact-box {
+    flex-basis: 32.5%;
+    background-color: #ffffff;
     padding: 20px;
+    margin: 0;
+    text-align: left;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 725px;
 }
 
-.contact-us.right {
-    flex: 1; /* Take up less space than the left section */
+.guest-contact-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+    color: #1D3675;
+    align-self: center;
+}
+
+.guest-contact-box h2 {
+    font-size: 20px;
+    color: #1D3675;
+    margin-bottom: 5px;
+    align-self: center;
+}
+
+.guest-contact-box p {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.3;
+    margin: 3px 0;
+    text-align: center;
+    width: 100%;
+}
+
+.map-container {
+    margin-top: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    width: 100%;
 }
 
-.contact-us.big-f {
-    font-size: 24px; /* Large font size for titles */
-    margin-bottom: 10px;
+.map {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid #ddd;
 }
 
-.contact-us.small-f {
-    font-size: 16px; /* Smaller font size for details */
-    margin: 5px 0; /* Margin for spacing between lines */
-    color: #555; /* Slightly darker text for readability */
-}
+@media screen and (max-width: 768px) {
+    .guest-contact-us {
+        flex-direction: column;
+        padding: 20px;
+        gap: 10px;
+    }
 
-.contact-us.bold {
-    font-weight: bold; /* Bold text */
-}
-
-.contact-us.anybody {
-    line-height: 1.5; /* Increase line height for better readability */
-}
-
-.contact-us.clinic {
-    margin-top: 20px; /* Spacing above the image */
-    max-width: 100%; /* Responsive image */
-    height: auto; /* Maintain aspect ratio */
-}
-
-.contact-us.map {
-    max-width: 100%; /* Responsive image */
-    height: auto; /* Maintain aspect ratio */
+    .guest-contact-box {
+        flex-basis: auto;
+        margin: 8px 0;
+        height: auto;
+    }
 }
