@@ -6,7 +6,7 @@
     background-color: #f9f9f9; /* Light background for contrast */
 }
 
-.container {
+.contact-us.container {
     display: flex;
     max-width: 1200px; /* Set a max-width for larger screens */
     width: 100%;
@@ -15,12 +15,12 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
-.left {
+.contact-us.left {
     flex: 2; /* Take up more space than the right section */
     padding: 20px;
 }
 
-.right {
+.contact-us.right {
     flex: 1; /* Take up less space than the left section */
     display: flex;
     justify-content: center;
@@ -28,32 +28,32 @@
     padding: 20px;
 }
 
-.big-f {
+.contact-us.big-f {
     font-size: 24px; /* Large font size for titles */
     margin-bottom: 10px;
 }
 
-.small-f {
+.contact-us.small-f {
     font-size: 16px; /* Smaller font size for details */
     margin: 5px 0; /* Margin for spacing between lines */
     color: #555; /* Slightly darker text for readability */
 }
 
-.bold {
+.contact-us.bold {
     font-weight: bold; /* Bold text */
 }
 
-.anybody {
+.contact-us.anybody {
     line-height: 1.5; /* Increase line height for better readability */
 }
 
-.clinic {
+.contact-us.clinic {
     margin-top: 20px; /* Spacing above the image */
     max-width: 100%; /* Responsive image */
     height: auto; /* Maintain aspect ratio */
 }
 
-.map {
+.contact-us.map {
     max-width: 100%; /* Responsive image */
     height: auto; /* Maintain aspect ratio */
 }

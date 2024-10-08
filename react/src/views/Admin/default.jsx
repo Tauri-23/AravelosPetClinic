@@ -42,7 +42,7 @@ export default function AdminDefault () {
     if (!token || userType !== 'admin') {
         return <Navigate to="/" />;
     }
-    
+
     return(
         <ModalProvider>
             <div className="position-relative">

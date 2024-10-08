@@ -70,8 +70,10 @@ export default function BookAppointment() {
     }
 
     const handleSubmit = (e) => {
+
+        const handleFunction = "handleAddPost";
         e.preventDefault();
-        showModal('AddAppointmentConfirmationModal1', {handleYesConfirmationPost: handleSubmitPost});
+        showModal('ConfirmActionModal1', {handlePost: handleSubmitPost, handleFunction});
 
     };
 
@@ -84,7 +86,6 @@ export default function BookAppointment() {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
-                timeZone: 'Asia/Manila'
             });
             setDateUnformatted(localDate.toISOString().slice(0, 19).replace('T', ' '));
             setSelectedDateTime(formattedDate);
@@ -97,7 +98,6 @@ export default function BookAppointment() {
                 hour: 'numeric',
                 minute: 'numeric',
                 hour12: true,
-                timeZone: 'Asia/Manila'
             });
             setSelectedDateTime(formattedDateTime);
             setDateUnformatted(localDate.toISOString().slice(0, 19).replace('T', ' '));
@@ -137,12 +137,6 @@ export default function BookAppointment() {
         }
     }, [selectedDateTime, selectedPet, selectedService]);
 
-    const modalHeader = "Confirm Appointment";
-    const modalText = "Are you sure you want to book this appointment?";
-    const leftBTNLBL = "Cancel";
-    const rightBTNLBL = "Confirm";
-    const leftBTN = "sub-button";
-    const rightBTN = "main-button";
     return (
         <div className="page">
             <div className="bg book-appointment gen-margin">

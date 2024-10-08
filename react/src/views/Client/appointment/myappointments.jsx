@@ -62,12 +62,23 @@ export default function MyAppointments() {
         formData.append('appointmentId', recordId);
         formData.append('reason', recordReason || 'No reason provided.');
 
+        const canceledRecord = appointments.find(record => record.id === recordId);
         console.log(recordId);
         axiosClient.post(`/cancel-appointment`, formData)
             .then(({ data }) => {
                 if (data.status === 200) {
                     notify('success', data.message, 'top-center', 3000);
-                    setAppointments(prev => prev.filter(record => record.id !== recordId)); // Remove the canceled appointment from state
+                    // Remove the canceled appointment from the current list
+                    setAppointments(prev => prev.filter(record => record.id !== recordId));
+
+                    // Add the canceled appointment back with status updated to 'Cancelled'
+                    setAppointments(prev => [...prev, { ...canceledRecord, status: 'Cancelled', cancelled_at: new Date().toISOString(), reason: recordReason || 'No reason provided.' }]);
+
+                    // Optionally switch to the 'Cancelled' tab to reflect the change
+                    setActiveTab('Cancelled');
+
+
+                    //setAppointments(prev => prev.filter(record => record.id !== recordId)); // Remove the canceled appointment from state
                 } else {
                     notify('error', data.message + record.id, 'top-center', 3000);
                 }
@@ -79,12 +90,12 @@ export default function MyAppointments() {
     const handleCancel = (recordId, recordReason) =>{
 
         console.log(recordId);
-        const handleFunction = "handleCancelPost"
+        const handleFunction = "handleCancelPost";
         if (isEmptyOrSpaces(String(recordId))) {
             console.error("No appointment selected for cancellation.");
             return;
         }
-        showModal('ConfirmActionModal1',  {handleCancelPost, recordId, recordReason, handleFunction});
+        showModal('ConfirmActionModal1',  {handlePost:handleCancelPost, recordId, recordReason, handleFunction});
     }
 
 
@@ -197,9 +208,6 @@ export default function MyAppointments() {
                                 handleAppointmentRecordClick={handleAppointmentRecordClick}
                                 record={record}
                                 handleCancel={(e) => handleCancel(record.id, e)}/>
-                                // <div className='appt-record' key={record.id}>
-                                //     {serviceOptions.find(option => option.id === record.service)?.label}, {record.petName}, {record.date_time}
-                                // </div>
                             )
                         )
                     }

@@ -21,20 +21,13 @@ export default function AppointmentRecord({
                         <div className='content-deet'>{record.pet.name}</div>
                         <div className='content-deet'>{serviceLabel}</div>
                         <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    timeZone: 'Asia/Manila'
-                                })}</div>
-                        {/* <div>{new Date(recordRequestDate).toLocaleString()}</div>
-                        <div>{recordCancelDate ? new Date(recordCancelDate).toLocaleString() : "N/A"}</div>
-                        <div>{recordApprovedDate ? new Date(recordApprovedDate).toLocaleString() : "N/A"}</div>
-                        <div>{recordRejectDate ? new Date(recordRejectDate).toLocaleString() : "N/A"}</div>
-                        <div>{record.reason}</div>
-                        <div>Status: Pending</div> */}
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hour12: true,
+                        })}</div>
                     </div>
                 );
             case 'Approved':
@@ -43,23 +36,21 @@ export default function AppointmentRecord({
                         <div className='content-deet'>{record.pet.name}</div>
                         <div className='content-deet'>{serviceLabel}</div>
                         <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    timeZone: 'Asia/Manila'
-                                })}</div>
-                        <div className='content-deet'>{record.approved_at ? new Date(record.approved_at).toLocaleString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    timeZone: 'Asia/Manila'
-                                }) : "N/A"}</div>
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hour12: true,
+                        })}</div>
+                        <div className='content-deet'>{new Date(record.approved_at).toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hour12: true,
+                        })}</div>
                         {/* <div>{new Date(recordRequestDate).toLocaleString()}</div>
                         <div>{recordCancelDate ? new Date(recordCancelDate).toLocaleString() : "N/A"}</div>
                         <div>{recordRejectDate ? new Date(recordRejectDate).toLocaleString() : "N/A"}</div>
@@ -73,20 +64,13 @@ export default function AppointmentRecord({
                         <div className='content-deet'>{record.pet.name}</div>
                         <div className='content-deet'>{serviceLabel}</div>
                         <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    timeZone: 'Asia/Manila'
-                                })}</div>
-                        {/* <div>{recordRejectDate ? new Date(recordRejectDate).toLocaleString() : "N/A"}</div>
-                        <div>{record.reason}</div>
-                        <div>{new Date(recordRequestDate).toLocaleString()}</div>
-                        <div>{recordCancelDate ? new Date(recordCancelDate).toLocaleString() : "N/A"}</div>
-                        <div>{recordApprovedDate ? new Date(recordApprovedDate).toLocaleString() : "N/A"}</div>
-                        <div>Status: Rejected</div> */}
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hour12: true,
+                        })}</div>
                     </div>
                 );
             case 'Cancelled':
@@ -94,16 +78,22 @@ export default function AppointmentRecord({
                     <div className='appt-record-five rejected' onClick={() => handleAppointmentRecordClick(record)}>
                         <div className='content-deet'>{record.pet.name}</div>
                         <div className='content-deet'>{serviceLabel}</div>
-                        <div className='content-deet'>{new Date(record.date_time).toLocaleString()}</div>
-                        <div className='content-deet'>{record.cancelled_at ? new Date(record.cancelled_at).toLocaleString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    timeZone: 'Asia/Manila'
-                                }) : "N/A"}</div>
+                        <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hour12: true,
+                        })}</div>
+                        <div className='content-deet'>{new Date(record.cancelled_at).toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hour12: true,
+                        })}</div>
                         <div className='content-deet'>{record.reason}</div>
                         {/* <div>{recordRejectDate ? new Date(recordRejectDate).toLocaleString() : "N/A"}</div>
                         <div>{new Date(recordRequestDate).toLocaleString()}</div>
@@ -116,16 +106,22 @@ export default function AppointmentRecord({
                     <div className='appt-record-five rejected' onClick={() => handleAppointmentRecordClick(record)}>
                         <div className='content-deet'>{record.pet.name}</div>
                         <div className='content-deet'>{serviceLabel}</div>
-                        <div className='content-deet'>{new Date(record.date_time).toLocaleString()}</div>
-                        <div className='content-deet'>{record.rejected_at ? new Date(record.rejected_at).toLocaleString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    timeZone: 'Asia/Manila'
-                                }) : "N/A"}</div>
+                        <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hour12: true,
+                        })}</div>
+                        <div className='content-deet'>{new Date(record.rejected_at).toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hour12: true,
+                        })}</div>
                         <div className='content-deet'>{record.reason}</div>
                         {/* <div>{new Date(recordRequestDate).toLocaleString()}</div>
                         <div>{recordCancelDate ? new Date(recordCancelDate).toLocaleString() : "N/A"}</div>
@@ -139,14 +135,13 @@ export default function AppointmentRecord({
                         <div className='content-deet'>{record.pet.name}</div>
                         <div className='content-deet'>{serviceLabel}</div>
                         <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    timeZone: 'Asia/Manila'
-                                })}</div>
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hour12: true,
+                        })}</div>
                         <div className='content-deet'>{new Date(recordRequestDate).toLocaleString()}</div>
                         <div className='content-deet'>{recordCancelDate ? new Date(recordCancelDate).toLocaleString() : "N/A"}</div>
                         <div className='content-deet'>{recordApprovedDate ? new Date(recordApprovedDate).toLocaleString() : "N/A"}</div>
