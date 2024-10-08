@@ -3,40 +3,18 @@ import { Link } from 'react-router-dom';
 import "../../assets/css/manageaccs.css";
 
 function ManageProfiles() {
-  const [users, setUsers] = useState([]);
+  //const [users, setUsers] = useState([]);
   const [newAdminEmail, setNewAdminEmail] = useState('');
   const [activeTab, setActiveTab] = useState("ManageClients");
   const [clients, setClients] = useState([]);
   const [admins, setAdmins] = useState([]);
+  const [users, setUsers] = useState([  // Replace with dummy data
+    { id: 1, fullName: "John Doe", gender: "Male", email: "johndoe@example.com", status: "Active" },
+    { id: 2, fullName: "Jane Smith", gender: "Female", email: "janesmith@example.com", status: "Suspended" },
+    { id: 3, fullName: "Mike Brown", gender: "Male", email: "mikebrown@example.com", status: "Active" },
+  ]);
 
 
-//   useEffect(() => {
-//     const getAllClients = async () => {
-//         try {
-//             const data = await fetchAllClientAppointments(user.id); // Pass clientId here
-//             setAppointments(data);
-//             console.log(data); // Log the received appointments
-//         } catch (error) {
-//             console.error(error);
-//         }
-//     };
-
-//     getAllAppointments();
-// }, []);
-
-// useEffect(() => {
-//   const getAllAdmins = async () => {
-//       try {
-//           const data = await fetchAllClientAppointments(user.id); // Pass clientId here
-//           setAppointments(data);
-//           console.log(data); // Log the received appointments
-//       } catch (error) {
-//           console.error(error);
-//       }
-//   };
-
-//   getAllAppointments();
-// }, []);
   const renderHeaders = () => {
     switch (activeTab) {
         case "ManageClients":
@@ -155,27 +133,30 @@ function ManageProfiles() {
     <div className="page inter">
         <div className='manage-users gen-margin'>
             {renderHeaders()}
+           
+            <div className="myappt small-form">
+                {users.map((user) => (
+                  <div className='appt-record-five pending' key={user.id}>
+                    <div className='content-deet'>{user.fullName}</div> 
+                    <div className='content-deet'>{user.gender}</div> 
+                    <div className='content-deet'>{user.email}</div> 
+                    <div className='content-deet'>{user.status}</div> 
+                    <div className='content-deet'>
+                      <button onClick={() => handleSuspendUser(user.id)}>Suspend</button>
+                      <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
+                    </div> 
+                  </div>
+                ))}
+              </div>
 
-            {//PARA SA RECORDS NG USERS
-            /* <div className="myappt small-form">
-                    {appointments.length > 0 &&
-                        appointments.map(record =>
-                            record.status === activeTab && (
-                                <AppointmentRecord e key={record.id}
-                                handleAppointmentRecordClick={handleAppointmentRecordClick}
-                                record={record}
-                                handleCancel={(e) => handleCancel(record.id, e)}/>
-                        )
-                    }
-            </div> */}
 
-
-
-            <div>
-                <h3>Add New Admin</h3>
-                <input type="email" value={newAdminEmail} onChange={e => setNewAdminEmail(e.target.value)} />
-                <button onClick={handleAddAdmin}>Add Admin</button>
-            </div>
+        {/* Placeholder for Manage Admins section (assuming similar structure) */}
+        {activeTab === "ManageAdmins" && (
+          <div className="myappt small-form">
+            {/* Add your logic to display dummy admin information here */}
+          </div>
+        )}
+           
         </div>
     </div>
   );

@@ -15,7 +15,7 @@ import AdminInventoryIndex from "./views/Admin/Inventory/inventory_index";
 import AddItem from "./views/Admin/Inventory/addItem";
 import BookAppointment from "./views/Client/appointment/bookappointment";
 import MyAppointments from "./views/Client/appointment/myappointments";
-import ManageProfiles from "./views/Admin/ManageProfiles";
+import ManageProfiles from "./views/Admin/manageProfiles";
 
 const router = createBrowserRouter([
     /*
