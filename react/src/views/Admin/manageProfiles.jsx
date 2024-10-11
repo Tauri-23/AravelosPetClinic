@@ -32,10 +32,10 @@ function ManageProfiles() {
         setClients(clientsDb);
         setAdmins(adminsDb);
       } catch (error) {
-        console.error(error);        
+        console.error(error);
       }
     }
-    
+
 
     getAll();
   }, [])
@@ -95,7 +95,7 @@ function ManageProfiles() {
   const handleDeleteClient = (clientId) => {
     const formData = new FormData();
     formData.append('clientId', clientId);
-    
+
     axiosClient.post('/del-client', formData)
     .then(({data}) => {
       if(data.status === 200) {
@@ -166,22 +166,22 @@ function ManageProfiles() {
     <div className="page inter">
         <div className='manage-users gen-margin'>
           {renderHeaders()}
-            
-          
+
+
           {/* Manage Clients */}
           {activeTab === "ManageClients" && (
             <div className="myappt small-form">
               {clients?.length > 0 && clients.map((client) => (
                 <div className='appt-record-five pending' key={client.id}>
-                  <div className='content-deet'>{client.fname} {client.mname} {client.lname}</div> 
-                  <div className='content-deet'>{client.gender}</div> 
-                  <div className='content-deet'>{client.email}</div> 
-                  <div className='content-deet'>{client.status}</div> 
+                  <div className='content-deet'>{client.fname} {client.mname} {client.lname}</div>
+                  <div className='content-deet'>{client.gender}</div>
+                  <div className='content-deet'>{client.email}</div>
+                  <div className='content-deet'>{client.status}</div>
                   <div className='content-deet'>
 
-                    <button onClick={() => handleSuspendUnsuspendClient(client.id)}>{client.status === 'active' ? 'Suspend' : 'Unsuspend'}</button>               
-                    <button onClick={() => handleDeleteClient(client.id)}>Delete</button>
-                  </div> 
+                    <button className="primary-btn-blue1" onClick={() => handleSuspendUnsuspendClient(client.id)}>{client.status === 'active' ? 'Suspend' : 'Unsuspend'}</button>
+                    <button className="sub-button" onClick={() => handleDeleteClient(client.id)}>Delete</button>
+                  </div>
                 </div>
               ))}
               {!clients && (
@@ -199,15 +199,15 @@ function ManageProfiles() {
             <div className="myappt small-form">
               {admins?.length > 0 && admins.map((client) => (
                 <div className='appt-record-five pending' key={client.id}>
-                  <div className='content-deet'>{client.fname} {client.mname} {client.lname}</div> 
-                  <div className='content-deet'>{client.gender}</div> 
-                  <div className='content-deet'>{client.email}</div> 
-                  <div className='content-deet'>{client.status}</div> 
+                  <div className='content-deet'>{client.fname} {client.mname} {client.lname}</div>
+                  <div className='content-deet'>{client.gender}</div>
+                  <div className='content-deet'>{client.email}</div>
+                  <div className='content-deet'>{client.status}</div>
                   <div className='content-deet'>
 
-                    <button onClick={() => handleSuspendUnsuspendClient(client.id)}>{client.status === 'active' ? 'Suspend' : 'Unsuspend'}</button>               
-                    <button onClick={() => handleDeleteClient(client.id)}>Delete</button>
-                  </div> 
+                    <button className="primary-btn-blue1"onClick={() => handleSuspendUnsuspendClient(client.id)}>{client.status === 'active' ? 'Suspend' : 'Unsuspend'}</button>
+                    <button className="sub-button" onClick={() => handleDeleteClient(client.id)}>Delete</button>
+                  </div>
                 </div>
               ))}
               {!admins && (
@@ -219,7 +219,7 @@ function ManageProfiles() {
               )}
             </div>
           )}
-           
+
         </div>
     </div>
   );

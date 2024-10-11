@@ -43,8 +43,8 @@ export default function AddPetModal1({ handleAddPetPost, onClose }) {
                 placeholder="Pet Picture"
                 onChange={(e) => setPetPic(e.target.files[0])}
               />
-              <button onClick={() => {handleAddPetPost(petName, petType, petBreed, petPic); onClose()}} className="save-button">Add Pet</button>
-            <button onClick={onClose} className="cancel-button">Close</button>
+              <button onClick={() => {handleAddPetPost(petName, petType, petBreed, petPic); onClose()}} className="primary-btn-blue1">Add Pet</button>
+            <button onClick={onClose} className="sub-button">Close</button>
           </div>
 
 

@@ -19,7 +19,7 @@ export default function AdminNavbar({onLogout}) {
             </div>
 
             <div className="nav1-sign">
-                <div onClick={onLogout} className="nav1-link">Sign Out</div>
+                <div onClick={onLogout} className="pointer bold nav1-link">Sign Out</div>
             </div>
         </div>
     );
