@@ -73,7 +73,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $client = user_clients::where('email', $request->email)->first();
+        $client = user_clients::where('email', $request->email)->whereNot('status', 'deleted')->first();
         $admin = user_admins::where('email', $request->email)->first();
 
         if($client && Hash::check($request->password, $client->password))

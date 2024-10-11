@@ -1,18 +1,44 @@
 import React, { useState, useEffect, act } from 'react';
 import { Link } from 'react-router-dom';
 import "../../assets/css/manageaccs.css";
+import { fetchAllClientsNotDeleted } from '../../services/UserClientsServices';
+import axiosClient from '../../axios-client';
+import { notify } from '../../assets/js/utils';
+import { fetchAllAdminsNotDeleted } from '../../services/UserAdminsServices';
+import { useStateContext } from '../../contexts/ContextProvider';
 
 function ManageProfiles() {
-  //const [users, setUsers] = useState([]);
+  const {user} = useStateContext();
   const [newAdminEmail, setNewAdminEmail] = useState('');
   const [activeTab, setActiveTab] = useState("ManageClients");
-  const [clients, setClients] = useState([]);
-  const [admins, setAdmins] = useState([]);
-  const [users, setUsers] = useState([  // Replace with dummy data
-    { id: 1, fullName: "John Doe", gender: "Male", email: "johndoe@example.com", status: "Active" },
-    { id: 2, fullName: "Jane Smith", gender: "Female", email: "janesmith@example.com", status: "Suspended" },
-    { id: 3, fullName: "Mike Brown", gender: "Male", email: "mikebrown@example.com", status: "Active" },
-  ]);
+  const [admins, setAdmins] = useState(null);
+  const [clients, setClients] = useState(null);
+
+
+
+
+
+  /**
+   * Render from db
+   */
+  useEffect(() => {
+    const getAll = async() => {
+      try {
+        const [clientsDb, adminsDb] = await Promise.all([
+          fetchAllClientsNotDeleted(),
+          fetchAllAdminsNotDeleted(user.id)
+        ]);
+
+        setClients(clientsDb);
+        setAdmins(adminsDb);
+      } catch (error) {
+        console.error(error);        
+      }
+    }
+    
+
+    getAll();
+  }, [])
 
 
   const renderHeaders = () => {
@@ -59,39 +85,46 @@ function ManageProfiles() {
                 </>
             );
     }
-};
-
-  const handleDeleteUser = userId => {
-    // Send a DELETE request to the backend API to delete the user
-    fetch(`/api/users/${userId}`, { method: 'DELETE' })
-      .then(response => {
-        if (response.ok) {
-          // Update the user list after successful deletion
-          setUsers(users.filter(user => user.id !== userId));
-        } else {
-          console.error('Error deleting user:', response.statusText);
-        }
-      })
-      .catch(error => console.error('Error deleting user:', error));
   };
 
-  const handleSuspendUser = userId => {
-    // Send a PATCH request to the backend API to suspend the user
-    fetch(`/api/users/${userId}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ suspended: true })
+
+
+  /**
+   * Clients Handlers
+   */
+  const handleDeleteClient = (clientId) => {
+    const formData = new FormData();
+    formData.append('clientId', clientId);
+    
+    axiosClient.post('/del-client', formData)
+    .then(({data}) => {
+      if(data.status === 200) {
+        setClients(prev => prev.filter(c => c.id !== clientId));
+        notify('success', data.message, 'top-center', 3000);
+      } else {
+        notify('error', data.message, 'top-center', 3000);
+      }
     })
-      .then(response => {
-        if (response.ok) {
-          // Update the user list after successful suspension
-          setUsers(users.map(user => (user.id === userId ? { ...user, suspended: true } : user)));
-        } else {
-          console.error('Error suspending user:', response.statusText);
-        }
-      })
-      .catch(error => console.error('Error suspending user:', error));
+    .catch(error => console.error(error));
   };
+
+  const handleSuspendUnsuspendClient = (clientId) => {
+    // Send a PATCH request to the backend API to suspend the user
+    const formData = new FormData();
+    formData.append('clientId', clientId);
+    axiosClient.post('/suspend-unsuspend-client', formData)
+    .then(({data}) => {
+      if(data.status === 200) {
+        setClients(data.clients);
+        notify('success', data.message, 'top-center', 3000);
+      } else {
+        notify('error', data.message, 'top-center', 3000);
+      }
+    })
+    .catch(error => console.error(error));
+  };
+
+
 
   const handleAddAdmin = () => {
     // Send a POST request to the backend API to add a new admin account
@@ -132,30 +165,60 @@ function ManageProfiles() {
   return (
     <div className="page inter">
         <div className='manage-users gen-margin'>
-            {renderHeaders()}
-           
+          {renderHeaders()}
+            
+          
+          {/* Manage Clients */}
+          {activeTab === "ManageClients" && (
             <div className="myappt small-form">
-                {users.map((user) => (
-                  <div className='appt-record-five pending' key={user.id}>
-                    <div className='content-deet'>{user.fullName}</div> 
-                    <div className='content-deet'>{user.gender}</div> 
-                    <div className='content-deet'>{user.email}</div> 
-                    <div className='content-deet'>{user.status}</div> 
-                    <div className='content-deet'>
-                      <button onClick={() => handleSuspendUser(user.id)}>Suspend</button>
-                      <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
-                    </div> 
-                  </div>
-                ))}
-              </div>
+              {clients?.length > 0 && clients.map((client) => (
+                <div className='appt-record-five pending' key={client.id}>
+                  <div className='content-deet'>{client.fname} {client.mname} {client.lname}</div> 
+                  <div className='content-deet'>{client.gender}</div> 
+                  <div className='content-deet'>{client.email}</div> 
+                  <div className='content-deet'>{client.status}</div> 
+                  <div className='content-deet'>
 
+                    <button onClick={() => handleSuspendUnsuspendClient(client.id)}>{client.status === 'active' ? 'Suspend' : 'Unsuspend'}</button>               
+                    <button onClick={() => handleDeleteClient(client.id)}>Delete</button>
+                  </div> 
+                </div>
+              ))}
+              {!clients && (
+                <>Loading</>
+              )}
 
-        {/* Placeholder for Manage Admins section (assuming similar structure) */}
-        {activeTab === "ManageAdmins" && (
-          <div className="myappt small-form">
-            {/* Add your logic to display dummy admin information here */}
-          </div>
-        )}
+              {clients?.length < 1 && (
+                <>No Records</>
+              )}
+            </div>
+          )}
+
+          {/* Placeholder for Manage Admins section (assuming similar structure) */}
+          {activeTab === "ManageAdmins" && (
+            <div className="myappt small-form">
+              {admins?.length > 0 && admins.map((client) => (
+                <div className='appt-record-five pending' key={client.id}>
+                  <div className='content-deet'>{client.fname} {client.mname} {client.lname}</div> 
+                  <div className='content-deet'>{client.gender}</div> 
+                  <div className='content-deet'>{client.email}</div> 
+                  <div className='content-deet'>{client.status}</div> 
+                  <div className='content-deet'>
+
+                    <button onClick={() => handleSuspendUnsuspendClient(client.id)}>{client.status === 'active' ? 'Suspend' : 'Unsuspend'}</button>               
+                    <button onClick={() => handleDeleteClient(client.id)}>Delete</button>
+                  </div> 
+                </div>
+              ))}
+              {!admins && (
+                <>Loading</>
+              )}
+
+              {admins?.length < 1 && (
+                <>No Records</>
+              )}
+            </div>
+          )}
            
         </div>
     </div>

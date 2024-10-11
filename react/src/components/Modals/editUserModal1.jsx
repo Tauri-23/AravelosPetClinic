@@ -101,13 +101,17 @@ const EditUserModal = ({ user, onClose }) => {
             </div>
             <div className="input-group">
               <label htmlFor="gender">Gender:</label>
-              <input
+              <select value={editData.gender}>
+                <option value={'Male'}>Male</option>
+                <option value={'Female'}>Female</option>
+              </select>
+              {/* <input
                 type="text" // Adjust the input type as needed for gender selection
                 id="gender"
                 name="gender"
                 value={editData.gender}
                 onChange={handleInputChange}
-              />
+              /> */}
             </div>
             <div className="input-group">
               <label htmlFor="birthday">Birthday:</label>

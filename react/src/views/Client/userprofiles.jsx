@@ -20,6 +20,9 @@ const userprofiles = () => {
   const [pets, setPets] = useState(null);
 
 
+
+
+
   // Simulate fetching data from the database
   useEffect(() => {
     const getAllPets = async () => {
@@ -34,10 +37,14 @@ const userprofiles = () => {
     getAllPets();
   }, []);
 
+
+
   const handlePetClick = (pet) => {
     setSelectedPet(pet); // Set the selected pet to show in modal
     showModal('EditPetModal1', { pet }); // Pass the entire pet object
   };
+
+
 
   const handleEditUserPost = (fname, mname, lname, email, password, bday, gender, address, phone, pic ) => {
     const formData = new FormData();
@@ -66,6 +73,8 @@ const userprofiles = () => {
       .catch(error => console.error(error));
   };
 
+
+
   const handleAddPetPost = (petName, petType, petBreed, petPic) => {
     const formData = new FormData();
     formData.append('client', user.id);
@@ -88,18 +97,29 @@ const userprofiles = () => {
       .catch(error => console.error(error));
   };
 
+
+
   const handleEditUserClick = () => {
     setIsEditing(true); // Toggle editing state
     setEditData(user); // Set initial edit data to user object
     showModal('EditUserModal1', {user}); // Show the EditUserModal
   };
   
+
+
   const handleAddPetClick = () => {
     showModal('AddPetModal1', { handleAddPetPost });
   };
 
+
+
+
+
+
+  // Loading
   if (!user) return <div>Loading...</div>;
 
+  // Return component
   return (
     <div className="profile-container">
       <div className="profile-header">

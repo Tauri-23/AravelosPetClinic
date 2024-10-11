@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\inventoryCategoriesController;
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\PetsController;
+use App\Http\Controllers\Api\UserAdminsController;
+use App\Http\Controllers\Api\UserClientsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -76,3 +78,32 @@ Route::post('/cancel-appointment', [AppointmentsController::class,'cancelAppoint
 */
 Route::post('/add-pet', [PetsController::class,'CreatePet']);
 Route::get('/retrieve-pet-where-client/{clientId}', [PetsController::class,'GetPetWhereClient']);
+
+
+
+
+
+/*
+|----------------------------------------
+| Clients
+|----------------------------------------
+*/
+Route::get('/retrieve-all-clients-not-deleted', [UserClientsController::class, 'GetAllClientsNotDeleted']);
+
+Route::post('/suspend-unsuspend-client', [UserClientsController::class, 'SuspendUnsuspendClient']);
+Route::post('/del-client', [UserClientsController::class, 'DeleteClient']);
+
+
+
+
+
+/*
+|----------------------------------------
+| Admins
+|----------------------------------------
+*/
+Route::get('/retrieve-all-admins-not-deleted/{adminId}', [UserAdminsController::class, 'GetAllAdminsNotDeleted']);
+
+Route::post('/suspend-unsuspend-admin', [UserAdminsController::class, 'SuspendUnsuspendAdmin']);
+Route::post('/del-admin', [UserAdminsController::class, 'DeleteAdmin']);
+
