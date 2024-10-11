@@ -31,4 +31,8 @@
   flex: 1; /* Allow columns to grow/shrink proportionally */
   text-align: center;
 }
+
+button{
+  width: 500px;
+}
   

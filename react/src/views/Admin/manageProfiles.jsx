@@ -6,14 +6,16 @@ function ManageProfiles() {
   //const [users, setUsers] = useState([]);
   const [newAdminEmail, setNewAdminEmail] = useState('');
   const [activeTab, setActiveTab] = useState("ManageClients");
-  const [clients, setClients] = useState([]);
-  const [admins, setAdmins] = useState([]);
+  const [admins, setAdmins] = useState([ // Replace with dummy admin data
+    { id: 4, fullName: "Alice Johnson",gender: "LGBBQ", role: "Super Admin", email: "alicejohnson@example.com" },
+    { id: 5, fullName: "Bob Williams",gender: "Attack Helicopter", role: "Admin", email: "bobwilliams@example.com" },
+  ]);
   const [users, setUsers] = useState([  // Replace with dummy data
     { id: 1, fullName: "John Doe", gender: "Male", email: "johndoe@example.com", status: "Active" },
     { id: 2, fullName: "Jane Smith", gender: "Female", email: "janesmith@example.com", status: "Suspended" },
     { id: 3, fullName: "Mike Brown", gender: "Male", email: "mikebrown@example.com", status: "Active" },
   ]);
-
+  
 
   const renderHeaders = () => {
     switch (activeTab) {
@@ -133,7 +135,7 @@ function ManageProfiles() {
     <div className="page inter">
         <div className='manage-users gen-margin'>
             {renderHeaders()}
-           
+           {activeTab === "ManageClients" && (
             <div className="myappt small-form">
                 {users.map((user) => (
                   <div className='appt-record-five pending' key={user.id}>
@@ -142,21 +144,30 @@ function ManageProfiles() {
                     <div className='content-deet'>{user.email}</div> 
                     <div className='content-deet'>{user.status}</div> 
                     <div className='content-deet'>
-                      <button onClick={() => handleSuspendUser(user.id)}>Suspend</button>
-                      <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
+                      <button onClick={() => handleSuspendUser(user.id)} className='primary-btn-blue1'>Suspend</button>
+                      <button onClick={() => handleDeleteUser(user.id)} className='sub-button'>Delete</button>
                     </div> 
                   </div>
                 ))}
               </div>
+            )}
 
 
-        {/* Placeholder for Manage Admins section (assuming similar structure) */}
         {activeTab === "ManageAdmins" && (
-          <div className="myappt small-form">
-            {/* Add your logic to display dummy admin information here */}
-          </div>
-        )}
-           
+            <div className="myappt small-form">
+              {admins.map((admin) => (
+                    <div className='appt-record-five pending' key={admin.id}>
+                      <div className='content-deet'>{admin.fullName}</div>
+                      <div className='content-deet'>{admin.gender}</div>
+                      <div className='content-deet'>{admin.email}</div>
+                      <div className='content-deet'>{admin.role}</div>
+                      <div className='content-deet'>
+                        <button onClick={() => handleDeleteAdmin(admin.id)} className='primary-btn-blue1'>Remove as Admin</button>
+                      </div>
+                    </div>
+                  ))}
+            </div>
+          )}
         </div>
     </div>
   );
