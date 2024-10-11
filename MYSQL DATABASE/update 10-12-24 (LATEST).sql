@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 12, 2024 at 12:41 AM
+-- Generation Time: Oct 12, 2024 at 01:15 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -197,7 +197,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (17, '2024_09_30_090820_create_appointments_table', 9),
 (19, '2024_10_07_145653_create_user_admins_table', 11),
 (20, '2024_08_21_050816_create_user_clients_table', 12),
-(21, '2024_10_01_032309_create_pets_table', 13);
+(22, '2024_10_01_032309_create_pets_table', 13);
 
 -- --------------------------------------------------------
 
@@ -257,7 +257,7 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (20, 'App\\Models\\user_clients', 126373, 'main', '1792ae6274f04bb0e36b0a52566fbf820baf4b57d19938ce3866ec9594abdf8e', '[\"*\"]', '2024-08-21 02:57:36', NULL, '2024-08-21 02:53:51', '2024-08-21 02:57:36'),
 (21, 'App\\Models\\user_clients', 0, 'main', '63fdba02d50457492dfd296e8d290917c2c0efb9625a367863e16d9d4cfacfe4', '[\"*\"]', NULL, NULL, '2024-08-21 02:59:44', '2024-08-21 02:59:44'),
 (22, 'App\\Models\\user_clients', 185147, 'main', '5a100b4faaadfb32fe3256cad1caf3e6b9d2b15a0d9455b0202f7ac390c48545', '[\"*\"]', '2024-08-21 03:00:20', NULL, '2024-08-21 03:00:06', '2024-08-21 03:00:20'),
-(42, 'App\\Models\\user_admins', 111111, 'main', '7246a3c789c3a2ac34a7795ae0e9b9bc1e17ec77f654e9177923a095a686b3a0', '[\"*\"]', '2024-10-11 22:37:35', NULL, '2024-10-11 22:31:55', '2024-10-11 22:37:35');
+(44, 'App\\Models\\user_clients', 179411, 'main', 'ed9b2fa8d09b52c4a7a3f3d191b1c74ffb85e8827a384c8d490cd0f40eace999', '[\"*\"]', '2024-10-11 23:12:50', NULL, '2024-10-11 22:55:13', '2024-10-11 23:12:50');
 
 -- --------------------------------------------------------
 
@@ -272,11 +272,18 @@ CREATE TABLE `pets` (
   `type` varchar(255) NOT NULL,
   `breed` varchar(255) NOT NULL,
   `gender` varchar(255) NOT NULL,
-  `dob` date NOT NULL,
+  `dob` date DEFAULT NULL,
   `picture` longtext NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `pets`
+--
+
+INSERT INTO `pets` (`id`, `client`, `name`, `type`, `breed`, `gender`, `dob`, `picture`, `created_at`, `updated_at`) VALUES
+('268760', '179411', 'Chuchay', 'Dog', 'Shih Tzu', 'female', NULL, 'jLanoqQeAJrYftlcUV53sEMp.jpg', '2024-10-11 23:13:44', '2024-10-11 23:13:44');
 
 -- --------------------------------------------------------
 
@@ -519,13 +526,13 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `users`

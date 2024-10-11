@@ -24,7 +24,7 @@ class PetsController extends Controller
     {
         $petId = $this->generateId->generate(pets::class, 6);
 
-        try 
+        try
         {
             $photo = $request->file('pic');
             $targetDirectory = base_path("react/public/assets/media/pets");
@@ -34,9 +34,11 @@ class PetsController extends Controller
 
             $pet = new pets();
             $pet->id = $petId;
-            $pet->client = $request->client; 
+            $pet->client = $request->client;
             $pet->name = $request->petName;
-            $pet->type = $request->petType; 
+            $pet->type = $request->petType;
+            $pet->gender = $request->petGender;
+            $pet->dob = $request->petDOB;
             $pet->breed = $request->petBreed;
             $pet->picture = $newFilename;
             $pet->save();
@@ -46,7 +48,7 @@ class PetsController extends Controller
                 'message' =>'Pet added.',
                 'pet' => $pet
             ]);
-        } 
+        }
         catch(\Exception $ex)
         {
             return response()->json([
@@ -55,7 +57,7 @@ class PetsController extends Controller
             ], 500);
         }
 
-        
+
     }
 
 

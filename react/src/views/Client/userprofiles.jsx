@@ -75,11 +75,13 @@ const userprofiles = () => {
 
 
 
-  const handleAddPetPost = (petName, petType, petBreed, petPic) => {
+  const handleAddPetPost = (petName, petType, petGender, petDOB, petBreed, petPic) => {
     const formData = new FormData();
     formData.append('client', user.id);
     formData.append('petName', petName);
     formData.append('petType', petType);
+    formData.append('petGender', petGender);
+    formData.append('petDOB', petDOB);
     formData.append('petBreed', petBreed);
     formData.append('pic', petPic);
 
@@ -104,7 +106,7 @@ const userprofiles = () => {
     setEditData(user); // Set initial edit data to user object
     showModal('EditUserModal1', {user}); // Show the EditUserModal
   };
-  
+
 
 
   const handleAddPetClick = () => {

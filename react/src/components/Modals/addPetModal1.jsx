@@ -2,13 +2,22 @@ import { useState } from "react";
 import * as Icon from "react-bootstrap-icons";
 import "../../assets/css/addPetModal1.css";
 
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function AddPetModal1({ handleAddPetPost, onClose }) {
   const [petName, setPetName] = useState('');
   const [petType, setPetType] = useState('');
   const [petBreed, setPetBreed] = useState('');
+  const [petGender, setPetGender] = useState('');
+  const [petDOB, setPetDOB] = useState('');
   const [petPic, setPetPic] = useState('');
 
+  const genderOptions = [
+    { id: "male", label: "Male" },
+    { id: "female", label: "Female" },
+];
     return(
         <div className= {`modal2`}>
 
@@ -37,13 +46,23 @@ export default function AddPetModal1({ handleAddPetPost, onClose }) {
                 value={petBreed}
                 onChange={(e) => setPetBreed(e.target.value)}
               />
+              <select
+              id="viewType"
+              value={petGender}
+              onChange={(e) => setPetGender(e.target.value)}>
+                {genderOptions.map(gender => (
+                  <option key={gender.id} value={gender.id}>{gender.label}</option>
+                ))}
+              </select>
+              <DatePicker onChange={(e) => setPetDOB(e.target.value)}
+              />
               <input
                 type="file"
                 name="petPic"
                 placeholder="Pet Picture"
                 onChange={(e) => setPetPic(e.target.files[0])}
               />
-              <button onClick={() => {handleAddPetPost(petName, petType, petBreed, petPic); onClose()}} className="primary-btn-blue1">Add Pet</button>
+              <button onClick={() => {handleAddPetPost(petName, petType, petGender, petDOB, petBreed, petPic); onClose()}} className="primary-btn-blue1">Add Pet</button>
             <button onClick={onClose} className="sub-button">Close</button>
           </div>
 

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('type');
             $table->string('breed');
             $table->string('gender');
-            $table->date('dob');
+            $table->date('dob')->nullable();
             $table->longText('picture');
             $table->timestamps();
 

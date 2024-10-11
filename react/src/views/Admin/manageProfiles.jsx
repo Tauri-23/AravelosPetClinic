@@ -172,7 +172,7 @@ function ManageProfiles() {
           {activeTab === "ManageClients" && (
             <div className="myappt small-form">
               {clients?.length > 0 && clients.map((client) => (
-                <div className='appt-record-five pending' key={client.id}>
+                <div className='manage-users appt-record-five pending' key={client.id}>
                   <div className='content-deet'>{client.fname} {client.mname} {client.lname}</div>
                   <div className='content-deet'>{client.gender}</div>
                   <div className='content-deet'>{client.email}</div>
@@ -198,7 +198,7 @@ function ManageProfiles() {
           {activeTab === "ManageAdmins" && (
             <div className="myappt small-form">
               {admins?.length > 0 && admins.map((client) => (
-                <div className='appt-record-five pending' key={client.id}>
+                <div className='manage-users user-record' key={client.id}>
                   <div className='content-deet'>{client.fname} {client.mname} {client.lname}</div>
                   <div className='content-deet'>{client.gender}</div>
                   <div className='content-deet'>{client.email}</div>

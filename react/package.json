@@ -20,6 +20,7 @@
     "react-big-calendar": "^1.14.1",
     "react-bootstrap": "^2.10.5",
     "react-bootstrap-icons": "^1.11.4",
+    "react-datepicker": "^7.4.0",
     "react-dom": "^18.2.0",
     "react-fontawesome": "^1.7.1",
     "react-router-dom": "^6.26.1",
