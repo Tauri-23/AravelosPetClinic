@@ -1,82 +1,99 @@
+/* General styles */
 .modal2 {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 22;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-  }
-  
-  .modal-box4{
-    width: 35vw;
-    padding: 25px;
-    border-radius: var(--rounded_conts);
-    background: white;
-    filter: drop-shadow(0 0 10px var(--black2));
-    overflow-x: hidden;
-}
-  .edit-user-modal {
-    max-height: 80vh; /* Adjust max-height as needed */
-    overflow-y: auto; /* Enable vertical scrolling within the modal */
-    justify-content: center; /* Align vertically in the center */
-    align-items: center;
-
-
-  }
-  .edit-user-modal form {
-    display: flex; /* Make the form a flex container */
-    flex-direction: column; /* Arrange elements vertically */
-    overflow-x: hidden;
-  }
-  
-  .edit-user-modal button {
-    margin-top: 1rem; /* Add some space between buttons and form */
-    display: flex; /* Center the buttons horizontally */
-  
-  }
-  .edit-user-modal .input-group {
-    display: flex;
-  margin-bottom: 1rem;
-  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
   align-items: center;
-  margin-left: 5px;
-  width: 97%;
-  }
-  
-  .edit-user-modal h2 {
-    text-align: center;
-    border-bottom: 1px solid black;
-  }
-  .edit-user-modal .input-group label {
-    width: 120px;
-    margin-right: 10px;
-  }
-  
-  
-  .edit-user-modal .input-group input[type="text"],
-  .edit-user-modal .input-group input[type="email"],
-  .edit-user-modal .input-group input[type="date"] {
-    flex: .7;
-  }
-  
-  /* Group specific layouts */
-  .edit-user-modal .input-group:nth-child(1),
-  .edit-user-modal .input-group:nth-child(2),
-  .edit-user-modal .input-group:nth-child(3) {
-    /* First 3 elements (Name fields) */
-  }
-  
-  .edit-user-modal .input-group:nth-child(4),
-  .edit-user-modal .input-group:nth-child(5) {
-    /* Email and Gender */
-    justify-content: space-between;
-  }
-  
-  .edit-user-modal .input-group:nth-child(6),
-  .edit-user-modal .input-group:nth-child(7) {
-    /* Birthday and Phone Number */
-    justify-content: space-between;
-  }
+  z-index: 100; /* Make sure the modal is on top of other content */
+}
+
+.modal-box4 {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  width: 600px; /* Initial width */
+}
+
+/* Edit user modal styles */
+.edit-user-modal {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.edit-user-modal h2 {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between; /* Align buttons horizontally */
+  margin-top: 20px;
+}
+
+/* Input group styles */
+.input-group {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.input-group label {
+  flex: .5;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+/* Field value styles */
+.field-value {
+  flex: .1;
+}
+
+/* Buttons styles */
+button {
+  top: 0%;
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.cancel-button,
+.cancel-edit-button {
+  background-color: #eee;
+}
+
+.update-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* Specific field styles */
+.input-group select {
+  flex: 1;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.input-group input[type="date"],
+.input-group input[type="file"] {
+  flex: 1;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+/* Adjust width on edit button click */
+.input-group.editing {
+  width: 100%; /* Expand width when editing */
+}

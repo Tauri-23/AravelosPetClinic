@@ -140,7 +140,7 @@ const userprofiles = () => {
               <p>Birthday: {user.birthday || "n/a"}</p>
               <p>Address: {user.address || "n/a"}</p>
               <p>Phone: {user.phone || "n/a"}</p>
-              <button onClick={() => handleEditUserClick(user)} className="edit-button">Edit</button>
+              <button onClick={() => handleEditUserClick(user)} className="edit-button">Update</button>
             </>
         </div>
       </div>
