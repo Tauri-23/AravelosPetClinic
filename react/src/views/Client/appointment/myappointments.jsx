@@ -95,7 +95,7 @@ export default function MyAppointments() {
             console.error("No appointment selected for cancellation.");
             return;
         }
-        showModal('ConfirmActionModal1',  {handlePost:handleCancelPost, recordId, recordReason, handleFunction});
+        showModal('ConfirmActionModal1',  {handlePost:handleCancelPost, recordId, handleFunction});
     }
 
 

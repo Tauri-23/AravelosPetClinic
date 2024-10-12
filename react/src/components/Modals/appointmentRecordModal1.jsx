@@ -187,7 +187,11 @@ export default function AppointmentRecordModal1({
                 <div className='d-flex'>
                     <div className='petPictureCont right-margin'><img className="circle petPicture" src={`/assets/media/pets/${record.pet.picture}`}/></div>
                     <div className='appt-details top-margin-s'>
-                        <div className='pet-name bold inter d-flex'>Pet: <div className='left-margin-s normal'>{record.pet.name}</div></div>
+                        <div className='bold inter d-flex'>Pet: <div className='left-margin-s normal'>{record.pet.name}</div></div>
+                        <div className='bold inter d-flex'>Gender: <div className='left-margin-s normal'>{record.pet.gender.charAt(0).toUpperCase() + record.pet.gender.slice(1)}</div></div>
+                        <div className='bold inter d-flex'>Breed: <div className='left-margin-s normal'>{record.pet.breed.charAt(0).toUpperCase() + record.pet.breed.slice(1)}{" "}({record.pet.type})</div></div>
+                        <div className='bold inter d-flex'>Birthdate: <div className='left-margin-s normal'>{new Date(record.pet.dob).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}{' '}
+                        ({new Date().getFullYear() - new Date(record.pet.dob).getFullYear() - (new Date().getMonth() < new Date(record.pet.dob).getMonth() || (new Date().getMonth() === new Date(record.pet.dob).getMonth() && new Date().getDate() < new Date(record.pet.dob).getDate()) ? 1 : 0)} yrs old)</div></div>
                         <div className='service bold inter d-flex'>Service: <div className='left-margin-s normal'>{serviceLabel}</div></div>
                         {renderDetails()}
                     </div>

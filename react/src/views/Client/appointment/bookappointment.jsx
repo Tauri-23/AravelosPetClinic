@@ -15,7 +15,7 @@ export default function BookAppointment() {
     // 1 HR GROOMING
     // ONLY 8AM TO 3PM
     // CANT BOOK 3PM APPOINTMENT BC LAGPAS NA
-    // NO OVERLAP APPOINTMENTS
+    // NO OVERLAP APPOINTMENTS IF BY TIMESLOT (SEP 2 AND SEP 2 OK, SEP 2 8AM AND SEP 2 8AM NOT OK)
     const navigate = useNavigate(); // Initialize useNavigate
     const {showModal} = useModal();
     const {user} = useStateContext();

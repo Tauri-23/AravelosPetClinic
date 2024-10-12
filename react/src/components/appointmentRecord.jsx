@@ -129,27 +129,6 @@ export default function AppointmentRecord({
                         <div>Status: Rejected</div> */}
                     </div>
                 );
-            default:
-                return (
-                    <div className='appt-record' onClick={() => handleAppointmentRecordClick(record)}>
-                        <div className='content-deet'>{record.pet.name}</div>
-                        <div className='content-deet'>{serviceLabel}</div>
-                        <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            hour: 'numeric',
-                            minute: 'numeric',
-                            hour12: true,
-                        })}</div>
-                        <div className='content-deet'>{new Date(recordRequestDate).toLocaleString()}</div>
-                        <div className='content-deet'>{recordCancelDate ? new Date(recordCancelDate).toLocaleString() : "N/A"}</div>
-                        <div className='content-deet'>{recordApprovedDate ? new Date(recordApprovedDate).toLocaleString() : "N/A"}</div>
-                        <div className='content-deet'>{recordRejectDate ? new Date(recordRejectDate).toLocaleString() : "N/A"}</div>
-                        <div className='content-deet'>{record.reason}</div>
-                        <div className='content-deet'>Status: {record.status}</div>
-                    </div>
-                );
         }
     };
 

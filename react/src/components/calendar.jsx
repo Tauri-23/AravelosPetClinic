@@ -8,17 +8,7 @@ import { useEffect, useState } from "react";
 import { useStateContext } from "../contexts/ContextProvider";
 import { fetchAllClientAppointments } from "../services/AppointmentServices";
 
-
-// const events = [
-//     {
-//         start: moment("2024-09-29T15:00:00").toDate(),
-//         end: moment("2024-09-29T11:00:00").toDate(),
-//         title: "hahaha"
-//     }
-// ];
-
-
-export default function ClientCalendar({ onDateSelect, calendarView, CustomToolbar }) { // Accept the view as a prop
+export default function ClientCalendar({ onDateSelect, calendarView, CustomToolbar }) {
     const {user} = useStateContext();
     const localizer = momentLocalizer(moment);
 
@@ -38,16 +28,12 @@ export default function ClientCalendar({ onDateSelect, calendarView, CustomToolb
 
     useEffect(() => {
         setEvents(appointments.map(appointment => ({
-            start: moment(appointment.date_time, "YYYY-MM-DD HH:mm:ss","Asia/Manila").toDate(), // Format and convert to Date
-            end: moment(appointment.date_time, "YYYY-MM-DD HH:mm:ss","Asia/Manila").toDate(),   // Same for end
+            start: moment(appointment.date_time, "YYYY-MM-DD HH:mm:ss","Asia/Manila").toDate(),
+            end: moment(appointment.date_time, "YYYY-MM-DD HH:mm:ss","Asia/Manila").toDate(),
             title: `${appointment.service} ${appointment.pet}`
         })));
     }, [appointments]);
 
-
-    /*
-    | Debugging
-    */
     useEffect(() => {
         console.log(appointments);
     }, [appointments]);
@@ -57,9 +43,13 @@ export default function ClientCalendar({ onDateSelect, calendarView, CustomToolb
 
     const dayPropGetter = (date) => {
         const day = date.getDay();
+        const now = moment().tz("Asia/Manila");
+        const currentDate = moment(date).tz("Asia/Manila");
+        const twoDaysFromNow = now.clone().add(2, 'days');
+
         let style = {};
 
-        if (day === 2) {
+        if (day === 2 || currentDate.isSameOrBefore(twoDaysFromNow)) {
             style = {
                 backgroundColor: '#f0f0f0',
                 color: '#ccc',
@@ -69,15 +59,18 @@ export default function ClientCalendar({ onDateSelect, calendarView, CustomToolb
         return { style };
     };
 
-    const handleSelectSlot = ({ start, end }) => {
+    const handleSelectSlot = ({ start }) => {
         const selectedDay = start.getDay();
+        const now = moment().tz("Asia/Manila");
+        const selectedDate = moment(start).tz("Asia/Manila");
+        const twoDaysFromNow = now.clone().add(2, 'days');
 
-        if (selectedDay === 2) {
-            return; // Exit if the selected day is Tuesday
+        if (selectedDay === 2 || selectedDate.isSameOrBefore(twoDaysFromNow)) {
+            return; // Exit if the selected day is Tuesday or within 2 days from now
         }
 
-        const selectedDate = moment.tz(start, "Asia/Manila").toISOString();
-        onDateSelect(selectedDate); // Call the callback function with the selected date
+        const isoSelectedDate = selectedDate.toISOString();
+        onDateSelect(isoSelectedDate);
     };
 
     return (
@@ -90,11 +83,11 @@ export default function ClientCalendar({ onDateSelect, calendarView, CustomToolb
             dayPropGetter={dayPropGetter}
             selectable
             onSelectSlot={handleSelectSlot}
-            min={new Date(2024, 0, 1, 8, 0)} // 8:00 AM
-            max={new Date(2025, 0, 1, 15, 0)} // 3:00 PM
-            view={calendarView} // Dynamically set the view (day or week)
+            min={new Date(2024, 0, 1, 8, 0)}
+            max={new Date(2025, 0, 1, 15, 0)}
+            view={calendarView}
             components={{
-                toolbar: CustomToolbar, // Replace toolbar with CustomToolbar
+                toolbar: CustomToolbar,
             }}
         />
     );
@@ -103,5 +96,5 @@ export default function ClientCalendar({ onDateSelect, calendarView, CustomToolb
 ClientCalendar.propTypes = {
     onDateSelect: PropTypes.func.isRequired,
     calendarView: PropTypes.string.isRequired,
-    CustomToolbar: PropTypes.elementType, // Optional
+    CustomToolbar: PropTypes.elementType,
 };

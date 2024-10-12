@@ -3,9 +3,9 @@ import propTypes from 'prop-types';
 import { useState } from "react";
 import { useEffect, useRef } from 'react';
 
-export const ConfirmActionModal1 = ({ handlePost, recordId, recordReason, onClose, handleFunction}) => {
-    const [reason,setReason] = useState('');
+export const ConfirmActionModal1 = ({ handlePost, recordId, onClose, handleFunction}) => {
     // useEffect(() => {console.log(listing);}, listing);
+    const [recordReason, setReason] = useState(''); // State for cancellation reason
     const renderContent = () => {
         switch (handleFunction) {
             // FOR CANCEL APPOINTMENT
@@ -18,7 +18,7 @@ export const ConfirmActionModal1 = ({ handlePost, recordId, recordReason, onClos
                         <input type="text"
                         name="reason"
                         placeholder="Reason for cancelling your appointment"
-                        value={reason}
+                        value={recordReason}
                         onChange={(e) => setReason(e.target.value)}/>
                     </div>
                     <div className="d-flex flex-direction-x flex-row-reverse gap3">
