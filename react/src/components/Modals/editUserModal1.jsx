@@ -70,123 +70,131 @@ const EditUserModal = ({ user, onClose }) => {
   };
 
   const renderInputField = (fieldName, label, type = 'text') => (
-    <div className="input-group">
-      <label htmlFor={fieldName}>{label}:</label>
-      {editMode[fieldName] ? (
-        <>
-          {type === 'select' ? (
-            <select
-              id={fieldName}
-              name={fieldName}
-              value={editData[fieldName]}
-              onChange={handleInputChange}
+    <div className="content-deet">
+      <div className="content-deet">
+        <label htmlFor={fieldName}>{label}:</label>
+      </div>
+      <div className="content-deet">
+        {editMode[fieldName] ? (
+          <>
+            {type === 'select' ? (
+              <select
+                id={fieldName}
+                name={fieldName}
+                value={editData[fieldName]}
+                onChange={handleInputChange}
+              >
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            ) : type === 'date' ? (
+              <input
+                type="date"
+                id={fieldName}
+                name={fieldName}
+                value={editData[fieldName]}
+                onChange={handleInputChange}
+              />
+            ) : type === 'file' ? (
+              <input
+                type="file"
+                id={fieldName}
+                name={fieldName}
+                onChange={handleInputChange}
+              />
+            ) : (
+              <input
+                type={type}
+                id={fieldName}
+                name={fieldName}
+                value={editData[fieldName]}
+                onChange={handleInputChange}
+              />
+            )}
+            <button
+              type="button"
+              onClick={() => handleSaveField(fieldName)}
+              className="update-button"
             >
-              <option value="">Select</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-          ) : type === 'date' ? (
-            <input
-              type="date"
-              id={fieldName}
-              name={fieldName}
-              value={editData[fieldName]}
-              onChange={handleInputChange}
-            />
-          ) : type === 'file' ? (
-            <input
-              type="file"
-              id={fieldName}
-              name={fieldName}
-              onChange={handleInputChange}
-            />
-          ) : (
-            <input
-              type={type}
-              id={fieldName}
-              name={fieldName}
-              value={editData[fieldName]}
-              onChange={handleInputChange}
-            />
-          )}
-          <button
-            type="button"
-            onClick={() => handleSaveField(fieldName)}
-            className="update-button"
-          >
-            Update
-          </button>
-          <button
-            type="button"
-            onClick={() =>
-              setEditMode((prev) => ({ ...prev, [fieldName]: false }))
-            }
-            className="cancel-edit-button"
-          >
-            Cancel
-          </button>
-        </>
-      ) : (
-        <>
-          <span className="field-value">
-            {type === 'file' && editData[fieldName]
-              ? editData[fieldName].name
-              : editData[fieldName] || 'N/A'}
-          </span>
-          <button
-            type="button"
-            onClick={() => handleEditClick(fieldName)}
-            className="edit-button"
-          >
-            Edit
-          </button>
-        </>
-      )}
+              Update
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                setEditMode((prev) => ({ ...prev, [fieldName]: false }))
+              }
+              className="cancel-edit-button"
+            >
+              Cancel
+            </button>
+          </>
+        ) : (
+          <>
+            <span className="field-value">
+              {type === 'file' && editData[fieldName]
+                ? editData[fieldName].name
+                : editData[fieldName] || 'N/A'}
+            </span>
+            <button
+              type="button"
+              onClick={() => handleEditClick(fieldName)}
+              className="edit-button"
+            >
+              Edit
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 
   const renderPasswordInput = () => (
-    <div className="input-group">
-      <label htmlFor="currentPassword">Current Password:</label>
-      {editMode.currentPassword ? (
-        <>
-          <input
-            type="password"
-            id="currentPassword"
-            name="currentPassword"
-            value={editData.currentPassword || ''}
-            onChange={handleInputChange}
-          />
-          <button
-            type="button"
-            onClick={() => handleSaveField('currentPassword')}
-            className="update-button"
-          >
-            Update
-          </button>
-          <button
-            type="button"
-            onClick={() =>
-              setEditMode((prev) => ({ ...prev, currentPassword: false }))
-            }
-            className="cancel-edit-button"
-          >
-            Cancel
-          </button>
-        </>
-      ) : (
-        <>
-          <span className="field-value">********</span>
-          <button
-            type="button"
-            onClick={toggleCurrentPassword}
-            className="edit-button"
-          >
-            Change Password
-          </button>
-        </>
-      )}
+    <div className="content-deet">
+      <div className="content-deet">
+        <label htmlFor="currentPassword">Current Password:</label>
+      </div>
+      <div className="content-deet">
+        {editMode.currentPassword ? (
+          <>
+            <input
+              type="password"
+              id="currentPassword"
+              name="currentPassword"
+              value={editData.currentPassword || ''}
+              onChange={handleInputChange}
+            />
+            <button
+              type="button"
+              onClick={() => handleSaveField('currentPassword')}
+              className="update-button"
+            >
+              Update
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                setEditMode((prev) => ({ ...prev, currentPassword: false }))
+              }
+              className="cancel-edit-button"
+            >
+              Cancel
+            </button>
+          </>
+        ) : (
+          <>
+            <span className="field-value">********</span>
+            <button
+              type="button"
+              onClick={toggleCurrentPassword}
+              className="edit-button"
+            >
+              Change Password
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 
@@ -195,27 +203,29 @@ const EditUserModal = ({ user, onClose }) => {
       <div className="modal-box4">
         <div className="edit-user-modal">
           <h2>Edit User Information</h2>
-          <form>
-            {renderInputField('firstName', 'First Name')}
-            {renderInputField('middleName', 'Middle Name')}
-            {renderInputField('lastName', 'Last Name')}
-            {renderInputField('email', 'Email', 'email')}
-            {renderInputField('gender', 'Gender', 'select')}
-            {renderInputField('birthday', 'Birthday', 'date')}
-            {renderInputField('phone', 'Phone Number', 'tel')}
-            {renderInputField('address', 'Address')}
-            {renderInputField('picture', 'Profile Picture', 'file')}
-            {renderPasswordInput()}
-            <div className="form-actions">
-              <button
-                type="button"
-                onClick={onClose}
-                className="cancel-button"
-              >
-                Close
-              </button>
-            </div>
-          </form>
+          <div className="appt-record-three">
+            <form>
+              {renderInputField('firstName', 'First Name')}
+              {renderInputField('middleName', 'Middle Name')}
+              {renderInputField('lastName', 'Last Name')}
+              {renderInputField('email', 'Email', 'email')}
+              {renderInputField('gender', 'Gender', 'select')}
+              {renderInputField('birthday', 'Birthday', 'date')}
+              {renderInputField('phone', 'Phone Number', 'tel')}
+              {renderInputField('address', 'Address')}
+              {renderInputField('picture', 'Profile Picture', 'file')}
+              {renderPasswordInput()}
+              <div className="form-actions">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="cancel-button"
+                >
+                  Close
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
