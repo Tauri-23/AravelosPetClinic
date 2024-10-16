@@ -1,20 +1,39 @@
+.prof.gen-margin{
+height:-webkit-fill-available;
+gap:2vw;
+}
 /* Overall Page Layout */
-
+.prof.user-profile{
+    width: 60vw;
+}
+.prof.user-pets{
+    width: 40vw;
+}
 .profile-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background-color: #f5f5f5;
-  padding: 20px;
 }
-
+.user-details{
+    overflow-y: auto;
+    height:17vw;
+}
+.detail-row{
+    display: flex;
+    align-items: center;
+}
+.ud.detail-cont{
+    width:25vw;
+}
 /* Profile Header */
-
+.user-details.head{
+    size:20px
+}
 .profile-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
   border-bottom: 1px solid #ddd;
   background-color: #fff;
 }
@@ -22,16 +41,16 @@
 /* Profile Picture */
 
 .profilepic {
-  width: 180px;
-  height: 180px;
+  width: 10vw;
+  height: 10vw;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 20px;
+  margin-right: 2vw;
 }
 
 /* User Information */
 
-.user-info {
+.user-name {
   flex: 1;
 }
 
@@ -49,7 +68,6 @@
 .user-info p {
   margin: 5px 0;
   font-size: 16px;
-  color: #666;
 }
 
 /* Edit Button Styling */
@@ -78,12 +96,14 @@
 /* Pet Profile Section */
 
 .pet-profiles {
-  display: flex;
-  flex-direction: column; /* Change to column for vertical layout */
-  justify-content: space-between;
-  margin-top: 20px;
-  border-bottom: 1px solid #ddd;
-  background-color: #fff;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    overflow-y: auto;
+    max-height:31vw;
+    scrollbar-gutter: stable;
+
 }
 
 .pet-profiles h3 {
@@ -98,11 +118,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 120px;
-  height: 120px;
+  width: 8vw;
+  height: 8vw;
   background-color: #eee;
   border: none;
-  border-radius: 10px;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease-in-out;
@@ -110,7 +129,17 @@
 
 .pet-profile.add-pet:hover {
   background-color: #ddd;
-  transform: scale(1.05);
+  transform: scale(1.03);
+}
+.pet-profile:hover {
+  transform: scale(1.03);
+}
+
+.pet-profile {
+  margin: .7vw .7vw .2vw .7vw;
+  text-align: center;
+  cursor:pointer;
+  transition: all 0.2s ease-in-out;
 }
 
 .add-icon {
@@ -120,22 +149,17 @@
 
 /* Pet profile styles (you can keep this section from your original CSS) */
 
-.pets-container {
-  display: flex;
-  flex-wrap: wrap;
-  
-}
-
-.pet-profile {
-  margin: 10px;
-  text-align: center;
-}
+/* .pets-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    overflow-y:auto;
+} */
 
 .pet-picture {
-  width: 120px;
-  height: 120px;
-  border-radius: 10px; /* Adjust top radius to match container */
-  object-fit: cover;
+    width: 8vw;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
 }
 
 .pet-name {

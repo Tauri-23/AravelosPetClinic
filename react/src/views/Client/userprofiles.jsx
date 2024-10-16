@@ -123,48 +123,62 @@ const userprofiles = () => {
 
   // Return component
   return (
-    <div className="profile-container">
-      <div className="profile-header">
-        <div className="profilepic">
-          {newProfilePicture || user.profilePicture ? (
-              <img src={newProfilePicture || user.profilePicture} alt="Profile" />
-            ) : (
-              <FontAwesomeIcon icon={faUserCircle} className="profilepic"/>
-            )}
-          </div>
-        <div className="user-info">
-            <>
-              <h2>{user.fname} {user.mname} {user.lname}</h2>
-              <p>Email: {user.email || "n/a"}</p>
-              <p>Gender: {user.gender || "n/a"}</p>
-              <p>Birthday: {user.birthday || "n/a"}</p>
-              <p>Address: {user.address || "n/a"}</p>
-              <p>Phone: {user.phone || "n/a"}</p>
-              <button onClick={() => handleEditUserClick(user)} className="edit-button">Update</button>
-            </>
-        </div>
-      </div>
+    <div className="page inter">
+        <div className="prof gen-margin d-flex ">
+            <div className='prof small-form user-profile'>
+                <div className="profile-header bottom-padding">
+                    <div className="profilepic">
+                    {newProfilePicture || user.profilePicture ? (
+                        <img src={newProfilePicture || user.profilePicture} alt="Profile" />
+                        ) : (
+                        <FontAwesomeIcon icon={faUserCircle} className="profilepic"/>
+                        )}
+                    </div>
+                    <div className="user-name semi-medium-f bold anybody">
+                        {user.fname} {user.mname} {user.lname}
+                        {/* <p>Email: {user.email || "n/a"}</p>
+                        <p>Birthday: {user.birthday || "n/a"}</p>
+                        <p>Address: {user.address || "n/a"}</p>
+                        <p>Phone: {user.phone || "n/a"}</p>
+                        <button onClick={() => handleEditUserClick(user)} className="primary-btn-blue1">Update</button> */}
 
-      <div className="pet-profiles">
-        <h3>Your Pets</h3>
-        <div className="pets-container">
-          {pets?.length > 0 && pets.map((pet) => (
-            <div
-              key={pet.id}
-              className="pet-profile"
-              onClick={() => handlePetClick(pet)}
-            >
-              <img src={`/assets/media/pets/${pet.picture}`} alt={pet.name} className="pet-picture" />
-              <p>{pet.name}</p>
+                    </div>
+
+                </div>
+                <div className="left-margin top-margin">
+                    <p className='user-deet head bold anybody'>Information</p>
+                    <div className='user-details'>
+                        <p className='detail-row semi-bold'>Name: <input className="left-margin ud detail-cont" type="text" value={`${user.fname || ''} ${user.mname || ''} ${user.lname || ''}`.trim() || 'n/a'} readOnly /></p>
+                        <p className='detail-row semi-bold'>Gender: <input className="left-margin ud detail-cont" type="text" value={user.gender || 'n/a'} readOnly /></p>
+                        <p className='detail-row semi-bold'>Email: <input className="left-margin ud detail-cont"  type="text" value={user.email || 'n/a'} readOnly /></p>
+                        <p className='detail-row semi-bold'>Birthday: <input className="left-margin ud detail-cont" type="text" value={user.birthday || 'n/a'} readOnly /></p>
+                        <p className='detail-row semi-bold'>Address: <input className="left-margin ud detail-cont" type="text" value={user.address || 'n/a'} readOnly /></p>
+                        <p className='detail-row semi-bold'>Phone: <input className="left-margin ud detail-cont" type="text" value={user.phone || 'n/a'} readOnly /></p>
+                    </div>
+
+                </div>
             </div>
-          ))}
-          {/* Add New Pet button */}
-          <div className="pet-profile add-pet" onClick={handleAddPetClick}>
-            <div className="add-icon">+</div>
-          </div>
-        </div>
-      </div>
+            <div className='prof small-form user-pets'>
+                <div className="prof header bold anybody semi-medium-f">Pet Profiles</div>
+                <div className="pet-profiles">
+                    {pets?.length > 0 && pets.map((pet) => (
+                        <div
+                        key={pet.id}
+                        className="pet-profile"
+                        onClick={() => handlePetClick(pet)}
+                        >
+                        <img src={`/assets/media/pets/${pet.picture}`} alt={pet.name} className="pet-picture rounded-corners" />
+                        <p>{pet.name}</p>
+                        </div>
+                    ))}
+                    {/* Add New Pet button */}
+                    <div className="pet-profile add-pet rounded-corners" onClick={handleAddPetClick}>
+                        <div className="add-icon ">+</div>
+                    </div>
+                </div>
+            </div>
 
+        </div>
     </div>
   );
 };

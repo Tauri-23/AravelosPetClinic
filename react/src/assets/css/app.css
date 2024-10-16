@@ -37,6 +37,10 @@ a{
     margin-left:1vw;
     margin-right:1vw;
 }
+.semi-small-f
+{
+    font-size:1vw;
+}
 .small-f
 {
     font-size:1vw;
@@ -78,6 +82,9 @@ a{
 .bottom-margin{
     margin-bottom: 2vw;
 }
+.bottom-padding{
+    padding-bottom: 2vw;
+}
 .top-margin{
     margin-top: 2vw;
 }
@@ -117,6 +124,9 @@ a{
 }
 .circle{
     border-radius: 50%;
+}
+.rounded-corners{
+    border-radius: 1.4vw;
 }
 /*
 |----------------------------------------

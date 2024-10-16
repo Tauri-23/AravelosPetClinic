@@ -64,7 +64,7 @@ export default function AddPetModal1({ handleAddPetPost, onClose }) {
             id="petDOB"
             selected={petDOB}
             dateFormat="yyyy/MM/dd"
-            placeholderText="Pet's Birthday" 
+            placeholderText="Pet's Birthday"
             onChange={handleDateChange}
           />
         </div>
@@ -78,7 +78,8 @@ export default function AddPetModal1({ handleAddPetPost, onClose }) {
         <div className="pet-info-row">
         <button
           onClick={() => {
-            handleAddPetPost(petName, petType, petGender, petDOB, petBreed, petPic);
+            const formattedDOB = petDOB ? petDOB.toISOString().split("T")[0] : null;
+            handleAddPetPost(petName, petType, petGender, formattedDOB, petBreed, petPic);
             onClose();
           }}
           className="primary-btn-blue1"
