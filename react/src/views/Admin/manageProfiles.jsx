@@ -7,7 +7,7 @@ import { notify } from '../../assets/js/utils';
 import { fetchAllAdminsNotDeleted } from '../../services/UserAdminsServices';
 import { useStateContext } from '../../contexts/ContextProvider';
 import { useModal } from '../../contexts/ModalContext';
-import addAdmin1 from '../../components/Modals/addAdmin1';
+import addAdminModal1 from '../../components/Modals/addAdminModal1';
 
 function ManageProfiles() {
   const {user} = useStateContext();
@@ -131,16 +131,12 @@ function ManageProfiles() {
     .catch(error => console.error(error));
   };
 
-  const handleAdd = (e) => {
-
-    const handleFunction = "handleAddPost";
-    e.preventDefault();
-    showModal('addAdmin1', {handlePost: addAdmin1, handleFunction});
-
-};
+  const handleAdd = () => {
+    showModal('AddAdminModal1', { handleAddPetPost });
+  };
 
 
-    const handleAddAdmin = async (fname, mname, lname, email, password, bday, gender, address, phone, role, status, picture) => {
+    const handleAddPetPost = (fname, mname, lname, email, password, bday, gender, address, phone, role, status, picture) => {
       
       const formData = new FormData();
       formData.append('fname', fname);
@@ -156,21 +152,18 @@ function ManageProfiles() {
       formData.append('status', status);
       formData.append('picture', picture);
 
-      try {
-        const response = await axiosClient.post('/api/admins', data);
-        if (response.status === 200) {
-          // Admin added successfully
-          setShowModal(false); // Close the modal
-          setAdmins([...admins, response.data]); // Update admins state with new admin
-          notify('success', 'Admin added successfully!', 'top-center', 3000);
+      axiosClient.post('/add-admin', formData)
+      .then(({ data }) => {
+        if (data.status === 200) {
+          notify('success', data.message, 'top-center', 3000);
+          setPets(prev =>
+            [...prev, data.pet]
+          );
         } else {
-          console.error('Error adding admin:', response.statusText);
-          notify('error', 'Failed to add admin!', 'top-center', 3000);
+          notify('error', data.message, 'top-center', 3000);
         }
-      } catch (error) {
-        console.error('Error adding admin:', error);
-        notify('error', 'Failed to add admin!', 'top-center', 3000);
-      }
+      })
+      .catch(error => console.error(error));
     };
   
 
