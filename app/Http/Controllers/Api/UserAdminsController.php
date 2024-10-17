@@ -9,12 +9,9 @@ use Illuminate\Http\Request;
 class UserAdminsController extends Controller
 {
     // GET
-    public function GetAllAdminsNotDeleted($adminId)
+    public function GetAllAdminsNotDeleted()
     {
-        $admins = $adminId === '' 
-        ? user_admins::whereNot('status', 'deleted')->get() 
-        : user_admins::whereNot('status', 'deleted')->whereNot('id', $adminId)->get();
-        return response()->json($admins);
+        return response()->json(user_admins::whereNot('status', 'deleted')->get());
     }
 
 
@@ -22,9 +19,9 @@ class UserAdminsController extends Controller
     // POST
     public function SuspendUnsuspendAdmin(Request $request)
     {
-        $client = user_admins::where('id', $request->adminId)->whereNot('status', 'deleted')->firstOr();
+        $admin = user_admins::where('id', $request->adminId)->whereNot('status', 'deleted')->firstOr();
 
-        if(!$client)
+        if(!$admin)
         {
             return response()->json([
                 'status' => 404,
@@ -32,16 +29,16 @@ class UserAdminsController extends Controller
             ]);
         }
 
-        
-        $client->status = $client->status === 'active' ? 'suspended' : 'active';
-        $message = $client->status === "active" ? 'Client unsuspended' : "Client suspended";
 
-        if($client->save())
+        $admin->status = $admin->status === 'active' ? 'suspended' : 'active';
+        $message = $admin->status === "active" ? 'Admin unsuspended' : "Admin suspended";
+
+        if($admin->save())
         {
             return response()->json([
                 'status' => 200,
                 'message' => $message,
-                'clients' => user_admins::whereNot('status', 'deleted')->get()
+                'admin' => user_admins::whereNot('status', 'deleted')->get()
             ]);
         }
         else
@@ -55,30 +52,30 @@ class UserAdminsController extends Controller
 
     public function DeleteAdmin(Request $request)
     {
-        $client = user_admins::find($request->adminId);
+        $admin = user_admins::find($request->adminId);
 
-        if(!$client)
+        if(!$admin)
         {
             return response()->json([
                 'status' => 404,
-                'message' => 'Client not found'
+                'message' => 'Admin not found'
             ]);
         }
 
-        $client->status = 'deleted';
+        $admin->status = 'deleted';
 
-        if($client->save())
+        if($admin->save())
         {
             return response()->json([
                 'status' => 200,
-                'message' => 'Client deleted'
+                'message' => 'Admin deleted'
             ]);
         }
-        else 
+        else
         {
             return response()->json([
                 'status' => 404,
-                'message' => 'Client not found'
+                'message' => 'Admin not found'
             ]);
         }
     }

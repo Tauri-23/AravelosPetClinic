@@ -43,7 +43,7 @@ function ManageProfiles() {
     getAll();
   }, [])
 
-  
+
 
   const renderHeaders = () => {
     switch (activeTab) {
@@ -71,17 +71,19 @@ function ManageProfiles() {
         case "ManageAdmins":
             return (
                 <>
-                    <div className="mini-nav">
-                        <div className="anybody medium-f bold">Manage Admins</div>
-                        <div className="separator left-margin-s right-margin-s"></div>
-                        <div onClick={() => setActiveTab("ManageClients")}>
-                            <div className="anybody small-f semi-bold pointer">Manage Clients</div>
+                    <div className="manage-prof mini-nav">
+                        <div className = 'mini-links'>
+                            <div className="anybody medium-f bold">Manage Admins</div>
+                            <div className="separator left-margin-s right-margin-s"></div>
+                            <div onClick={() => setActiveTab("ManageClients")}>
+                                <div className="anybody small-f semi-bold pointer">Manage Clients</div>
+                            </div>
                         </div>
-                       
+                        <div className="add-admin">
+                            <div className='primary-btn-blue1 bottom-margin' onClick={handleAdd}>Add admin</div>
+                        </div>
                     </div>
-                    <div className="add-admin">
-                          <div className='primary-btn-blue1 bottom-margin' onClick={handleAdd}>Add admin</div>
-                        </div>
+
                     <div className="myappt headers small-form d-flex bottom-margin-s">
                         <div className='detailHeader column semi-bold'>Full Name</div>
                         <div className='detailHeader column semi-bold'>Gender</div>
@@ -137,7 +139,7 @@ function ManageProfiles() {
 
 
     const handleAddPetPost = (fname, mname, lname, email, password, bday, gender, address, phone, role, status, picture) => {
-      
+
       const formData = new FormData();
       formData.append('fname', fname);
       formData.append('mname', mname);
@@ -165,7 +167,7 @@ function ManageProfiles() {
       })
       .catch(error => console.error(error));
     };
-  
+
 
   const handleDeleteAdmin = userId => {
     // Send a DELETE request to the backend API to delete the admin account
@@ -213,19 +215,18 @@ function ManageProfiles() {
             </div>
           )}
 
-          {/* Placeholder for Manage Admins section (assuming similar structure) */}
           {activeTab === "ManageAdmins" && (
             <div className="myappt small-form">
-              {admins?.length > 0 && admins.map((client) => (
-                <div className='manage-users user-record' key={client.id}>
-                  <div className='content-deet'>{client.fname} {client.mname} {client.lname}</div>
-                  <div className='content-deet'>{client.gender}</div>
-                  <div className='content-deet'>{client.email}</div>
-                  <div className='content-deet'>{client.status}</div>
+              {admins?.length > 0 && admins.map((admins) => (
+                <div className='manage-users appt-record-five pending' key={admins.id}>
+                  <div className='content-deet'>{admins.fname} {admins.mname} {admins.lname}</div>
+                  <div className='content-deet'>{admins.gender}</div>
+                  <div className='content-deet'>{admins.email}</div>
+                  <div className='content-deet'>{admins.role}</div>
                   <div className='content-deet'>
 
-                    <button className="primary-btn-blue1"onClick={() => handleSuspendUnsuspendClient(client.id)}>{client.status === 'active' ? 'Suspend' : 'Unsuspend'}</button>
-                    <button className="sub-button" onClick={() => handleDeleteClient(client.id)}>Delete</button>
+                    <button className="primary-btn-blue1" onClick={() => handleSuspendUnsuspendClient(admins.id)}>{admins.status === 'active' ? 'Suspend' : 'Unsuspend'}</button>
+                    <button className="sub-button" onClick={() => handleDeleteClient(admins.id)}>Delete</button>
                   </div>
                 </div>
               ))}
@@ -236,7 +237,6 @@ function ManageProfiles() {
               {admins?.length < 1 && (
                 <>No Records</>
               )}
-             
             </div>
           )}
 

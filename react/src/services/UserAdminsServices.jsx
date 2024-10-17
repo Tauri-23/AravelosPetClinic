@@ -1,13 +1,13 @@
 import axiosClient from "../axios-client"
 
 /**
- * 
+ *
  * @param {string} adminId - Optional if you want to exclude the adminId to the rendering if render all leave ignore it
- * @returns 
+ * @returns
  */
-export const fetchAllAdminsNotDeleted = async(adminId) => {
+export const fetchAllAdminsNotDeleted = async() => {
     try {
-        const response = await axiosClient.get(`/retrieve-all-admins-not-deleted/${adminId}`);
+        const response = await axiosClient.get(`/retrieve-all-admins-not-deleted/`);
         console.log(response.data);
         return response.data;
     } catch(error) {
