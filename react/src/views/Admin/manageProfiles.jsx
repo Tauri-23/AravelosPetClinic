@@ -6,9 +6,12 @@ import axiosClient from '../../axios-client';
 import { notify } from '../../assets/js/utils';
 import { fetchAllAdminsNotDeleted } from '../../services/UserAdminsServices';
 import { useStateContext } from '../../contexts/ContextProvider';
+import { useModal } from '../../contexts/ModalContext';
+import addAdmin1 from '../../components/Modals/addAdmin1';
 
 function ManageProfiles() {
   const {user} = useStateContext();
+  const { showModal } = useModal();
   const [newAdminEmail, setNewAdminEmail] = useState('');
   const [activeTab, setActiveTab] = useState("ManageClients");
   const [admins, setAdmins] = useState(null);
@@ -40,6 +43,7 @@ function ManageProfiles() {
     getAll();
   }, [])
 
+  
 
   const renderHeaders = () => {
     switch (activeTab) {
@@ -67,14 +71,17 @@ function ManageProfiles() {
         case "ManageAdmins":
             return (
                 <>
-                    <div className="mini-nav bottom-margin">
+                    <div className="mini-nav">
                         <div className="anybody medium-f bold">Manage Admins</div>
                         <div className="separator left-margin-s right-margin-s"></div>
                         <div onClick={() => setActiveTab("ManageClients")}>
                             <div className="anybody small-f semi-bold pointer">Manage Clients</div>
                         </div>
+                       
                     </div>
-
+                    <div className="add-admin">
+                          <div className='primary-btn-blue1 bottom-margin' onClick={handleAdd}>Add admin</div>
+                        </div>
                     <div className="myappt headers small-form d-flex bottom-margin-s">
                         <div className='detailHeader column semi-bold'>Full Name</div>
                         <div className='detailHeader column semi-bold'>Gender</div>
@@ -124,29 +131,48 @@ function ManageProfiles() {
     .catch(error => console.error(error));
   };
 
+  const handleAdd = (e) => {
+
+    const handleFunction = "handleAddPost";
+    e.preventDefault();
+    showModal('addAdmin1', {handlePost: addAdmin1, handleFunction});
+
+};
 
 
-  const handleAddAdmin = () => {
-    // Send a POST request to the backend API to add a new admin account
-    fetch('/api/admins', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: newAdminEmail })
-    })
-      .then(response => {
-        if (response.ok) {
-          // Clear the new admin email field and update the user list
-          setNewAdminEmail('');
-          fetch('/api/users')
-            .then(response => response.json())
-            .then(data => setUsers(data))
-            .catch(error => console.error('Error fetching users:', error));
+    const handleAddAdmin = async (fname, mname, lname, email, password, bday, gender, address, phone, role, status, picture) => {
+      
+      const formData = new FormData();
+      formData.append('fname', fname);
+      formData.append('mname', mname);
+      formData.append('lname', lname);
+      formData.append('email', email);
+      formData.append('password', password);
+      formData.append('bday', bday);
+      formData.append('gender', gender);
+      formData.append('address', address);
+      formData.append('phone', phone);
+      formData.append('role', role);
+      formData.append('status', status);
+      formData.append('picture', picture);
+
+      try {
+        const response = await axiosClient.post('/api/admins', data);
+        if (response.status === 200) {
+          // Admin added successfully
+          setShowModal(false); // Close the modal
+          setAdmins([...admins, response.data]); // Update admins state with new admin
+          notify('success', 'Admin added successfully!', 'top-center', 3000);
         } else {
           console.error('Error adding admin:', response.statusText);
+          notify('error', 'Failed to add admin!', 'top-center', 3000);
         }
-      })
-      .catch(error => console.error('Error adding admin:', error));
-  };
+      } catch (error) {
+        console.error('Error adding admin:', error);
+        notify('error', 'Failed to add admin!', 'top-center', 3000);
+      }
+    };
+  
 
   const handleDeleteAdmin = userId => {
     // Send a DELETE request to the backend API to delete the admin account
@@ -217,6 +243,7 @@ function ManageProfiles() {
               {admins?.length < 1 && (
                 <>No Records</>
               )}
+             
             </div>
           )}
 

@@ -12,6 +12,7 @@ import EditPetModal1 from "../components/Modals/editPetModal1";
 import InventoryBoxModal1 from "../components/Modals/inventoryBoxModal1";
 import { useModal } from "../contexts/ModalContext";
 import EditUserModal1 from "../components/Modals/editUserModal1";
+import addAdmin1 from "../components/Modals/addAdmin1";
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -49,7 +50,7 @@ const ModalManager = () => {
             case 'ConfirmActionModal1':
             return <ConfirmActionModal1 {...modalState.props} onClose={hideModal} />;
 
-            case 'EditUserModal1': // Add the new EditPetModal1 case
+            case 'EditUserModal1': 
             return <EditUserModal1 {...modalState.props} onClose={hideModal} />;
 
             case 'EditItemModal1':
@@ -60,7 +61,9 @@ const ModalManager = () => {
 
             case 'EditCategoryConfirmationModal1':
                     return <EditCategoryConfirmationModal1 {...modalState.props} onClose={hideModal}/>;
-            
+
+            case 'addAdmin1':
+                    return <addAdmin1 {...modalState.props} onClose={hideModal}/>;
             
             /*
             |   DEFAULT
