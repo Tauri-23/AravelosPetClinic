@@ -22,10 +22,16 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->string('address')->nullable();
             $table->string('phone');
-            $table->string('role');
+            $table->unsignedBigInteger('role')->nullable();
             $table->string('status')->default('active');
             $table->longtext('picture')->nullable();
             $table->timestamps();
+
+            $table->foreign('role')
+            ->references('id')
+            ->on('admin_roles')
+            ->nullOnDelete()
+            ->cascadeOnUpdate();
         });
     }
 
