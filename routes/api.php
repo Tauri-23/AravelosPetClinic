@@ -103,7 +103,7 @@ Route::post('/del-client', [UserClientsController::class, 'DeleteClient']);
 | Admins
 |----------------------------------------
 */
-Route::get('/retrieve-all-admins-not-deleted', [UserAdminsController::class, 'GetAllAdminsNotDeleted']);
+Route::get('/retrieve-all-admins-not-deleted/{adminId}', [UserAdminsController::class, 'GetAllAdminsNotDeleted']);
 
 Route::post('/create-admin', [UserAdminsController::class, 'CreateAdmin']);
 Route::post('/suspend-unsuspend-admin', [UserAdminsController::class, 'SuspendUnsuspendAdmin']);

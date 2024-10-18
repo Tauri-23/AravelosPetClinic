@@ -190,8 +190,17 @@ function ManageProfiles() {
     }).catch(error => console.error(error));
   };
 
-  const deleteAdmin = (adminId) = {
-    
+  const handleDeleteAdmin = (adminId) => {
+    const formData = new FormData();
+    formData.append('adminId', adminId);
+
+    axiosClient.post('/del-admin', formData)
+    .then(({data}) => {
+      if(data.status === 200) {
+        setAdmins(prev => prev.filter(admin => admin.id !== adminId));
+      }
+      notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
+    }).catch(error => console.error(error));
   }
 
   return (
@@ -228,16 +237,16 @@ function ManageProfiles() {
 
           {activeTab === "ManageAdmins" && (
             <div className="myappt small-form">
-              {admins?.length > 0 && admins.map((admins) => (
-                <div className='manage-users appt-record-five pending' key={admins.id}>
-                  <div className='content-deet'>{admins.fname} {admins.mname} {admins.lname}</div>
-                  <div className='content-deet'>{admins.gender}</div>
-                  <div className='content-deet'>{admins.email}</div>
-                  <div className='content-deet'>{admins.role.role}</div>
+              {admins?.length > 0 && admins.map((admin) => (
+                <div className='manage-users appt-record-five pending' key={admin.id}>
+                  <div className='content-deet'>{admin.fname} {admin.mname} {admin.lname}</div>
+                  <div className='content-deet'>{admin.gender}</div>
+                  <div className='content-deet'>{admin.email}</div>
+                  <div className='content-deet'>{admin.role.role}</div>
                   <div className='content-deet'>
 
-                    <button className="primary-btn-blue1" onClick={() => handleSuspendUnsuspendAdmin(admins.id)}>{admins.status === 'active' ? 'Suspend' : 'Unsuspend'}</button>
-                    <button className="sub-button" onClick={() => handleDeleteAdmin(admins.id)}>Delete</button>
+                    <button className="primary-btn-blue1" onClick={() => handleSuspendUnsuspendAdmin(admin.id)}>{admin.status === 'active' ? 'Suspend' : 'Unsuspend'}</button>
+                    <button className="sub-button" onClick={() => handleDeleteAdmin(admin.id)}>Delete</button>
                   </div>
                 </div>
               ))}

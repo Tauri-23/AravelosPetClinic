@@ -22,9 +22,12 @@ class UserAdminsController extends Controller
 
 
     // GET
-    public function GetAllAdminsNotDeleted()
+    public function GetAllAdminsNotDeleted($adminId)
     {
-        return response()->json(user_admins::with('role')->whereNot('status', 'deleted')->get());
+        return response()->json(user_admins::with('role')
+        ->whereNot('status', 'deleted')
+        ->whereNot('id', $adminId)
+        ->get());
     }
 
 
