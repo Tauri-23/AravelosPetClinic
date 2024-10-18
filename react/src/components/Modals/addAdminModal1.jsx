@@ -10,24 +10,32 @@ export default function addAdminModal1({handleAddAdmin, onClose}) {
     const [lname, setLname] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [adminDOB, setAdminDOB] = useState(null); 
+    const [adminDOB, setAdminDOB] = useState(null);
     const [Gender, setGender] = useState("");
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState("");
     const [role, setRole] = useState("");
     const [status, setStatus] = useState("");
-    
+
     const [Pic, setPic] = useState("");
-  
+
     const genderOptions = [
       { id: "male", label: "Male" },
       { id: "female", label: "Female" },
     ];
-  
+
     const handleDateChange = (date) => {
       setadminDOB(date);
     };
-  
+
+    const roleOptions = [
+        { value: "Veterinarian", label: "Veterinarian" },
+        { value: "Veterinary_Assistant", label: "Veterinary Assistant" },
+        { value: "Secretary", label: "Secretary" },
+        { value: "Kennel_Assistant", label: "Kennel Assistant" },
+        { value: "Groomer", label: "Groomer" },
+        { value: "Main_Admin", label: "Main Admin" },
+    ];
     return (
       <div className={`modal2`}>
         {/* Box of modal */}
@@ -80,7 +88,7 @@ export default function addAdminModal1({handleAddAdmin, onClose}) {
                 </option>
               ))}
             </select>
-  
+
             <DatePicker
               id="adminDOB"
               selected={adminDOB}
@@ -97,14 +105,14 @@ export default function addAdminModal1({handleAddAdmin, onClose}) {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
-           <input
-            type="text"
-            className='pet-row-info margin-bottom'
-            name="role"
-            placeholder="Role"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-          />
+           <select id="viewType" value={role} onChange={(e) => setRole(e.target.value)}>
+              {roleOptions.map((role) => (
+                <option key={role.id} value={role.id}>
+                  {role.label}
+                </option>
+              ))}
+
+            </select>
           <input
             className="pet-info-row"
             type="file"
@@ -131,7 +139,6 @@ export default function addAdminModal1({handleAddAdmin, onClose}) {
       </div>
     );
   }
-  
 
 
- 
+
