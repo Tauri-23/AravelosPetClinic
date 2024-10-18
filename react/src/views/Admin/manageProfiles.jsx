@@ -80,7 +80,7 @@ function ManageProfiles() {
                             </div>
                         </div>
                         <div className="add-admin">
-                            <div className='primary-btn-blue1 bottom-margin' onClick={handleAdd}>Add admin</div>
+                            <div className='primary-btn-blue1 bottom-margin' onClick={handleAddAdmin}>Add admin</div>
                         </div>
                     </div>
 
@@ -133,40 +133,45 @@ function ManageProfiles() {
     .catch(error => console.error(error));
   };
 
-  const handleAdd = () => {
-    showModal('AddAdminModal1', { handleAddPetPost });
+  const handleAddAdmin = () => {
+    showModal('AddAdminModal1', { handleAddAdmin: handleAddAdminBtnClick });
   };
 
 
-    const handleAddPetPost = (fname, mname, lname, email, password, bday, gender, address, phone, role, status, picture) => {
+  const handleAddAdminBtnClick = (fname, mname, lname, email, password, adminDOB, Gender, address, phone, role, pic) => {
+    const formData = new FormData();
+    formData.append('fname', fname);
+    formData.append('mname', mname);
+    formData.append('lname', lname);
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('adminDOB', adminDOB);
+    formData.append('Gender', Gender);
+    formData.append('address', address);
+    formData.append('phone', phone);
+    formData.append('role', role);
+    formData.append('pic', pic);
 
-      const formData = new FormData();
-      formData.append('fname', fname);
-      formData.append('mname', mname);
-      formData.append('lname', lname);
-      formData.append('email', email);
-      formData.append('password', password);
-      formData.append('bday', bday);
-      formData.append('gender', gender);
-      formData.append('address', address);
-      formData.append('phone', phone);
-      formData.append('role', role);
-      formData.append('status', status);
-      formData.append('picture', picture);
+    console.log(fname);
+    console.log(mname);
+    console.log(lname);
+    console.log(email);
+    console.log(password);
+    console.log(adminDOB);
+    console.log(Gender);
+    console.log(address);
+    console.log(phone);
+    console.log(role);
+    console.log(pic);
 
-      axiosClient.post('/add-admin', formData)
-      .then(({ data }) => {
-        if (data.status === 200) {
-          notify('success', data.message, 'top-center', 3000);
-          setPets(prev =>
-            [...prev, data.pet]
-          );
-        } else {
-          notify('error', data.message, 'top-center', 3000);
-        }
-      })
-      .catch(error => console.error(error));
-    };
+    axiosClient.post('/create-admin', formData)
+    .then(({data}) => {
+      if(data.status === 200) {
+        setAdmins(prev => [...prev, data.admin]);
+      }
+      notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
+    }).catch(error => console.error(error));
+  }
 
 
   const handleDeleteAdmin = userId => {
@@ -222,7 +227,7 @@ function ManageProfiles() {
                   <div className='content-deet'>{admins.fname} {admins.mname} {admins.lname}</div>
                   <div className='content-deet'>{admins.gender}</div>
                   <div className='content-deet'>{admins.email}</div>
-                  <div className='content-deet'>{admins.role}</div>
+                  <div className='content-deet'>{admins.role.role}</div>
                   <div className='content-deet'>
 
                     <button className="primary-btn-blue1" onClick={() => handleSuspendUnsuspendClient(admins.id)}>{admins.status === 'active' ? 'Suspend' : 'Unsuspend'}</button>

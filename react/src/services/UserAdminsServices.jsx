@@ -7,7 +7,7 @@ import axiosClient from "../axios-client"
  */
 export const fetchAllAdminsNotDeleted = async() => {
     try {
-        const response = await axiosClient.get(`/retrieve-all-admins-not-deleted/`);
+        const response = await axiosClient.get(`/retrieve-all-admins-not-deleted`);
         console.log(response.data);
         return response.data;
     } catch(error) {

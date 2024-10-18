@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminRolesController;
 use App\Http\Controllers\Api\AppointmentsController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\inventoryCategoriesController;
@@ -104,6 +105,17 @@ Route::post('/del-client', [UserClientsController::class, 'DeleteClient']);
 */
 Route::get('/retrieve-all-admins-not-deleted', [UserAdminsController::class, 'GetAllAdminsNotDeleted']);
 
+Route::post('/create-admin', [UserAdminsController::class, 'CreateAdmin']);
 Route::post('/suspend-unsuspend-admin', [UserAdminsController::class, 'SuspendUnsuspendAdmin']);
 Route::post('/del-admin', [UserAdminsController::class, 'DeleteAdmin']);
 
+
+
+
+
+/*
+|----------------------------------------
+| Admin Types
+|----------------------------------------
+*/
+Route::get('/get-all-admin-roles', [AdminRolesController::class, 'GetAllAdminRoles']);
