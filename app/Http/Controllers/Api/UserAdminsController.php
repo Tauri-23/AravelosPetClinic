@@ -79,7 +79,7 @@ class UserAdminsController extends Controller
         {
             return response()->json([
                 'status' => 404,
-                'message' => "Client doesn't exist"
+                'message' => "Admin doesn't exist"
             ]);
         }
 
@@ -92,7 +92,7 @@ class UserAdminsController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => $message,
-                'admin' => user_admins::whereNot('status', 'deleted')->get()
+                'admins' => user_admins::whereNot('status', 'deleted')->get()
             ]);
         }
         else

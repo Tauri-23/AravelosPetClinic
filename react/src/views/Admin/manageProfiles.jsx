@@ -138,6 +138,10 @@ function ManageProfiles() {
   };
 
 
+
+  /**
+   * Admin Handlers
+   */
   const handleAddAdminBtnClick = (fname, mname, lname, email, password, adminDOB, Gender, address, phone, role, pic) => {
     const formData = new FormData();
     formData.append('fname', fname);
@@ -173,20 +177,22 @@ function ManageProfiles() {
     }).catch(error => console.error(error));
   }
 
+  const handleSuspendUnsuspendAdmin = (adminId) => {
+    const formData = new FormData();
+    formData.append('adminId', adminId);
 
-  const handleDeleteAdmin = userId => {
-    // Send a DELETE request to the backend API to delete the admin account
-    fetch(`/api/admins/${userId}`, { method: 'DELETE' })
-      .then(response => {
-        if (response.ok) {
-          // Update the user list after successful deletion
-          setUsers(users.filter(user => user.id !== userId));
-        } else {
-          console.error('Error deleting admin:', response.statusText);
-        }
-      })
-      .catch(error => console.error('Error deleting admin:', error));
+    axiosClient.post('/suspend-unsuspend-admin', formData)
+    .then(({data}) => {
+      if(data.status === 200) {
+        setAdmins(data.admins);
+      }
+      notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
+    }).catch(error => console.error(error));
   };
+
+  const deleteAdmin = (adminId) = {
+    
+  }
 
   return (
     <div className="page inter">
@@ -230,8 +236,8 @@ function ManageProfiles() {
                   <div className='content-deet'>{admins.role.role}</div>
                   <div className='content-deet'>
 
-                    <button className="primary-btn-blue1" onClick={() => handleSuspendUnsuspendClient(admins.id)}>{admins.status === 'active' ? 'Suspend' : 'Unsuspend'}</button>
-                    <button className="sub-button" onClick={() => handleDeleteClient(admins.id)}>Delete</button>
+                    <button className="primary-btn-blue1" onClick={() => handleSuspendUnsuspendAdmin(admins.id)}>{admins.status === 'active' ? 'Suspend' : 'Unsuspend'}</button>
+                    <button className="sub-button" onClick={() => handleDeleteAdmin(admins.id)}>Delete</button>
                   </div>
                 </div>
               ))}
