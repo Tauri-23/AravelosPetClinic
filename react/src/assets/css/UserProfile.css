@@ -2,6 +2,9 @@
 height:-webkit-fill-available;
 gap:2vw;
 }
+.prof .primary-btn-blue1{
+    font-weight:500;
+}
 /* Overall Page Layout */
 .prof.user-profile{
     width: 60vw;
@@ -17,14 +20,15 @@ gap:2vw;
 }
 .user-details{
     overflow-y: auto;
-    height:17vw;
+    height:25vw;
 }
 .detail-row{
     display: flex;
-    align-items: center;
+    align-items: baseline;
+    margin-bottom: .5vw;
 }
 .ud.detail-cont{
-    width:25vw;
+    width:350px;
 }
 /* Profile Header */
 .user-details.head{
@@ -41,15 +45,22 @@ gap:2vw;
 /* Profile Picture */
 
 .profilepic {
-  width: 10vw;
-  height: 10vw;
+  width: 5.5vw;
+  height: 5.5vw;
   border-radius: 50%;
   object-fit: cover;
   margin-right: 2vw;
 }
+.user-profile .primary-btn-blue1{
+    padding: 5px 10px;
+    font-size: 1vw;
+    align-self: center;
+}
 
 /* User Information */
-
+.label-div{
+    width: 60px;
+}
 .user-name {
   flex: 1;
 }

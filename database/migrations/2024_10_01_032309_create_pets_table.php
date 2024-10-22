@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('type');
             $table->string('breed');
             $table->string('gender');
+            $table->string('status')->default('active');
             $table->date('dob')->nullable();
             $table->longText('picture');
             $table->timestamps();

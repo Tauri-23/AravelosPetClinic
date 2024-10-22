@@ -2,8 +2,8 @@ import { useState } from "react";
 import * as Icon from "react-bootstrap-icons";
 import "../../assets/css/addPetModal1.css";
 
-import DatePicker from "react-date-picker";
-// import "react-datepicker/dist/react-datepicker.css";
+//import DatePicker from "react-date-picker";
+//import "react-datepicker/dist/react-datepicker.css";
 
 export default function AddPetModal1({ handleAddPetPost, onClose }) {
   const [petName, setPetName] = useState("");
@@ -14,8 +14,8 @@ export default function AddPetModal1({ handleAddPetPost, onClose }) {
   const [petPic, setPetPic] = useState("");
 
   const genderOptions = [
-    { id: "male", label: "Male" },
-    { id: "female", label: "Female" },
+    { id: "Male", label: "Male" },
+    { id: "Female", label: "Female" },
   ];
 
   const handleDateChange = (date) => {
@@ -60,13 +60,7 @@ export default function AddPetModal1({ handleAddPetPost, onClose }) {
             ))}
           </select>
 
-          <DatePicker
-            id="petDOB"
-            selected={petDOB}
-            dateFormat="yyyy/MM/dd"
-            placeholderText="Pet's Birthday"
-            onChange={handleDateChange}
-          />
+          <input type="date" onChange={(e) => setPetDOB(e.target.value)}/>
         </div>
         <input
           className="pet-info-row"
@@ -78,8 +72,7 @@ export default function AddPetModal1({ handleAddPetPost, onClose }) {
         <div className="pet-info-row">
         <button
           onClick={() => {
-            const formattedDOB = petDOB ? petDOB.toISOString().split("T")[0] : null;
-            handleAddPetPost(petName, petType, petGender, formattedDOB, petBreed, petPic);
+            handleAddPetPost(petName, petType, petGender, petDOB, petBreed, petPic);
             onClose();
           }}
           className="primary-btn-blue1"

@@ -14,6 +14,9 @@
     align-self: center;
 }
 
+.t-align-center{
+    text-align: center;
+}
 a{
 
     text-decoration: none!important;
@@ -76,14 +79,44 @@ a{
 .white{
     color: white!important;
 }
+.gen-padding{
+    padding: 2vw 2vw 4vw 2vw;
+}
+.bottom-padding{
+    padding-bottom: 2vw;
+}
+.top-padding{
+    padding-top: 2vw;
+}
+.left-padding{
+    padding-left: 2vw;
+}
+.right-padding{
+    padding-right: 2vw;
+}
+.gen-padding-s{
+    padding: 1vw 1vw 3vw 1vw;
+}
+.bottom-padding-s{
+    padding-bottom: 1vw;
+}
+.top-padding-s{
+    padding-top: 1vw;
+}
+.left-padding-s{
+    padding-left: 1vw;
+}
+.right-padding-s{
+    padding-right: 1vw;
+}
+.right-padding-ss{
+    padding-right: .5vw;
+}
 .gen-margin{
     margin: 2vw 2vw 4vw 2vw;
 }
 .bottom-margin{
     margin-bottom: 2vw;
-}
-.bottom-padding{
-    padding-bottom: 2vw;
 }
 .top-margin{
     margin-top: 2vw;

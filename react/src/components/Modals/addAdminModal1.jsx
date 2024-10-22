@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useState } from "react";
-import DatePicker from 'react-date-picker';
+//import DatePicker from 'react-date-picker';
 // import "react-datepicker/dist/react-datepicker.css";
 import "../../assets/css/addPetModal1.css";
 import { fetchAllAdminRoles } from '../../services/AdminTypesServices';
@@ -41,7 +41,7 @@ export default function addAdminModal1({handleAddAdmin, onClose}) {
 
         setAdminRoles(adminRolesDb);
       } catch (error) {
-       console.error(error); 
+       console.error(error);
       }
     }
 
@@ -63,9 +63,9 @@ export default function addAdminModal1({handleAddAdmin, onClose}) {
    * Checker
    */
   useEffect(() => {
-    if(isEmptyOrSpaces(fname) || isEmptyOrSpaces(lname) || 
-    isEmptyOrSpaces(email) || isEmptyOrSpaces(password) || 
-    isEmptyOrSpaces(adminDOB) || isEmptyOrSpaces(address) || 
+    if(isEmptyOrSpaces(fname) || isEmptyOrSpaces(lname) ||
+    isEmptyOrSpaces(email) || isEmptyOrSpaces(password) ||
+    isEmptyOrSpaces(adminDOB) || isEmptyOrSpaces(address) ||
     isEmptyOrSpaces(phone) || isEmptyOrSpaces(role) ||
     pic == null) {
       setAddBtnDisabled(true)
@@ -85,7 +85,7 @@ export default function addAdminModal1({handleAddAdmin, onClose}) {
       <div className="modal-box4">
         <h2>Add New Admin</h2>
         <div className="pet-info-row">
-        
+
         {/* fname */}
         <input
           type="text"
@@ -143,13 +143,6 @@ export default function addAdminModal1({handleAddAdmin, onClose}) {
 
           <input type="date" onChange={(e) => setAdminDOB(e.target.value)}/>
 
-          {/* <DatePicker
-            id="adminDOB"
-            selected={adminDOB}
-            dateFormat="yyyy/MM/dd"
-            placeholderText="Birth Date"
-            onChange={handleDateChange}
-          /> */}
         </div>
 
         {/* Phone */}

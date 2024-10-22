@@ -6,7 +6,7 @@ export default function EditItemConfirmationModal1({ onConfirm, onCancel }) {
   return (
     <div className="edit-confirmation-modal">
       <div className="modal-box">
-        <div className="circle-btn1 semi-medium-f">
+        <div className="circle-btn1 pointer semi-medium-f">
           <Icon.X className="pointer" onClick={onCancel} />
         </div>
         <div className="editCatModal text-center anybody mar-bottom-1">

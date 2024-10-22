@@ -87,7 +87,7 @@ export default function MyAppointments() {
                 notify('error', data.message, 'top-center', 3000);
             });
     }
-    const handleCancel = (recordId, recordReason) =>{
+    const handleCancel = (recordId) =>{
 
         console.log(recordId);
         const handleFunction = "handleCancelPost";
