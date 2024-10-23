@@ -3,13 +3,8 @@ import '../../assets/css/inventoryBoxModal1.css';
 import * as Icon from 'react-bootstrap-icons';
 import EditItemModal1 from './editItemModal1'; // Import the new modal
 
-const InventoryBoxModal1 = ({ itemName, itemImage, itemQuantity, itemDescription, onClose }) => {
+const InventoryBoxModal1 = ({ itemId, itemName, itemImage, itemQuantity, itemDescription, handleEditItemPost, onClose }) => {
     const [isEditItemModalOpen, setIsEditItemModalOpen] = useState(false);
-
-    const handleEditItemClick = (itemId, itemName) => {
-        console.log(`Editing item: ${itemId}, Name: ${itemName}`);
-        // Add your edit logic here, e.g., show edit form or fetch item details
-    };
 
     return (
         <div className="modal2"> {/* Updated modal2 class for consistency */}
@@ -37,9 +32,10 @@ const InventoryBoxModal1 = ({ itemName, itemImage, itemQuantity, itemDescription
             {/* Render Edit Item Modal */}
             {isEditItemModalOpen && (
                 <EditItemModal1
-                    item={{ name: itemName, quantity: itemQuantity, description: itemDescription }}
+                    item={{ id: itemId, name: itemName, quantity: itemQuantity, description: itemDescription }}
                     onClose={() => setIsEditItemModalOpen(false)} // Close the modal
-                    handleEditItemClick={handleEditItemClick}
+                    onCloseParent={onClose}
+                    handleSaveChangesClick={handleEditItemPost}
                 />
             )}
         </div>

@@ -40,7 +40,9 @@ Route::post('/login', [AuthController::class, 'login']);
 |----------------------------------------
 */
 Route::get('/get-all-inventory', [InventoryController::class,'GetAllInventory']);
+
 Route::post('/add-inventory-item', [InventoryController::class,'createInventoryItem']);
+Route::post('/edit-inventory', [InventoryController::class,'editInventoryItem']);
 
 
 

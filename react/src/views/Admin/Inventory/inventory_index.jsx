@@ -57,6 +57,59 @@ export default function AdminInventoryIndex() {
   useEffect(() => {
     console.log(inventoryItems);
   }, [inventoryItems])
+  
+
+
+  /**
+   * Search Handlers
+   */
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+
+
+  /**
+   * Inventory Handlers
+   */
+  const handleInventoryBoxClick=(itemId, itemName, itemImage, itemQuantity, itemDescription) => {
+    // console.log(itemId);
+    // console.log(itemName);
+    // console.log(itemImage);
+    // console.log(itemQuantity);
+    // console.log(itemDescription);
+    showModal('InventoryBoxModal1', {itemId, itemName, itemImage, itemQuantity, itemDescription, handleEditItemPost})
+  }
+
+  const handleEditItemPost = (itemId, itemName, itemQty, itemDesc) => {
+    console.log(`Editing item: ${itemId}, name: ${itemName}, qty: ${itemQty}, desc: ${itemDesc}`);
+    const formData = new FormData();
+    formData.append('id', itemId);
+    formData.append('name', itemName);
+    formData.append('qty', itemQty);
+    formData.append('desc', itemDesc);
+
+    axiosClient.post('/edit-inventory', formData)
+    .then(({data}) => {
+      if(data.status === 200) {
+        setInventoryItems(data.inventoryItems);
+      }
+      notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
+    }).catch(error => console.error(error));
+  };
+
+
+
+  /**
+   * Category Handlers
+   */
+  const handleAddCategory = () => {
+    showModal('AddCategoryModal1', {handleAddCategoryPost})
+  };
+
+  const handleEditCategoryClick = () => {
+    showModal('EditCategoryModal1', {categories, handleEditCategoryClick: handleEditCategoryPost, handleDeleteCategoryClick: handleDeleteCategoryPost})
+  }
 
   const handleAddCategoryPost = (newCategory) => {
     const formData = new FormData();
@@ -73,19 +126,6 @@ export default function AdminInventoryIndex() {
       .catch((error) => {
         console.error(error);
       });
-  }
-
-  const handleAddCategory = () => {
-    showModal('AddCategoryModal1', {handleAddCategoryPost})
-  };
-
-
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleInventoryBoxClick=(itemName, itemImage, itemQuantity, itemDescription) => {
-    showModal('InventoryBoxModal1', {itemName, itemImage, itemQuantity, itemDescription})
   }
 
   const handleEditCategoryPost = async (updatedCategoryId, updatedCategoryName) => {
@@ -114,39 +154,37 @@ export default function AdminInventoryIndex() {
         console.error(error);
         return false; // Return false if there's an error in the request
     }
-};
+  };
 
-const handleDeleteCategoryPost = (categoryId) => {
-  const formData = new FormData();
-  formData.append('id', categoryId);
+  const handleDeleteCategoryPost = async(categoryId) => {
+    const formData = new FormData();
+    formData.append('id', categoryId);
 
-  return axiosClient.post('/delete-inventory-categories', formData)
-    .then(({ data }) => {
-      if (data.status === 200) {
-        setCategories(prevCategories =>
-          prevCategories.filter(category => category.id !== categoryId)
-        );
-        notify('success', data.message, 'top-center', 3000);
-        return true; // Return true for success
-      } else {
-        notify('error', data.message, 'top-center', 3000);
-        return false; // Return false for failure
-      }
-    })
-    .catch((error) => {
-      console.error("Error deleting category:", error);
-      notify('error', 'Failed to delete category. Please try again.', 'top-center', 3000);
-      return false; // Return false in case of an error
-    });
-};
-
-  
-  const handleEditCategoryClick = () => {
-    showModal('EditCategoryModal1', {categories, handleEditCategoryClick: handleEditCategoryPost, handleDeleteCategoryClick: handleDeleteCategoryPost})
-  }
+    return axiosClient.post('/delete-inventory-categories', formData)
+      .then(({ data }) => {
+        if (data.status === 200) {
+          setCategories(prevCategories =>
+            prevCategories.filter(category => category.id !== categoryId)
+          );
+          notify('success', data.message, 'top-center', 3000);
+          return true; // Return true for success
+        } else {
+          notify('error', data.message, 'top-center', 3000);
+          return false; // Return false for failure
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting category:", error);
+        notify('error', 'Failed to delete category. Please try again.', 'top-center', 3000);
+        return false; // Return false in case of an error
+      });
+  };  
   
   
   
+  /**
+   * Render
+   */
   return (
     <div className="page">
       <div className="inventory-tracking  gen-margin">
@@ -214,7 +252,13 @@ const handleDeleteCategoryPost = (categoryId) => {
               <div className="admin-inventory-contents left-margin">
                 {inventoryItems?.length > 0 && inventoryItems.map(item =>
                   item.category == activeCategory &&
-                  (<InventoryBox key={item.id} handleInventoryBoxClick={handleInventoryBoxClick} itemName={item.name} itemImage={item.picture} itemQuantity={item.qty} itemDescription={item.desc}/>)
+                  (<InventoryBox 
+                    key={item.id} 
+                    handleInventoryBoxClick={() => handleInventoryBoxClick(item.id, item.name, item.picture, item.qty, item.desc)} 
+                    itemName={item.name} 
+                    itemImage={item.picture} 
+                    itemQuantity={item.qty} 
+                    itemDescription={item.desc}/>)
                 )}
 
 

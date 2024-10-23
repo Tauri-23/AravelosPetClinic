@@ -16,6 +16,7 @@ class InventoryController extends Controller
        $this->generateFilename = $generateFilename;
     }
 
+    // POST
     public function createInventoryItem(Request $request)
     {
         try 
@@ -49,7 +50,33 @@ class InventoryController extends Controller
         }
         
     }
+    public function editInventoryItem(Request $request)
+    {
+        $inventoryItem = inventory::find($request->id);
 
+        if(!$inventoryItem)
+        {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Item not found'
+            ]);
+        }
+
+        $inventoryItem->name = $request->name;
+        $inventoryItem->qty = $request->qty;
+        $inventoryItem->desc = $request->desc;
+        $inventoryItem->save();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Item edited',
+            'inventoryItems' => inventory::all()
+        ]);
+    }
+
+
+
+    // GET
     public function GetAllInventory()
     {
         return response()->json(inventory::all());

@@ -3,17 +3,12 @@ import * as Icon from "react-bootstrap-icons";
 import "../../assets/css/editItemModal1.css"; // Import the CSS file
 import EditItemConfirmationModal1 from "./editItemConfirmationModal1"; // Import the confirmation modal
 
-export default function EditItemModal1({ item, onClose, handleSaveChangesClick }) {
-  const [editedItem, setEditedItem] = useState({ ...item });
+export default function EditItemModal1({ item, onClose, onCloseParent, handleSaveChangesClick }) {
   const [showConfirmation, setShowConfirmation] = useState(false); // New state for the confirmation modal
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditedItem({
-      ...editedItem,
-      [name]: value,
-    });
-  };
+  const [_itemName, _setItemName] = useState(item.name);
+  const [_itemQuantity, _setItemQuantity] = useState(item.quantity);
+  const [_itemDescription, _setItemDescription] = useState(item.description);
 
   // Trigger the confirmation modal
   const handleSaveClick = () => {
@@ -22,9 +17,10 @@ export default function EditItemModal1({ item, onClose, handleSaveChangesClick }
 
   // Confirm and save changes
   const handleConfirmSave = () => {
-    handleSaveChangesClick(editedItem); // Save the item changes
+    handleSaveChangesClick(item.id, _itemName, _itemQuantity, _itemDescription); // Save the item changes
     setShowConfirmation(false); // Close the confirmation modal
     onClose(); // Close the edit modal (optional)
+    onCloseParent();
   };
 
   // Cancel the confirmation modal
@@ -51,8 +47,8 @@ export default function EditItemModal1({ item, onClose, handleSaveChangesClick }
               <input
                 type="text"
                 name="name"
-                value={editedItem.name}
-                onChange={handleInputChange}
+                value={_itemName}
+                onChange={(e) => _setItemName(e.target.value)}
                 className="edit-input"
               />
             </div>
@@ -61,8 +57,8 @@ export default function EditItemModal1({ item, onClose, handleSaveChangesClick }
               <input
                 type="number"
                 name="quantity"
-                value={editedItem.quantity}
-                onChange={handleInputChange}
+                value={_itemQuantity}
+                onChange={(e) => _setItemQuantity(e.target.value)}
                 className="edit-input"
               />
             </div>
@@ -70,8 +66,8 @@ export default function EditItemModal1({ item, onClose, handleSaveChangesClick }
               <span>Description: </span>
               <textarea
                 name="description"
-                value={editedItem.description}
-                onChange={handleInputChange}
+                value={_itemDescription}
+                onChange={(e) => _setItemDescription(e.target.value)}
                 className="edit-input"
               />
             </div>

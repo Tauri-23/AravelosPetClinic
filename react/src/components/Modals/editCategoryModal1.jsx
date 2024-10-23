@@ -63,7 +63,7 @@ export default function EditCategoryModal1({ categories, handleEditCategoryClick
   }
 
   return (
-    <div className="edit-modal">
+    <div className="modal1">
       <div className="edit-modal-box">
         <div className="circle-btn1 semi-medium-f">
           <Icon.X className="pointer" onClick={onClose} />
