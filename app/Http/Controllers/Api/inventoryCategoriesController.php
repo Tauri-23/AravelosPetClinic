@@ -44,6 +44,56 @@ class inventoryCategoriesController extends Controller
         }
     }
 
+    public function editCategory(Request $request)
+    {
+        $category = inventory_categories::find($request->id);
+
+        if(!$category)
+        {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Category not found'
+            ]);
+        }
+
+        $category->name = $request->name;
+        $category->save();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Edited category'
+        ]);
+    }
+
+    public function deleteCategory(Request $request)
+    {
+        $category = inventory_categories::find($request->id);
+
+        if(!$category)
+        {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Category not found'
+            ]);
+        }
+
+        if($category->inventory()->count() > 0)
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Cannot delete category with associated inventories.'
+            ]);
+        }
+
+        $category->delete();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Category deleted'
+        ]);
+    }
+
+
 
 
 

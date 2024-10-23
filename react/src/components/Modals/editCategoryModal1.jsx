@@ -5,6 +5,7 @@ import EditCategoryConfirmationModal1 from "./editCategoryConfirmationModal1"; /
 import "../../assets/css/editCategoryModal1.css"; // Import the CSS file
 
 export default function EditCategoryModal1({ categories, handleEditCategoryClick, handleDeleteCategoryClick, onClose }) {
+  const [_categories, _setCategories] = useState(categories);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [categoryNameToDelete, setCategoryNameToDelete] = useState("");
@@ -19,14 +20,6 @@ export default function EditCategoryModal1({ categories, handleEditCategoryClick
     setIsDeleteModalOpen(true);
   };
 
-  const handleDelete = () => {
-    if (confirmDeleteId) {
-      handleDeleteCategoryClick(confirmDeleteId);
-      setConfirmDeleteId(null);
-      setIsDeleteModalOpen(false);
-    }
-  };
-
   const handleEditClick = (categoryId, categoryName) => {
     setEditingCategoryId(categoryId);
     setNewCategoryName(categoryName);
@@ -39,6 +32,36 @@ export default function EditCategoryModal1({ categories, handleEditCategoryClick
     }
   };
 
+  const handleEditPost = async() => {
+    const result = await handleEditCategoryClick(categoryIdToEdit, newCategoryName);
+    if(result) {
+      _setCategories((prev) =>
+        prev.map((category) =>
+            category.id === editingCategoryId
+                ? { ...category, name: newCategoryName }
+                : category
+        )
+      );
+      setIsConfirmationModalOpen(false);
+      setCategoryIdToEdit(null);
+      setNewCategoryName("");
+      setEditingCategoryId(null);
+    }
+  }
+
+  const handleDeletePost = async() => {
+    const result = await handleDeleteCategoryClick(confirmDeleteId);
+    console.log(result);
+    if(result) {
+      _setCategories((prev) => 
+        prev.filter(cat => cat.id !== confirmDeleteId)
+      );
+      setIsConfirmationModalOpen(false);
+      setConfirmDeleteId(null);
+      setIsDeleteModalOpen(false);
+    }
+  }
+
   return (
     <div className="edit-modal">
       <div className="edit-modal-box">
@@ -50,7 +73,7 @@ export default function EditCategoryModal1({ categories, handleEditCategoryClick
         </div>
 
         <div className="category-list">
-          {categories.map((category) => (
+          {_categories.map((category) => (
             <div key={category.id} className="category-item">
               {editingCategoryId === category.id ? (
                 <input
@@ -101,7 +124,7 @@ export default function EditCategoryModal1({ categories, handleEditCategoryClick
       {isDeleteModalOpen && (
         <div className="modal-overlay">
           <DeleteCategoryModal1
-            onConfirm={handleDelete}
+            onConfirm={handleDeletePost}
             onCancel={() => setIsDeleteModalOpen(false)}
             categoryName={categoryNameToDelete}
           />
@@ -113,10 +136,7 @@ export default function EditCategoryModal1({ categories, handleEditCategoryClick
         <div className="modal-overlay">
           <EditCategoryConfirmationModal1
             onConfirm={() => {
-              handleEditCategoryClick(categoryIdToEdit, newCategoryName);
-              setIsConfirmationModalOpen(false);
-              setCategoryIdToEdit(null);
-              setNewCategoryName("");
+              handleEditPost();
             }}
             onCancel={() => setIsConfirmationModalOpen(false)}
           />

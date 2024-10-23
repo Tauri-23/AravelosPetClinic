@@ -52,6 +52,9 @@ Route::post('/add-inventory-item', [InventoryController::class,'createInventoryI
 |----------------------------------------
 */
 Route::post('/add-inventory-categories', [inventoryCategoriesController::class,'createCategory']);
+Route::post('/edit-inventory-categories', [inventoryCategoriesController::class,'editCategory']);
+Route::post('/delete-inventory-categories', [inventoryCategoriesController::class,'deleteCategory']);
+
 Route::get('/get-all-inventory-categories', [inventoryCategoriesController::class,'getAllCategories']);
 
 
