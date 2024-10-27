@@ -22,3 +22,14 @@ export const fetchAllClientAppointments = async(clientId) => {
         throw error;
     }
 }
+
+export const fetchAllAppointments = async() => {
+    try {
+        const response = await axiosClient.get(`/get-all-appointments`);
+        return response.data; //end
+        // return response.data;
+    } catch(error) {
+        console.error(error)
+        throw error;
+    }
+}

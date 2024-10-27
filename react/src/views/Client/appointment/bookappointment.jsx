@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../../assets/css/bookappointment.css";
-import ClientCalendar from "../../../components/calendar.jsx";
+import ClientCalendar from "../../../components/clientCalendar.jsx";
 import CustomToolbar from "../../../components/custom_toolbar.jsx";
 import { formatDateForMySQL, isEmptyOrSpaces, notify } from "../../../assets/js/utils.jsx";
 import axiosClient from "../../../axios-client.js";
@@ -13,8 +13,6 @@ export default function BookAppointment() {
     // VALIDATION:
     // 30 MINUTES CHECKUP PARASITIC CONTROL VACINNATION DEWORMING
     // 1 HR GROOMING
-    // ONLY 8AM TO 3PM
-    // CANT BOOK 3PM APPOINTMENT BC LAGPAS NA
     // NO OVERLAP APPOINTMENTS IF BY TIMESLOT (SEP 2 AND SEP 2 OK, SEP 2 8AM AND SEP 2 8AM NOT OK)
     const navigate = useNavigate(); // Initialize useNavigate
     const {showModal} = useModal();

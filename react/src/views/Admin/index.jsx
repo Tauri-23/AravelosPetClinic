@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import AdminCalendar from "../../components/adminCalendar.jsx";
+import CustomToolbar from "../../components/custom_toolbar.jsx";
+import { fetchAllAppointments } from '../../services/AppointmentServices.jsx';
+
+import "../../assets/css/adminIndex.css";
 
 function AdminIndex() {
-  const [appointments, setAppointments] = useState([]);
-  const [feedback, setFeedback] = useState([]);
-  const [inventory, setInventory] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+    const [appointments, setAppointments] = useState([]);
+    const [feedback, setFeedback] = useState([]);
+    const [inventory, setInventory] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [calendarView, setCalendarView] = useState("week"); // Default to "month" view // State to hold calendar view
+
+
+    const schedOptions = [
+        { value: "month", label: "By Day" },
+        { value: "week", label: "By Day Timeslot" },
+    ];
 
   useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const response = await axios.get('/api/appointments');
-        setAppointments(Array.isArray(response.data) ? response.data : []);
-        setLoading(false);
-      } catch (error) {
-        setError('Error fetching appointments:', error);
-        setLoading(false);
-      }
-    };
 
     const fetchFeedback = async () => {
       try {
@@ -42,18 +44,28 @@ function AdminIndex() {
       }
     };
 
-    fetchAppointments();
     fetchFeedback();
     fetchInventory();
   }, []);
 
   return (
     <div className="admin-homepage">
-      <h1>Admin Dashboard</h1>
+         <h1>Admin Dashboard</h1>
+
+            <AdminCalendar
+                calendarView={calendarView}
+                CustomToolbar={CustomToolbar} // Pass the custom toolbar here
+            />
+            <select id="viewType" value={calendarView} onChange={(e) => setCalendarView(e.target.value)}>
+                {schedOptions.map(sched=> (
+                    <option key={sched.value} value={sched.value}>{sched.label}</option>
+                ))}
+            </select>
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
       {appointments.length > 0 && (
         <div className="appointment-section">
+
           <h2>Upcoming Appointments</h2>
           <ul>
             {appointments.map((appointment) => (
