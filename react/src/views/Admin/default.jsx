@@ -8,7 +8,7 @@ import { ModalProvider } from "../../contexts/ModalContext";
 import ModalManager from "../../managers/modalManager";
 import { useStateContext } from "../../contexts/ContextProvider";
 import axiosClient from "../../axios-client";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 export default function AdminDefault () {
     const { user, userType, token, setUserType, setUser, setToken } = useStateContext();
     useEffect(() => {

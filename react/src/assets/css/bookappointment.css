@@ -1,4 +1,8 @@
-.bookappointment{
+.book-appointment .rbc-calendar{
+
+    width:55%;
+    height: 95vh;
+    margin-right:2vw;
 }
 .grid{
     display: flex;

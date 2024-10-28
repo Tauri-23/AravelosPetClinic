@@ -49,7 +49,7 @@ function AdminIndex() {
   }, []);
 
   return (
-    <div className="admin-homepage">
+    <div className="page admin-homepage">
          <h1>Admin Dashboard</h1>
 
             <AdminCalendar

@@ -1,7 +1,4 @@
 .rbc-calendar{
-    width:55%!important;
-    height: 95vh!important;
-    margin-right:2vw;
     background-color: white;
     border-radius:var(--rounded_conts);
     border:1px solid rgb(144, 144, 144, 0.48);

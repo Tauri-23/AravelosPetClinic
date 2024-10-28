@@ -1,0 +1,60 @@
+
+.clinic-cal .rbc-calendar{
+    height: 95vh!important;
+}
+
+.clinic-cal .small-form{
+    height: 95vh!important;
+    width:40vw;
+    overflow-y: hidden;
+}
+.client-pic{
+    background-color: var(--blue1);
+    width:20%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+}
+.pet-pic{
+    background-color: var(--blue1);
+    width:8%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+}
+.client-name{
+    font-size:1.75vw;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.clinic-cal .pet-name{
+    padding:0;
+    font-size:1.35vw;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.service-icon{
+    font-size: 1.2vw;
+    margin-right:.5vw;
+    filter: drop-shadow(2px 2px 1px lightgray);
+}
+.service-text{
+    font-size: 1.2vw;
+}
+.label{
+    width:5.5vw;
+}
+.deet{
+    margin-bottom: .5vw;
+    font-size: 1.1vw;
+}
+.notes{
+    resize:none;
+    height: 100%;
+}
+
+.deet-notes{
+    margin-bottom: .5vw;
+    font-size: 1.1vw;
+    height: 29vh;
+}

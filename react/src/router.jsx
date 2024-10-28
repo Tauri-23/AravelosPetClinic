@@ -13,6 +13,7 @@ import ClientuserProfile from "./views/Client/userprofiles";
 import AdminInventoryDefault from "./views/Admin/Inventory/inventory_default";
 import AdminInventoryIndex from "./views/Admin/Inventory/inventory_index";
 import AddItem from "./views/Admin/Inventory/addItem";
+import ClinicCalendar from "./views/Admin/Appointment/clinicCalendar";
 import BookAppointment from "./views/Client/appointment/bookappointment";
 import MyAppointments from "./views/Client/appointment/myappointments";
 import ManageProfiles from "./views/Admin/manageProfiles";
@@ -106,6 +107,10 @@ const router = createBrowserRouter([
                         element: <AddItem/>
                     }
                 ]
+            },
+            {
+                path: 'ClinicCalendar', // Remove leading `/`
+                element: <ClinicCalendar />
             },
             {
                 path: 'ManageProfiles', // Remove leading `/`

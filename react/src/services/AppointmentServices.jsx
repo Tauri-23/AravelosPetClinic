@@ -25,9 +25,17 @@ export const fetchAllClientAppointments = async(clientId) => {
 
 export const fetchAllAppointments = async() => {
     try {
-        const response = await axiosClient.get(`/get-all-appointments`);
-        return response.data; //end
-        // return response.data;
+        const response = await axiosClient.get('/get-all-appointments');
+        return response.data;
+    } catch(error) {
+        console.error(error)
+        throw error;
+    }
+}
+export const fetchAppointmentDetails = async(appointmentId) => {
+    try {
+        const response = await axiosClient.get(`/get-appt-where-id/${appointmentId}`);
+        return response.data;
     } catch(error) {
         console.error(error)
         throw error;

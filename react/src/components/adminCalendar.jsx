@@ -8,13 +8,17 @@ import { useEffect, useState } from "react";
 import { useStateContext } from "../contexts/ContextProvider";
 import { fetchAllAppointments } from "../services/AppointmentServices";
 
-export default function AdminCalendar({ onDateSelect, calendarView, CustomToolbar }) {
+export default function AdminCalendar({ onDateSelect, initialView='month', CustomToolbar, onSelectEvent }) {
     const {user} = useStateContext();
     const localizer = momentLocalizer(moment);
 
     const [appointments, setAppointments] = useState([]);
     const [events, setEvents] = useState([]);
+    const [calendarView, setCalendarView] = useState(initialView); // Add state for calendarView
 
+    const handleViewChange = (view) => {
+        setCalendarView(view); // Update the calendar view state
+    };
     useEffect(() => {
         const getAllAppointments = async() => {
             try {
@@ -27,12 +31,33 @@ export default function AdminCalendar({ onDateSelect, calendarView, CustomToolba
     }, []);
 
     useEffect(() => {
-        setEvents(appointments.map(appointment => ({
-            start: moment(appointment.date_time, "YYYY-MM-DD HH:mm:ss","Asia/Manila").toDate(),
-            end: moment(appointment.date_time, "YYYY-MM-DD HH:mm:ss","Asia/Manila").toDate(),
-            title: `${appointment.service} ${appointment.pet}`
-        })));
+        setEvents(appointments.map(appointment => {
+            // Initialize the service variable
+            let service = appointment.service; // Default to the raw service value
+
+            // Format the service name based on the appointment type
+            if (appointment.service === "checkup") {
+                service = "Check-up";
+            } else if (appointment.service === "grooming") {
+                service = "Grooming";
+            } else if (appointment.service === "deworming") {
+                service = "Deworming";
+            } else if (appointment.service === "parasiticControl") {
+                service = "Parasitic Control";
+            }
+
+            // Create the event object
+            let event = {
+                start: moment(appointment.date_time, "YYYY-MM-DD HH:mm:ss", "Asia/Manila").toDate(),
+                end: moment(appointment.date_time, "YYYY-MM-DD HH:mm:ss", "Asia/Manila").toDate(),
+                title: `${service}`, // Use the formatted service name
+                resource: `${appointment.id}`
+            };
+
+            return event; // Return the modified event object
+        }));
     }, [appointments]);
+
 
     useEffect(() => {
         console.log(appointments);
@@ -83,18 +108,22 @@ export default function AdminCalendar({ onDateSelect, calendarView, CustomToolba
             dayPropGetter={dayPropGetter}
             selectable
             onSelectSlot={handleSelectSlot}
+            view={calendarView} // Use the state variable for the view
+            onView={handleViewChange} // Update view when changed
+            onSelectEvent={onSelectEvent} // Pass the onSelectEvent handler here
             min={new Date(2024, 0, 1, 8, 0)}
             max={new Date(2025, 0, 1, 15, 0)}
-            view={calendarView}
             components={{
-                toolbar: CustomToolbar,
+                toolbar: (props) => <CustomToolbar {...props} onViewChange={handleViewChange} />, // Pass handleViewChange to the toolbar
             }}
         />
     );
 }
 
 AdminCalendar.propTypes = {
-    onDateSelect: PropTypes.func.isRequired,
-    calendarView: PropTypes.string.isRequired,
+    onDateSelect: PropTypes.func,
+    calendarView: PropTypes.string,
     CustomToolbar: PropTypes.elementType,
+    onSelectEvent: PropTypes.func,
+    onDoubleClickEvent: PropTypes.func,
 };

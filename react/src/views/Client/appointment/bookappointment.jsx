@@ -136,9 +136,9 @@ export default function BookAppointment() {
     }, [selectedDateTime, selectedPet, selectedService]);
 
     return (
-        <div className="page">
-            <div className="bg book-appointment gen-margin">
-                <div className="mini-nav bottom-margin">
+        <div className="page book-appointment">
+            <div className="bg gen-margin">
+                <div className="mini-nav bottom-margin-s">
                     <div className="anybody medium-f bold">Book Appointment</div>
                     <div className="separator left-margin-s right-margin-s"></div>
                     <Link to={'MyAppointments'}>
