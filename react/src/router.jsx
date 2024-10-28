@@ -16,6 +16,7 @@ import AddItem from "./views/Admin/Inventory/addItem";
 import BookAppointment from "./views/Client/appointment/bookappointment";
 import MyAppointments from "./views/Client/appointment/myappointments";
 import ManageProfiles from "./views/Admin/manageProfiles";
+import AdminFeedback from "./views/Admin/adminFeedback";
 
 const router = createBrowserRouter([
     /*
@@ -110,6 +111,10 @@ const router = createBrowserRouter([
                 path: 'ManageProfiles', // Remove leading `/`
                 element: <ManageProfiles />
             },
+            {
+                path: 'AdminFeedback', // Remove leading `/`
+                element: <AdminFeedback />
+            }
 
         ]
     }
