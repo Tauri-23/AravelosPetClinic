@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import "../../assets/css/adminFeedback.css";
 
 const adminFeedback = () => {
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedService, setSelectedService] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3;
+  const itemsPerPage = 3; // Changed back to 3
   const [reviews, setReviews] = useState([]);
+  const [serviceRankings, setServiceRankings] = useState([]);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -36,7 +38,7 @@ const adminFeedback = () => {
         },
         {
           name: "Pet Owner 4",
-          petName: "bentong",
+          petName: "Bentong",
           rating: 4,
           review: "Vet was knowledgeable, but the waiting time was long.",
           time: "11:00 AM",
@@ -44,6 +46,14 @@ const adminFeedback = () => {
         },
         {
           name: "Pet Owner 5",
+          petName: "Max",
+          rating: 2,
+          review: "Gupit pogi.",
+          time: "9:00 AM",
+          service: "Haircut"
+        },
+        {
+          name: "Pet Owner 6",
           petName: "Max",
           rating: 2,
           review: "Vet was knowledgeable, but the waiting time was long.",
@@ -65,6 +75,23 @@ const adminFeedback = () => {
       });
 
       setReviews(filteredReviews);
+
+      // Calculate service rankings only
+      const services = {};
+      fetchedReviews.forEach(review => {
+        services[review.service] = (services[review.service] || 0) + 1;
+      });
+
+      // Convert to array and sort
+      const rankingsData = Object.entries(services)
+        .map(([name, count]) => ({
+          name,
+          count,
+          percentage: (count / fetchedReviews.length) * 100
+        }))
+        .sort((a, b) => b.count - a.count);
+
+      setServiceRankings(rankingsData);
     };
 
     fetchReviews();
@@ -76,15 +103,14 @@ const adminFeedback = () => {
         if (prevPage < Math.ceil(reviews.length / itemsPerPage)) {
           return prevPage + 1;
         } else {
-          return 1; // Reset to the first page
+          return 1;
         }
       });
-    }, 5000); // Adjust the interval time as needed (in milliseconds)
+    }, 5000);
 
-    return () => clearInterval(intervalId); // Clear interval on unmount
+    return () => clearInterval(intervalId);
   }, [reviews]);
 
-  // Calculate the index of the first and last item for the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentReviews = reviews.slice(indexOfFirstItem, indexOfLastItem);
@@ -99,46 +125,76 @@ const adminFeedback = () => {
   };
 
   return (
-    <div className="container">
-      <h2>Customer Feedback</h2>
-      <div className="booking-options">
-        <select value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)}>
-          <option value="">Select Time</option>
-          <option value="9:00 AM">9:00 AM</option>
-          <option value="10:00 AM">10:00 AM</option>
-          {/* Add more time options */}
-        </select>
-        <select value={selectedService} onChange={(e) => setSelectedService(e.target.value)}>
-          <option value="">Select Service</option>
-          <option value="Check-up">Check-up</option>
-          <option value="Vaccination">Vaccination</option>
-          <option value="Surgery">Surgery</option>
-          {/* Add more service options */}
-        </select>
-      </div>
-      <div className="reviews">
-        {currentReviews.map((review, index) => (
-          <div key={index} className="review">
-            <h3>{review.name}</h3>
-            <p><strong>Pet:</strong> {review.petName}</p>
-            <p>{review.review}</p>
-            <p>Rating: {review.rating}</p>
-          </div>
-        ))}
-        <div className="pagination">
-          {pageNumbers.map((number) => (
-            <div key={number}>
-              <input
-                type="radio"
-                id={`page-${number}`}
-                name="page"
-                value={number}
-                checked={number === currentPage}
-                onChange={() => handlePageChange(number)}
-              />
+    <div className="main-container">
+      {/* Customer Feedback Section */}
+      <div className="section-card">
+        <h2 className="section-title">Customer Feedback</h2>
+        <div className="filter-container">
+          <select 
+            className="select-input"
+            value={selectedTime} 
+            onChange={(e) => setSelectedTime(e.target.value)}
+          >
+            <option value="">Select Time</option>
+            <option value="9:00 AM">9:00 AM</option>
+            <option value="10:00 AM">10:00 AM</option>
+            <option value="11:00 AM">11:00 AM</option>
+          </select>
+          <select 
+            className="select-input"
+            value={selectedService} 
+            onChange={(e) => setSelectedService(e.target.value)}
+          >
+            <option value="">Select Service</option>
+            <option value="Check-up">Check-up</option>
+            <option value="Vaccination">Vaccination</option>
+            <option value="Surgery">Surgery</option>
+          </select>
+        </div>
+        <div className="reviews-container">
+          {currentReviews.map((review, index) => (
+            <div key={index} className="review-card">
+              <h3 className="reviewer-name">{review.name}</h3>
+              <p className="pet-name"><strong>Pet:</strong> {review.petName}</p>
+              <p className="review-text">{review.review}</p>
+              <p className="rating">Rating: {review.rating}</p>
             </div>
           ))}
         </div>
+        <div className="pagination-container">
+          {pageNumbers.map((number) => (
+            <button
+              key={number}
+              className={`pagination-dot ${number === currentPage ? 'active' : ''}`}
+              onClick={() => handlePageChange(number)}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Rankings Section - Services Only */}
+      <div className="section-card">
+        <h2 className="section-title">Service Rankings</h2>
+        {serviceRankings.map((service, index) => (
+          <div key={index} className="ranking-item">
+            <div className="ranking-header">
+              <span className="aspect-name">
+                {service.name}
+              </span>
+              <span className="review-count">
+                {service.count} reviews
+              </span>
+            </div>
+            <div className="progress-container">
+              <div 
+                className="progress-bar" 
+                style={{
+                  width: `${service.percentage}%`
+                }}
+              />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
