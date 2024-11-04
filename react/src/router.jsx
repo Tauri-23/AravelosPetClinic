@@ -14,6 +14,7 @@ import AdminInventoryDefault from "./views/Admin/Inventory/inventory_default";
 import AdminInventoryIndex from "./views/Admin/Inventory/inventory_index";
 import AddItem from "./views/Admin/Inventory/addItem";
 import ClinicCalendar from "./views/Admin/Appointment/clinicCalendar";
+import Appointments from "./views/Admin/Appointment/appointments";
 import BookAppointment from "./views/Client/appointment/bookappointment";
 import MyAppointments from "./views/Client/appointment/myappointments";
 import ManageProfiles from "./views/Admin/manageProfiles";
@@ -111,6 +112,10 @@ const router = createBrowserRouter([
             {
                 path: 'ClinicCalendar', // Remove leading `/`
                 element: <ClinicCalendar />
+            },
+            {
+                path: 'ClinicCalendar/Appointments', // Remove leading `/`
+                element: <Appointments />
             },
             {
                 path: 'ManageProfiles', // Remove leading `/`

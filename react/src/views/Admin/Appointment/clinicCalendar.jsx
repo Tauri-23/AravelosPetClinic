@@ -9,13 +9,13 @@ import axiosClient from "../../../axios-client.js";
 import { useModal } from "../../../contexts/ModalContext.jsx";
 import { fetchAppointmentDetails } from '../../../services/AppointmentServices.jsx';
 import "../../../assets/css/clinicCalendar.css";
-//import { library } from '@fortawesome/fontawesome-svg-core';
-//import { fas } from '@fortawesome/free-solid-svg-icons'; // Solid icons
-//import { far } from '@fortawesome/free-regular-svg-icons'; // Regular icons
-//import { fab } from '@fortawesome/free-brands-svg-icons'; // Brand icons
-//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons'; // Solid icons
+import { far } from '@fortawesome/free-regular-svg-icons'; // Regular icons
+import { fab } from '@fortawesome/free-brands-svg-icons'; // Brand icons
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-//library.add(fas, far, fab);
+library.add(fas, far, fab);
 function ClinicCalendar() {
     const schedOptions = [
         { value: "month", label: "By Day" },
@@ -45,7 +45,7 @@ function ClinicCalendar() {
                 // Get appointment details using the ID stored in resource
                 try {
                     const data = await fetchAppointmentDetails(calEvent.resource);
-                    setSelectedAppointment(data); // Assuming data contains the appointment details
+                    setSelectedAppointment(data);
                 } catch (error) {
                     console.error(error);
                 }
@@ -59,7 +59,7 @@ function ClinicCalendar() {
                 <div className="mini-nav bottom-margin-s">
                     <div className="anybody medium-f bold">Clinic Calendar</div>
                     <div className="separator left-margin-s right-margin-s"></div>
-                    <Link to={'MyAppointments'}>
+                    <Link to={'Appointments'}>
                         <div className="anybody small-f semi-bold">Appointments</div>
                     </Link>
                 </div>
