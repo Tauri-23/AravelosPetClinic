@@ -5,9 +5,16 @@ const adminFeedback = () => {
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedService, setSelectedService] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3; // Changed back to 3
+  const itemsPerPage = 2;
   const [reviews, setReviews] = useState([]);
   const [serviceRankings, setServiceRankings] = useState([]);
+  const [aspectSentiments, setAspectSentiments] = useState([
+    { aspect: 'Hygiene', sentiment: 'positive', count: 15 },
+    { aspect: 'Vet Care', sentiment: 'positive', count: 20 },
+    { aspect: 'Customer Service', sentiment: 'neutral', count: 12 },
+    { aspect: 'Booking Experience', sentiment: 'negative', count: 8 },
+    { aspect: 'Waiting Time', sentiment: 'negative', count: 10 }
+  ]);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -124,77 +131,137 @@ const adminFeedback = () => {
     setCurrentPage(pageNumber);
   };
 
-  return (
-    <div className="main-container">
-      {/* Customer Feedback Section */}
-      <div className="section-card">
-        <h2 className="section-title">Customer Feedback</h2>
-        <div className="filter-container">
-          <select 
-            className="select-input"
-            value={selectedTime} 
-            onChange={(e) => setSelectedTime(e.target.value)}
-          >
-            <option value="">Select Time</option>
-            <option value="9:00 AM">9:00 AM</option>
-            <option value="10:00 AM">10:00 AM</option>
-            <option value="11:00 AM">11:00 AM</option>
-          </select>
-          <select 
-            className="select-input"
-            value={selectedService} 
-            onChange={(e) => setSelectedService(e.target.value)}
-          >
-            <option value="">Select Service</option>
-            <option value="Check-up">Check-up</option>
-            <option value="Vaccination">Vaccination</option>
-            <option value="Surgery">Surgery</option>
-          </select>
-        </div>
-        <div className="reviews-container">
-          {currentReviews.map((review, index) => (
-            <div key={index} className="review-card">
-              <h3 className="reviewer-name">{review.name}</h3>
-              <p className="pet-name"><strong>Pet:</strong> {review.petName}</p>
-              <p className="review-text">{review.review}</p>
-              <p className="rating">Rating: {review.rating}</p>
-            </div>
-          ))}
-        </div>
-        <div className="pagination-container">
-          {pageNumbers.map((number) => (
-            <button
-              key={number}
-              className={`pagination-dot ${number === currentPage ? 'active' : ''}`}
-              onClick={() => handlePageChange(number)}
-            />
-          ))}
-        </div>
-      </div>
+  const getSentimentColor = (sentiment) => {
+    switch (sentiment) {
+      case 'positive':
+        return '#22c55e';
+      case 'negative':
+        return '#ef4444';
+      default:
+        return '#f59e0b';
+    }
+  };
 
-      {/* Rankings Section - Services Only */}
-      <div className="section-card">
-        <h2 className="section-title">Service Rankings</h2>
-        {serviceRankings.map((service, index) => (
-          <div key={index} className="ranking-item">
-            <div className="ranking-header">
-              <span className="aspect-name">
-                {service.name}
-              </span>
-              <span className="review-count">
-                {service.count} reviews
-              </span>
-            </div>
-            <div className="progress-container">
-              <div 
-                className="progress-bar" 
-                style={{
-                  width: `${service.percentage}%`
-                }}
-              />
-            </div>
+  const getSentimentIcon = (sentiment) => {
+    switch (sentiment) {
+      case 'positive':
+        return '↑';
+      case 'negative':
+        return '↓';
+      default:
+        return '-';
+    }
+  };
+
+
+  return (
+    <div className="wrapper">
+      <div className="main-container">
+        {/* Customer Feedback Section */}
+        <div className="section-card">
+          <h2 className="section-title">Customer Feedback</h2>
+          <div className="filter-container">
+            <select 
+              className="select-input"
+              value={selectedTime} 
+              onChange={(e) => setSelectedTime(e.target.value)}
+            >
+              <option value="">Select Time</option>
+              <option value="9:00 AM">9:00 AM</option>
+              <option value="10:00 AM">10:00 AM</option>
+              <option value="11:00 AM">11:00 AM</option>
+            </select>
+            <select 
+              className="select-input"
+              value={selectedService} 
+              onChange={(e) => setSelectedService(e.target.value)}
+            >
+              <option value="">Select Service</option>
+              <option value="Check-up">Check-up</option>
+              <option value="Vaccination">Vaccination</option>
+              <option value="Surgery">Surgery</option>
+            </select>
           </div>
-        ))}
+          <div className="reviews-container">
+            {currentReviews.map((review, index) => (
+              <div key={index} className="review-card">
+                <h3 className="reviewer-name">{review.name}</h3>
+                <p className="pet-name"><strong>Pet:</strong> {review.petName}</p>
+                <p className="review-text">{review.review}</p>
+                <p className="rating">Rating: {review.rating}</p>
+              </div>
+            ))}
+          </div>
+          <div className="pagination-container">
+            {pageNumbers.map((number) => (
+              <button
+                key={number}
+                className={`pagination-dot ${number === currentPage ? 'active' : ''}`}
+                onClick={() => handlePageChange(number)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Rankings Section - Services Only */}
+        <div className="section-card">
+          <h2 className="section-title">Service Rankings</h2>
+          {serviceRankings.map((service, index) => (
+            <div key={index} className="ranking-item">
+              <div className="ranking-header">
+                <span className="aspect-name">{service.name}</span>
+                <div className="ranking-stats">
+                  <span className="review-count">{service.count} reviews</span>
+                  <span className="ranking-position">#{index + 1}</span>
+                </div>
+              </div>
+              <div className="progress-container">
+                <div 
+                  className="progress-bar" 
+                  style={{
+                    width: `${service.percentage}%`,
+                    backgroundColor: index === 0 ? '#22c55e' : 
+                                  index === serviceRankings.length - 1 ? '#ef4444' : '#3b82f6'
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="section-card sentiment-section">
+          <h2 className="section-title">Aspect Sentiment Analysis</h2>
+          <div className="sentiment-container">
+            {aspectSentiments.map((aspect, index) => (
+              <div key={index} className="sentiment-item">
+                <div className="sentiment-header">
+                  <span className="aspect-name">{aspect.aspect}</span>
+                  <div className="sentiment-indicator">
+                    <span 
+                      className="sentiment-badge"
+                      style={{ 
+                        backgroundColor: getSentimentColor(aspect.sentiment),
+                        color: 'white'
+                      }}
+                    >
+                      {getSentimentIcon(aspect.sentiment)} {aspect.sentiment}
+                    </span>
+                    <span className="sentiment-count">{aspect.count} mentions</span>
+                  </div>
+                </div>
+                <div className="progress-container">
+                  <div 
+                    className="progress-bar" 
+                    style={{
+                      width: `${(aspect.count / Math.max(...aspectSentiments.map(a => a.count))) * 100}%`,
+                      backgroundColor: getSentimentColor(aspect.sentiment)
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
