@@ -19,6 +19,7 @@ import BookAppointment from "./views/Client/appointment/bookappointment";
 import MyAppointments from "./views/Client/appointment/myappointments";
 import ManageProfiles from "./views/Admin/manageProfiles";
 import AdminFeedback from "./views/Admin/adminFeedback";
+import AdminFeedbackAnalysis from "./views/Admin/adminFeedbackAnalysis";
 
 const router = createBrowserRouter([
     /*
@@ -124,6 +125,10 @@ const router = createBrowserRouter([
             {
                 path: 'AdminFeedback', // Remove leading `/`
                 element: <AdminFeedback />
+            },
+            {
+                path: 'AdminFeedbackAnalysis', // Remove leading `/`
+                element: <AdminFeedbackAnalysis />
             }
 
         ]

@@ -13,6 +13,7 @@ import InventoryBoxModal1 from "../components/Modals/inventoryBoxModal1";
 import { useModal } from "../contexts/ModalContext";
 import EditUserModal1 from "../components/Modals/editUserModal1";
 import AddAdminModal1 from "../components/Modals/addAdminModal1";
+import FeedbackModal1 from "../components/Modals/feedbackModal1";
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -63,6 +64,9 @@ const ModalManager = () => {
                     return <EditCategoryConfirmationModal1 {...modalState.props} onClose={hideModal}/>;
 
             case 'AddAdminModal1':
+                    return <AddAdminModal1 {...modalState.props} onClose={hideModal}/>;
+
+            case 'FeedbackModal1':
                     return <AddAdminModal1 {...modalState.props} onClose={hideModal}/>;
             
             /*
