@@ -11,8 +11,7 @@
     z-index: 1000;
     padding: 16px;
 }
-
-.modal-content {
+.feedback .modal-cont {
     background-color: white;
     border-radius: 16px;
     width: 100%;
@@ -101,11 +100,11 @@
     .modal-content {
         max-height: 90vh;
     }
-    
+
     .modal-header {
         padding: 16px;
     }
-    
+
     .modal-body {
         padding: 16px;
     }

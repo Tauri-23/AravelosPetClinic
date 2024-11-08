@@ -17,6 +17,7 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "axios": "^1.7.4",
     "bootstrap": "^5.3.3",
+    "lucide-react": "^0.456.0",
     "moment-timezone": "^0.5.45",
     "react": "^18.2.0",
     "react-big-calendar": "^1.14.1",
@@ -26,7 +27,8 @@
     "react-dom": "^18.2.0",
     "react-fontawesome": "^1.7.1",
     "react-router-dom": "^6.26.1",
-    "react-toastify": "^10.0.5"
+    "react-toastify": "^10.0.5",
+    "recharts": "^2.13.3"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

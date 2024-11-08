@@ -5,6 +5,9 @@
     --blue1: #1D3675;
     --rounded_conts: 1.4vw;
     --grey1: #585858;
+    --bs-modal-color: #1D3675;
+    --bs-modal-bg:white;
+    --bs-modal-border-radius: var(--rounded_conts);
 }
 
 

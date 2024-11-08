@@ -7,7 +7,7 @@ const feedbackModal1 = ({ data, onClose }) => {
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <div className="feedback modal-content" onClick={e => e.stopPropagation()}>
                 <div className="modal-header">
                     <div className="header-content">
                         <h3>{data.aspect}</h3>
@@ -29,7 +29,7 @@ const feedbackModal1 = ({ data, onClose }) => {
                         <X size={24} />
                     </button>
                 </div>
-                
+
                 <div className="modal-body">
                     {data.comments.length > 0 ? (
                         <div className="comments-list">
