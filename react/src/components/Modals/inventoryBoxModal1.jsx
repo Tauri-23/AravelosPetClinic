@@ -5,10 +5,13 @@ import EditItemModal1 from './editItemModal1'; // Import the new modal
 
 const InventoryBoxModal1 = ({ itemId, itemName, itemImage, itemQuantity, itemDescription, handleEditItemPost, onClose }) => {
     const [isEditItemModalOpen, setIsEditItemModalOpen] = useState(false);
+    const handleEditClick = () => {
 
+        setIsEditItemModalOpen(true); // Open the edit item modal
+    };
     return (
         <div className="modal2"> {/* Updated modal2 class for consistency */}
-            <div className="box-modal modal-content1">
+            <div className={`box-modal modal-content1 ${isEditItemModalOpen ? 'closed' : ''}`}>
                 <div className="circle-btn1 semi-medium-f">
                     <Icon.X className="pointer" onClick={onClose} />
                 </div>
@@ -19,7 +22,7 @@ const InventoryBoxModal1 = ({ itemId, itemName, itemImage, itemQuantity, itemDes
                             src="/assets/media/icons/edit_btn.svg"
                             alt="Edit"
                             title="Edit Item Details"
-                            onClick={() => setIsEditItemModalOpen(true)} // Open the edit item modal
+                            onClick={handleEditClick} // Open the edit item modal
                         />
                     </div>
                 </div>
@@ -33,7 +36,7 @@ const InventoryBoxModal1 = ({ itemId, itemName, itemImage, itemQuantity, itemDes
             {isEditItemModalOpen && (
                 <EditItemModal1
                     item={{ id: itemId, name: itemName, quantity: itemQuantity, description: itemDescription }}
-                    onClose={() => setIsEditItemModalOpen(false)} // Close the modal
+                    onClose={() => setIsEditItemModalOpen(true)} // Close the modal
                     onCloseParent={onClose}
                     handleSaveChangesClick={handleEditItemPost}
                 />

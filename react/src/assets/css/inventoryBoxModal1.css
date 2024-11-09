@@ -10,6 +10,9 @@
     align-items: center;
     z-index: 1000; /* Ensures modal is on top of other content */
 }
+.closed{
+    display: none;
+}
 
 .modalHeader1 {
     display: flex;

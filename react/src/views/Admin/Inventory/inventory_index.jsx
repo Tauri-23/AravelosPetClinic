@@ -57,7 +57,7 @@ export default function AdminInventoryIndex() {
   useEffect(() => {
     console.log(inventoryItems);
   }, [inventoryItems])
-  
+
 
 
   /**
@@ -178,10 +178,10 @@ export default function AdminInventoryIndex() {
         notify('error', 'Failed to delete category. Please try again.', 'top-center', 3000);
         return false; // Return false in case of an error
       });
-  };  
-  
-  
-  
+  };
+
+
+
   /**
    * Render
    */
@@ -227,7 +227,7 @@ export default function AdminInventoryIndex() {
               {categories?.length < 1 && <>No Categories</>}
             </div>
 
-           
+
           </div>
 
           {/* Right Side with Search and Inventory Display */}
@@ -252,12 +252,12 @@ export default function AdminInventoryIndex() {
               <div className="admin-inventory-contents left-margin">
                 {inventoryItems?.length > 0 && inventoryItems.map(item =>
                   item.category == activeCategory &&
-                  (<InventoryBox 
-                    key={item.id} 
-                    handleInventoryBoxClick={() => handleInventoryBoxClick(item.id, item.name, item.picture, item.qty, item.desc)} 
-                    itemName={item.name} 
-                    itemImage={item.picture} 
-                    itemQuantity={item.qty} 
+                  (<InventoryBox
+                    key={item.id}
+                    handleInventoryBoxClick={() => handleInventoryBoxClick(item.id, item.name, item.picture, item.qty, item.desc)}
+                    itemName={item.name}
+                    itemImage={item.picture}
+                    itemQuantity={item.qty}
                     itemDescription={item.desc}/>)
                 )}
 

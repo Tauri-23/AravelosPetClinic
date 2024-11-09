@@ -29,7 +29,6 @@ export default function EditItemModal1({ item, onClose, onCloseParent, handleSav
   };
 
   return (
-    <div className="modal-overlay">
       <div className="edit-modal">
         <div className="edit-modal-box">
           <div className="circle-btn1 semi-medium-f">
@@ -83,8 +82,6 @@ export default function EditItemModal1({ item, onClose, onCloseParent, handleSav
             </div>
           </div>
         </div>
-      </div>
-
       {/* Confirmation Modal */}
       {showConfirmation && (
         <EditItemConfirmationModal1
@@ -92,6 +89,7 @@ export default function EditItemModal1({ item, onClose, onCloseParent, handleSav
           onCancel={handleCancelSave} // Close the confirmation modal on cancel
         />
       )}
-    </div>
+      </div>
+
   );
 }
