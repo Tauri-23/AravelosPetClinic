@@ -36,7 +36,7 @@ const InventoryBoxModal1 = ({ itemId, itemName, itemImage, itemQuantity, itemDes
             {isEditItemModalOpen && (
                 <EditItemModal1
                     item={{ id: itemId, name: itemName, quantity: itemQuantity, description: itemDescription }}
-                    onClose={() => setIsEditItemModalOpen(true)} // Close the modal
+                    onClose={() => setIsEditItemModalOpen(false)} // Close the modal
                     onCloseParent={onClose}
                     handleSaveChangesClick={handleEditItemPost}
                 />

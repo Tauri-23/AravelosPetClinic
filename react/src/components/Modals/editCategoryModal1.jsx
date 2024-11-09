@@ -64,7 +64,8 @@ export default function EditCategoryModal1({ categories, handleEditCategoryClick
 
   return (
     <div className="modal1">
-      <div className="edit-modal-box">
+       <div className={`box-modal modal-content1 ${isEditItemModalOpen ? 'closed' : ''}`}></div>
+      <div className={`edit-modal-box ${isEditItemModalOpen ? 'closed' : ''}`}>
         <div className="circle-btn1 semi-medium-f">
           <Icon.X className="pointer" onClick={onClose} />
         </div>
@@ -122,25 +123,25 @@ export default function EditCategoryModal1({ categories, handleEditCategoryClick
 
       {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
-        <div className="modal-overlay">
+        
           <DeleteCategoryModal1
             onConfirm={handleDeletePost}
             onCancel={() => setIsDeleteModalOpen(false)}
             categoryName={categoryNameToDelete}
           />
-        </div>
+        
       )}
 
       {/* Edit Category Confirmation Modal */}
       {isConfirmationModalOpen && (
-        <div className="modal-overlay">
+       
           <EditCategoryConfirmationModal1
             onConfirm={() => {
               handleEditPost();
             }}
             onCancel={() => setIsConfirmationModalOpen(false)}
           />
-        </div>
+        
       )}
     </div>
   );
