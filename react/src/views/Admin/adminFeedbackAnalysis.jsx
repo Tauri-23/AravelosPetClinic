@@ -42,7 +42,7 @@ const adminFeedbackAnalysis = () => {
             negative: 5,
             total: 70,
             comments: {
-                positive: ['Excellent treatment', 'Knowledgeable vet', 'Caring approach'],
+                positive: ['Excellent treatment', 'Knowledgeable vet', 'Caring approach', 'Amazing', 'was knowledgeable friendly and truly listened to my concerns a few days later  she called to follow up on my pets recovery '],
                 negative: ['Rushed examination', 'Expensive treatments']
             }
         },

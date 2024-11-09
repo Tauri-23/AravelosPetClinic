@@ -51,10 +51,10 @@ function ManageProfiles() {
             return (
                 <>
                     <div className="mini-nav bottom-margin">
-                        <div className="anybody medium-f bold">Manage Clients</div>
+                        <div className="anybody medium-f bold">Manage Customers</div>
                         <div className="separator left-margin-s right-margin-s"></div>
                         <div onClick={() => setActiveTab("ManageAdmins")}>
-                            <div className="anybody small-f semi-bold pointer">Manage Admins</div>
+                            <div className="anybody small-f semi-bold pointer">Manage Staff Accounts</div>
                         </div>
                     </div>
 
@@ -73,14 +73,14 @@ function ManageProfiles() {
                 <>
                     <div className="manage-prof mini-nav">
                         <div className = 'mini-links'>
-                            <div className="anybody medium-f bold">Manage Admins</div>
+                            <div className="anybody medium-f bold">Manage Staff Accounts</div>
                             <div className="separator left-margin-s right-margin-s"></div>
                             <div onClick={() => setActiveTab("ManageClients")}>
-                                <div className="anybody small-f semi-bold pointer">Manage Clients</div>
+                                <div className="anybody small-f semi-bold pointer">Manage Customers</div>
                             </div>
                         </div>
                         <div className="add-admin">
-                            <div className='primary-btn-blue1 bottom-margin' onClick={handleAddAdmin}>Add admin</div>
+                            <div className='primary-btn-blue1 bottom-margin' onClick={handleAddAdmin}>Add account</div>
                         </div>
                     </div>
 

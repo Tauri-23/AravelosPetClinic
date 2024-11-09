@@ -1,49 +1,66 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { X, MessageSquare, ThumbsUp, ThumbsDown } from 'lucide-react';
 import "../../assets/css/FeedbackModal.css";
 
 const feedbackModal1 = ({ data, onClose }) => {
     if (!data) return null;
 
+    // State for sentiment filter
+    const [filter, setFilter] = useState('all'); // 'all', 'positive', 'negative'
+
+    // Process feedback sentences to include sentiment
+    const feedbackSentences = data.comments.map(comment => {
+        // Split long comments into sentences
+        return comment.split(/[.!?]+/).filter(sentence => sentence.trim().length > 0).map(sentence => ({
+            text: sentence.trim(),
+            sentiment: data.feedbackType
+        }));
+    }).flat();
+
+    const filteredSentences = filter === 'all' 
+        ? feedbackSentences
+        : feedbackSentences.filter(sentence => sentence.sentiment === filter);
+
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="feedback modal-content" onClick={e => e.stopPropagation()}>
+        <div className="modal-overlay">
+            <div className="feedback modal-content">
                 <div className="modal-header">
-                    <div className="header-content">
-                        <h3>{data.aspect}</h3>
-                        <div className="feedback-type">
-                            {data.feedbackType === 'positive' ? (
-                                <>
-                                    <ThumbsUp className="feedback-icon positive" />
-                                    <span className="positive">Positive Feedback</span>
-                                </>
-                            ) : (
-                                <>
-                                    <ThumbsDown className="feedback-icon negative" />
-                                    <span className="negative">Negative Feedback</span>
-                                </>
-                            )}
+                    <button className="close-button mobile-close" onClick={onClose}>
+                        <X size={24} />
+                    </button>
+                    <div className="modal-title-container">
+                        <div className="modal-title">
+                            <MessageSquare className="modal-icon" />
+                            <h3>{data.aspect} Feedback Analysis</h3>
                         </div>
+                        <p className="modal-subtitle">Customer sentiments and detailed feedback</p>
                     </div>
-                    <button className="close-button" onClick={onClose}>
+                    <button className="close-button desktop-close" onClick={onClose}>
                         <X size={24} />
                     </button>
                 </div>
-
                 <div className="modal-body">
-                    {data.comments.length > 0 ? (
-                        <div className="comments-list">
-                            {data.comments.map((comment, index) => (
-                                <div key={index} className="comment-card">
-                                    <MessageSquare size={18} className="comment-icon" />
-                                    <p>{comment}</p>
+                    {filteredSentences.length > 0 ? (
+                        <div className="feedback-list">
+                            {filteredSentences.map((sentence, index) => (
+                                <div 
+                                    key={index} 
+                                    className={`feedback-item ${sentence.sentiment}`}
+                                >
+                                    <div className="feedback-icon">
+                                        {sentence.sentiment === 'positive' ? (
+                                            <ThumbsUp size={16} />
+                                        ) : (
+                                            <ThumbsDown size={16} />
+                                        )}
+                                    </div>
+                                    <p>{sentence.text}</p>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <div className="no-comments">
-                            <MessageSquare size={24} />
-                            <p>No comments available</p>
+                        <div className="no-feedback">
+                            <p>No feedback available for the selected filter.</p>
                         </div>
                     )}
                 </div>
@@ -53,3 +70,6 @@ const feedbackModal1 = ({ data, onClose }) => {
 };
 
 export default feedbackModal1;
+
+
+
