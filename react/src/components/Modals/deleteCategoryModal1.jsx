@@ -4,7 +4,6 @@ import "../../assets/css/deleteCategoryModal1.css"; // Create your CSS file for 
 
 export default function DeleteCategoryModal1({ onConfirm, onCancel, categoryName }) {
   return (
-    <div className="delete-confirmation-modal">
       <div className="modal-box">
         <div className="circle-btn1 semi-medium-f">
           <Icon.X className="pointer" onClick={onCancel} />
@@ -20,6 +19,5 @@ export default function DeleteCategoryModal1({ onConfirm, onCancel, categoryName
           <button className="cancel-delete-button" onClick={onCancel}>Cancel</button>
         </div>
       </div>
-    </div>
   );
 }

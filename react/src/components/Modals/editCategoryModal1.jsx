@@ -53,7 +53,7 @@ export default function EditCategoryModal1({ categories, handleEditCategoryClick
     const result = await handleDeleteCategoryClick(confirmDeleteId);
     console.log(result);
     if(result) {
-      _setCategories((prev) => 
+      _setCategories((prev) =>
         prev.filter(cat => cat.id !== confirmDeleteId)
       );
       setIsConfirmationModalOpen(false);
@@ -64,8 +64,7 @@ export default function EditCategoryModal1({ categories, handleEditCategoryClick
 
   return (
     <div className="modal1">
-       <div className={`box-modal modal-content1 ${isEditItemModalOpen ? 'closed' : ''}`}></div>
-      <div className={`edit-modal-box ${isEditItemModalOpen ? 'closed' : ''}`}>
+      <div className={`edit-modal-box ${isConfirmationModalOpen || isDeleteModalOpen ? 'closed' : ''}`}>
         <div className="circle-btn1 semi-medium-f">
           <Icon.X className="pointer" onClick={onClose} />
         </div>
@@ -123,25 +122,25 @@ export default function EditCategoryModal1({ categories, handleEditCategoryClick
 
       {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
-        
+
           <DeleteCategoryModal1
             onConfirm={handleDeletePost}
             onCancel={() => setIsDeleteModalOpen(false)}
             categoryName={categoryNameToDelete}
           />
-        
+
       )}
 
       {/* Edit Category Confirmation Modal */}
       {isConfirmationModalOpen && (
-       
+
           <EditCategoryConfirmationModal1
             onConfirm={() => {
               handleEditPost();
             }}
             onCancel={() => setIsConfirmationModalOpen(false)}
           />
-        
+
       )}
     </div>
   );
