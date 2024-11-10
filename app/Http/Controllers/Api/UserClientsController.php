@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\user_clients;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserClientsController extends Controller
 {
@@ -80,5 +81,50 @@ class UserClientsController extends Controller
                 'message' => 'Client not found'
             ]);
         }
+    }
+
+    public function UpdateClientProfile(Request $request)
+    {
+        $client = user_clients::find($request->clientId);
+
+        if(!$client)
+        {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Client not found'
+            ]);
+        }
+
+        if(!(Hash::check($request->password, $client->password)))
+        {
+            return response()->json([
+                'status' => 401,
+                'message' => 'Invalid password'
+            ]);
+        }
+
+        switch($request->editType)
+        {
+            case "name":
+                $client->fname = $request->fname;
+                $client->mname = $request->mname ?? null;
+                $client->lname = $request->lname;
+                break;
+            case "gender":
+                $client->gender = $request->gender;
+                break;
+            default:
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'Invalid edit type'
+                ]);
+        }
+
+        $client->save();
+        return response()->json([
+            'status' => 200,
+            'message' => 'Profile updated',
+            'client' => $client
+        ]);
     }
 }

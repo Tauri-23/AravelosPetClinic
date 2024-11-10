@@ -13,7 +13,7 @@ import * as Icon from 'react-bootstrap-icons';
 
 const userprofiles = () => {
   const { showModal } = useModal();
-  const { user } = useStateContext();
+  const { user, setUser } = useStateContext();
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
   const [selectedPet, setSelectedPet] = useState(null); // For pet modal
@@ -47,35 +47,6 @@ const userprofiles = () => {
 
 
 
-  const handleEditUserPost = (fname, mname, lname, email, password, bday, gender, address, phone, pic ) => {
-    const formData = new FormData();
-    formData.append('client', user.id);
-    formData.append('fname', user.fname);
-    formData.append('mname', user.mname);
-    formData.append('lname', user.lname);
-    formData.append('email', user.email);
-    formData.append('password', user.password);
-    formData.append('bday', user.bday);
-    formData.append('gender', user.gender);
-    formData.append('phone', user.phone);
-    formData.append('pic', user.pic);
-
-    axiosClient.post('/edit-user', formData)
-      .then(({ data }) => {
-        if (data.status === 200) {
-          notify('success', data.message, 'top-center', 3000);
-          setPets(prev =>
-            [...prev, data.user]
-          );
-        } else {
-          notify('error', data.message, 'top-center', 3000);
-        }
-      })
-      .catch(error => console.error(error));
-  };
-
-
-
   const handleAddPetPost = (petName, petType, petGender, petDOB, petBreed, petPic) => {
     const formData = new FormData();
     formData.append('client', user.id);
@@ -105,7 +76,7 @@ const userprofiles = () => {
   const handleEditUserClick = (detailValue) => {
     setIsEditing(true); // Toggle editing state
     setEditData(user); // Set initial edit data to user object
-    showModal('EditUserModal1', {user, detail:detailValue}); // Show the EditUserModal
+    showModal('EditUserModal1', {user, setUser, detail:detailValue}); // Show the EditUserModal
   };
 
 
@@ -148,15 +119,71 @@ const userprofiles = () => {
                 </div>
                 <div className="left-margin top-margin">
                     <div className='user-details'>
-                        <div className='detail-row semi-bold'><div className="label-div">Name: </div><input className="left-margin ud detail-cont" type="text" value={`${user.fname || ''} ${user.mname || ''} ${user.lname || ''}`.trim() || 'n/a'} readOnly /><Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("name")}/></div>
-                        <div className='detail-row semi-bold'><div className="label-div">Gender: </div><input className="left-margin ud detail-cont" type="text" value={user.gender || 'n/a'} readOnly /><Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("gender")}/></div>
-                        <div className='detail-row semi-bold'><div className="label-div">Email: </div><input className="left-margin ud detail-cont"  type="text" value={user.email || 'n/a'} readOnly /><Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("email")}/></div>
-                        <div className='detail-row semi-bold'><div className="label-div">Birthday: </div><input className="left-margin ud detail-cont" type="text" value={user.birthday || 'n/a'} readOnly /><Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("birthday")}/></div>
-                        <div className='detail-row semi-bold'><div className="label-div">Address: </div><input className="left-margin ud detail-cont" type="text" value={user.address || 'n/a'} readOnly /><Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("address")}/></div>
-                        <div className='detail-row semi-bold'><div className="label-div">Phone: </div><input className="left-margin ud detail-cont" type="text" value={user.phone || 'n/a'} readOnly /><Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("phone")}/></div>
+                        <div className='detail-row semi-bold'>
+                          <div className="label-div">Name: </div>
+                          <input 
+                          className="left-margin ud detail-cont" 
+                          type="text" 
+                          value={`${user.fname || ''} ${user.mname || ''} ${user.lname || ''}`.trim() || 'n/a'} readOnly />
+                          <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("name")}/>
+
+                        </div>
+                        <div className='detail-row semi-bold'>
+                          <div className="label-div">Gender: </div>
+                          <input 
+                          className="left-margin ud detail-cont" 
+                          type="text" 
+                          value={user.gender || 'n/a'} readOnly />
+                          <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("gender")}/>
+
+                        </div>
+                        <div className='detail-row semi-bold'>
+                          <div className="label-div">Email: </div>
+                          <input 
+                          className="left-margin ud detail-cont"  
+                          type="text" 
+                          value={user.email || 'n/a'} readOnly />
+                          <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("email")}/>
+
+                        </div>
+                        <div className='detail-row semi-bold'>
+                          <div className="label-div">Birthday: </div>
+                          <input 
+                          className="left-margin ud detail-cont" 
+                          type="text" 
+                          value={user.birthday || 'n/a'} readOnly />
+                          <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("birthday")}/>
+
+                        </div>
+                        <div className='detail-row semi-bold'>
+                          <div className="label-div">Address: </div>
+                          <input 
+                          className="left-margin ud detail-cont" 
+                          type="text" 
+                          value={user.address || 'n/a'} readOnly />
+                          <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("address")}/>
+
+                        </div>
+                        <div className='detail-row semi-bold'>
+                          <div className="label-div">Phone: </div>
+                          <input 
+                          className="left-margin ud detail-cont" 
+                          type="text" 
+                          value={user.phone || 'n/a'} readOnly />
+                          <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("phone")}/>
+
+                        </div>
                         {/* <div className="primary-btn-blue1">Change Password</div> */}
                         {/* <u>Change Password</u> */}
-                        <div className='detail-row semi-bold'><div className="label-div">Password: </div><input className="left-margin ud detail-cont" type="password" value="********" readOnly /><Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("phone")}/></div>
+                        <div className='detail-row semi-bold'>
+                          <div className="label-div">Password: </div>
+                          <input 
+                          className="left-margin ud detail-cont" 
+                          type="password" 
+                          value="********" 
+                          readOnly />
+                          <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("phone")}/>
+                        </div>
 
                     </div>
 

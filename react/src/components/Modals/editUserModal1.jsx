@@ -4,22 +4,28 @@ import * as Icon from 'react-bootstrap-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { useModal } from "../../contexts/ModalContext.jsx";
+import axiosClient from '../../axios-client.js';
+import { notify } from '../../assets/js/utils.jsx';
 
-const EditUserModal = ({ user, detail, onClose }) => {
+const EditUserModal = ({ user, setUser, detail, onClose }) => {
 // Inside your component
 const {showModal} = useModal();
-const [fname, setFname] = useState(user.fname || '');
+const [fname, setFname] = useState(user.fname);
 const [mname, setMname] = useState(user.mname || '');
-const [lname, setLname] = useState(user.lname || '');
+const [lname, setLname] = useState(user.lname);
+
 const [gender, setGender] = useState(user.gender || '');
+
+const [newEmail, setNewEmail] = useState("");
+const [conNewEmail, setConNewEmail] = useState("");
+
 const [birthday, setBirthday] = useState(user.birthday || '');
 const [phone, setPhone] = useState(user.phone || '');
 const [address, setAddress] = useState(user.address || '');
+const [password, setPassword] = useState("");
 
 const [newProfilePicture, setNewProfilePicture] = useState(null); // For user's profile picture
-const handleInputChange = (setter) => (e) => {
-    setter(e.target.value);
-};
+
 const handlePhoneChange = (e) => {
     const input = e.target.value;
 
@@ -32,29 +38,61 @@ const handlePhoneChange = (e) => {
     { id: "Male", label: "Male" },
     { id: "Female", label: "Female" },
   ];
-  const handleUpdateClicks = () => {
-    const handleFunction = "handleUpdateProfile";
-    showModal('ConfirmActionModal1', {handlePost: handleUpdatePost, handleFunction});
-  };
-  const handleUpdatePost = () => {
-  };
+//   const handleUpdateClicks = () => {
+//     const handleFunction = "handleUpdateProfile";
+//     showModal('ConfirmActionModal1', {handlePost: handleUpdateInfo});
+//   };
+  
+  const handleUpdateInfo = (editType) => {
+    const formData = new FormData();
+
+    switch(editType) {
+        case "name":
+            formData.append('fname', fname);
+            formData.append('mname', mname);
+            formData.append('lname', lname);
+            break;
+        case "gender":
+            formData.append('gender', gender);
+            break;
+        case "":
+            break;
+        default:
+            notify('error', 'Invalid edit type', 'top-center', 3000);
+            return;
+    }
+    formData.append('clientId', user.id);
+    formData.append('password', password);
+    formData.append('editType', editType);
+
+    axiosClient.post('/update-client-profile', formData)
+    .then(({data}) => {
+        if(data.status === 200) {
+            onClose();
+            setUser(data.client);
+        }
+        notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
+    }).catch((error) => console.error(error))
+  }
+
   const renderContent = () => {
     switch (detail){
+        // Name
         case 'name':
-            return(
+            return (
                 <>
                     <div className='bold semi-medium-f anybody t-align-center'>
                         Change Name
                     </div>
-                    <hr></hr>
+                    <hr/>
                     <div className="detail-row semi-bold">
                         <div className="label-div">First Name: </div>
                         <input
                             className='top-margin-s'
                             type="text"
                             name="fname" placeholder="First Name"
-                            onChange={handleInputChange(setFname)}
-                            value={fname || user.fname}/>
+                            onChange={(e) => setFname(e.target.value)}
+                            value={fname}/>
                     </div>
                     <div className="detail-row semi-bold">
                         <div className="label-div">Middle Name: </div>
@@ -62,8 +100,8 @@ const handlePhoneChange = (e) => {
                             className='top-margin-s'
                             type="text"
                             name="mname" placeholder="Middle Name (Optional)"
-                            onChange={handleInputChange(setMname)}
-                            value={mname || user.mname}/>
+                            onChange={(e) => setMname(e.target.value)}
+                            value={mname || ""}/>
                     </div>
                     <div className="detail-row semi-bold">
                         <div className="label-div">Last Name: </div>
@@ -71,20 +109,25 @@ const handlePhoneChange = (e) => {
                             className='top-margin-s'
                             type="text"
                             name="lname" placeholder="Last Name"
-                            onChange={handleInputChange(setLname)}
-                            value={lname || user.lname}/>
+                            onChange={(e) => setLname(e.target.value)}
+                            value={lname}/>
                     </div>
                     <div className="detail-row semi-bold">
                         <div className="label-div">Password: </div>
                         <input
                             className='top-margin-s'
-                            type="password" placeholder="Re-enter Password" title="Re-enter your password to verify changes"/>
+                            type="password" 
+                            placeholder="Re-enter Password" 
+                            title="Re-enter your password to verify changes"
+                            value={password}
+                            onInput={(e) => setPassword(e.target.value)}
+                            />
                     </div>
 
                 <div className="d-flex flex-direction-x flex-row-reverse gap3 top-margin justify-content-between">
 
                 <div
-                onClick={() => {handleUpdateClicks(); onClose();}}
+                onClick={() => {handleUpdateInfo("name");}}
                 className="primary-btn-blue1 text-center"
                 >
                     Update
@@ -94,6 +137,51 @@ const handlePhoneChange = (e) => {
                     Cancel
                 </div>
                 </div>
+                </>
+            )
+
+        case 'gender':
+            return(
+                <>
+                    <div className='bold semi-medium-f anybody t-align-center'>
+                        Change Gender
+                    </div>
+                    <hr/>
+                    <div className="detail-row semi-bold">
+                        <div className="label-div">Gender: </div>
+                        <select className="select top-margin-s" id="viewType" value={gender} onChange={(e) => setGender(e.target.value)}>
+                            {genderOptions.map((gender) => (
+                            <option key={gender.id} value={gender.id}>
+                                {gender.label}
+                            </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="detail-row semi-bold">
+                        <div className="label-div">Password: </div>
+                        <input
+                            className='top-margin-s'
+                            type="password" 
+                            placeholder="Re-enter Password" 
+                            title="Re-enter your password to verify changes"
+                            value={password}
+                            onInput={(e) => setPassword(e.target.value)}
+                            />
+                    </div>
+
+                    <div className="d-flex flex-direction-x flex-row-reverse gap3 top-margin justify-content-between">
+
+                        <div
+                        onClick={() => {handleUpdateInfo('gender')}}
+                        className="primary-btn-blue1 text-center"
+                        >
+                            Update
+                        </div>
+
+                        <div className="sub-button text-center d-flex gap3 align-items-center justify-content-center" onClick={onClose}>
+                            Cancel
+                        </div>
+                    </div>
                 </>
             )
 
@@ -107,21 +195,29 @@ const handlePhoneChange = (e) => {
                     <div className="detail-row semi-bold">
                         <div className="label-div">Current Email: </div>
                         <input
-                            className='top-margin-s'
-                            type="text"
-                            value={user.email} readOnly/>
+                        className='top-margin-s'
+                        type="text"
+                        value={user.email} readOnly/>
                     </div>
+
                     <div className="detail-row semi-bold">
                         <div className="label-div">New Email: </div>
                         <input
-                            className='top-margin-s'
-                            type="text" placeholder="New Email"/>
+                        className='top-margin-s'
+                        type="text" 
+                        placeholder="New Email"
+                        value={newEmail}
+                        onInput={(e) => setNewEmail(e.target.value)}/>
                     </div>
+
                     <div className="detail-row semi-bold">
                         <div className="label-div">Re-enter Email: </div>
                         <input
-                            className='top-margin-s'
-                            type="text" placeholder="Re-enter  Email"/>
+                        className='top-margin-s'
+                        type="text" 
+                        placeholder="Re-enter  Email"
+                        value={conNewEmail}
+                        onInput={(e) => setConNewEmail(e.target.value)}/>
                     </div>
                     <div className="detail-row semi-bold" title="Input the OTP sent to your old email.">
                         <div className="label-div align-self-end">One-Time Password: </div>
@@ -129,7 +225,7 @@ const handlePhoneChange = (e) => {
                                 <input
                                 className='top-margin-s align-items-center w-100'
                                 type="text" placeholder="One-Time Password" /><button
-                                onClick={() => {handleYesConfirmationPost(); onClose();}}
+                                onClick={() => {handleUpdateInfo("email")}}
                                 className="left-margin-s primary-btn-blue1 text-center align-self-end">Send</button>
                             </div>
                     </div>
@@ -155,6 +251,7 @@ const handlePhoneChange = (e) => {
                 </div>
                 </>
             )
+
         case 'birthday':
                 return(
                     <>
@@ -191,7 +288,7 @@ const handlePhoneChange = (e) => {
                     </div>
                     </div>
                     </>
-                )
+            )
         case 'phone':
                 return(
                     <>
@@ -232,7 +329,7 @@ const handlePhoneChange = (e) => {
                     </div>
                     </div>
                     </>
-                )
+            )
         case 'address':
                 return(
                     <>
@@ -269,46 +366,8 @@ const handlePhoneChange = (e) => {
                     </div>
                     </div>
                     </>
-                )
-        case 'gender':
-                return(
-                    <>
-                        <div className='bold semi-medium-f anybody t-align-center'>
-                            Change Gender
-                        </div>
-                        <hr></hr>
-                        <div className="detail-row semi-bold">
-                            <div className="label-div">Gender: </div>
-                            <select className="select top-margin-s" id="viewType" value={user.gender} onChange={handleInputChange(setGender)}>
-                                {genderOptions.map((gender) => (
-                                <option key={gender.id} value={gender.id}>
-                                    {gender.label}
-                                </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="detail-row semi-bold">
-                            <div className="label-div">Password: </div>
-                            <input
-                                className='top-margin-s'
-                                type="password" placeholder="Re-enter Password" title="Re-enter your password to verify changes"/>
-                        </div>
-
-                    <div className="d-flex flex-direction-x flex-row-reverse gap3 top-margin justify-content-between">
-
-                    <div
-                    onClick={() => {handleUpdateClicks(); onClose();}}
-                    className="primary-btn-blue1 text-center"
-                    >
-                        Update
-                    </div>
-
-                    <div className="sub-button text-center d-flex gap3 align-items-center justify-content-center" onClick={onClose}>
-                        Cancel
-                    </div>
-                    </div>
-                    </>
-                )
+            )
+        
         case 'password':
                 return(
                     <>
@@ -349,7 +408,7 @@ const handlePhoneChange = (e) => {
                     </div>
                     </div>
                     </>
-                )
+            )
         case 'pfp':
                 return(
                     <>
@@ -389,7 +448,7 @@ const handlePhoneChange = (e) => {
                             </div>
                         </div>
                     </>
-                )
+            )
 
 
     }

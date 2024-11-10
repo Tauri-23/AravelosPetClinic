@@ -101,6 +101,7 @@ Route::get('/retrieve-all-clients-not-deleted', [UserClientsController::class, '
 
 Route::post('/suspend-unsuspend-client', [UserClientsController::class, 'SuspendUnsuspendClient']);
 Route::post('/del-client', [UserClientsController::class, 'DeleteClient']);
+Route::post('/update-client-profile', [UserClientsController::class, 'UpdateClientProfile']);
 
 
 
