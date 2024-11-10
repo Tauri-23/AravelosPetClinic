@@ -273,6 +273,7 @@ class VetFeedbackAnalyzer:
             print("Falling back to base model...")
             self._load_base_model()
 
+
     def evaluate_batch(self, texts, labels):
         """Evaluate a single batch"""
         encoded = self.tokenizer(
@@ -293,6 +294,144 @@ class VetFeedbackAnalyzer:
         torch.cuda.empty_cache() if self.device.type == 'cuda' else None
 
         return predictions
+    def collect_aspect_statistics(self, dataset_path: str, aspect: str) -> Dict:
+        """Collect statistics for a specific aspect from the dataset"""
+        print(f"\nAnalyzing {aspect} reviews...")
+
+        total_reviews = 0
+        aspect_stats = {'positive': 0, 'negative': 0, 'neutral': 0}
+
+        # Process in batches
+        for chunk in tqdm(pd.read_csv(dataset_path, chunksize=self.batch_size),
+                         desc='Processing reviews'):
+            for _, row in chunk.iterrows():
+                text = row['review']
+                lang = self.detect_language(text)
+                aspects = self.identify_aspects(text, lang)
+
+                if aspect in aspects:
+                    total_reviews += 1
+                    # Get sentiment prediction
+                    encoded = self.tokenizer(
+                        text,
+                        padding=True,
+                        truncation=True,
+                        max_length=128,
+                        return_tensors='pt'
+                    )
+
+                    with torch.no_grad():
+                        input_ids = encoded['input_ids'].to(self.device)
+                        attention_mask = encoded['attention_mask'].to(self.device)
+                        outputs = self.model(input_ids, attention_mask=attention_mask)
+                        prediction = torch.argmax(outputs.logits, dim=1).item()
+                        sentiment = ['negative', 'positive', 'neutral'][prediction]
+                        aspect_stats[sentiment] += 1
+
+                    del input_ids, attention_mask, outputs
+                    torch.cuda.empty_cache() if self.device.type == 'cuda' else None
+
+            gc.collect()
+
+        # Calculate percentages
+        stats = {
+            'total': total_reviews,
+            'positive': {
+                'count': aspect_stats['positive'],
+                'percentage': (aspect_stats['positive'] / total_reviews * 100) if total_reviews > 0 else 0
+            },
+            'neutral': {
+                'count': aspect_stats['neutral'],
+                'percentage': (aspect_stats['neutral'] / total_reviews * 100) if total_reviews > 0 else 0
+            },
+            'negative': {
+                'count': aspect_stats['negative'],
+                'percentage': (aspect_stats['negative'] / total_reviews * 100) if total_reviews > 0 else 0
+            }
+        }
+
+        return stats
+
+    def collect_all_aspect_statistics(self, dataset_path: str) -> Dict[str, Dict]:
+        """Collect statistics for all aspects from the dataset"""
+        print("\nAnalyzing all aspects...")
+
+        aspects = ['hygiene', 'waiting_time', 'customer_service', 'vet_care', 'pricing']
+        all_stats = {}
+
+        # Initialize statistics for each aspect
+        aspect_reviews = {aspect: {'total': 0, 'positive': 0, 'negative': 0, 'neutral': 0}
+                         for aspect in aspects}
+
+        # Process in batches
+        for chunk in tqdm(pd.read_csv(dataset_path, chunksize=self.batch_size),
+                         desc='Processing reviews'):
+            for _, row in chunk.iterrows():
+                text = row['review']
+                lang = self.detect_language(text)
+                review_aspects = self.identify_aspects(text, lang)
+
+                # Get sentiment prediction once for this review
+                encoded = self.tokenizer(
+                    text,
+                    padding=True,
+                    truncation=True,
+                    max_length=128,
+                    return_tensors='pt'
+                )
+
+                with torch.no_grad():
+                    input_ids = encoded['input_ids'].to(self.device)
+                    attention_mask = encoded['attention_mask'].to(self.device)
+                    outputs = self.model(input_ids, attention_mask=attention_mask)
+                    prediction = torch.argmax(outputs.logits, dim=1).item()
+                    sentiment = ['negative', 'positive', 'neutral'][prediction]
+
+                    # Update statistics for each aspect found in this review
+                    for aspect in review_aspects:
+                        if aspect in aspects:  # Skip 'general' aspect
+                            aspect_reviews[aspect]['total'] += 1
+                            aspect_reviews[aspect][sentiment] += 1
+
+                    del input_ids, attention_mask, outputs
+                    torch.cuda.empty_cache() if self.device.type == 'cuda' else None
+
+            gc.collect()
+
+        # Calculate percentages and format statistics for each aspect
+        for aspect in aspects:
+            total = aspect_reviews[aspect]['total']
+            all_stats[aspect] = {
+                'total': total,
+                'positive': {
+                    'count': aspect_reviews[aspect]['positive'],
+                    'percentage': (aspect_reviews[aspect]['positive'] / total * 100) if total > 0 else 0
+                },
+                'neutral': {
+                    'count': aspect_reviews[aspect]['neutral'],
+                    'percentage': (aspect_reviews[aspect]['neutral'] / total * 100) if total > 0 else 0
+                },
+                'negative': {
+                    'count': aspect_reviews[aspect]['negative'],
+                    'percentage': (aspect_reviews[aspect]['negative'] / total * 100) if total > 0 else 0
+                }
+            }
+
+        return all_stats
+
+    def display_aspect_statistics(self, stats: Dict):
+        """Display statistics for an aspect in a formatted way"""
+        print(f"\nPositive Reviews: {stats['positive']['count']} ({stats['positive']['percentage']:.1f}%)")
+        print(f"Neutral Reviews: {stats['neutral']['count']} ({stats['neutral']['percentage']:.1f}%)")
+        print(f"Negative Reviews: {stats['negative']['count']} ({stats['negative']['percentage']:.1f}%)")
+        print(f"Total Reviews: {stats['total']}")
+
+    def display_all_aspect_statistics(self, all_stats: Dict[str, Dict]):
+        """Display statistics for all aspects in a formatted way"""
+        for aspect, stats in all_stats.items():
+            print(f"\n{aspect.capitalize()}:")
+            print("-" * 40)
+            self.display_aspect_statistics(stats)
 
     def _print_metrics(self, metrics):
         """Helper to print evaluation metrics"""
@@ -411,9 +550,10 @@ def main():
         print("2. Load model")
         print("3. Test model")
         print("4. View accuracy metrics")
-        print("5. Exit")
+        print("5. View Statistics")
+        print("6. Exit")
 
-        choice = input("\nEnter your choice (1-5): ")
+        choice = input("\nEnter your choice (1-6): ")
 
         if choice == '2':
             print("\nAvailable trained models:")
@@ -466,11 +606,44 @@ def main():
                 print(f"Error during evaluation: {str(e)}")
 
         elif choice == '5':
+            if analyzer.is_base_model:
+                print("\nWarning: Using untrained base model. Results may not be meaningful.")
+                proceed = input("Do you want to proceed anyway? (y/n): ")
+                if proceed.lower() != 'y':
+                    continue
+
+            dataset_path = input("Enter dataset path for analysis: ")
+
+            print("\nAspects:")
+            aspects = ['hygiene', 'waiting_time', 'customer_service', 'vet_care', 'pricing']
+            print("0. All aspects")
+            for i, aspect in enumerate(aspects, 1):
+                print(f"{i}. {aspect}")
+
+            try:
+                aspect_choice = int(input("\nChoose aspect (0-5): "))
+                if aspect_choice == 0:
+                    print("\nAll Aspects Statistics:")
+                    all_stats = analyzer.collect_all_aspect_statistics(dataset_path)
+                    analyzer.display_all_aspect_statistics(all_stats)
+                elif 1 <= aspect_choice <= len(aspects):
+                    chosen_aspect = aspects[aspect_choice-1]
+                    print(f"\n{chosen_aspect.capitalize()}:")
+                    stats = analyzer.collect_aspect_statistics(dataset_path, chosen_aspect)
+                    analyzer.display_aspect_statistics(stats)
+                else:
+                    print("Invalid aspect choice!")
+            except ValueError:
+                print("Please enter a valid number")
+            except Exception as e:
+                print(f"Error during statistics collection: {str(e)}")
+
+        elif choice == '6':
             print("Goodbye!")
             break
 
         else:
-            print("Invalid choice! Please enter a number between 1 and 5.")
+            print("Invalid choice! Please enter a number between 1 and 6.")
 
 if __name__ == "__main__":
     main()
