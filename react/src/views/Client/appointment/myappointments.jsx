@@ -138,16 +138,6 @@ export default function MyAppointments() {
                         <div className='detailHeader column semi-bold'>Reason</div>
                     </>
                 );
-            case "Rejected":
-                return (
-                    <>
-                        <div className='detailHeader column semi-bold'>Pet Name</div>
-                        <div className='detailHeader column semi-bold'>Appointment Type</div>
-                        <div className='detailHeader column semi-bold'>Requested Schedule</div>
-                        <div className='detailHeader column semi-bold'>Date Rejected</div>
-                        <div className='detailHeader column semi-bold'>Reason</div>
-                    </>
-                );
             default:
                 return null;
         }
@@ -183,12 +173,6 @@ export default function MyAppointments() {
                             <div onClick={() => setActiveTab("Cancelled")}>
                                 Cancelled
                                 <div className={`nav1-line${activeTab === "Cancelled" ? " active" : ""}`}></div>
-                            </div>
-                        </Link>
-                        <Link to={''} className="anybody semi-bold right-margin">
-                            <div onClick={() => setActiveTab("Rejected")}>
-                                Rejected
-                                <div className={`nav1-line${activeTab === "Rejected" ? " active" : ""}`}></div>
                             </div>
                         </Link>
                     </div>

@@ -59,38 +59,13 @@ export const ConfirmActionModal1 = ({ handlePost, recordId, onClose, handleFunct
                         </div>
                     </>
                 )
-            case 'handleAddPost':
+            case 'handleApprovePost':
                 return (
                     <>
                         {/* Desc */}
                         <div className="text-center mar-bottom-1 d-flex flex-direction-y ">
-                            <div className="text-m1 fw-bold semi-medium-f w-100 anybody">Schedule an Appointment?</div><hr></hr>
-                            <div className="text-m2 w-100 m-auto">An appointment will be requested with the clinic. Proceed?</div>
-                         </div>
-
-                        {/* Btns */}
-                        <div className="d-flex flex-direction-x flex-row-reverse gap3">
-
-                            <div
-                            onClick={() => {handlePost(); onClose();}}
-                            className="primary-btn-blue1 w-100 text-center"
-                            >
-                                Yes
-                            </div>
-
-                            <div className="sub-button w-100 text-center d-flex gap3 align-items-center justify-content-center" onClick={onClose}>
-                                Cancel
-                            </div>
-                        </div>
-                    </>
-                )
-            case 'handleAddPost':
-                return (
-                    <>
-                        {/* Desc */}
-                        <div className="text-center mar-bottom-1 d-flex flex-direction-y ">
-                            <div className="text-m1 fw-bold semi-medium-f w-100 anybody">Schedule an Appointment?</div><hr></hr>
-                            <div className="text-m2 w-100 m-auto">An appointment will be requested with the clinic. Proceed?</div>
+                            <div className="text-m1 fw-bold semi-medium-f w-100 anybody">Approve appointment?</div><hr></hr>
+                            <div className="text-m2 w-100 m-auto">This appointment will be approved. Proceed?</div>
                          </div>
 
                         {/* Btns */}

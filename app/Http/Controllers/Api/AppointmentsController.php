@@ -78,6 +78,35 @@ class AppointmentsController extends Controller
         ], 500);
     }
 
+    public function approveAppointment(Request $request){
+        $appointment = appointments::find($request->appointmentId);
+        if (!$appointment) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Appointment not found.'
+            ], 404);
+        }
+
+        $appointment->status = 'Approved';
+
+        // Update the status to 'Cancelled'
+        $appointment->status = 'Approved';
+
+        // Set the current timestamp to 'cancelled_at'
+        $appointment->approved_at = now();
+
+        if ($appointment->save()) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Appointment approved successfully.'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 500,
+            'message' => 'Failed to approve appointment. Please try again later.'
+        ], 500);
+    }
 
     // GET
     public function getAllAppointmentWhereClient($clientId)
@@ -90,6 +119,6 @@ class AppointmentsController extends Controller
     }
     public function getAllAppointments()
     {
-        return response()->json(appointments::all());
+        return response()->json(appointments::with('pet')->get());
     }
 }

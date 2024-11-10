@@ -1,7 +1,7 @@
 import React from 'react';
 import "../assets/css/appointmentRecord.css";
 
-export default function AppointmentRecord({
+export default function AppointmentRecordAdmin({
     handleAppointmentRecordClick, record, handleCancel
 }) {
     const serviceOptions = [

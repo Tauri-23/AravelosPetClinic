@@ -1,7 +1,7 @@
 import React from 'react'
 import * as Icon from 'react-bootstrap-icons'
-export default function AppointmentRecordModal1({
-    record, onClose, handleCancel
+export default function AppointmentRecordModalAdmin1({
+    record, onClose, handleCancel, handleApprove
 }) {
     const serviceOptions = [
         { id: "checkup", label: "Check-up" },
@@ -31,8 +31,11 @@ export default function AppointmentRecordModal1({
                             </div>
                         </div>
                         <div className='btn-row'>
-                            <button className='primary-btn-blue1 w-100' onClick={(e) => handleCancel(record.id,record.reason)}>
-                                Cancel Appointment
+                            <button className='sub-button right-margin-s w-100' onClick={(e) => handleCancel(record.id,record.reason)}>
+                                Cancel
+                            </button>
+                            <button className='primary-btn-blue1 left-margin-s w-100' onClick={(e) => handleApprove(record.id)}>
+                                Approve
                             </button>
                         </div>
                     </div>

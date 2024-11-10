@@ -3,9 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import "../../../assets/css/myappointments.css";
 import { notify } from "../../../assets/js/utils.jsx";
 import { useStateContext } from '../../../contexts/ContextProvider';
-import { fetchAllClientAppointments } from '../../../services/AppointmentServices.jsx';
+import { fetchAllAppointments } from '../../../services/AppointmentServices.jsx';
 import axiosClient from '../../../axios-client.js';
-import AppointmentRecord from '../../../components/appointmentRecord.jsx';
+import AppointmentRecordAdmin from '../../../components/appointmentRecordAdmin.jsx';
 import { useModal } from '../../../contexts/ModalContext.jsx';
 import { isEmptyOrSpaces } from '../../../assets/js/utils.jsx';
 
@@ -29,7 +29,7 @@ export default function Appointments() {
     useEffect(() => {
         const getAllAppointments = async () => {
             try {
-                const data = await fetchAllClientAppointments(user.id); // Pass clientId here
+                const data = await fetchAllAppointments();
                 setAppointments(data);
                 console.log(data); // Log the received appointments
             } catch (error) {
@@ -52,9 +52,38 @@ export default function Appointments() {
 
 
     const handleAppointmentRecordClick = (record)=> {
-        showModal('AppointmentRecordModal1', {record, handleCancel})
+        showModal('AppointmentRecordModalAdmin1', {record, handleCancel, handleApprove})
     }
+    const handleApprovePost =(recordId) => {
 
+        const formData=new FormData();
+        formData.append('appointmentId', recordId);
+
+        const approvedRecord = appointments.find(record => record.id === recordId);
+        console.log(recordId);
+        axiosClient.post(`/approve-appointment`, formData)
+            .then(({ data }) => {
+                if (data.status === 200) {
+                    notify('success', data.message, 'top-center', 3000);
+                    // Remove the canceled appointment from the current list
+                    setAppointments(prev => prev.filter(record => record.id !== recordId));
+
+                    // Add the canceled appointment back with status updated to 'Cancelled'
+                    setAppointments(prev => [...prev, { ...approvedRecord, status: 'Approved', cancelled_at: new Date().toISOString(), reason: recordReason || 'No reason provided.' }]);
+
+                    // Optionally switch to the 'Cancelled' tab to reflect the change
+                    setActiveTab('Approved');
+
+
+                    //setAppointments(prev => prev.filter(record => record.id !== recordId)); // Remove the canceled appointment from state
+                } else {
+                    notify('error', data.message + record.id, 'top-center', 3000);
+                }
+            }).catch(error => {
+                console.error(error);
+                notify('error', data.message, 'top-center', 3000);
+            });
+    }
 
     const handleCancelPost =(recordId, recordReason) => {
 
@@ -98,6 +127,17 @@ export default function Appointments() {
         showModal('ConfirmActionModal1',  {handlePost:handleCancelPost, recordId, handleFunction});
     }
 
+    const handleApprove = (recordId) =>{
+
+        console.log(recordId);
+        const handleFunction = "handleApprovePost";
+        if (isEmptyOrSpaces(String(recordId))) {
+            console.error("No appointment selected for approval.");
+            return;
+        }
+        showModal('ConfirmActionModal1',  {handlePost:handleApprovePost, recordId, handleFunction});
+    }
+
 
 
 
@@ -138,16 +178,6 @@ export default function Appointments() {
                         <div className='detailHeader column semi-bold'>Reason</div>
                     </>
                 );
-            case "Rejected":
-                return (
-                    <>
-                        <div className='detailHeader column semi-bold'>Pet Name</div>
-                        <div className='detailHeader column semi-bold'>Appointment Type</div>
-                        <div className='detailHeader column semi-bold'>Requested Schedule</div>
-                        <div className='detailHeader column semi-bold'>Date Rejected</div>
-                        <div className='detailHeader column semi-bold'>Reason</div>
-                    </>
-                );
             default:
                 return null;
         }
@@ -185,12 +215,6 @@ export default function Appointments() {
                                 <div className={`nav1-line${activeTab === "Cancelled" ? " active" : ""}`}></div>
                             </div>
                         </Link>
-                        <Link to={''} className="anybody semi-bold right-margin">
-                            <div onClick={() => setActiveTab("Rejected")}>
-                                Rejected
-                                <div className={`nav1-line${activeTab === "Rejected" ? " active" : ""}`}></div>
-                            </div>
-                        </Link>
                     </div>
                     {/* <div className="anybody medium-f bold">No Appointments</div>
                     <div className="anybody semi-bold">You haven't made any appointments yet.</div>
@@ -204,10 +228,11 @@ export default function Appointments() {
                     {appointments.length > 0 &&
                         appointments.map(record =>
                             record.status === activeTab && (
-                                <AppointmentRecord e key={record.id}
+                                <AppointmentRecordAdmin e key={record.id}
                                 handleAppointmentRecordClick={handleAppointmentRecordClick}
                                 record={record}
-                                handleCancel={(e) => handleCancel(record.id, e)}/>
+                                handleCancel={(e) => handleCancel(record.id, e)}
+                                handleApprove={(e) => handleApprove(record.id, e)}/>
                             )
                         )
                     }

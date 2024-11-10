@@ -2,6 +2,7 @@ import { AddAppointmentConfirmationModal1 } from "../components/Modals/addAppoin
 import AddCategoryModal1 from "../components/Modals/addCategoryModal1";
 import AddPetModal1 from "../components/Modals/addPetModal1";
 import AppointmentRecordModal1 from "../components/Modals/appointmentRecordModal1";
+import AppointmentRecordModalAdmin1 from "../components/Modals/appointmentRecordModalAdmin1";
 import { ConfirmActionModal1 } from "../components/Modals/confirmActionModal1";
 import DeleteCategoryModal1 from "../components/Modals/deleteCategoryModal1";
 import EditCategoryConfirmationModal1 from "../components/Modals/editCategoryConfirmationModal1";
@@ -30,6 +31,9 @@ const ModalManager = () => {
             case 'AppointmentRecordModal1':
                     return <AppointmentRecordModal1 {...modalState.props} onClose={hideModal}/>;
 
+            case 'AppointmentRecordModalAdmin1':
+                    return <AppointmentRecordModalAdmin1 {...modalState.props} onClose={hideModal}/>;
+
             case 'AddCategoryModal1':
                 return <AddCategoryModal1 {...modalState.props} onClose={hideModal}/>;
 
@@ -51,12 +55,12 @@ const ModalManager = () => {
             case 'ConfirmActionModal1':
             return <ConfirmActionModal1 {...modalState.props} onClose={hideModal} />;
 
-            case 'EditUserModal1': 
+            case 'EditUserModal1':
             return <EditUserModal1 {...modalState.props} onClose={hideModal} />;
 
             case 'EditItemModal1':
                 return <EditItemModal1 {...modalState.props} onClose={hideModal}/>;
-            
+
             case 'EditItemConfirmationModal1':
                     return <EditItemConfirmationModal1 {...modalState.props} onClose={hideModal}/>;
 
@@ -68,7 +72,7 @@ const ModalManager = () => {
 
             case 'FeedbackModal1':
                     return <AddAdminModal1 {...modalState.props} onClose={hideModal}/>;
-            
+
             /*
             |   DEFAULT
             */
