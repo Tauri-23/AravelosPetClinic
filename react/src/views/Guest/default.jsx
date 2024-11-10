@@ -3,6 +3,9 @@ import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import { useStateContext } from "../../contexts/ContextProvider";
 import axiosClient from "../../axios-client";
 import { ToastContainer } from "react-toastify";
+import { ModalProvider } from "../../contexts/ModalContext";
+import ModalManager from "../../managers/modalManager";
+
 
 
 export default function GuestDefault() {
@@ -36,25 +39,27 @@ export default function GuestDefault() {
             return <Navigate to="/AdminIndex" />;
         }
     }
-    
-    return(
-        <>
-        <div className="nav nav1">
-        <div className="nav1-logo-div">
-        <img src="/assets/media/logos/paw.png" className="nav1-logo" alt="logo"/>
-        </div>
-        <div className="nav1-links">
-             <Link to={'/'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/home.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Home</p><div className={`nav1-line${url === "/" ? " active" : ""}`} ></div></div></Link>
-             <Link to={'/GuestContactUs'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/user.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Contact Us</p><div className={`nav1-line${url === "/GuestContactUs" ? " active" : ""}`} ></div></div></Link>
-        </div>
 
-          <div className="nav1-sign">
-            <Link to={'/Sign'} className="nav1-link">Sign In</Link>
-        </div>
-        </div>
-        <Outlet/>
-        <ToastContainer/>
-        </>
+    return(
+
+        <ModalProvider>
+                <ModalManager/>
+            <div className="nav nav1">
+            <div className="nav1-logo-div">
+            <img src="/assets/media/logos/paw.png" className="nav1-logo" alt="logo"/>
+            </div>
+            <div className="nav1-links">
+                <Link to={'/'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/home.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Home</p><div className={`nav1-line${url === "/" ? " active" : ""}`} ></div></div></Link>
+                <Link to={'/GuestContactUs'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/user.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Contact Us</p><div className={`nav1-line${url === "/GuestContactUs" ? " active" : ""}`} ></div></div></Link>
+            </div>
+
+            <div className="nav1-sign">
+                <Link to={'/Sign'} className="nav1-link">Sign In</Link>
+            </div>
+            </div>
+            <Outlet/>
+            <ToastContainer/>
+        </ModalProvider>
 
     );
 }

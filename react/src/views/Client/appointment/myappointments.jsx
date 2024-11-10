@@ -152,25 +152,25 @@ export default function MyAppointments() {
                 <div className="text-center">
                     <div className='myappt-navigation d-flex '>
                         <Link to={''} className="anybody semi-bold right-margin">
-                            <div onClick={() => setActiveTab("Pending")}>
+                            <div className="a-tab" onClick={() => setActiveTab("Pending")}>
                                 Pending
                                 <div className={`nav1-line${activeTab === "Pending" ? " active" : ""}`}></div>
                             </div>
                         </Link>
                         <Link to={''} className="anybody semi-bold right-margin">
-                            <div onClick={() => setActiveTab("Approved")}>
+                            <div className="a-tab" onClick={() => setActiveTab("Approved")}>
                             Approved
                                 <div className={`nav1-line${activeTab === "Approved" ? " active" : ""}`}></div>
                             </div>
                         </Link>
                         <Link to={''} className="anybody semi-bold right-margin">
-                            <div onClick={() => setActiveTab("Completed")}>
+                            <div className="a-tab" onClick={() => setActiveTab("Completed")}>
                                 Completed
                                 <div className={`nav1-line${activeTab === "Completed" ? " active" : ""}`}></div>
                             </div>
                         </Link>
                         <Link to={''} className="anybody semi-bold right-margin">
-                            <div onClick={() => setActiveTab("Cancelled")}>
+                            <div className="a-tab" onClick={() => setActiveTab("Cancelled")}>
                                 Cancelled
                                 <div className={`nav1-line${activeTab === "Cancelled" ? " active" : ""}`}></div>
                             </div>

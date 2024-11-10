@@ -57,11 +57,16 @@
     visibility: hidden;
     background-color: #1D3675;
     height: .2vw;
-    width: 40%;
+    width: 10%;
     border-radius: 1vw;
     margin: 0.1vw auto;
-    transition: width 800ms ease;
+    transition: width 0.5s;
+  -webkit-transition: width 0.5s;
 }
+.a-tab:hover .nav1-line {
+    width: 40%;visibility: visible; /* Ensure visibility changes immediately on hover */
+    transition: width 0.4s ease, visibility 0s linear 0s;
+  }
 .nv-line{
     height: .5vw;
     width: auto;
@@ -82,6 +87,7 @@
 }
 .active{
     visibility: visible!important;
+    width: 40%;
 }
 .wx{
     display: flex;

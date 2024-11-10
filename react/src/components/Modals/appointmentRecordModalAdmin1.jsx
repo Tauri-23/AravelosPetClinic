@@ -19,23 +19,26 @@ export default function AppointmentRecordModalAdmin1({
                         <div className='schedule bold inter d-flex'>
                             Schedule:
                             <div className='left-margin-s normal'>
-                                {new Date(record.date_time).toLocaleString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    timeZone: 'Asia/Manila'
-                                })}
+                            {new Date(record.date_time).toLocaleString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                ...(new Date(record.date_time).getHours() === 0 && new Date(record.date_time).getMinutes() === 0
+                                    ? {}
+                                    : {
+                                        hour: 'numeric',
+                                        minute: 'numeric',
+                                        hour12: true,
+                                    }),
+                            })}
                             </div>
                         </div>
                         <div className='btn-row'>
                             <button className='sub-button right-margin-s w-100' onClick={(e) => handleCancel(record.id,record.reason)}>
-                                Cancel
+                            Cancel Appointment
                             </button>
                             <button className='primary-btn-blue1 left-margin-s w-100' onClick={(e) => handleApprove(record.id)}>
-                                Approve
+                                Approve Appointment
                             </button>
                         </div>
                     </div>
@@ -46,20 +49,26 @@ export default function AppointmentRecordModalAdmin1({
                         <div className='schedule bold inter d-flex'>
                             Schedule:
                             <div className='left-margin-s normal'>
-                                {new Date(record.date_time).toLocaleString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    timeZone: 'Asia/Manila'
-                                })}
+                            {new Date(record.date_time).toLocaleString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                ...(new Date(record.date_time).getHours() === 0 && new Date(record.date_time).getMinutes() === 0
+                                    ? {}
+                                    : {
+                                        hour: 'numeric',
+                                        minute: 'numeric',
+                                        hour12: true,
+                                    }),
+                            })}
                             </div>
                         </div>
                         <div className='btn-row'>
-                            <button className='primary-btn-blue1 w-100' onClick={(e) => handleCancel(record.id, record.reason)}>
+                            <button className='sub-button right-margin-s w-100' onClick={(e) => handleCancel(record.id,record.reason)}>
                                 Cancel Appointment
+                            </button>
+                            <button className='primary-btn-blue1 left-margin-s w-100' onClick={(e) => handleMComplete(record.id)}>
+                                Mark as Completed
                             </button>
                         </div>
                     </div>
@@ -70,15 +79,18 @@ export default function AppointmentRecordModalAdmin1({
                         <div className='schedule bold inter d-flex'>
                             Schedule:
                             <div className='left-margin-s normal'>
-                                {new Date(record.date_time).toLocaleString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    timeZone: 'Asia/Manila'
-                                })}
+                            {new Date(record.date_time).toLocaleString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                ...(new Date(record.date_time).getHours() === 0 && new Date(record.date_time).getMinutes() === 0
+                                    ? {}
+                                    : {
+                                        hour: 'numeric',
+                                        minute: 'numeric',
+                                        hour12: true,
+                                    }),
+                            })}
                             </div>
                         </div>
                         {/* <div className='btn-row'>
@@ -94,65 +106,24 @@ export default function AppointmentRecordModalAdmin1({
                         <div className='schedule bold inter d-flex'>
                             Schedule:
                             <div className='left-margin-s normal'>
-                                {new Date(record.date_time).toLocaleString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    timeZone: 'Asia/Manila'
-                                })}
+                            {new Date(record.date_time).toLocaleString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                ...(new Date(record.date_time).getHours() === 0 && new Date(record.date_time).getMinutes() === 0
+                                    ? {}
+                                    : {
+                                        hour: 'numeric',
+                                        minute: 'numeric',
+                                        hour12: true,
+                                    }),
+                            })}
                             </div>
                         </div>
                         <div className='date-cancelled bold inter d-flex'>
                             Date Cancelled:
                             <div className='left-margin-s normal'>
                                 {new Date(record.cancelled_at).toLocaleString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    timeZone: 'Asia/Manila'
-                                })}
-                            </div>
-                        </div>
-                        <div className='reason bold inter'>
-                            Reason:
-                            <div className='normal reasonCont'>
-                                {record.reason}
-                            </div>
-                        </div>
-                        {/* <div className='btn-row'>
-                            <button className='primary-btn-blue1' onClick={onClose}>
-                                Cancel Appointment
-                            </button>
-                        </div> */}
-                    </div>
-                )
-            case 'Rejected':
-                return (
-                    <div className='flex-grow'>
-                        <div className='schedule bold inter d-flex'>
-                            Schedule:
-                            <div className='left-margin-s normal'>
-                                {new Date(record.date_time).toLocaleString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    hour12: true,
-                                    timeZone: 'Asia/Manila'
-                                })}
-                            </div>
-                        </div>
-                        <div className='date-rejected bold inter d-flex'>
-                            Date Rejected:
-                            <div className='left-margin-s normal'>
-                                {new Date(record.rejected_at).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
                                     day: 'numeric',

@@ -72,7 +72,7 @@ export const ConfirmActionModal1 = ({ handlePost, recordId, onClose, handleFunct
                         <div className="d-flex flex-direction-x flex-row-reverse gap3">
 
                             <div
-                            onClick={() => {handlePost(); onClose();}}
+                            onClick={() => {handlePost(recordId); onClose();}}
                             className="primary-btn-blue1 w-100 text-center"
                             >
                                 Yes

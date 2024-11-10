@@ -34,10 +34,10 @@
     position: relative;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Adds shadow for focus */
     z-index: 1001; /* Ensures modal content is above background */
-    width: 50%!important;
+    width: 60%!important;
 }
 .petPictureCont{
-    width:40%;
+    width:35%;
     border-radius: 50%;
 }
 .petPicture{

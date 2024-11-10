@@ -65,17 +65,13 @@ export default function Appointments() {
             .then(({ data }) => {
                 if (data.status === 200) {
                     notify('success', data.message, 'top-center', 3000);
-                    // Remove the canceled appointment from the current list
                     setAppointments(prev => prev.filter(record => record.id !== recordId));
 
-                    // Add the canceled appointment back with status updated to 'Cancelled'
-                    setAppointments(prev => [...prev, { ...approvedRecord, status: 'Approved', cancelled_at: new Date().toISOString(), reason: recordReason || 'No reason provided.' }]);
+                    setAppointments(prev => [...prev, { ...approvedRecord, status: 'Approved', approved_at: new Date().toISOString()}]);
 
-                    // Optionally switch to the 'Cancelled' tab to reflect the change
                     setActiveTab('Approved');
 
 
-                    //setAppointments(prev => prev.filter(record => record.id !== recordId)); // Remove the canceled appointment from state
                 } else {
                     notify('error', data.message + record.id, 'top-center', 3000);
                 }
@@ -192,25 +188,25 @@ export default function Appointments() {
                 <div className="text-center">
                     <div className='myappt-navigation d-flex '>
                         <Link to={''} className="anybody semi-bold right-margin">
-                            <div onClick={() => setActiveTab("Pending")}>
+                            <div className="a-tab" onClick={() => setActiveTab("Pending")}>
                                 Pending
                                 <div className={`nav1-line${activeTab === "Pending" ? " active" : ""}`}></div>
                             </div>
                         </Link>
                         <Link to={''} className="anybody semi-bold right-margin">
-                            <div onClick={() => setActiveTab("Approved")}>
+                            <div className="a-tab" onClick={() => setActiveTab("Approved")}>
                             Approved
                                 <div className={`nav1-line${activeTab === "Approved" ? " active" : ""}`}></div>
                             </div>
                         </Link>
                         <Link to={''} className="anybody semi-bold right-margin">
-                            <div onClick={() => setActiveTab("Completed")}>
+                            <div className="a-tab" onClick={() => setActiveTab("Completed")}>
                                 Completed
                                 <div className={`nav1-line${activeTab === "Completed" ? " active" : ""}`}></div>
                             </div>
                         </Link>
                         <Link to={''} className="anybody semi-bold right-margin">
-                            <div onClick={() => setActiveTab("Cancelled")}>
+                            <div className="a-tab" onClick={() => setActiveTab("Cancelled")}>
                                 Cancelled
                                 <div className={`nav1-line${activeTab === "Cancelled" ? " active" : ""}`}></div>
                             </div>

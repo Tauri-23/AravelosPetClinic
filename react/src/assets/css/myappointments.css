@@ -20,3 +20,6 @@ a{
 .headers{
     gap:20px;
 }
+.smaller-fs{
+    font-size: 1rem;
+}
