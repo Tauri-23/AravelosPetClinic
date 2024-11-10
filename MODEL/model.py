@@ -9,7 +9,9 @@ import gc
 import os
 from tqdm import tqdm
 from datetime import datetime
-
+from collections import defaultdict, Counter
+import re
+import string
 
 class VetFeedbackAnalyzer:
     def __init__(self, batch_size=16):
@@ -69,6 +71,34 @@ class VetFeedbackAnalyzer:
             'epoch': None,
             'timestamp': None
         }
+        self.stopwords = {
+            'en': {'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'has', 'he',
+                  'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the', 'to', 'was', 'were', 'will',
+                  'with', 'the', 'this', 'but', 'they', 'have', 'had', 'what', 'when', 'where',
+                  'who', 'which', 'why', 'how'},
+            'tl': {'ang', 'mga', 'sa', 'na', 'ng', 'at', 'ay', 'ko', 'mo', 'niya', 'ito', 'po',
+                   'para', 'siya', 'nila', 'namin', 'natin', 'kami', 'tayo', 'kayo', 'sila'}
+        }
+    def preprocess_text(self, text: str, lang: str) -> str:
+        """Preprocess text by removing punctuation, numbers, and stopwords"""
+        # Convert to lowercase
+        text = text.lower()
+        # Remove punctuation and numbers
+        text = re.sub(f'[{string.punctuation}{string.digits}]', ' ', text)
+        # Split into words
+        words = text.split()
+        # Remove stopwords
+        words = [word for word in words if word not in self.stopwords[lang]]
+        return ' '.join(words)
+
+    def get_word_frequency(self, text: str, lang: str) -> int:
+        """Calculate the frequency of repeated meaningful words"""
+        processed_text = self.preprocess_text(text, lang)
+        words = processed_text.split()
+        word_counts = Counter(words)
+        # Sum the counts of words that appear more than once
+        return sum(count for count in word_counts.values() if count > 1)
+
     def _parse_model_path(self, model_path: str) -> dict:
         """Parse both old and new format model paths"""
         info = {}
@@ -294,12 +324,15 @@ class VetFeedbackAnalyzer:
         torch.cuda.empty_cache() if self.device.type == 'cuda' else None
 
         return predictions
+
+
     def collect_aspect_statistics(self, dataset_path: str, aspect: str) -> Dict:
         """Collect statistics for a specific aspect from the dataset"""
         print(f"\nAnalyzing {aspect} reviews...")
 
         total_reviews = 0
         aspect_stats = {'positive': 0, 'negative': 0, 'neutral': 0}
+        top_comments = {'positive': [], 'negative': [], 'neutral': []}
 
         # Process in batches
         for chunk in tqdm(pd.read_csv(dataset_path, chunksize=self.batch_size),
@@ -328,25 +361,38 @@ class VetFeedbackAnalyzer:
                         sentiment = ['negative', 'positive', 'neutral'][prediction]
                         aspect_stats[sentiment] += 1
 
+                        # Add to top comments with word frequency
+                        word_freq = self.get_word_frequency(text, lang)
+                        top_comments[sentiment].append((text, word_freq))
+
                     del input_ids, attention_mask, outputs
                     torch.cuda.empty_cache() if self.device.type == 'cuda' else None
 
             gc.collect()
+
+        # Sort and get top 5 comments for each sentiment
+        for sentiment in top_comments:
+            top_comments[sentiment] = sorted(top_comments[sentiment],
+                                          key=lambda x: x[1],
+                                          reverse=True)[:5]
 
         # Calculate percentages
         stats = {
             'total': total_reviews,
             'positive': {
                 'count': aspect_stats['positive'],
-                'percentage': (aspect_stats['positive'] / total_reviews * 100) if total_reviews > 0 else 0
+                'percentage': (aspect_stats['positive'] / total_reviews * 100) if total_reviews > 0 else 0,
+                'top_comments': top_comments['positive']
             },
             'neutral': {
                 'count': aspect_stats['neutral'],
-                'percentage': (aspect_stats['neutral'] / total_reviews * 100) if total_reviews > 0 else 0
+                'percentage': (aspect_stats['neutral'] / total_reviews * 100) if total_reviews > 0 else 0,
+                'top_comments': top_comments['neutral']
             },
             'negative': {
                 'count': aspect_stats['negative'],
-                'percentage': (aspect_stats['negative'] / total_reviews * 100) if total_reviews > 0 else 0
+                'percentage': (aspect_stats['negative'] / total_reviews * 100) if total_reviews > 0 else 0,
+                'top_comments': top_comments['negative']
             }
         }
 
@@ -360,8 +406,13 @@ class VetFeedbackAnalyzer:
         all_stats = {}
 
         # Initialize statistics for each aspect
-        aspect_reviews = {aspect: {'total': 0, 'positive': 0, 'negative': 0, 'neutral': 0}
-                         for aspect in aspects}
+        aspect_reviews = {aspect: {
+            'total': 0,
+            'positive': 0,
+            'negative': 0,
+            'neutral': 0,
+            'top_comments': {'positive': [], 'negative': [], 'neutral': []}
+        } for aspect in aspects}
 
         # Process in batches
         for chunk in tqdm(pd.read_csv(dataset_path, chunksize=self.batch_size),
@@ -387,11 +438,15 @@ class VetFeedbackAnalyzer:
                     prediction = torch.argmax(outputs.logits, dim=1).item()
                     sentiment = ['negative', 'positive', 'neutral'][prediction]
 
+                    # Get word frequency once
+                    word_freq = self.get_word_frequency(text, lang)
+
                     # Update statistics for each aspect found in this review
                     for aspect in review_aspects:
                         if aspect in aspects:  # Skip 'general' aspect
                             aspect_reviews[aspect]['total'] += 1
                             aspect_reviews[aspect][sentiment] += 1
+                            aspect_reviews[aspect]['top_comments'][sentiment].append((text, word_freq))
 
                     del input_ids, attention_mask, outputs
                     torch.cuda.empty_cache() if self.device.type == 'cuda' else None
@@ -400,20 +455,31 @@ class VetFeedbackAnalyzer:
 
         # Calculate percentages and format statistics for each aspect
         for aspect in aspects:
+            # Sort and get top 5 comments for each sentiment
+            top_comments = {
+                sentiment: sorted(aspect_reviews[aspect]['top_comments'][sentiment],
+                                key=lambda x: x[1],
+                                reverse=True)[:5]
+                for sentiment in ['positive', 'negative', 'neutral']
+            }
+
             total = aspect_reviews[aspect]['total']
             all_stats[aspect] = {
                 'total': total,
                 'positive': {
                     'count': aspect_reviews[aspect]['positive'],
-                    'percentage': (aspect_reviews[aspect]['positive'] / total * 100) if total > 0 else 0
+                    'percentage': (aspect_reviews[aspect]['positive'] / total * 100) if total > 0 else 0,
+                    'top_comments': top_comments['positive']
                 },
                 'neutral': {
                     'count': aspect_reviews[aspect]['neutral'],
-                    'percentage': (aspect_reviews[aspect]['neutral'] / total * 100) if total > 0 else 0
+                    'percentage': (aspect_reviews[aspect]['neutral'] / total * 100) if total > 0 else 0,
+                    'top_comments': top_comments['neutral']
                 },
                 'negative': {
                     'count': aspect_reviews[aspect]['negative'],
-                    'percentage': (aspect_reviews[aspect]['negative'] / total * 100) if total > 0 else 0
+                    'percentage': (aspect_reviews[aspect]['negative'] / total * 100) if total > 0 else 0,
+                    'top_comments': top_comments['negative']
                 }
             }
 
@@ -422,16 +488,29 @@ class VetFeedbackAnalyzer:
     def display_aspect_statistics(self, stats: Dict):
         """Display statistics for an aspect in a formatted way"""
         print(f"\nPositive Reviews: {stats['positive']['count']} ({stats['positive']['percentage']:.1f}%)")
-        print(f"Neutral Reviews: {stats['neutral']['count']} ({stats['neutral']['percentage']:.1f}%)")
-        print(f"Negative Reviews: {stats['negative']['count']} ({stats['negative']['percentage']:.1f}%)")
-        print(f"Total Reviews: {stats['total']}")
+        print("Top 5 Positive Comments:")
+        for comment, freq in stats['positive']['top_comments']:
+            print(f"- {comment}")
+
+        print(f"\nNeutral Reviews: {stats['neutral']['count']} ({stats['neutral']['percentage']:.1f}%)")
+        print("Top 5 Neutral Comments:")
+        for comment, freq in stats['neutral']['top_comments']:
+            print(f"- {comment}")
+
+        print(f"\nNegative Reviews: {stats['negative']['count']} ({stats['negative']['percentage']:.1f}%)")
+        print("Top 5 Negative Comments:")
+        for comment, freq in stats['negative']['top_comments']:
+            print(f"- {comment}")
+
+        print(f"\nTotal Reviews: {stats['total']}")
 
     def display_all_aspect_statistics(self, all_stats: Dict[str, Dict]):
         """Display statistics for all aspects in a formatted way"""
         for aspect, stats in all_stats.items():
             print(f"\n{aspect.capitalize()}:")
-            print("-" * 40)
+            print("=" * 80)
             self.display_aspect_statistics(stats)
+            print("=" * 80)
 
     def _print_metrics(self, metrics):
         """Helper to print evaluation metrics"""
