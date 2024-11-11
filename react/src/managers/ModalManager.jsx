@@ -78,7 +78,8 @@ const ModalManager = () => {
             case 'AddItemConfirmationModal1':
                         return <AddItemConfirmationModal1 {...modalState.props} onClose={hideModal}/>;
             
-
+            case 'AddCategoryConfirmationModal1':
+                        return <AddCategoryConfirmationModal1 {...modalState.props} onClose={hideModal}/>;
             /*
             |   DEFAULT
             */
