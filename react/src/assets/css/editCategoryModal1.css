@@ -84,7 +84,8 @@
 }
 
 .edit_savebtn {
-    background-color: #007bff; /* Button color */
+    font-family: Inter;
+    background-color: var(--blue1);
     color: white; /* Text color */
     padding: 3px 6px; /* Smaller padding for a compact size */
     border-radius: 5px; /* Rounded corners */

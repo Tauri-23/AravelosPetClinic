@@ -5,7 +5,7 @@ import "../../assets/css/editCategoryConfirmationModal1.css"; // Create a corres
 
 export default function EditCategoryConfirmationModal1({ onConfirm, onCancel }) {
   return (
-    
+    <div className="edit-confirmation-modal">
       <div className="modal-box">
         <div className="circle-btn1 semi-medium-f">
           <Icon.X className="pointer" onClick={onCancel} />
@@ -17,10 +17,10 @@ export default function EditCategoryConfirmationModal1({ onConfirm, onCancel }) 
           <p>Are you sure you want to save the changes to this category?</p>
         </div>
         <div className="edit-category confirm_save">
-          <button className="confirm-save-button" onClick={onConfirm}>Yes, Save Changes</button>
-          <button className="cancel-save-button" onClick={onCancel}>Cancel</button>
+          <button className="primary-btn-blue1" onClick={onConfirm}>Yes, Save Changes</button>
+          <button className="sub-button" onClick={onCancel}>Cancel</button>
         </div>
       </div>
-   
+    </div>
   );
 }

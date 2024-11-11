@@ -74,7 +74,7 @@ export default function EditItemModal1({ item, onClose, onCloseParent, handleSav
             {/* Save Changes Button */}
             <div className="savebutton">
               <button
-                className="editItemsave"
+                className="primary-btn-blue1"
                 onClick={handleSaveClick} // Show the confirmation modal
               >
                 Save Changes
