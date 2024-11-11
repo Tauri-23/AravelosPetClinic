@@ -20,8 +20,8 @@ export default function AddCategoryModal1({ handleAddCategoryPost, onClose }) {
 
   return (
     <div>
-      {/* Main Modal */}
-      <div className={`modal1`}>
+      {/* Main Modal, closes when confirmation modal is opened */}
+      <div className={`modal1 ${showConfirmation ? 'closed' : ''}`}>
         <div className="addcat modal-box3">
           <div className="circle-btn1 semi-medium-f">
             <Icon.X className="pointer" onClick={onClose} />

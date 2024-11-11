@@ -93,3 +93,7 @@
 .editItemsave:hover {
     background-color: #0056b3; /* Darker green on hover */
 }
+.edit-modal.closed {
+    display: none;
+  }
+  

@@ -29,7 +29,9 @@ export default function EditItemModal1({ item, onClose, onCloseParent, handleSav
   };
 
   return (
-      <div className="edit-modal">
+    <div>
+      {/* Main Edit Modal, closes when confirmation modal is opened */}
+      <div className={`edit-modal ${showConfirmation ? 'closed' : ''}`}>
         <div className="edit-modal-box">
           <div className="circle-btn1 semi-medium-f">
             <Icon.X className="pointer" onClick={onClose} />
@@ -82,6 +84,8 @@ export default function EditItemModal1({ item, onClose, onCloseParent, handleSav
             </div>
           </div>
         </div>
+      </div>
+
       {/* Confirmation Modal */}
       {showConfirmation && (
         <EditItemConfirmationModal1
@@ -89,7 +93,6 @@ export default function EditItemModal1({ item, onClose, onCloseParent, handleSav
           onCancel={handleCancelSave} // Close the confirmation modal on cancel
         />
       )}
-      </div>
-
+    </div>
   );
 }
