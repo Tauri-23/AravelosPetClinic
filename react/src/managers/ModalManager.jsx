@@ -16,7 +16,7 @@ import EditUserModal1 from "../components/Modals/editUserModal1";
 import AddAdminModal1 from "../components/Modals/addAdminModal1";
 import FeedbackModal1 from "../components/Modals/feedbackModal1";
 import AddItemConfirmationModal1 from "../components/Modals/addItemConfirmationModal1";
-
+import TransactionDetailsModal1 from '../components/Modals/transactionDetailsModal1.jsx';
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -80,6 +80,10 @@ const ModalManager = () => {
             
             case 'AddCategoryConfirmationModal1':
                         return <AddCategoryConfirmationModal1 {...modalState.props} onClose={hideModal}/>;
+            
+            case 'TransactionDetailsModal1':
+                    return <TransactionDetailsModal1 {...modalState.props} onClose={hideModal}/>;
+                
             /*
             |   DEFAULT
             */

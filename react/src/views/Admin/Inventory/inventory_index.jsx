@@ -6,6 +6,7 @@ import { notify } from '../../../assets/js/utils.jsx';
 import '../../../assets/css/InventoryTracking.css';
 import InventoryBox from '../../../components/inventory_box.jsx';
 import { useModal } from '../../../contexts/ModalContext.jsx';
+import TransactionDetailsModal1 from '../../../components/Modals/transactionDetailsModal1.jsx';
 
 export default function AdminInventoryIndex() {
   const {showModal} = useModal();
