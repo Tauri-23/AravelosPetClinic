@@ -50,15 +50,12 @@ export default function AdminInventoryIndex() {
     }
   }, [categories])
 
-
   /*
   | Debugging
   */
   useEffect(() => {
     console.log(inventoryItems);
   }, [inventoryItems])
-
-
 
   /**
    * Search Handlers
@@ -67,22 +64,14 @@ export default function AdminInventoryIndex() {
     setSearchQuery(e.target.value);
   };
 
-
-
   /**
    * Inventory Handlers
    */
   const handleInventoryBoxClick=(itemId, itemName, itemImage, itemQuantity, itemDescription) => {
-    // console.log(itemId);
-    // console.log(itemName);
-    // console.log(itemImage);
-    // console.log(itemQuantity);
-    // console.log(itemDescription);
     showModal('InventoryBoxModal1', {itemId, itemName, itemImage, itemQuantity, itemDescription, handleEditItemPost})
   }
 
   const handleEditItemPost = (itemId, itemName, itemQty, itemDesc) => {
-    console.log(`Editing item: ${itemId}, name: ${itemName}, qty: ${itemQty}, desc: ${itemDesc}`);
     const formData = new FormData();
     formData.append('id', itemId);
     formData.append('name', itemName);
@@ -97,8 +86,6 @@ export default function AdminInventoryIndex() {
       notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
     }).catch(error => console.error(error));
   };
-
-
 
   /**
    * Category Handlers
@@ -145,14 +132,14 @@ export default function AdminInventoryIndex() {
                 )
             );
             notify('success', data.message, 'top-center', 3000);
-            return true; // Return true on success
+            return true;
         } else {
             notify('error', data.message, 'top-center', 3000);
-            return false; // Return false on error
+            return false;
         }
     } catch (error) {
         console.error(error);
-        return false; // Return false if there's an error in the request
+        return false;
     }
   };
 
@@ -167,105 +154,144 @@ export default function AdminInventoryIndex() {
             prevCategories.filter(category => category.id !== categoryId)
           );
           notify('success', data.message, 'top-center', 3000);
-          return true; // Return true for success
+          return true;
         } else {
           notify('error', data.message, 'top-center', 3000);
-          return false; // Return false for failure
+          return false;
         }
       })
       .catch((error) => {
         console.error("Error deleting category:", error);
         notify('error', 'Failed to delete category. Please try again.', 'top-center', 3000);
-        return false; // Return false in case of an error
+        return false;
       });
   };
 
-
+  const [transactionHistory, setTransactionHistory] = useState([
+    { id: 1, itemName: 'NexGard', qtyUsed: 5, qtyAdded: 10, date: new Date() },
+    // Add more transactions here
+  ]);
 
   /**
    * Render
    */
   return (
     <div className="page">
-      <div className="inventory-tracking  gen-margin">
-        <h1 className='anybody' >Inventory Tracking</h1>
+      <div className="inventory-tracking gen-margin">
+        <h1 className='anybody'>Inventory Tracking</h1>
 
-        <div className="d-flex inv small-form">
+        <div className="d-flex">
+          {/* Wrap small-form and transaction-history in a flex container */}
+          <div className="d-flex inv small-form">
 
-          {/* Sidebar with Categories */}
-          <div className="sidebar">
-            {/* Header with icons */}
-            <div className="category-header anybody">
-              <h3>Categories</h3>
-            </div>
-            <div className="icons">
-                <img
-                  src="/assets/media/icons/add_btn.svg" // Add your add icon path here
-                  alt="Add"
-                  title="Add Category"
-                  onClick={handleAddCategory} // You can link the add functionality here
-                />
-                <img
-                  src="/assets/media/icons/edit_btn.svg" // Add your edit icon path here
-                  alt="Edit"
-                  title="Edit Categories"
-                  onClick={() => handleEditCategoryClick()} // Add any functionality if needed for editing categories
-                />
+            {/* Sidebar with Categories */}
+            <div className="sidebar">
+              {/* Header with icons */}
+              <div className="category-header anybody">
+                <h3>Categories</h3>
               </div>
+              <div className="icons">
+                  <img
+                    src="/assets/media/icons/add_btn.svg"
+                    alt="Add"
+                    title="Add Category"
+                    onClick={handleAddCategory}
+                  />
+                  <img
+                    src="/assets/media/icons/edit_btn.svg"
+                    alt="Edit"
+                    title="Edit Categories"
+                    onClick={() => handleEditCategoryClick()}
+                  />
+                </div>
 
-            <div className='category-nav-links'>
-              {categories?.length > 0 && categories.map((category) => (
-                <Link
-                className={`category-nav-link ${activeCategory === category.id ? 'active' : ''}`}
-                onClick={() => setActiveCategory(category.id)}
-                key={category.id}
-                >
-                  {category.name}
+              <div className='category-nav-links'>
+                {categories?.length > 0 && categories.map((category) => (
+                  <Link
+                  className={`category-nav-link ${activeCategory === category.id ? 'active' : ''}`}
+                  onClick={() => setActiveCategory(category.id)}
+                  key={category.id}
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+
+                {categories?.length < 1 && <>No Categories</>}
+              </div>
+            </div>
+
+            {/* Right Side with Search and Inventory Display */}
+            <div className="right-side">
+              {/* Navbar with Search and Action Buttons */}
+              <div className="top-nav">
+                <input
+                  type="text"
+                  placeholder="Search inventory..."
+                  value={searchQuery}
+                  onChange={handleSearch}
+                  className="search-bar"
+                />
+
+                <Link to="AddItem">
+                  <button className="primary-btn-blue1 action-button">Add Item</button>
                 </Link>
-              ))}
-
-              {categories?.length < 1 && <>No Categories</>}
-            </div>
-
-
-          </div>
-
-          {/* Right Side with Search and Inventory Display */}
-          <div className="right-side">
-            {/* Navbar with Search and Action Buttons */}
-            <div className="top-nav">
-              <input
-                type="text"
-                placeholder="Search inventory..."
-                value={searchQuery}
-                onChange={handleSearch}
-                className="search-bar"
-              />
-
-              <Link to="AddItem">
-                <button className="primary-btn-blue1 action-button">Add Item</button>
-              </Link>
-            </div>
-
-            <div className="bottom-content">
-              {/* Route for Inventory Display */}
-              <div className="admin-inventory-contents left-margin">
-                {inventoryItems?.length > 0 && inventoryItems.map(item =>
-                  item.category == activeCategory &&
-                  (<InventoryBox
-                    key={item.id}
-                    handleInventoryBoxClick={() => handleInventoryBoxClick(item.id, item.name, item.picture, item.qty, item.desc)}
-                    itemName={item.name}
-                    itemImage={item.picture}
-                    itemQuantity={item.qty}
-                    itemDescription={item.desc}/>)
-                )}
-
-
-                {/* Inventory items would be displayed here */}
+              </div>
+              
+              <div className="bottom-content">
+                {/* Route for Inventory Display */}
+                <div className="admin-inventory-contents left-margin">
+                  {inventoryItems?.length > 0 && inventoryItems.map(item =>
+                    item.category == activeCategory &&
+                    (<InventoryBox
+                      key={item.id}
+                      handleInventoryBoxClick={() => handleInventoryBoxClick(item.id, item.name, item.picture, item.qty, item.desc)}
+                      itemName={item.name}
+                      itemImage={item.picture}
+                      itemQuantity={item.qty}
+                      itemDescription={item.desc}/>)
+                  )}
+                </div>
               </div>
             </div>
           </div>
+            {/* Transaction History Section */}
+            <div className="transaction-history">
+              <h3 className="anybody">Transaction History</h3>
+                            
+              {/* Added Transactions */}
+              <div className="added-transactions">
+                <ul>
+                  {transactionHistory
+                    .filter(transaction => transaction.qtyAdded > 0)
+                    .map(transaction => (
+                      <li key={`added-${transaction.id}`} className="transaction-item">
+                        <img src={transaction.itemImageUrl} alt={transaction.itemName} className="item-image" />
+                        <span className="inter"> +{transaction.qtyAdded} </span>
+                        <span className="inter">{transaction.itemName} </span>
+                        <span className="inter">{transaction.date.toLocaleDateString()}</span>
+                        <span className="inter">{transaction.date.toLocaleTimeString()}</span>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+                  
+              {/* Used Transactions */}
+              <div className="used-transactions" style={{ marginTop: '20px' }}>
+                <ul>
+                  {transactionHistory
+                    .filter(transaction => transaction.qtyUsed > 0)
+                    .map(transaction => (
+                      <li key={`used-${transaction.id}`} className="transaction-item">
+                        <img src={transaction.itemImageUrl} alt={transaction.itemName} className="item-image" />
+                        <span className="inter"> -{transaction.qtyUsed}</span>
+                        <span className="inter">{transaction.itemName} </span>
+                        <span className="inter">{transaction.date.toLocaleDateString()} </span>
+                        <span className="inter">{transaction.date.toLocaleTimeString()}</span>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            </div>    
         </div>
       </div>
     </div>
