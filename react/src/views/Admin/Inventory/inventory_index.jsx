@@ -6,7 +6,6 @@ import { notify } from '../../../assets/js/utils.jsx';
 import '../../../assets/css/InventoryTracking.css';
 import InventoryBox from '../../../components/inventory_box.jsx';
 import { useModal } from '../../../contexts/ModalContext.jsx';
-import TransactionDetailsModal1 from '../../../components/Modals/transactionDetailsModal1.jsx';
 
 export default function AdminInventoryIndex() {
   const {showModal} = useModal();
@@ -168,10 +167,6 @@ export default function AdminInventoryIndex() {
       });
   };
 
-  const [transactionHistory, setTransactionHistory] = useState([
-    { id: 1, itemName: 'NexGard', qtyUsed: 5, qtyAdded: 10, date: new Date() },
-    // Add more transactions here
-  ]);
 
   /**
    * Render
@@ -237,7 +232,7 @@ export default function AdminInventoryIndex() {
                   <button className="primary-btn-blue1 action-button">Add Item</button>
                 </Link>
               </div>
-              
+
               <div className="bottom-content">
                 {/* Route for Inventory Display */}
                 <div className="admin-inventory-contents left-margin">
@@ -256,43 +251,35 @@ export default function AdminInventoryIndex() {
             </div>
           </div>
             {/* Transaction History Section */}
-            <div className="transaction-history">
+            <div className="small-form transaction-history">
               <h3 className="anybody">Transaction History</h3>
-                            
+
               {/* Added Transactions */}
-              <div className="added-transactions">
+              <div className="added-transactions" onClick={showModal('TransactionDetailsModal1')}>
                 <ul>
-                  {transactionHistory
-                    .filter(transaction => transaction.qtyAdded > 0)
-                    .map(transaction => (
-                      <li key={`added-${transaction.id}`} className="transaction-item">
-                        <img src={transaction.itemImageUrl} alt={transaction.itemName} className="item-image" />
-                        <span className="inter"> +{transaction.qtyAdded} </span>
-                        <span className="inter">{transaction.itemName} </span>
-                        <span className="inter">{transaction.date.toLocaleDateString()}</span>
-                        <span className="inter">{transaction.date.toLocaleTimeString()}</span>
+                      <li  className="transaction-item">
+                        <img className="item-image" />
+                        <span className="inter"> +1 </span>
+                        <span className="inter">NexGard </span>
+                        <span className="inter">December 3, 2024</span>
+                        <span className="inter">12:00PM</span>
                       </li>
-                    ))}
                 </ul>
               </div>
-                  
+
               {/* Used Transactions */}
               <div className="used-transactions" style={{ marginTop: '20px' }}>
                 <ul>
-                  {transactionHistory
-                    .filter(transaction => transaction.qtyUsed > 0)
-                    .map(transaction => (
-                      <li key={`used-${transaction.id}`} className="transaction-item">
-                        <img src={transaction.itemImageUrl} alt={transaction.itemName} className="item-image" />
-                        <span className="inter"> -{transaction.qtyUsed}</span>
-                        <span className="inter">{transaction.itemName} </span>
-                        <span className="inter">{transaction.date.toLocaleDateString()} </span>
-                        <span className="inter">{transaction.date.toLocaleTimeString()}</span>
+                      <li  className="transaction-item">
+                        <img className="item-image" />
+                        <span className="inter"> -1 </span>
+                        <span className="inter">NexGard </span>
+                        <span className="inter">December 3, 2024</span>
+                        <span className="inter">12:00PM</span>
                       </li>
-                    ))}
                 </ul>
               </div>
-            </div>    
+            </div>
         </div>
       </div>
     </div>

@@ -8,6 +8,7 @@
     --bs-modal-color: #1D3675;
     --bs-modal-bg:white;
     --bs-modal-border-radius: var(--rounded_conts);
+    --circle:50%;
 }
 
 
@@ -45,11 +46,14 @@ a{
 }
 .semi-small-f
 {
-    font-size:1vw;
+    font-size:.5vw;
 }
 .small-f
 {
     font-size:1vw;
+}
+.semi-small-medium-f{
+    font-size:1.5vw;
 }
 .semi-medium-f{
     font-size:2vw;

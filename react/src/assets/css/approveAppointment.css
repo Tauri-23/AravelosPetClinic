@@ -1,0 +1,49 @@
+.staff-appt{
+    height:34vh;
+}
+.details-appt{
+    height:34vh;
+    margin-bottom:3vh;
+}
+.inventory-appt{
+    height:71vh;
+}
+.approve-appt .left .pic{
+    width:25vh;
+    height:25vh;
+    background-color: var(--blue1);
+    flex-shrink: 0;
+}
+.staff-pic{
+
+    background-color: var(--blue1);
+    flex-shrink: 0;
+    width:11vh;
+    height:11vh;
+}
+.staff-item{
+    width: 10vw;
+    height: auto;
+}
+.staff-list{
+    height:min-content;
+}
+.approve-appt .right{
+height:25vh;
+}
+.cont-row{
+
+    margin-top: .35vw;
+    margin-bottom: 0.2vw;
+}
+.cont-lbl{
+    margin-right: .5vw;
+    width: 6vw;
+}
+.left.side{
+    width:48vw;
+}
+
+.right.side{
+    width:48vw;
+}

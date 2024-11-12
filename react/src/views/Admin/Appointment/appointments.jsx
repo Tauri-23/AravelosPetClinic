@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import "../../../assets/css/myappointments.css";
 import { notify } from "../../../assets/js/utils.jsx";
 import { useStateContext } from '../../../contexts/ContextProvider';
@@ -9,7 +9,6 @@ import AppointmentRecordAdmin from '../../../components/appointmentRecordAdmin.j
 import { useModal } from '../../../contexts/ModalContext.jsx';
 import { isEmptyOrSpaces } from '../../../assets/js/utils.jsx';
 
-
 export default function Appointments() {
     const {showModal} = useModal();
     const { user } = useStateContext();
@@ -17,6 +16,7 @@ export default function Appointments() {
     const url = location.pathname;
     const [activeTab, setActiveTab] = useState("Pending");
     const [appointments, setAppointments] = useState([]);
+    const navigate = useNavigate();
 
     const serviceOptions = [
         { id: "checkup", label: "Check-up" },
@@ -52,7 +52,7 @@ export default function Appointments() {
 
 
     const handleAppointmentRecordClick = (record)=> {
-        showModal('AppointmentRecordModalAdmin1', {record, handleCancel, handleApprove})
+        showModal('AppointmentRecordModalAdmin1', {record, handleCancel, handleApprovePage})
     }
     const handleApprovePost =(recordId) => {
 
@@ -113,7 +113,6 @@ export default function Appointments() {
             });
     }
     const handleCancel = (recordId) =>{
-
         console.log(recordId);
         const handleFunction = "handleCancelPost";
         if (isEmptyOrSpaces(String(recordId))) {
@@ -123,15 +122,10 @@ export default function Appointments() {
         showModal('ConfirmActionModal1',  {handlePost:handleCancelPost, recordId, handleFunction});
     }
 
-    const handleApprove = (recordId) =>{
+    const handleApprovePage = (recordId) =>{
 
-        console.log(recordId);
-        const handleFunction = "handleApprovePost";
-        if (isEmptyOrSpaces(String(recordId))) {
-            console.error("No appointment selected for approval.");
-            return;
-        }
-        showModal('ConfirmActionModal1',  {handlePost:handleApprovePost, recordId, handleFunction});
+        sessionStorage.setItem('recordId', recordId);
+        navigate('ApproveAppointment');
     }
 
 
@@ -228,7 +222,7 @@ export default function Appointments() {
                                 handleAppointmentRecordClick={handleAppointmentRecordClick}
                                 record={record}
                                 handleCancel={(e) => handleCancel(record.id, e)}
-                                handleApprove={(e) => handleApprove(record.id, e)}/>
+                                handleApprovePage={(e) => handleApprovePage(record.id, e)}/>
                             )
                         )
                     }

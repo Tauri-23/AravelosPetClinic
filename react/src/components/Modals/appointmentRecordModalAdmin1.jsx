@@ -1,7 +1,7 @@
 import React from 'react'
 import * as Icon from 'react-bootstrap-icons'
 export default function AppointmentRecordModalAdmin1({
-    record, onClose, handleCancel, handleApprove
+    record, onClose, handleCancel, handleApprovePage
 }) {
     const serviceOptions = [
         { id: "checkup", label: "Check-up" },
@@ -37,7 +37,7 @@ export default function AppointmentRecordModalAdmin1({
                             <button className='sub-button right-margin-s w-100' onClick={(e) => handleCancel(record.id,record.reason)}>
                             Cancel Appointment
                             </button>
-                            <button className='primary-btn-blue1 left-margin-s w-100' onClick={(e) => handleApprove(record.id)}>
+                            <button className='primary-btn-blue1 left-margin-s w-100' onClick={(e) => {handleApprovePage(record.id); onClose()}}>
                                 Approve Appointment
                             </button>
                         </div>

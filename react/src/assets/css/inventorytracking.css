@@ -131,11 +131,7 @@ h3 {
 
 .transaction-history {
   width: 600px; /* Adjust the width as needed */
-  padding: 15px;
   margin-left: 20px;
-  background: #f9f9f9;
-  border: 1px solid #ccc;
-  border-radius: 10px; /* Match this with the small-form radius */
   height: 275px;
   overflow-y: auto;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for a lifted effect */
