@@ -1,149 +1,192 @@
-import React, { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { useState } from "react";
+import { AlertCircle, Users } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
 import "../../assets/css/adminIndex.css";
 
-const AdminIndex = () => {
-  const [timeFrame, setTimeFrame] = useState('day');
+const Index = () => {
+  const [feedbackLanguage, setFeedbackLanguage] = useState("english");
+  const [activeTab, setActiveTab] = useState('today');
 
-  // Sample data
-  const appointments = [
-    { id: 1, petName: "Max", ownerName: "John Doe", date: "2024-11-11", time: "09:00", type: "Vaccination" },
-    { id: 2, petName: "Luna", ownerName: "Jane Smith", date: "2024-11-11", time: "10:30", type: "Check-up" },
-    { id: 3, petName: "Bella", ownerName: "Mike Johnson", date: "2024-11-11", time: "14:00", type: "Surgery" },
-    { id: 4, petName: "Buddy", ownerName: "Sarah Lee", date: "2024-11-12", time: "11:00", type: "Grooming" },
-    { id: 5, petName: "Daisy", ownerName: "Tom Wilson", date: "2024-11-12", time: "15:30", type: "Dental" },
-    { id: 6, petName: "Coco", ownerName: "Lisa Chen", date: "2024-11-13", time: "13:00", type: "Vaccination" },
-  ];
+  const [appointments] = useState([
+    { id: 1, petName: "Max", ownerName: "John Doe", time: "09:00 AM", date: "2024-02-14" },
+    { id: 2, petName: "Luna", ownerName: "Jane Smith", time: "10:30 AM", date: "2024-02-14" },
+    { id: 3, petName: "Bella", ownerName: "Mike Johnson", time: "02:00 PM", date: "2024-02-15" },
+    { id: 4, petName: "Charlie", ownerName: "Sarah Williams", time: "11:00 AM", date: "2024-02-20" },
+    { id: 5, petName: "Rocky", ownerName: "Tom Brown", time: "03:30 PM", date: "2024-03-01" }
+  ]);
 
-  const feedbackData = [
-    { aspect: 'Hygiene', positive: 85, negative: 15 },
-    { aspect: 'Pricing', positive: 70, negative: 30 },
-    { aspect: 'Customer Service', positive: 90, negative: 10 },
-    { aspect: 'Waiting Time', positive: 65, negative: 35 },
-    { aspect: 'Booking Experience', positive: 80, negative: 20 },
-    { aspect: 'Vet Care', positive: 95, negative: 5 },
-  ];
-
-  const inventoryData = [
-    { month: 'Jan', vaccines: 100, medicines: 150, supplies: 200 },
-    { month: 'Feb', vaccines: 120, medicines: 140, supplies: 180 },
-    { month: 'Mar', vaccines: 90, medicines: 160, supplies: 220 },
-    { month: 'Apr', vaccines: 110, medicines: 130, supplies: 190 },
-  ];
-
-  const filteredAppointments = appointments.filter((appointment) => {
-    const appointmentDate = new Date(appointment.date);
-    const today = new Date();
-
-    switch (timeFrame) {
-      case 'day':
-        return appointmentDate.toDateString() === today.toDateString();
-      case 'week':
-        const weekStart = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
-        const weekEnd = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + 6);
-        return appointmentDate >= weekStart && appointmentDate <= weekEnd;
-      case 'month':
-        return appointmentDate.getMonth() === today.getMonth() && appointmentDate.getFullYear() === today.getFullYear();
-      default:
-        return true;
+  const [feedbackData] = useState({
+    english: {
+      hygiene: { positive: 46, negative: 54 },
+      customerService: { positive: 90, negative: 10 },
+      vetCare: { positive: 95, negative: 5 },
+      bookingExperience: { positive: 80, negative: 20 },
+      pricing: { positive: 75, negative: 25 },
+      waitingTime: { positive: 70, negative: 30 }
+    },
+    tagalog: {
+      hygiene: { positive: 82, negative: 18 },
+      customerService: { positive: 88, negative: 12 },
+      vetCare: { positive: 92, negative: 8 },
+      bookingExperience: { positive: 50, negative: 50 },
+      pricing: { positive: 73, negative: 27 },
+      waitingTime: { positive: 68, negative: 32 },
     }
   });
 
+  const [inventory] = useState([
+    { id: 1, name: "Vaccines", stock: 5, threshold: 10 },
+    { id: 2, name: "Syringes", stock: 150, threshold: 100 },
+    { id: 3, name: "Bandages", stock: 8, threshold: 20 }
+  ]);
+
+  const [activeUsers] = useState([
+    { id: 1, name: "Dr. Smith", role: "Veterinarian", status: "Online" },
+    { id: 2, name: "Nancy Drew", role: "Receptionist", status: "Online" }
+  ]);
+
+  const chartData = Object.entries(feedbackData[feedbackLanguage]).map(([category, values]) => ({
+    category,
+    positive: values.positive,
+    negative: values.negative
+  }));
+
+  const getFilteredAppointments = () => {
+    const today = new Date();
+    const currentDate = today.toISOString().split('T')[0];
+    
+    const weekAgo = new Date(today);
+    weekAgo.setDate(today.getDate() - 7);
+    const monthAgo = new Date(today);
+    monthAgo.setMonth(today.getMonth() - 1);
+
+    switch (activeTab) {
+      case 'today':
+        return appointments.filter(apt => apt.date === currentDate);
+      case 'week':
+        return appointments.filter(apt => {
+          const aptDate = new Date(apt.date);
+          return aptDate >= weekAgo && aptDate <= today;
+        });
+      case 'month':
+        return appointments.filter(apt => {
+          const aptDate = new Date(apt.date);
+          return aptDate >= monthAgo && aptDate <= today;
+        });
+      default:
+        return appointments;
+    }
+  };
+
+  const filteredAppointments = getFilteredAppointments();
+
+
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <h1 className="dashboard-title">Vet Clinic Dashboard</h1>
-        <div className="dashboard-date">{new Date().toLocaleDateString()}</div>
-      </div>
+    <div className="admin-container">
+        <section className="appointments-section">
+        <h2>Appointments</h2>
+        <div className="appointments-tabs">
+          <button 
+            className={`tab ${activeTab === 'today' ? 'active' : ''}`}
+            onClick={() => setActiveTab('today')}
+          >
+            Today
+          </button>
+          <button 
+            className={`tab ${activeTab === 'week' ? 'active' : ''}`}
+            onClick={() => setActiveTab('week')}
+          >
+            This Week
+          </button>
+          <button 
+            className={`tab ${activeTab === 'month' ? 'active' : ''}`}
+            onClick={() => setActiveTab('month')}
+          >
+            This Month
+          </button>
+        </div>
+        <div className="appointments-list">
+          {filteredAppointments.map(apt => (
+            <div key={apt.id} className="appointment-card">
+              <h3>{apt.petName}</h3>
+              <p>Owner: {apt.ownerName}</p>
+              <p>Time: {apt.time}</p>
+              <p>Date: {new Date(apt.date).toLocaleDateString()}</p>
+            </div>
+          ))}
+          {filteredAppointments.length === 0 && (
+            <div className="appointment-card">
+              <p>No appointments found for this period</p>
+            </div>
+          )}
+        </div>
+      </section>
 
-      <div className="dashboard-grid">
-        <Card className="appointments-card">
-          <CardHeader>
-            <CardTitle>Appointments</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="time-frame-buttons">
-              {['day', 'week', 'month'].map((period) => (
-                <button
-                  key={period}
-                  className={`time-frame-button ${timeFrame === period ? 'active' : ''}`}
-                  onClick={() => setTimeFrame(period)}
-                >
-                  {period.charAt(0).toUpperCase() + period.slice(1)}
-                </button>
-              ))}
-            </div>
-            <div className="appointments-table-container">
-              <table className="appointments-table">
-                <thead>
-                  <tr>
-                    <th>Pet Name</th>
-                    <th>Owner</th>
-                    <th>Time</th>
-                    <th>Type</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredAppointments.map((appointment) => (
-                    <tr key={appointment.id}>
-                      <td>{appointment.petName}</td>
-                      <td>{appointment.ownerName}</td>
-                      <td>{appointment.time}</td>
-                      <td>{appointment.type}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="right-section">
+        <section className="feedback-section">
+          <h2>Customer Feedback</h2>
+          <div className="language-toggle">
+            <button 
+              className={feedbackLanguage === "english" ? "active" : ""}
+              onClick={() => setFeedbackLanguage("english")}
+            >
+              English
+            </button>
+            <button 
+              className={feedbackLanguage === "tagalog" ? "active" : ""}
+              onClick={() => setFeedbackLanguage("tagalog")}
+            >
+              Tagalog
+            </button>
+          </div>
+          <div className="feedback-chart">
+            <BarChart width={600} height={300} data={chartData}>
+              <XAxis dataKey="category" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="positive" stackId="a" fill="#4ade80" name="Positive" />
+              <Bar dataKey="negative" stackId="a" fill="#f87171" name="Negative" />
+            </BarChart>
+          </div>
+        </section>
 
-        <Card className="feedback-card">
-          <CardHeader>
-            <CardTitle>Customer Feedback Analysis</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="chart-container">
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={feedbackData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="aspect" angle={-45} textAnchor="end" height={80} />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="positive" name="Positive Feedback" stackId="stack" fill="#4ade80" />
-                  <Bar dataKey="negative" name="Negative Feedback" stackId="stack" fill="#f87171" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+        <section className="inventory-section">
+          <h2>Inventory Status</h2>
+          <div className="inventory-list">
+            {inventory.map(item => (
+              <div key={item.id} className="inventory-card">
+                <h3>{item.name}</h3>
+                <p>Stock: {item.stock}</p>
+                {item.stock < item.threshold && (
+                  <div className="low-stock-alert">
+                    <AlertCircle size={16} />
+                    Low Stock Alert
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
 
-        <Card className="inventory-card">
-          <CardHeader>
-            <CardTitle>Inventory Trends</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="chart-container">
-              <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={inventoryData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="vaccines" stroke="#3b82f6" name="Vaccines" />
-                  <Line type="monotone" dataKey="medicines" stroke="#10b981" name="Medicines" />
-                  <Line type="monotone" dataKey="supplies" stroke="#f59e0b" name="Supplies" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+        <section className="active-users-section">
+          <h2>Active Users</h2>
+          <div className="users-list">
+            {activeUsers.map(user => (
+              <div key={user.id} className="user-card">
+                <Users size={16} />
+                <div className="user-info">
+                  <h3>{user.name}</h3>
+                  <p>{user.role}</p>
+                </div>
+                <span className="status-indicator"></span>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );
 };
 
-export default AdminIndex;
+export default Index;

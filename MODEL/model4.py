@@ -502,11 +502,11 @@ if __name__ == "__main__":
 
     # Train the model
     print("Training model...")
-    analyzer.train('your_dataset.csv')
+    analyzer.train('rows_cleaned.csv')
 
     # Evaluate the model
     print("\nEvaluating model...")
-    metrics = analyzer.evaluate('your_dataset.csv')
+    metrics = analyzer.evaluate('rows_cleaned.csv')
 
     # Test some example feedback
     test_feedbacks = [
