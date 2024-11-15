@@ -8,11 +8,11 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState('today');
 
   const [appointments] = useState([
-    { id: 1, petName: "Max", ownerName: "John Doe", time: "09:00 AM", date: "2024-02-14" },
-    { id: 2, petName: "Luna", ownerName: "Jane Smith", time: "10:30 AM", date: "2024-02-14" },
-    { id: 3, petName: "Bella", ownerName: "Mike Johnson", time: "02:00 PM", date: "2024-02-15" },
-    { id: 4, petName: "Charlie", ownerName: "Sarah Williams", time: "11:00 AM", date: "2024-02-20" },
-    { id: 5, petName: "Rocky", ownerName: "Tom Brown", time: "03:30 PM", date: "2024-03-01" }
+    { id: 1, petName: "Max", ownerName: "John Doe", time: "09:00 AM", date: "2024-11-15" },
+    { id: 2, petName: "Luna", ownerName: "Jane Smith", time: "10:30 AM", date: "2024-11-15" },
+    { id: 3, petName: "Bella", ownerName: "Mike Johnson", time: "02:00 PM", date: "2024-11-15" },
+    { id: 4, petName: "Charlie", ownerName: "Sarah Williams", time: "11:00 AM", date: "2024-11-25" },
+    { id: 5, petName: "Rocky", ownerName: "Tom Brown", time: "03:30 PM", date: "2024-12-01" }
   ]);
 
   const [feedbackData] = useState({
@@ -45,45 +45,44 @@ const Index = () => {
     { id: 2, name: "Nancy Drew", role: "Receptionist", status: "Online" }
   ]);
 
+  const getFilteredAppointments = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of day
+    
+    const weekAgo = new Date(today);
+    weekAgo.setDate(today.getDate() - 7);
+    
+    const monthAgo = new Date(today);
+    monthAgo.setMonth(today.getMonth() - 1);
+
+    return appointments.filter(apt => {
+      const aptDate = new Date(apt.date);
+      aptDate.setHours(0, 0, 0, 0); // Set to start of day for proper comparison
+
+      switch (activeTab) {
+        case 'today':
+          return aptDate.getTime() === today.getTime();
+        case 'week':
+          return aptDate >= weekAgo && aptDate <= today;
+        case 'month':
+          return aptDate >= monthAgo && aptDate <= today;
+        default:
+          return true;
+      }
+    });
+  };
+
   const chartData = Object.entries(feedbackData[feedbackLanguage]).map(([category, values]) => ({
     category,
     positive: values.positive,
     negative: values.negative
   }));
 
-  const getFilteredAppointments = () => {
-    const today = new Date();
-    const currentDate = today.toISOString().split('T')[0];
-    
-    const weekAgo = new Date(today);
-    weekAgo.setDate(today.getDate() - 7);
-    const monthAgo = new Date(today);
-    monthAgo.setMonth(today.getMonth() - 1);
-
-    switch (activeTab) {
-      case 'today':
-        return appointments.filter(apt => apt.date === currentDate);
-      case 'week':
-        return appointments.filter(apt => {
-          const aptDate = new Date(apt.date);
-          return aptDate >= weekAgo && aptDate <= today;
-        });
-      case 'month':
-        return appointments.filter(apt => {
-          const aptDate = new Date(apt.date);
-          return aptDate >= monthAgo && aptDate <= today;
-        });
-      default:
-        return appointments;
-    }
-  };
-
   const filteredAppointments = getFilteredAppointments();
-
 
   return (
     <div className="admin-container">
-        <section className="appointments-section">
+      <section className="appointments-section">
         <h2>Appointments</h2>
         <div className="appointments-tabs">
           <button 
@@ -106,15 +105,16 @@ const Index = () => {
           </button>
         </div>
         <div className="appointments-list">
-          {filteredAppointments.map(apt => (
-            <div key={apt.id} className="appointment-card">
-              <h3>{apt.petName}</h3>
-              <p>Owner: {apt.ownerName}</p>
-              <p>Time: {apt.time}</p>
-              <p>Date: {new Date(apt.date).toLocaleDateString()}</p>
-            </div>
-          ))}
-          {filteredAppointments.length === 0 && (
+          {filteredAppointments.length > 0 ? (
+            filteredAppointments.map(apt => (
+              <div key={apt.id} className="appointment-card">
+                <h3>{apt.petName}</h3>
+                <p>Owner: {apt.ownerName}</p>
+                <p>Time: {apt.time}</p>
+                <p>Date: {new Date(apt.date).toLocaleDateString()}</p>
+              </div>
+            ))
+          ) : (
             <div className="appointment-card">
               <p>No appointments found for this period</p>
             </div>
