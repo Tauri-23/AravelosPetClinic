@@ -17,6 +17,7 @@ import AddAdminModal1 from "../components/Modals/addAdminModal1";
 import FeedbackModal1 from "../components/Modals/feedbackModal1";
 import AddItemConfirmationModal1 from "../components/Modals/addItemConfirmationModal1";
 import TransactionDetailsModal1 from '../components/Modals/transactionDetailsModal1.jsx';
+import AdminShowAppointment from "../components/Modals/adminshowappointment.jsx";
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -76,14 +77,16 @@ const ModalManager = () => {
                     return <AddAdminModal1 {...modalState.props} onClose={hideModal}/>;
             
             case 'AddItemConfirmationModal1':
-                        return <AddItemConfirmationModal1 {...modalState.props} onClose={hideModal}/>;
+                    return <AddItemConfirmationModal1 {...modalState.props} onClose={hideModal}/>;
             
             case 'AddCategoryConfirmationModal1':
-                        return <AddCategoryConfirmationModal1 {...modalState.props} onClose={hideModal}/>;
+                    return <AddCategoryConfirmationModal1 {...modalState.props} onClose={hideModal}/>;
             
             case 'TransactionDetailsModal1':
                     return <TransactionDetailsModal1 {...modalState.props} onClose={hideModal}/>;
                 
+            case 'AdminShowAppointment':
+                    return <AdminShowAppointment {...modalState.props} onClose={hideModal}/>;
             /*
             |   DEFAULT
             */

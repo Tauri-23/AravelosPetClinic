@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { AlertCircle, Users } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import AdminShowAppointment from '../../components/Modals/adminshowappointment';
 import "../../assets/css/adminIndex.css";
 
 const Index = () => {
   const [feedbackLanguage, setFeedbackLanguage] = useState("english");
   const [activeTab, setActiveTab] = useState('today');
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
 
   const [appointments] = useState([
     { id: 1, petName: "Max", ownerName: "John Doe", time: "09:00 AM", date: "2024-11-15" },
     { id: 2, petName: "Luna", ownerName: "Jane Smith", time: "10:30 AM", date: "2024-11-15" },
     { id: 3, petName: "Bella", ownerName: "Mike Johnson", time: "02:00 PM", date: "2024-11-15" },
-    { id: 4, petName: "Charlie", ownerName: "Sarah Williams", time: "11:00 AM", date: "2024-11-25" },
+    { id: 4, petName: "Charlie", ownerName: "Sarah Williams", time: "11:00 AM", date: "2024-11-16" },
     { id: 5, petName: "Rocky", ownerName: "Tom Brown", time: "03:30 PM", date: "2024-12-01" }
   ]);
 
@@ -107,7 +109,11 @@ const Index = () => {
         <div className="appointments-list">
           {filteredAppointments.length > 0 ? (
             filteredAppointments.map(apt => (
-              <div key={apt.id} className="appointment-card">
+              <div 
+                key={apt.id} 
+                className="appointment-card hover:bg-gray-100 cursor-pointer transition-colors"
+                onClick={() => setSelectedAppointment(apt)}
+              >
                 <h3>{apt.petName}</h3>
                 <p>Owner: {apt.ownerName}</p>
                 <p>Time: {apt.time}</p>
@@ -185,6 +191,13 @@ const Index = () => {
           </div>
         </section>
       </div>
+      {selectedAppointment && (
+        <AdminShowAppointment
+          isOpen={!!selectedAppointment}
+          onClose={() => setSelectedAppointment(null)}
+          appointment={selectedAppointment}
+        />
+      )}
     </div>
   );
 };

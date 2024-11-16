@@ -1,13 +1,21 @@
 .feedback-dashboard {
-    padding: 24px;
+    padding: 0px 24px 24px 24px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    height: calc(100vh - 48px); /* Subtract padding from viewport height */
+    overflow-y: auto;
+    margin: 0px 24px 24px 24px; /* Add margin around the dashboard */
 }
 
 .dashboard-header {
     text-align: center;
     margin-bottom: 32px;
+    position: sticky;
+    top: 0;
+    background: white;
+    padding: 12px 0;
+    z-index: 10;
 }
 
 .dashboard-header h2 {
@@ -76,6 +84,7 @@
     padding: 20px;
     border-radius: 8px;
     border: 1px solid #E5E7EB;
+    margin-bottom: 24px; /* Add bottom margin to ensure space at the end */
 }
 
 .custom-tooltip {
@@ -115,6 +124,8 @@
 @media (max-width: 768px) {
     .feedback-dashboard {
         padding: 16px;
+        margin: 16px;
+        height: calc(100vh - 32px);
     }
     
     .stats-container {
