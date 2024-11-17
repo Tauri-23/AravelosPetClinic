@@ -179,6 +179,11 @@ export default function AdminInventoryIndex() {
     // Add more transactions here
   ]);
 
+const handle = () => { 
+  console.log('asdasdasd')
+    showModal('TransactionDetailsModal1')
+}
+
   /**
    * Render
    */
@@ -270,7 +275,7 @@ export default function AdminInventoryIndex() {
                   {transactionHistory
                     .filter(transaction => transaction.qtyAdded > 0)
                     .map(transaction => (
-                      <li key={`added-${transaction.id}`} className="transaction-item">
+                      <li key={`added-${transaction.id}`} className="transaction-item" onClick={handle}>
                         <img src={transaction.itemImageUrl} alt={transaction.itemName} className="item-image" />
                         <span className="inter"> +{transaction.qtyAdded} </span>
                         <span className="inter">{transaction.itemName} </span>

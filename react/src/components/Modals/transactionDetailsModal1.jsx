@@ -4,7 +4,7 @@ import "../../assets/css/transactionDetailsModal1.css";
 export default function TransactionDetailsModal1(){
 
   return (
-    <div className="modal">
+    <div className="modal1">
       <h2>Transaction Details</h2>
       <div className="transaction-info">
         {/* Display the transaction details */}
