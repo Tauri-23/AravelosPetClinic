@@ -5,9 +5,10 @@ import axiosClient from '../../../axios-client.js';
 import { notify } from '../../../assets/js/utils.jsx';
 import '../../../assets/css/InventoryTracking.css';
 import InventoryBox from '../../../components/inventory_box.jsx';
-
+import { useModal } from '../../../contexts/ModalContext.jsx';
 
 export default function AdminInventoryIndex() {
+  const {showModal} = useModal();
   const [categories, setCategories] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [inventoryItems, setInventoryItems] = useState(null);
@@ -47,9 +48,9 @@ export default function AdminInventoryIndex() {
     if(categories?.length > 0 && inventoryItems?.length > 0) {
       setActiveCategory(categories[0].id);
     }
-  }, [categories])
+  }, [categories]);
 
-  /*
+ /*
   | Debugging
   */
   useEffect(() => {
@@ -66,8 +67,19 @@ export default function AdminInventoryIndex() {
   /**
    * Inventory Handlers
    */
-  
+  const handleInventoryBoxClick = (itemId, itemName, itemImage, itemQuantity, itemDescription) => {
+    showModal('InventoryBoxModal1', {
+      itemId,
+      itemName,
+      itemImage,
+      itemQuantity,
+      itemDescription,
+      handleEditItemPost,
+    });
+  };
+
   const handleEditItemPost = (itemId, itemName, itemQty, itemDesc) => {
+    console.log(`Editing item: ${itemId}, name: ${itemName}, qty: ${itemQty}, desc: ${itemDesc}`);
     const formData = new FormData();
     formData.append('id', itemId);
     formData.append('name', itemName);
@@ -83,10 +95,10 @@ export default function AdminInventoryIndex() {
     }).catch(error => console.error(error));
   };
 
-  /**
+   /**
    * Category Handlers
    */
-  const handleAddCategory = () => {
+   const handleAddCategory = () => {
     showModal('AddCategoryModal1', {handleAddCategoryPost})
   };
 
@@ -128,14 +140,14 @@ export default function AdminInventoryIndex() {
                 )
             );
             notify('success', data.message, 'top-center', 3000);
-            return true;
-        } else {
+            return true;}
+        else {
             notify('error', data.message, 'top-center', 3000);
-            return false;
-        }
-    } catch (error) {
-        console.error(error);
-        return false;
+            return false;}
+    } 
+    catch (error) {
+      console.error(error);
+      return false;
     }
   };
 
@@ -162,7 +174,10 @@ export default function AdminInventoryIndex() {
         return false;
       });
   };
-
+  const [transactionHistory, setTransactionHistory] = useState([
+    { id: 1, itemName: 'NexGard', qtyUsed: 5, qtyAdded: 10, date: new Date() },
+    // Add more transactions here
+  ]);
 
   /**
    * Render
@@ -173,7 +188,7 @@ export default function AdminInventoryIndex() {
         <h1 className='anybody'>Inventory Tracking</h1>
 
         <div className="d-flex-inventory">
-          {/* Wrap small-form and transaction-history in a flex container */}
+          
           <div className="d-flex inv small-form">
 
             {/* Sidebar with Categories */}
@@ -210,10 +225,10 @@ export default function AdminInventoryIndex() {
 
                 {categories?.length < 1 && <>No Categories</>}
               </div>
-            </div>
+          </div>
 
-            {/* Right Side with Search and Inventory Display */}
-            <div className="right-side">
+           {/* Right Side with Search and Inventory Display */}
+           <div className="right-side">
               {/* Navbar with Search and Action Buttons */}
               <div className="top-nav">
                 <input
@@ -223,12 +238,11 @@ export default function AdminInventoryIndex() {
                   onChange={handleSearch}
                   className="search-bar"
                 />
-
-                <Link to="AddItem">
+              <Link to="AddItem">
                   <button className="primary-btn-blue1 action-button">Add Item</button>
                 </Link>
               </div>
-
+              
               <div className="bottom-content">
                 {/* Route for Inventory Display */}
                 <div className="admin-inventory-contents left-margin">
@@ -246,38 +260,46 @@ export default function AdminInventoryIndex() {
               </div>
             </div>
           </div>
-            {/* Transaction History Section */}
-            <div className="small-form transaction-history">
+          {/* Transaction History Section */}
+          <div className="transaction-history">
               <h3 className="anybody">Transaction History</h3>
-
+                            
               {/* Added Transactions */}
-              <div className="added-transactions" onClick={showModal('TransactionDetailsModal1')}>
+              <div className="added-transactions">
                 <ul>
-                      <li  className="transaction-item">
-                        <img className="item-image" />
-                        <span className="inter"> +1 </span>
-                        <span className="inter">NexGard </span>
-                        <span className="inter">December 3, 2024</span>
-                        <span className="inter">12:00PM</span>
+                  {transactionHistory
+                    .filter(transaction => transaction.qtyAdded > 0)
+                    .map(transaction => (
+                      <li key={`added-${transaction.id}`} className="transaction-item">
+                        <img src={transaction.itemImageUrl} alt={transaction.itemName} className="item-image" />
+                        <span className="inter"> +{transaction.qtyAdded} </span>
+                        <span className="inter">{transaction.itemName} </span>
+                        <span className="inter">{transaction.date.toLocaleDateString()}</span>
+                        <span className="inter">{transaction.date.toLocaleTimeString()}</span>
                       </li>
+                    ))}
                 </ul>
               </div>
-
+                  
               {/* Used Transactions */}
               <div className="used-transactions" style={{ marginTop: '20px' }}>
                 <ul>
-                      <li  className="transaction-item">
-                        <img className="item-image" />
-                        <span className="inter"> -1 </span>
-                        <span className="inter">NexGard </span>
-                        <span className="inter">December 3, 2024</span>
-                        <span className="inter">12:00PM</span>
+                  {transactionHistory
+                    .filter(transaction => transaction.qtyUsed > 0)
+                    .map(transaction => (
+                      <li key={`used-${transaction.id}`} className="transaction-item">
+                        <img src={transaction.itemImageUrl} alt={transaction.itemName} className="item-image" />
+                        <span className="inter"> -{transaction.qtyUsed}</span>
+                        <span className="inter">{transaction.itemName} </span>
+                        <span className="inter">{transaction.date.toLocaleDateString()} </span>
+                        <span className="inter">{transaction.date.toLocaleTimeString()}</span>
                       </li>
+                    ))}
                 </ul>
               </div>
-            </div>
-        </div>
+          </div>    
       </div>
+    </div>
     </div>
   );
 }
