@@ -126,7 +126,7 @@ h3 {
 }
 .d-flex-inventory {
   display: flex;
-  justify-content: space-between;
+  /*justify-content: space-between;*/
 }
 
 .transaction-history {
