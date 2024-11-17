@@ -174,15 +174,18 @@ export default function AdminInventoryIndex() {
         return false;
       });
   };
+
   const [transactionHistory, setTransactionHistory] = useState([
     { id: 1, itemName: 'NexGard', qtyUsed: 5, qtyAdded: 10, date: new Date() },
     // Add more transactions here
   ]);
 
-const handle = () => { 
-  console.log('asdasdasd')
-    showModal('TransactionDetailsModal1')
-}
+const sortedTransactions = [...transactionHistory].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+const handleTransactionHistory = () => {
+  // Show the Transaction Details Modal with transaction data
+  showModal('TransactionDetailsModal1', { transactions: sortedTransactions });
+};
 
   /**
    * Render
@@ -267,15 +270,15 @@ const handle = () => {
           </div>
           {/* Transaction History Section */}
           <div className="transaction-history">
-              <h3 className="anybody">Transaction History</h3>
+              <h3 className="anybody" onClick={handleTransactionHistory} >Transaction History</h3>
                             
               {/* Added Transactions */}
               <div className="added-transactions">
-                <ul>
-                  {transactionHistory
+              <ul>
+                  {sortedTransactions
                     .filter(transaction => transaction.qtyAdded > 0)
                     .map(transaction => (
-                      <li key={`added-${transaction.id}`} className="transaction-item" onClick={handle}>
+                      <li key={`added-${transaction.id}`} className="transaction-item">
                         <img src={transaction.itemImageUrl} alt={transaction.itemName} className="item-image" />
                         <span className="inter"> +{transaction.qtyAdded} </span>
                         <span className="inter">{transaction.itemName} </span>
@@ -289,14 +292,14 @@ const handle = () => {
               {/* Used Transactions */}
               <div className="used-transactions" style={{ marginTop: '20px' }}>
                 <ul>
-                  {transactionHistory
+                  {sortedTransactions
                     .filter(transaction => transaction.qtyUsed > 0)
                     .map(transaction => (
                       <li key={`used-${transaction.id}`} className="transaction-item">
                         <img src={transaction.itemImageUrl} alt={transaction.itemName} className="item-image" />
                         <span className="inter"> -{transaction.qtyUsed}</span>
                         <span className="inter">{transaction.itemName} </span>
-                        <span className="inter">{transaction.date.toLocaleDateString()} </span>
+                        <span className="inter">{transaction.date.toLocaleDateString()}</span>
                         <span className="inter">{transaction.date.toLocaleTimeString()}</span>
                       </li>
                     ))}

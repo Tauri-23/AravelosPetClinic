@@ -134,28 +134,51 @@ h3 {
   margin-left: 20px;
   height: 275px;
   overflow-y: auto;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for a lifted effect */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for a lifted effect */
+  border: 1px solid #d9d9d9; /* Adds a border around the section */
+  border-radius: 8px; /* Smooth corners */
+  background: #f9f9f9; /* Light background color for contrast */
+  padding: 15px; /* Adds space inside the container */
 }
 
 .transaction-history h3 {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #1D3675; /* Default text color */
+  text-align: center; /* Center-align the title */
+  border-bottom: 2px solid #e6e6e6; /* Divider below the title */
+  padding-bottom: 10px; /* Add spacing below the title */
+  cursor: pointer; /* Indicates the element is clickable */
+  transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition */
 }
+
+.transaction-history h3:hover {
+  color: #4A90E2; /* Changes text color on hover */
+  transform: scale(1.05); /* Slightly enlarges the text on hover */
+  border-bottom: 2px solid #4A90E2; /* Matches the hover color */
+}
+
 
 .transaction-history ul {
   list-style-type: none;
   padding: 0;
+  margin: 0; /* Remove default margins */
 }
 
 .transaction-history li {
-  padding: 8px;
+  padding: 12px; /* More padding for a comfortable layout */
   display: flex;
   align-items: center; /* Ensures everything is centered vertically */
-  background: #fff;
-  border-bottom: 1px solid #eee;
+  background: #fff; /* White background for items */
+  border: 1px solid #eaeaea; /* Light border around each item */
+  border-radius: 5px; /* Rounded corners for individual items */
+  margin-bottom: 10px; /* Add spacing between items */
+  transition: background 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
 }
 
 .transaction-history li:hover {
-  background: #e6f7ff;
+  background: #e6f7ff; /* Light blue hover effect */
+  transform: translateY(-2px); /* Slight lift on hover */
 }
 
 .transaction-item {
@@ -169,13 +192,22 @@ h3 {
   width: 40px; /* Adjust the image size */
   height: 40px; /* Adjust the image size */
   margin-right: 15px;
+  border-radius: 50%; /* Circular images */
+  border: 1px solid #ccc; /* Optional border for the image */
 }
 
 .transaction-item .inter {
   flex: 1;
-  text-align: center; /* Optional: Centering content */
-  white-space: nowrap; /* Prevents the text from wrapping onto the next line */
-  overflow: hidden;    /* Hides any overflow */
+  text-align: center; /* Center-align the text */
+  font-size: 14px; /* Smaller text size */
+  color: #555; /* Neutral text color */
+  white-space: nowrap; /* Prevents text from wrapping onto the next line */
+  overflow: hidden; /* Hides any overflow */
   text-overflow: ellipsis; /* Adds "..." at the end if the text overflows */
+}
+
+.added-transactions ul,
+.used-transactions ul {
+  margin-top: 10px; /* Adds spacing between sections */
 }
 
