@@ -5,10 +5,9 @@ import axiosClient from '../../../axios-client.js';
 import { notify } from '../../../assets/js/utils.jsx';
 import '../../../assets/css/InventoryTracking.css';
 import InventoryBox from '../../../components/inventory_box.jsx';
-import { useModal } from '../../../contexts/ModalContext.jsx';
+
 
 export default function AdminInventoryIndex() {
-  const {showModal} = useModal();
   const [categories, setCategories] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [inventoryItems, setInventoryItems] = useState(null);
@@ -67,10 +66,7 @@ export default function AdminInventoryIndex() {
   /**
    * Inventory Handlers
    */
-  const handleInventoryBoxClick=(itemId, itemName, itemImage, itemQuantity, itemDescription) => {
-    showModal('InventoryBoxModal1', {itemId, itemName, itemImage, itemQuantity, itemDescription, handleEditItemPost})
-  }
-
+  
   const handleEditItemPost = (itemId, itemName, itemQty, itemDesc) => {
     const formData = new FormData();
     formData.append('id', itemId);
@@ -176,7 +172,7 @@ export default function AdminInventoryIndex() {
       <div className="inventory-tracking gen-margin">
         <h1 className='anybody'>Inventory Tracking</h1>
 
-        <div className="d-flex">
+        <div className="d-flex-inventory">
           {/* Wrap small-form and transaction-history in a flex container */}
           <div className="d-flex inv small-form">
 

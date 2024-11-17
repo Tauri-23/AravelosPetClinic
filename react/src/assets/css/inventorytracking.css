@@ -124,7 +124,7 @@ h3 {
   background: var(--blue1);
   color: white;
 }
-.d-flex {
+.d-flex-inventory {
   display: flex;
   justify-content: space-between;
 }
