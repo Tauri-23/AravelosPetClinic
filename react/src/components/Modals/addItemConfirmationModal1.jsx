@@ -1,7 +1,6 @@
 import React from "react";
-import * as Icon from "react-bootstrap-icons";
+import * as Icon from "react-bootstrap-icons";  // Add this import to resolve the error
 import "../../assets/css/addItemConfirmationModal1.css";
-
 export default function AddItemConfirmationModal1({ onConfirm, onCancel }) {
   return (
     <div className="add-item-modal">

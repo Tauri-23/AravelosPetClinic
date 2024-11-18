@@ -22,6 +22,11 @@ export default function AddItem() {
     const [measurementValue, setMeasurementValue] = useState("");
     const [measurementUnit, setMeasurementUnit] = useState("");
 
+    // Expiration Date
+    const [expirationDateRequired, setExpirationDateRequired] = useState(false);
+    const [expirationDate, setExpirationDate] = useState('');
+
+
     const navigate = useNavigate();
     
     useEffect(() => {
@@ -69,6 +74,7 @@ export default function AddItem() {
             .then(({ data }) => {
                 if (data.status === 200) {
                     notify('success', data.message, 'top-center', 3000);
+                    navigate('/inventory_index');
                 } else {
                     notify('error', data.message, 'top-center', 3000);
                 }
@@ -175,14 +181,34 @@ export default function AddItem() {
                                             onChange={(e) => setMeasurementUnit(e.target.value)}
                                         >
                                             <option value="">Unit</option>
-                                            <option value="m">m</option>
+                                            <option value="m">ml</option>
                                             <option value="mg">mg</option>
                                             <option value="g">g</option>
                                         </select>
                                     </div>
                                 )}
                             </div>
-
+                            <div className="expiration-date-section">
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  checked={expirationDateRequired}
+                                  onChange={() => setExpirationDateRequired(!expirationDateRequired)}
+                                />
+                                Expiration Date:
+                              </label>
+                              {expirationDateRequired && (
+                                <div className="expiration-date-inputs">
+                                  <input
+                                    type="date"
+                                    value={expirationDate}
+                                    onChange={(e) => setExpirationDate(e.target.value)}
+                                    required
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          
                             {/* Button Group */}
                             <div className="button-group">
                                 <button type="button" onClick={handleShowModal} className="primary-btn-blue1">

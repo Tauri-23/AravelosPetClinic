@@ -99,5 +99,37 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+.expiration-date-section {
+    display: flex;
+    align-items: center; /* Center the checkbox and text vertically */
+    gap: 10px; /* Space between checkbox and label */
+    margin-top: 15px;
+}
 
-  
+.expiration-date-section label {
+    font-weight: bold;
+    display: inline-flex; /* Ensure the label stays on one line */
+    align-items: center;
+    gap: 5px;
+    width: auto; /* Let the label width adjust based on content */
+    white-space: nowrap; /* Prevent label from breaking into multiple lines */
+}
+
+/* Add some margin to increase space between label and input */
+.expiration-date-section label + .expiration-date-inputs {
+    margin-left: 1px; /* Adjust this value for more or less space */
+}
+
+.expiration-date-inputs {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.expiration-date-inputs input {
+    width: 150px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+}
