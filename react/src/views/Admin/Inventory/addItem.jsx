@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import "../../../assets/css/addItem.css";
 import { fetchAllInventoryCategories } from '../../../services/InventoryServices.jsx';
 import axiosClient from '../../../axios-client.js';
-import { isEmptyOrSpaces, notify } from '../../../assets/js/utils.jsx';
+import { notify } from '../../../assets/js/utils.jsx';
 import Dropdown2 from '../../../components/dropdowns2.jsx';
 import { useNavigate } from 'react-router-dom';
-import AddItemConfirmationModal1 from '../../../components/Modals/addItemConfirmationModal1'; 
-
-
+import AddItemConfirmationModal1 from '../../../components/Modals/addItemConfirmationModal1';
 
 export default function AddItem() {
     const [categoryOptions, setCategoryOptions] = useState(null);
@@ -18,15 +16,23 @@ export default function AddItem() {
     const [itemImagePrev, setItemImagePrev] = useState(null);
     const [itemImage, setItemImage] = useState(null);
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-    const navigate = useNavigate();
 
+    // Measurement feature states
+    const [measurementRequired, setMeasurementRequired] = useState(false);
+    const [measurementValue, setMeasurementValue] = useState("");
+    const [measurementUnit, setMeasurementUnit] = useState("");
+
+    const navigate = useNavigate();
+    
     useEffect(() => {
         const getAllCategories = async () => {
             try {
                 const data = await fetchAllInventoryCategories();
                 setCategoryOptions(data);
-            } catch (error) { console.error(error); }
-        }
+            } catch (error) {
+                console.error(error);
+            }
+        };
 
         getAllCategories();
     }, []);
@@ -53,6 +59,12 @@ export default function AddItem() {
         formData.append('desc', itemDesc);
         formData.append('img', itemImage);
 
+        // Add measurement data if required
+        if (measurementRequired) {
+            formData.append('measurementValue', measurementValue);
+            formData.append('measurementUnit', measurementUnit);
+        }
+
         axiosClient.post('/add-inventory-item', formData)
             .then(({ data }) => {
                 if (data.status === 200) {
@@ -60,7 +72,9 @@ export default function AddItem() {
                 } else {
                     notify('error', data.message, 'top-center', 3000);
                 }
-            }).catch(error => { console.error(error); });
+            }).catch(error => {
+                console.error(error);
+            });
     };
 
     const handleCancel = () => {
@@ -70,6 +84,9 @@ export default function AddItem() {
         setItemDesc('');
         setItemImage(null);
         setItemImagePrev(null);
+        setMeasurementRequired(false);
+        setMeasurementValue('');
+        setMeasurementUnit('');
 
         navigate(-1);
     };
@@ -82,7 +99,7 @@ export default function AddItem() {
         return (
             <div className='page'>
                 <div className='inventory-tracking gen-margin'>
-                    <h1>Add Item</h1>
+                    <h1 className='anybody'>Add Item</h1>
 
                     <div className="d-flex add small-form">
                         {/* Left Side - Image with Upload */}
@@ -134,6 +151,37 @@ export default function AddItem() {
                                 value={itemDesc}
                                 onChange={(e) => setItemDesc(e.target.value)}
                             />
+
+                            {/* Measurement Section */}
+                            <div className="measurement-section">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        checked={measurementRequired}
+                                        onChange={() => setMeasurementRequired(!measurementRequired)}
+                                    />
+                                    Measurement:
+                                </label>
+                                {measurementRequired && (
+                                    <div className="measurement-inputs">
+                                        <input
+                                            type="number"
+                                            placeholder="Value"
+                                            value={measurementValue}
+                                            onChange={(e) => setMeasurementValue(e.target.value)}
+                                        />
+                                        <select
+                                            value={measurementUnit}
+                                            onChange={(e) => setMeasurementUnit(e.target.value)}
+                                        >
+                                            <option value="">Unit</option>
+                                            <option value="m">m</option>
+                                            <option value="mg">mg</option>
+                                            <option value="g">g</option>
+                                        </select>
+                                    </div>
+                                )}
+                            </div>
 
                             {/* Button Group */}
                             <div className="button-group">

@@ -65,3 +65,39 @@ textarea {
 .submit-button:hover {
     background-color: #0056b3; /* Darker shade for hover effect */
 }
+.measurement-section {
+    display: flex;
+    align-items: center; /* Center the checkbox and text vertically */
+    gap: 10px; /* Space between checkbox and label */
+    margin-top: 15px;
+}
+
+.measurement-section label {
+    font-weight: bold;
+    display: flex;
+    align-items: center; /* Center checkbox with label */
+    gap: 5px; /* Adjust gap between checkbox and "Measurement:" text */
+}
+
+.measurement-inputs {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.measurement-inputs input {
+    width: 100px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.measurement-inputs select {
+    width: 100px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+  
