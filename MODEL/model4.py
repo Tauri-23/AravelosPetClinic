@@ -502,11 +502,19 @@ if __name__ == "__main__":
 
     # Train the model
     print("Training model...")
+<<<<<<< Updated upstream
     analyzer.train('rows_cleaned.csv')
 
     # Evaluate the model
     print("\nEvaluating model...")
     metrics = analyzer.evaluate('rows_cleaned.csv')
+=======
+    analyzer.train('MODEL/rows_cleaned.csv')
+
+    # Evaluate the model
+    print("\nEvaluating model...")
+    metrics = analyzer.evaluate('MODEL/rows_cleaned.csv')
+>>>>>>> Stashed changes
 
     # Test some example feedback
     test_feedbacks = [

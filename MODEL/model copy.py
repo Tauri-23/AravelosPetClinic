@@ -57,36 +57,12 @@ class VetFeedbackAnalyzer:
 
         self.sentiment_rules = {
             'positive': {
-                'en': ['good', 'great', 'excellent', 'awesome', 'satisfied', 'happy', 'clean', 'neat', 'tidy', 'pristine', 'fresh',
-                        'spotless', 'hygienic', 'sterile', 'orderly', 'sanitary', 'quick', 'fast', 'efficient', 'nice', 'pleasant',
-                        'friendly', 'helpful', 'attentive', 'compassionate', 'knowledgeable', 'skilled', 'responsive', 'professional',
-                        'respectful', 'welcoming', 'understanding', 'timely', 'reasonable', 'swift', 'thorough', 'reliable', 'gentle',
-                        'trustworthy', 'caring', 'dedicated', 'reputable', 'affordable', 'fair', 'justifiable', 'budget-friendly',
-                        'compassionate', 'minimal', 'short', 'prompt', 'value based', 'cost effective', 'patient focused', 'accessible',
-                        'competitive', 'organized', 'manageable', 'supportive', 'proactive'
-                    ],
-                'tl': ['maganda', 'mahusay', 'masaya', 'kontento', 'magaling', 'malinis', 'maayos', 'mura', 'makatarungan', 'mabait',
-                        'mabilis', 'mabisa', 'matulungin', 'mapagkalinga', 'maalaga', 'mapagmalasakit', 'maasahan', 'masinsin',
-                        'maingat', 'matapat', 'kaaya-aya', 'mapag-unawa', 'masinop', 'maalwan', 'madaling lapitan', 'malinaw', 'maaliwalas',
-                        'malambing', 'mapag-aruga', 'kagalang-galang', 'maasikaso', 'masipag', 'mapagbigay', 'mapagpakumbaba',
-                        'malasakit', 'marespeto', 'masigla', 'maingat', 'matapat', 'makonsiderasyon', 'mabango', 'maasikaso'
-                    ]
+                'en': ['good', 'great', 'excellent', 'awesome', 'satisfied', 'happy'],
+                'tl': ['maganda', 'mahusay', 'masaya', 'kontento', 'magaling']
             },
             'negative': {
-                'en': ['bad', 'poor', 'terrible', 'worst', 'disappointed', 'horrible', 'expensive', 'dirty', 'filthy', 'unkempt',
-                        'unsanitary', 'smelly', 'foul', 'contaminated', 'grimy', 'negligent', 'rude', 'unhelpful', 'impatient',
-                        'disrespectful', 'inattentive', 'unresponsive', 'unprofessional', 'cold', 'dismissive', 'indifferent',
-                        'slow', 'condescending', 'unreliable', 'inconsiderate', 'long', 'extended', 'delayed', 'excessive',
-                        'unreasonable', 'frustrating', 'tedious', 'prolonged', 'rough', 'inconsistent', 'rushed',
-                        'impersonal', 'hidden fees', 'overpriced', 'inflated', 'steep', 'costly', 'unaffordable', 'exorbitant'
-                    ],
-                'tl': ['pangit', 'masama', 'hindi maganda', 'hindi mahusay', 'malala', 'marumi', 'magulo', 'mahal', 'marahas',
-                        'mabagal', 'matagal', 'nakakainis', 'mabaho', 'makalat', 'hindi maayos', 'palpak', 'bastos', 'hindi magalang',
-                        'pabaya', 'walang malasakit', 'mapagsamantala', 'walang pakialam', 'hindi makatwiran', 'hindi kaaya-aya',
-                        'nakakadismaya', 'hindi sigurado', 'pasaway', 'magulo', 'magaspang', 'mapanlait', 'palpak', 'masalimoot',
-                        'mapagsamantala', 'walang malasakit', 'hindi kapani-paniwala', 'madamot', 'masikip', 'mahirap lapitan',
-                        'hindi marespeto', 'nakakasakit', 'mapanlinlang'
-                    ]
+                'en': ['bad', 'poor', 'terrible', 'worst', 'disappointed', 'horrible'],
+                'tl': ['pangit', 'masama', 'hindi maganda', 'hindi mahusay', 'malala']
             }
         }
         self.model_info = {
@@ -225,8 +201,7 @@ class VetFeedbackAnalyzer:
             return 'positive'
         elif neg_count > pos_count:
             return 'negative'
-        else:
-            return 'neutral'
+        return 'neutral'
 
     def train_batch(self, texts, labels):
         """Process a single training batch"""
@@ -658,14 +633,8 @@ def main():
         print("6. Exit")
 
         choice = input("\nEnter your choice (1-6): ")
-        if choice == '1':
-            dataset_path = input("Enter dataset path (CSV file): ")
-            model_save_path = input("Enter path to save model: ")
-            try:
-                analyzer.train(dataset_path, model_save_path)
-            except Exception as e:
-                print(f"Error during training: {str(e)}")
-        elif choice == '2':
+
+        if choice == '2':
             print("\nAvailable trained models:")
             available_models = list_available_models(base_model_path)
             if not available_models:
