@@ -156,14 +156,14 @@ const adminFeedback = () => {
 
   return (
     <div className="wrapper">
-      <div className="main-container">
+      <div className="main-container pet-name">
         {/* Customer Feedback Section */}
         <div className="section-card">
           <h2 className="section-title">Customer Feedback</h2>
           <div className="filter-container">
-            <select 
+            <select
               className="select-input"
-              value={selectedTime} 
+              value={selectedTime}
               onChange={(e) => setSelectedTime(e.target.value)}
             >
               <option value="">Select Time</option>
@@ -171,9 +171,9 @@ const adminFeedback = () => {
               <option value="10:00 AM">10:00 AM</option>
               <option value="11:00 AM">11:00 AM</option>
             </select>
-            <select 
+            <select
               className="select-input"
-              value={selectedService} 
+              value={selectedService}
               onChange={(e) => setSelectedService(e.target.value)}
             >
               <option value="">Select Service</option>
@@ -216,11 +216,11 @@ const adminFeedback = () => {
                 </div>
               </div>
               <div className="progress-container">
-                <div 
-                  className="progress-bar" 
+                <div
+                  className="progress-bar"
                   style={{
                     width: `${service.percentage}%`,
-                    backgroundColor: index === 0 ? '#22c55e' : 
+                    backgroundColor: index === 0 ? '#22c55e' :
                                   index === serviceRankings.length - 1 ? '#ef4444' : '#3b82f6'
                   }}
                 />
@@ -237,9 +237,9 @@ const adminFeedback = () => {
                 <div className="sentiment-header">
                   <span className="aspect-name">{aspect.aspect}</span>
                   <div className="sentiment-indicator">
-                    <span 
+                    <span
                       className="sentiment-badge"
-                      style={{ 
+                      style={{
                         backgroundColor: getSentimentColor(aspect.sentiment),
                         color: 'white'
                       }}
@@ -250,8 +250,8 @@ const adminFeedback = () => {
                   </div>
                 </div>
                 <div className="progress-container">
-                  <div 
-                    className="progress-bar" 
+                  <div
+                    className="progress-bar"
                     style={{
                       width: `${(aspect.count / Math.max(...aspectSentiments.map(a => a.count))) * 100}%`,
                       backgroundColor: getSentimentColor(aspect.sentiment)

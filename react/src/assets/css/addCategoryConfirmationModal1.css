@@ -20,10 +20,6 @@
     text-align: center;
 }
 
-.circle-btn1 {
-    display: flex;
-    justify-content: flex-end;
-}
 
 .circle-btn1 .pointer {
     font-size: 1.5rem;

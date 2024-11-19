@@ -6,14 +6,14 @@
 .inventory-box {
     display: flex;
     flex-direction: column; /* Align items vertically */
-    gap: 20px;
-    width: var(--box-width); /* Adjust width as needed */
-    height: var(--box-height); /* Adjust height as needed */
+    gap: .8vw;
+    width: 18vw;
+    height: 22vw;
     background: white; /* Background color */
     border-radius: var(--rounded_conts); /* Rounded corners */
     text-decoration: none; /* Remove underline from the link */
     color: #333; /* Text color */
-    padding: 20px; /* Padding for inner spacing */
+    padding: 1.5vw; /* Padding for inner spacing */
     transition: transform 0.3s; /* Smooth hover effect */
     filter: drop-shadow(0 0 1px var(--grey1));
 
@@ -24,24 +24,24 @@
 }
 
 .inventory-image {
-    width: 100%;  /* Set a width for the image */
-    height: calc(var(--box-width) - 100px);
-    border-radius: 10px;
+    aspect-ratio: 1/1;
+    border-radius: .5vw;
     display: block; /* Center image in its container */
     margin: 0 auto; /* Centering the image horizontally */
 }
 
 .item-details {
+    font-size:1vw;
+    font-weight:700;
     width: 100%;
 }
 
 .item-name {
-    font-size: 16px; /* Font size for item name */
     margin: 0; /* Remove default margin */
+    font-size:1.2vw;
 }
 
 .item-quantity {
-    font-size: 14px; /* Font size for item quantity */
     margin: 0; /* Remove default margin */
     color: #666; /* Lighter color for quantity text */
 }

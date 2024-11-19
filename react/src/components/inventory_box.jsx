@@ -7,11 +7,11 @@ export default function InventoryBox({ handleInventoryBoxClick, itemName, itemIm
             <div className="inventory-image">
                 <img src={`/assets/media/items/${itemImage}`} alt={itemName} className="inventory-image" />
             </div>
-            
+
             <div className="item-details">
-                <h4 className="item-name">{itemName}</h4>
+                <div className="item-name">{itemName}</div>
                 <p className="item-quantity">Quantity: {itemQuantity}</p>
-                
+
             </div>
         </div>
     );

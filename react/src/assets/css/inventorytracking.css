@@ -29,8 +29,6 @@ h3 {
 }
 
 .inventory-box {
-  width: 300px;
-  height: 200px;
   background: lightblue;
   font-size: 30px;
   text-align: center;
@@ -114,7 +112,10 @@ h3 {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  height:54vh;
+  margin-top: 1vw;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 .category-nav-link {
   padding: 10px 5px;
@@ -130,7 +131,7 @@ h3 {
 }
 
 .transaction-history {
-  width: 600px; /* Adjust the width as needed */
+  width: 35%; /* Adjust the width as needed */
   margin-left: 20px;
   height: 275px;
   overflow-y: auto;
