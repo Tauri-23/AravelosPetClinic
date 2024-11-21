@@ -1,14 +1,16 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { AlertCircle, Users } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
 import AdminShowAppointment from '../../components/Modals/adminshowappointment';
 import "../../assets/css/adminIndex.css";
 
-const Index = () => {
+
+const adminIndex = () => {
   const [feedbackLanguage, setFeedbackLanguage] = useState("english");
   const [activeTab, setActiveTab] = useState('today');
   const [selectedAppointment, setSelectedAppointment] = useState(null);
 
+  // Sample data
   const [appointments] = useState([
     { id: 1, petName: "Max", ownerName: "John Doe", time: "09:00 AM", date: "2024-11-15" },
     { id: 2, petName: "Luna", ownerName: "Jane Smith", time: "10:30 AM", date: "2024-11-15" },
@@ -49,7 +51,7 @@ const Index = () => {
 
   const getFilteredAppointments = () => {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set to start of day
+    today.setHours(0, 0, 0, 0);
     
     const weekAgo = new Date(today);
     weekAgo.setDate(today.getDate() - 7);
@@ -59,7 +61,7 @@ const Index = () => {
 
     return appointments.filter(apt => {
       const aptDate = new Date(apt.date);
-      aptDate.setHours(0, 0, 0, 0); // Set to start of day for proper comparison
+      aptDate.setHours(0, 0, 0, 0);
 
       switch (activeTab) {
         case 'today':
@@ -83,67 +85,52 @@ const Index = () => {
   const filteredAppointments = getFilteredAppointments();
 
   return (
-    <div className="admin-container">
-      <section className="appointments-section">
-        <h2>Appointments</h2>
-        <div className="appointments-tabs">
-          <button 
-            className={`tab ${activeTab === 'today' ? 'active' : ''}`}
-            onClick={() => setActiveTab('today')}
-          >
-            Today
-          </button>
-          <button 
-            className={`tab ${activeTab === 'week' ? 'active' : ''}`}
-            onClick={() => setActiveTab('week')}
-          >
-            This Week
-          </button>
-          <button 
-            className={`tab ${activeTab === 'month' ? 'active' : ''}`}
-            onClick={() => setActiveTab('month')}
-          >
-            This Month
-          </button>
+    <div className="powerbi-dashboard">
+      <header className="dashboard-header">
+        <h1>Veterinary Clinic Dashboard</h1>
+        <div className="header-controls">
+          <div className="date-filter">
+            <button className={`filter-btn ${activeTab === 'today' ? 'active' : ''}`} onClick={() => setActiveTab('today')}>Today</button>
+            <button className={`filter-btn ${activeTab === 'week' ? 'active' : ''}`} onClick={() => setActiveTab('week')}>This Week</button>
+            <button className={`filter-btn ${activeTab === 'month' ? 'active' : ''}`} onClick={() => setActiveTab('month')}>This Month</button>
+          </div>
         </div>
-        <div className="appointments-list">
-          {filteredAppointments.length > 0 ? (
-            filteredAppointments.map(apt => (
-              <div 
-                key={apt.id} 
-                className="appointment-card hover:bg-gray-100 cursor-pointer transition-colors"
-                onClick={() => setSelectedAppointment(apt)}
-              >
-                <h3>{apt.petName}</h3>
-                <p>Owner: {apt.ownerName}</p>
-                <p>Time: {apt.time}</p>
-                <p>Date: {new Date(apt.date).toLocaleDateString()}</p>
-              </div>
-            ))
-          ) : (
-            <div className="appointment-card">
-              <p>No appointments found for this period</p>
-            </div>
-          )}
-        </div>
-      </section>
+      </header>
 
-      <div className="right-section">
-        <section className="feedback-section">
-          <h2>Customer Feedback</h2>
-          <div className="language-toggle">
-            <button 
-              className={feedbackLanguage === "english" ? "active" : ""}
-              onClick={() => setFeedbackLanguage("english")}
-            >
-              English
-            </button>
-            <button 
-              className={feedbackLanguage === "tagalog" ? "active" : ""}
-              onClick={() => setFeedbackLanguage("tagalog")}
-            >
-              Tagalog
-            </button>
+      <div className="dashboard-grid">
+        <div className="dashboard-card appointments-card">
+          <div className="card-header">
+            <h2>Upcoming Appointments</h2>
+          </div>
+          <div className="appointments-scroll">
+            {filteredAppointments.length > 0 ? (
+              filteredAppointments.map(apt => (
+                <div key={apt.id} className="appointment-item" onClick={() => setSelectedAppointment(apt)}>
+                  <div className="appointment-time">{apt.time}</div>
+                  <div className="appointment-details">
+                    <div className="pet-name">{apt.petName}</div>
+                    <div className="owner-name">{apt.ownerName}</div>
+                  </div>
+                  <div className="appointment-date">
+                    {new Date(apt.date).toLocaleDateString()}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="no-appointments">
+                <p>No appointments found for this period</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="dashboard-card feedback-card">
+          <div className="card-header">
+            <h2>Customer Feedback</h2>
+            <div className="language-toggle">
+              <button className={`toggle-btn ${feedbackLanguage === "english" ? 'active' : ''}`} onClick={() => setFeedbackLanguage("english")}>English</button>
+              <button className={`toggle-btn ${feedbackLanguage === "tagalog" ? 'active' : ''}`} onClick={() => setFeedbackLanguage("tagalog")}>Tagalog</button>
+            </div>
           </div>
           <div className="feedback-chart">
             <BarChart width={600} height={300} data={chartData}>
@@ -151,55 +138,70 @@ const Index = () => {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="positive" stackId="a" fill="#4ade80" name="Positive" />
-              <Bar dataKey="negative" stackId="a" fill="#f87171" name="Negative" />
+              <Bar dataKey="positive" stackId="a" fill="#4CAF50" name="Positive" />
+              <Bar dataKey="negative" stackId="a" fill="#FF5252" name="Negative" />
             </BarChart>
           </div>
-        </section>
+        </div>
 
-        <section className="inventory-section">
-          <h2>Inventory Status</h2>
-          <div className="inventory-list">
+        <div className="dashboard-card inventory-card">
+          <div className="card-header">
+            <h2>Inventory Status</h2>
+          </div>
+          <div className="inventory-grid">
             {inventory.map(item => (
-              <div key={item.id} className="inventory-card">
-                <h3>{item.name}</h3>
-                <p>Stock: {item.stock}</p>
-                {item.stock < item.threshold && (
-                  <div className="low-stock-alert">
-                    <AlertCircle size={16} />
-                    Low Stock Alert
+              <div key={item.id} className={`inventory-item ${item.stock < item.threshold ? 'low-stock' : ''}`}>
+                <div className="inventory-icon">
+                  {item.stock < item.threshold && <AlertCircle size={20} />}
+                </div>
+                <div className="inventory-details">
+                  <h3>{item.name}</h3>
+                  <div className="stock-level">
+                    <div className="stock-bar">
+                      <div 
+                        className="stock-fill" 
+                        style={{ width: `${(item.stock / item.threshold) * 100}%` }}
+                      />
+                    </div>
+                    <span>{item.stock} units</span>
                   </div>
-                )}
+                </div>
               </div>
             ))}
           </div>
-        </section>
+        </div>
 
-        <section className="active-users-section">
-          <h2>Active Users</h2>
-          <div className="users-list">
+        <div className="dashboard-card users-card">
+          <div className="card-header">
+            <h2>Active Staff</h2>
+          </div>
+          <div className="users-grid">
             {activeUsers.map(user => (
-              <div key={user.id} className="user-card">
-                <Users size={16} />
-                <div className="user-info">
+              <div key={user.id} className="user-item">
+                <div className="user-avatar">
+                  <Users size={24} />
+                </div>
+                <div className="user-details">
                   <h3>{user.name}</h3>
                   <p>{user.role}</p>
                 </div>
-                <span className="status-indicator"></span>
+                <div className="user-status">
+                  <span className="status-dot"></span>
+                  {user.status}
+                </div>
               </div>
             ))}
           </div>
-        </section>
+        </div>
       </div>
-      {selectedAppointment && (
-        <AdminShowAppointment
-          isOpen={!!selectedAppointment}
-          onClose={() => setSelectedAppointment(null)}
-          appointment={selectedAppointment}
-        />
-      )}
+
+      <AdminShowAppointment
+        isOpen={!!selectedAppointment}
+        onClose={() => setSelectedAppointment(null)}
+        appointment={selectedAppointment}
+      />
     </div>
   );
 };
 
-export default Index;
+export default adminIndex;
