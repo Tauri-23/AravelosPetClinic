@@ -87,8 +87,20 @@ class VetFeedbackAnalyzer:
                         'mapagsamantala', 'walang malasakit', 'hindi kapani-paniwala', 'madamot', 'masikip', 'mahirap lapitan',
                         'hindi marespeto', 'nakakasakit', 'mapanlinlang'
                     ]
+            },
+            'neutral': {
+                'en': ['okay', 'average', 'normal', 'standard', 'typical', 'moderate', 'fair', 'regular', 'common', 'usual',
+                       'ordinary', 'basic', 'acceptable', 'decent', 'mediocre', 'middle', 'intermediate', 'medium', 'so-so',
+                       'alright', 'fine', 'satisfactory', 'adequate', 'sufficient', 'passable', 'tolerable', 'reasonable',
+                       'conventional', 'routine', 'customary'
+                    ],
+                'tl': ['pwede na', 'sakto', 'katamtaman', 'karaniwan', 'pangkaraniwan', 'karaniwang', 'tama lang',
+                       'sapat', 'kasya', 'kainaman', 'hindi masama', 'hindi maganda', 'pwede pa', 'ganun', 'ganon',
+                       'hindi naman masama', 'hindi naman maganda', 'ayos lang', 'ok lang', 'puwede na'
+                    ]
             }
         }
+        
         self.model_info = {
             'path': None,
             'format': None,  # 'old' or 'new'
@@ -214,19 +226,25 @@ class VetFeedbackAnalyzer:
         return aspects if aspects else ['general']
 
     def analyze_sentiment(self, text: str) -> str:
-        """Rule-based sentiment analysis"""
+        """Rule-based sentiment analysis with explicit neutral detection"""
         lang = self.detect_language(text)
         text = text.lower()
 
+        # Count sentiment signals
         pos_count = sum(1 for word in self.sentiment_rules['positive'][lang] if word in text)
         neg_count = sum(1 for word in self.sentiment_rules['negative'][lang] if word in text)
+        neutral_count = sum(1 for word in self.sentiment_rules['neutral'][lang] if word in text)
 
-        if pos_count > neg_count:
+        # Determine sentiment based on counts
+        if neutral_count > pos_count and neutral_count > neg_count:
+            return 'neutral'
+        elif pos_count > neg_count:
             return 'positive'
         elif neg_count > pos_count:
             return 'negative'
         else:
-            return 'neutral'
+            return 'neutral'  # Default to neutral if no clear sentiment
+
 
     def train_batch(self, texts, labels):
         """Process a single training batch"""
