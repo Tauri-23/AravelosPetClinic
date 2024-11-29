@@ -9,7 +9,7 @@ export default function AddPetModal1({ handleAddPetPost, onClose }) {
   const [petName, setPetName] = useState("");
   const [petType, setPetType] = useState("");
   const [petBreed, setPetBreed] = useState("");
-  const [petGender, setPetGender] = useState("");
+  const [petGender, setPetGender] = useState("Male");
   const [petDOB, setPetDOB] = useState(null); // Initialize with null to avoid default date
   const [petPic, setPetPic] = useState("");
 
