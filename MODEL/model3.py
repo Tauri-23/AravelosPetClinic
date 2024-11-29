@@ -31,7 +31,7 @@ class VetFeedbackAnalyzer:
         # Initialize with base model
         self._load_base_model()
 
-        # Aspect keywords (same as original)
+        # Aspect keywords 
         self.aspect_keywords = {
             'hygiene': {
                 'en': ['clean', 'sanitize', 'hygiene', 'dirty', 'smell', 'neat'],
@@ -42,7 +42,7 @@ class VetFeedbackAnalyzer:
                 'tl': ['maghintay', 'matagal', 'mabilis', 'oras', 'antay']
             },
             'customer_service': {
-                'en': ['staff', 'service', 'friendly', 'rude', 'helpful', 'attentive'],
+                'en': ['staff', 'service', 'friendly', 'rude', 'helpful', 'attentive', 'receptionist', 'customer service'],
                 'tl': ['kawani', 'serbisyo', 'magalang', 'bastos', 'matulungin']
             },
             'vet_care': {
@@ -50,8 +50,12 @@ class VetFeedbackAnalyzer:
                 'tl': ['gamot', 'doktor', 'beterinaryo', 'eksamin', 'alaga']
             },
             'pricing': {
-                'en': ['price', 'expensive', 'cheap', 'cost', 'affordable', 'fee'],
-                'tl': ['presyo', 'mahal', 'mura', 'halaga', 'bayad']
+                'en': ['price', 'expensive', 'cheap', 'cost', 'affordable', 'fee', 'charge'],
+                'tl': ['presyo', 'mahal', 'mura', 'halaga', 'bayad', 'singil']
+            },
+            'booking_experience': {
+                'en': ['book', 'appointment', 'schedule', 'reservation', 'slot', 'available', 'unavailable', 'full', 'online', 'phone', 'call'],
+                'tl': ['reserba', 'iskedyul', 'tawag', 'puno', 'bakante']
             }
         }
 
@@ -63,13 +67,14 @@ class VetFeedbackAnalyzer:
                         'respectful', 'welcoming', 'understanding', 'timely', 'reasonable', 'swift', 'thorough', 'reliable', 'gentle',
                         'trustworthy', 'caring', 'dedicated', 'reputable', 'affordable', 'fair', 'justifiable', 'budget-friendly',
                         'compassionate', 'minimal', 'short', 'prompt', 'value based', 'cost effective', 'patient focused', 'accessible',
-                        'competitive', 'organized', 'manageable', 'supportive', 'proactive'
+                        'competitive', 'organized', 'manageable', 'supportive', 'proactive', 'empathetic'
                     ],
                 'tl': ['maganda', 'mahusay', 'masaya', 'kontento', 'magaling', 'malinis', 'maayos', 'mura', 'makatarungan', 'mabait',
                         'mabilis', 'mabisa', 'matulungin', 'mapagkalinga', 'maalaga', 'mapagmalasakit', 'maasahan', 'masinsin',
                         'maingat', 'matapat', 'kaaya-aya', 'mapag-unawa', 'masinop', 'maalwan', 'madaling lapitan', 'malinaw', 'maaliwalas',
-                        'malambing', 'mapag-aruga', 'kagalang-galang', 'maasikaso', 'masipag', 'mapagbigay', 'mapagpakumbaba',
-                        'malasakit', 'marespeto', 'masigla', 'maingat', 'matapat', 'makonsiderasyon', 'mabango', 'maasikaso'
+                        'malambing', 'mapag aruga', 'kagalang galang', 'maasikaso', 'masipag', 'mapagbigay', 'mapagpakumbaba',
+                        'malasakit', 'marespeto', 'masigla', 'maingat', 'matapat', 'makonsiderasyon', 'mabango', 'maasikaso', 
+                        'nakikiramay'
                     ]
             },
             'negative': {
@@ -78,21 +83,26 @@ class VetFeedbackAnalyzer:
                         'disrespectful', 'inattentive', 'unresponsive', 'unprofessional', 'cold', 'dismissive', 'indifferent',
                         'slow', 'condescending', 'unreliable', 'inconsiderate', 'long', 'extended', 'delayed', 'excessive',
                         'unreasonable', 'frustrating', 'tedious', 'prolonged', 'rough', 'inconsistent', 'rushed',
-                        'impersonal', 'hidden fees', 'overpriced', 'inflated', 'steep', 'costly', 'unaffordable', 'exorbitant'
+                        'impersonal', 'hidden fees', 'overpriced', 'inflated', 'steep', 'costly', 'unaffordable', 'exorbitant', 'awful', 'disgusting', 
+                        'not transparent', 'too much', 'not cleaned', 'unclean', 'increasing', 'high', 'extra', 'double the price',
+                        'huge amount', 'unacceptable', 'ridiculous', 'shocked', 'ignored', 'not empathetic', 'unorganized', 'unwelcome',
+                        'stressful', 'lied'
                     ],
                 'tl': ['pangit', 'masama', 'hindi maganda', 'hindi mahusay', 'malala', 'marumi', 'magulo', 'mahal', 'marahas',
                         'mabagal', 'matagal', 'nakakainis', 'mabaho', 'makalat', 'hindi maayos', 'palpak', 'bastos', 'hindi magalang',
                         'pabaya', 'walang malasakit', 'mapagsamantala', 'walang pakialam', 'hindi makatwiran', 'hindi kaaya-aya',
                         'nakakadismaya', 'hindi sigurado', 'pasaway', 'magulo', 'magaspang', 'mapanlait', 'palpak', 'masalimoot',
-                        'mapagsamantala', 'walang malasakit', 'hindi kapani-paniwala', 'madamot', 'masikip', 'mahirap lapitan',
-                        'hindi marespeto', 'nakakasakit', 'mapanlinlang'
+                        'mapagsamantala', 'walang malasakit', 'hindi kapani paniwala', 'madamot', 'masikip', 'mahirap lapitan',
+                        'hindi marespeto', 'nakakasakit', 'mapanlinlang', 'katakot', 'nakakatakot', 'nakakadiri', 'di nagsasabi', 
+                        'di sinasabi', 'sobra', 'hindi nalinis', 'hindi malinis', 'padagdag', 'taas', 'dagdag', 'doble',
+                        'malaking halaga', 'hindi katanggap tanggap', 'nakakagulat', 'hindi ako pinansin', 'nagsinungaling'
                     ]
             },
             'neutral': {
                 'en': ['okay', 'average', 'normal', 'standard', 'typical', 'moderate', 'fair', 'regular', 'common', 'usual',
-                       'ordinary', 'basic', 'acceptable', 'decent', 'mediocre', 'middle', 'intermediate', 'medium', 'so-so',
+                       'ordinary', 'basic', 'acceptable', 'decent', 'mediocre', 'middle', 'intermediate', 'medium', 'so so',
                        'alright', 'fine', 'satisfactory', 'adequate', 'sufficient', 'passable', 'tolerable', 'reasonable',
-                       'conventional', 'routine', 'customary'
+                       'conventional', 'routine', 'customary', 'neutral'
                     ],
                 'tl': ['pwede na', 'sakto', 'katamtaman', 'karaniwan', 'pangkaraniwan', 'karaniwang', 'tama lang',
                        'sapat', 'kasya', 'kainaman', 'hindi masama', 'hindi maganda', 'pwede pa', 'ganun', 'ganon',
@@ -498,7 +508,7 @@ class VetFeedbackAnalyzer:
         """Collect statistics for all aspects from the dataset"""
         print("\nAnalyzing all aspects...")
 
-        aspects = ['hygiene', 'waiting_time', 'customer_service', 'vet_care', 'pricing']
+        aspects = ['hygiene', 'waiting_time', 'customer_service', 'vet_care', 'pricing', 'booking_experience']
         all_stats = {}
 
         # Initialize statistics for each aspect
