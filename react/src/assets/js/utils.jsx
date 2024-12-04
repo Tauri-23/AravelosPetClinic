@@ -97,3 +97,25 @@ export const formatDateForMySQL = (dateString) => {
 
     return mysqlDateTime;
 }
+
+export const formatDate = (date) => {
+    const realDate = new Date(date);
+    const options = {month: 'short', day: '2-digit', year: 'numeric'}
+    return realDate.toLocaleDateString('en-PH', options);
+}
+
+export const getAge = (date) => {
+    const birthDate = new Date(date); // Convert input date to Date object
+    const today = new Date();
+    
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    const dayDifference = today.getDate() - birthDate.getDate();
+    
+    // Adjust age if birth date hasn't occurred yet this year
+    if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
+        age--;
+    }
+    
+    return age;
+};

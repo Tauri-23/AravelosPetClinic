@@ -21,6 +21,7 @@ import MyAppointments from "./views/Client/appointment/myappointments";
 import ManageProfiles from "./views/Admin/manageProfiles";
 import AdminFeedback from "./views/Admin/adminFeedback";
 import AdminFeedbackAnalysis from "./views/Admin/adminFeedbackAnalysis";
+import AdminAppointmentDefault from "./views/Admin/Appointment/admin_appointment_default";
 
 const router = createBrowserRouter([
     /*
@@ -111,18 +112,32 @@ const router = createBrowserRouter([
                     }
                 ]
             },
+
+            /**
+             * Appointments
+             */
             {
-                path: 'ClinicCalendar', // Remove leading `/`
-                element: <ClinicCalendar />
+                path: "ClinicCalendar",
+                element: <AdminAppointmentDefault/>,
+                children: [
+                    {
+                        index: true,
+                        element: <ClinicCalendar />
+                    },
+                    {
+                        path: 'Appointments',
+                        element: <Appointments/>
+                    },
+                    {
+                        path: 'ApproveAppointment/:appointmentId',
+                        element: <ApproveAppointment />
+                    },
+                    
+                ]
             },
-            {
-                path: 'ClinicCalendar/Appointments', // Remove leading `/`
-                element: <Appointments />
-            },
-            {
-                path: 'ClinicCalendar/Appointments/ApproveAppointment', // Remove leading `/`
-                element: <ApproveAppointment />
-            },
+
+
+
             {
                 path: 'ManageProfiles', // Remove leading `/`
                 element: <ManageProfiles />

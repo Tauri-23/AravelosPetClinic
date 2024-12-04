@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\inventoryCategoriesController;
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\PetsController;
+use App\Http\Controllers\Api\StaffsController;
 use App\Http\Controllers\Api\UserAdminsController;
 use App\Http\Controllers\Api\UserClientsController;
 use Illuminate\Http\Request;
@@ -128,3 +129,14 @@ Route::post('/del-admin', [UserAdminsController::class, 'DeleteAdmin']);
 |----------------------------------------
 */
 Route::get('/get-all-admin-roles', [AdminRolesController::class, 'GetAllAdminRoles']);
+
+
+
+
+
+/*
+|----------------------------------------
+| Staffs
+|----------------------------------------
+*/
+Route::get('/get-all-staffs', [StaffsController::class, 'GetAllStaffs']);

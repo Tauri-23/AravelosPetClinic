@@ -51,9 +51,10 @@ export default function Appointments() {
 
 
 
-    const handleAppointmentRecordClick = (record)=> {
+    const handleAppointmentRecordClick = (record) => {
         showModal('AppointmentRecordModalAdmin1', {record, handleCancel, handleApprovePage})
     }
+    
     const handleApprovePost =(recordId) => {
 
         const formData=new FormData();
@@ -123,15 +124,10 @@ export default function Appointments() {
     }
 
     const handleApprovePage = (recordId) =>{
-
-        sessionStorage.setItem('recordId', recordId);
-        navigate('ApproveAppointment');
+        navigate(`/AdminIndex/ClinicCalendar/ApproveAppointment/${recordId}`);
     }
 
-
-
-
-      const renderHeaders = () => {
+    const renderHeaders = () => {
         switch (activeTab) {
             case "Pending":
                 return (
@@ -173,62 +169,66 @@ export default function Appointments() {
         }
     };
 
-  return (
 
-    <div className = "page inter">
-        <div className="bg book-appointment gen-margin">
-            <div className="mini-nav bottom-margin"><div className="anybody medium-f bold">Appointments</div><div className="separator left-margin-s right-margin-s"></div><Link to={'../ClinicCalendar'}><div className="anybody small-f semi-bold">Clinic Calendar</div></Link></div>
-            <div className="myappt small-form bottom-margin-s">
-                <div className="text-center">
-                    <div className='myappt-navigation d-flex '>
-                        <Link to={''} className="anybody semi-bold right-margin">
-                            <div className="a-tab" onClick={() => setActiveTab("Pending")}>
-                                Pending
-                                <div className={`nav1-line${activeTab === "Pending" ? " active" : ""}`}></div>
-                            </div>
-                        </Link>
-                        <Link to={''} className="anybody semi-bold right-margin">
-                            <div className="a-tab" onClick={() => setActiveTab("Approved")}>
-                            Approved
-                                <div className={`nav1-line${activeTab === "Approved" ? " active" : ""}`}></div>
-                            </div>
-                        </Link>
-                        <Link to={''} className="anybody semi-bold right-margin">
-                            <div className="a-tab" onClick={() => setActiveTab("Completed")}>
-                                Completed
-                                <div className={`nav1-line${activeTab === "Completed" ? " active" : ""}`}></div>
-                            </div>
-                        </Link>
-                        <Link to={''} className="anybody semi-bold right-margin">
-                            <div className="a-tab" onClick={() => setActiveTab("Cancelled")}>
-                                Cancelled
-                                <div className={`nav1-line${activeTab === "Cancelled" ? " active" : ""}`}></div>
-                            </div>
-                        </Link>
+    
+    /**
+     * Render
+     */
+    return (
+        <div className = "page inter">
+            <div className="bg book-appointment gen-margin">
+                <div className="mini-nav bottom-margin"><div className="anybody medium-f bold">Appointments</div><div className="separator left-margin-s right-margin-s"></div><Link to={'../ClinicCalendar'}><div className="anybody small-f semi-bold">Clinic Calendar</div></Link></div>
+                <div className="myappt small-form bottom-margin-s">
+                    <div className="text-center">
+                        <div className='myappt-navigation d-flex '>
+                            <Link to={''} className="anybody semi-bold right-margin">
+                                <div className="a-tab" onClick={() => setActiveTab("Pending")}>
+                                    Pending
+                                    <div className={`nav1-line${activeTab === "Pending" ? " active" : ""}`}></div>
+                                </div>
+                            </Link>
+                            <Link to={''} className="anybody semi-bold right-margin">
+                                <div className="a-tab" onClick={() => setActiveTab("Approved")}>
+                                Approved
+                                    <div className={`nav1-line${activeTab === "Approved" ? " active" : ""}`}></div>
+                                </div>
+                            </Link>
+                            <Link to={''} className="anybody semi-bold right-margin">
+                                <div className="a-tab" onClick={() => setActiveTab("Completed")}>
+                                    Completed
+                                    <div className={`nav1-line${activeTab === "Completed" ? " active" : ""}`}></div>
+                                </div>
+                            </Link>
+                            <Link to={''} className="anybody semi-bold right-margin">
+                                <div className="a-tab" onClick={() => setActiveTab("Cancelled")}>
+                                    Cancelled
+                                    <div className={`nav1-line${activeTab === "Cancelled" ? " active" : ""}`}></div>
+                                </div>
+                            </Link>
+                        </div>
+                        {/* <div className="anybody medium-f bold">No Appointments</div>
+                        <div className="anybody semi-bold">You haven't made any appointments yet.</div>
+                        <Link to={'../BookAppointment'}><button className="main-button">Book an Appointment</button></Link> */}
                     </div>
-                    {/* <div className="anybody medium-f bold">No Appointments</div>
-                    <div className="anybody semi-bold">You haven't made any appointments yet.</div>
-                    <Link to={'../BookAppointment'}><button className="main-button">Book an Appointment</button></Link> */}
                 </div>
-            </div>
-            <div className="myappt headers small-form d-flex bottom-margin-s">
-                {renderHeaders()}
-            </div>
-            <div className="myappt small-form">
-                    {appointments.length > 0 &&
-                        appointments.map(record =>
-                            record.status === activeTab && (
-                                <AppointmentRecordAdmin e key={record.id}
-                                handleAppointmentRecordClick={handleAppointmentRecordClick}
-                                record={record}
-                                handleCancel={(e) => handleCancel(record.id, e)}
-                                handleApprovePage={(e) => handleApprovePage(record.id, e)}/>
+                <div className="myappt headers small-form d-flex bottom-margin-s">
+                    {renderHeaders()}
+                </div>
+                <div className="myappt small-form">
+                        {appointments.length > 0 &&
+                            appointments.map(record =>
+                                record.status === activeTab && (
+                                    <AppointmentRecordAdmin e key={record.id}
+                                    handleAppointmentRecordClick={handleAppointmentRecordClick}
+                                    record={record}
+                                    handleCancel={(e) => handleCancel(record.id, e)}
+                                    handleApprovePage={(e) => handleApprovePage(record.id, e)}/>
+                                )
                             )
-                        )
-                    }
-            </div>
+                        }
+                </div>
 
+            </div>
         </div>
-    </div>
-  )
+    )
 }
