@@ -89,9 +89,6 @@ class AppointmentsController extends Controller
 
         $appointment->status = 'Approved';
 
-        // Update the status to 'Cancelled'
-        $appointment->status = 'Approved';
-
         // Set the current timestamp to 'cancelled_at'
         $appointment->approved_at = now();
 
@@ -113,9 +110,9 @@ class AppointmentsController extends Controller
     {
         return response()->json(appointments::where('client', $clientId)->with('pet')->get());
     }
-    public function getAppointment($appointmentId)
+    public function getAppointmentWhereId($appointmentId)
     {
-        return response()->json(appointments::where('client', $appointmentId));
+        return response()->json(appointments::with('pet')->find($appointmentId));
     }
     public function getAllAppointments()
     {

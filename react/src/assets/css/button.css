@@ -1,4 +1,4 @@
-.primary-btn-blue1{ /*for submission or confirm btns example: yes/submit/confirm*/
+.primary-btn-blue1, .primary-btn-red1{ /*for submission or confirm btns example: yes/submit/confirm*/
     font-family: Inter;
     font-weight: 700;
     border-radius: 20px;
@@ -16,6 +16,10 @@
     opacity: .5;
     user-select: none;
     cursor: not-allowed;
+}
+
+.primary-btn-red1 {
+    background-color: var(--red1);
 }
 
 .sub-button{ /*for cancel btns example: no/back/cancel*/

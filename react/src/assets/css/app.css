@@ -3,6 +3,7 @@
 
 :root {
     --blue1: #1D3675;
+    --red1: #aa1a1a;
     --rounded_conts: 1.4vw;
     --grey1: #585858;
     --bs-modal-color: #1D3675;
@@ -46,7 +47,7 @@ a{
 }
 .semi-small-f
 {
-    font-size:.5vw;
+    font-size:.8vw;
 }
 .small-f
 {

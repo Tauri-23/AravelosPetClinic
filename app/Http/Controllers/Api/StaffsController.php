@@ -11,6 +11,6 @@ class StaffsController extends Controller
     // GET
     public function GetAllStaffs()
     {
-        return response()->json(user_admins::whereNot("role", 1)->get());
+        return response()->json(user_admins::whereNot("role", 1)->with("role")->get());
     }
 }

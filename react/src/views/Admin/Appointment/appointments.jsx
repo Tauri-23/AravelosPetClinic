@@ -63,23 +63,23 @@ export default function Appointments() {
         const approvedRecord = appointments.find(record => record.id === recordId);
         console.log(recordId);
         axiosClient.post(`/approve-appointment`, formData)
-            .then(({ data }) => {
-                if (data.status === 200) {
-                    notify('success', data.message, 'top-center', 3000);
-                    setAppointments(prev => prev.filter(record => record.id !== recordId));
+        .then(({ data }) => {
+            if (data.status === 200) {
+                notify('success', data.message, 'top-center', 3000);
+                setAppointments(prev => prev.filter(record => record.id !== recordId));
 
-                    setAppointments(prev => [...prev, { ...approvedRecord, status: 'Approved', approved_at: new Date().toISOString()}]);
+                setAppointments(prev => [...prev, { ...approvedRecord, status: 'Approved', approved_at: new Date().toISOString()}]);
 
-                    setActiveTab('Approved');
+                setActiveTab('Approved');
 
 
-                } else {
-                    notify('error', data.message + record.id, 'top-center', 3000);
-                }
-            }).catch(error => {
-                console.error(error);
-                notify('error', data.message, 'top-center', 3000);
-            });
+            } else {
+                notify('error', data.message + record.id, 'top-center', 3000);
+            }
+        }).catch(error => {
+            console.error(error);
+            notify('error', data.message, 'top-center', 3000);
+        });
     }
 
     const handleCancelPost =(recordId, recordReason) => {

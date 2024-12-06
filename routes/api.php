@@ -70,7 +70,7 @@ Route::get('/get-all-inventory-categories', [inventoryCategoriesController::clas
 |----------------------------------------
 */
 Route::get('/get-all-appointments-where-client/{clientId}', [AppointmentsController::class,'getAllAppointmentWhereClient']);
-Route::get('/get-appt-where-id/{appointmentId}', [AppointmentsController::class,'getAppointment']);
+Route::get('/get-appt-where-id/{appointmentId}', [AppointmentsController::class,'getAppointmentWhereId']);
 Route::get('/get-all-appointments', [AppointmentsController::class,'getAllAppointments']);
 Route::post('/add-appointment', [AppointmentsController::class,'createAppointment']);
 Route::post('/cancel-appointment', [AppointmentsController::class,'cancelAppointment']);

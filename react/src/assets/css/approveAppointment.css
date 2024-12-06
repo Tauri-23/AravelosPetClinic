@@ -15,11 +15,15 @@
     flex-shrink: 0;
 }
 .staff-pic{
-
+    position: relative;
     background-color: var(--blue1);
     flex-shrink: 0;
     width:11vh;
     height:11vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 .staff-item{
     width: 10vw;
