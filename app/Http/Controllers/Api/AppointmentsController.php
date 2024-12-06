@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Contracts\IGenerateIdService;
 use App\Http\Controllers\Controller;
+use App\Models\appointment_assigned_staffs;
 use App\Models\appointments;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AppointmentsController extends Controller
 {
@@ -18,104 +20,171 @@ class AppointmentsController extends Controller
 
 
 
-    // POST
+    /**
+     * POST
+     */
     public function createAppointment(Request $request)
     {
-        $appointmentId = $this->generateId->generate(appointments::class, 12);
-        $appointment = new appointments();
-        $appointment->id = $appointmentId;
-        $appointment->client = $request->client;
-        $appointment->pet = $request->pet;
-        $appointment->service = $request->service;
-        $appointment->date_time = $request->dateTime;
-        $appointment->status = $request->status;
-
-        if($appointment->save())
+        try
         {
+            DB::beginTransaction();
+            $appointmentId = $this->generateId->generate(appointments::class, 12);
+            $appointment = new appointments();
+            $appointment->id = $appointmentId;
+            $appointment->client = $request->client;
+            $appointment->pet = $request->pet;
+            $appointment->service = $request->service;
+            $appointment->date_time = $request->dateTime;
+            $appointment->status = $request->status;
+            $appointment->save();
+
+            DB::commit();
+
             return response()->json([
                 'status' => 200,
                 'message' => 'Success.'
             ]);
         }
-        else
+        catch(\Exception $e)
         {
+            DB::rollBack();
             return response()->json([
-                'status' => 401,
-                'message' => 'Something went wrong please try again later.'
-            ]);
+                'status' => 500,
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
     public function cancelAppointment(Request $request){
-        $appointment = appointments::find($request->appointmentId);
-        if (!$appointment) {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Appointment not found.'
-            ], 404);
-        }
+        try 
+        {
+            DB::beginTransaction();
+            $appointment = appointments::find($request->appointmentId);
+            if (!$appointment) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Appointment not found.'
+                ], 404);
+            }
 
-        $appointment->status = 'Cancelled';
+            $appointment->status = 'Cancelled';
+            $appointment->cancelled_at = now();
+            $appointment->reason = $request->reason;
 
-        // Update the status to 'Cancelled'
-        $appointment->status = 'Cancelled';
+            $appointment->save();
 
-        // Set the current timestamp to 'cancelled_at'
-        $appointment->cancelled_at = now();
-
-        // Save the cancellation reason if provided
-        $appointment->reason = $request->reason;
-        if ($appointment->save()) {
+            DB::commit();
+            
             return response()->json([
                 'status' => 200,
                 'message' => 'Appointment cancelled successfully.'
             ]);
         }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    public function completeAppointment(Request $request){
+        try 
+        {
+            DB::beginTransaction();
+            $appointment = appointments::find($request->appointmentId);
+            if (!$appointment) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Appointment not found.'
+                ], 404);
+            }
 
-        return response()->json([
-            'status' => 500,
-            'message' => 'Failed to cancel appointment. Please try again later.'
-        ], 500);
+            $appointment->status = 'Completed';
+            $appointment->save();
+
+            DB::commit();
+            
+            return response()->json([
+                'status' => 200,
+                'message' => 'Appointment completed successfully.'
+            ]);
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function approveAppointment(Request $request){
-        $appointment = appointments::find($request->appointmentId);
-        if (!$appointment) {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Appointment not found.'
-            ], 404);
-        }
+        try 
+        {
+            DB::beginTransaction();
+            $appointment = appointments::find($request->appointmentId);
 
-        $appointment->status = 'Approved';
+            if (!$appointment) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Appointment not found.'
+                ]);
+            }
 
-        // Set the current timestamp to 'cancelled_at'
-        $appointment->approved_at = now();
+            $appointment->status = 'Approved';
+            $appointment->approved_at = now();
+            $appointment->save();
 
-        if ($appointment->save()) {
+            foreach($request->staffs as $staff)
+            {
+                $appointmentStaff = new appointment_assigned_staffs();
+                $appointmentStaff->staff = $staff;
+                $appointmentStaff->appointment = $request->appointmentId;
+                $appointmentStaff->save();
+            }
+
+            DB::commit();
             return response()->json([
                 'status' => 200,
                 'message' => 'Appointment approved successfully.'
             ]);
         }
-
-        return response()->json([
-            'status' => 500,
-            'message' => 'Failed to approve appointment. Please try again later.'
-        ], 500);
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            return response()->json([
+                'status'=> 500,
+                'message'=> $e->getMessage()
+            ], 500);
+        }
     }
 
-    // GET
+
+
+    /**
+     * GET
+     */
     public function getAllAppointmentWhereClient($clientId)
     {
         return response()->json(appointments::where('client', $clientId)->with('pet')->get());
     }
+
     public function getAppointmentWhereId($appointmentId)
     {
         return response()->json(appointments::with('pet')->find($appointmentId));
     }
+
     public function getAllAppointments()
     {
         return response()->json(appointments::with('pet')->get());
+    }
+    
+    public function GetAllAppointmentsWhereStatus($status)
+    {
+        return response()->json(appointments::where('status', $status)->with("pet")->get());
     }
 }

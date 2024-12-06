@@ -72,8 +72,11 @@ Route::get('/get-all-inventory-categories', [inventoryCategoriesController::clas
 Route::get('/get-all-appointments-where-client/{clientId}', [AppointmentsController::class,'getAllAppointmentWhereClient']);
 Route::get('/get-appt-where-id/{appointmentId}', [AppointmentsController::class,'getAppointmentWhereId']);
 Route::get('/get-all-appointments', [AppointmentsController::class,'getAllAppointments']);
+Route::get('/get-all-appointments-where-status/{status}', [AppointmentsController::class,'GetAllAppointmentsWhereStatus']);
+
 Route::post('/add-appointment', [AppointmentsController::class,'createAppointment']);
 Route::post('/cancel-appointment', [AppointmentsController::class,'cancelAppointment']);
+Route::post('/m-complete-appointment', [AppointmentsController::class,'completeAppointment']);
 Route::post('/approve-appointment', [AppointmentsController::class,'approveAppointment']);
 
 

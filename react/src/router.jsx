@@ -14,7 +14,6 @@ import AdminInventoryDefault from "./views/Admin/Inventory/inventory_default";
 import AdminInventoryIndex from "./views/Admin/Inventory/inventory_index";
 import AddItem from "./views/Admin/Inventory/addItem";
 import ClinicCalendar from "./views/Admin/Appointment/clinicCalendar";
-import Appointments from "./views/Admin/Appointment/appointments";
 import ApproveAppointment from "./views/Admin/Appointment/approveAppointment";
 import BookAppointment from "./views/Client/appointment/bookappointment";
 import MyAppointments from "./views/Client/appointment/myappointments";
@@ -22,6 +21,10 @@ import ManageProfiles from "./views/Admin/manageProfiles";
 import AdminFeedback from "./views/Admin/adminFeedback";
 import AdminFeedbackAnalysis from "./views/Admin/adminFeedbackAnalysis";
 import AdminAppointmentDefault from "./views/Admin/Appointment/admin_appointment_default";
+import AdminPendingAppointments from "./views/Admin/Appointment/admin_pending_appointments";
+import AdminApprovedAppointments from "./views/Admin/Appointment/admin_approved_appointments";
+import AdminCompletedAppointments from "./views/Admin/Appointment/admin_completed_appointments";
+import AdminCancelledAppointments from "./views/Admin/Appointment/admin_cancelled_appointments";
 
 const router = createBrowserRouter([
     /*
@@ -118,22 +121,33 @@ const router = createBrowserRouter([
              */
             {
                 path: "ClinicCalendar",
+                element: <ClinicCalendar />
+            },
+            {
+                path: "Appointments",
                 element: <AdminAppointmentDefault/>,
                 children: [
                     {
                         index: true,
-                        element: <ClinicCalendar />
+                        element: <AdminPendingAppointments/>
                     },
                     {
-                        path: 'Appointments',
-                        element: <Appointments/>
+                        path: 'Approved',
+                        element: <AdminApprovedAppointments/>
                     },
                     {
-                        path: 'ApproveAppointment/:appointmentId',
-                        element: <ApproveAppointment />
+                        path: 'Completed',
+                        element: <AdminCompletedAppointments/>
                     },
-                    
+                    {
+                        path: 'Cancelled',
+                        element: <AdminCancelledAppointments/>
+                    },               
                 ]
+            },
+            {
+                path: 'ApproveAppointment/:appointmentId',
+                element: <ApproveAppointment />
             },
 
 

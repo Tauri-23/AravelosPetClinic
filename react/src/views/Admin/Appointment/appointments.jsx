@@ -51,9 +51,7 @@ export default function Appointments() {
 
 
 
-    const handleAppointmentRecordClick = (record) => {
-        showModal('AppointmentRecordModalAdmin1', {record, handleCancel, handleApprovePage})
-    }
+    
     
     const handleApprovePost =(recordId) => {
 
@@ -113,15 +111,6 @@ export default function Appointments() {
                 notify('error', data.message, 'top-center', 3000);
             });
     }
-    const handleCancel = (recordId) =>{
-        console.log(recordId);
-        const handleFunction = "handleCancelPost";
-        if (isEmptyOrSpaces(String(recordId))) {
-            console.error("No appointment selected for cancellation.");
-            return;
-        }
-        showModal('ConfirmActionModal1',  {handlePost:handleCancelPost, recordId, handleFunction});
-    }
 
     const handleApprovePage = (recordId) =>{
         navigate(`/AdminIndex/ClinicCalendar/ApproveAppointment/${recordId}`);
@@ -132,36 +121,21 @@ export default function Appointments() {
             case "Pending":
                 return (
                     <>
-                        <div className='detailHeader column semi-bold'>Pet Name</div>
-                        <div className='detailHeader column semi-bold'>Appointment Type</div>
-                        <div className='detailHeader column semi-bold'>Requested Schedule</div>
                     </>
                 );
             case "Approved":
                 return (
                     <>
-                        <div className='detailHeader column semi-bold'>Pet Name</div>
-                        <div className='detailHeader column semi-bold'>Appointment Type</div>
-                        <div className='detailHeader column semi-bold'>Scheduled Date</div>
-                        <div className='detailHeader column semi-bold'>Date Approved</div>
                     </>
                 );
             case "Completed":
                 return (
                     <>
-                        <div className='detailHeader column semi-bold'>Pet Name</div>
-                        <div className='detailHeader column semi-bold'>Appointment Type</div>
-                        <div className='detailHeader column semi-bold'>Date Completed</div>
                     </>
                 );
             case "Cancelled":
                 return (
                     <>
-                        <div className='detailHeader column semi-bold'>Pet Name</div>
-                        <div className='detailHeader column semi-bold'>Appointment Type</div>
-                        <div className='detailHeader column semi-bold'>Requested Schedule</div>
-                        <div className='detailHeader column semi-bold'>Date Cancelled</div>
-                        <div className='detailHeader column semi-bold'>Reason</div>
                     </>
                 );
             default:
@@ -176,59 +150,7 @@ export default function Appointments() {
      */
     return (
         <div className = "page inter">
-            <div className="bg book-appointment gen-margin">
-                <div className="mini-nav bottom-margin"><div className="anybody medium-f bold">Appointments</div><div className="separator left-margin-s right-margin-s"></div><Link to={'../ClinicCalendar'}><div className="anybody small-f semi-bold">Clinic Calendar</div></Link></div>
-                <div className="myappt small-form bottom-margin-s">
-                    <div className="text-center">
-                        <div className='myappt-navigation d-flex '>
-                            <Link to={''} className="anybody semi-bold right-margin">
-                                <div className="a-tab" onClick={() => setActiveTab("Pending")}>
-                                    Pending
-                                    <div className={`nav1-line${activeTab === "Pending" ? " active" : ""}`}></div>
-                                </div>
-                            </Link>
-                            <Link to={''} className="anybody semi-bold right-margin">
-                                <div className="a-tab" onClick={() => setActiveTab("Approved")}>
-                                Approved
-                                    <div className={`nav1-line${activeTab === "Approved" ? " active" : ""}`}></div>
-                                </div>
-                            </Link>
-                            <Link to={''} className="anybody semi-bold right-margin">
-                                <div className="a-tab" onClick={() => setActiveTab("Completed")}>
-                                    Completed
-                                    <div className={`nav1-line${activeTab === "Completed" ? " active" : ""}`}></div>
-                                </div>
-                            </Link>
-                            <Link to={''} className="anybody semi-bold right-margin">
-                                <div className="a-tab" onClick={() => setActiveTab("Cancelled")}>
-                                    Cancelled
-                                    <div className={`nav1-line${activeTab === "Cancelled" ? " active" : ""}`}></div>
-                                </div>
-                            </Link>
-                        </div>
-                        {/* <div className="anybody medium-f bold">No Appointments</div>
-                        <div className="anybody semi-bold">You haven't made any appointments yet.</div>
-                        <Link to={'../BookAppointment'}><button className="main-button">Book an Appointment</button></Link> */}
-                    </div>
-                </div>
-                <div className="myappt headers small-form d-flex bottom-margin-s">
-                    {renderHeaders()}
-                </div>
-                <div className="myappt small-form">
-                        {appointments.length > 0 &&
-                            appointments.map(record =>
-                                record.status === activeTab && (
-                                    <AppointmentRecordAdmin e key={record.id}
-                                    handleAppointmentRecordClick={handleAppointmentRecordClick}
-                                    record={record}
-                                    handleCancel={(e) => handleCancel(record.id, e)}
-                                    handleApprovePage={(e) => handleApprovePage(record.id, e)}/>
-                                )
-                            )
-                        }
-                </div>
-
-            </div>
+            
         </div>
     )
 }

@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import "../../../assets/css/approveAppointment.css";
 import { fetchAppointmentDetails } from '../../../services/AppointmentServices';
 import { fetchAllStaffs } from '../../../services/StaffServices.jsx';
 import { formatDate, getAge, isEmptyOrSpaces, notify } from '../../../assets/js/utils.jsx';
+import axiosClient from '../../../axios-client.js';
 
 
 export default function ApproveAppointment() {
+    const navigate = useNavigate();
     const {appointmentId} = useParams();
 
-    const [selectedStaff, setSelectedStaff] = useState(null);
+    const [selectedStaffs, setSelectedStaffs] = useState([]);
 
     const [staffs, setStaffs] = useState(null);
     const [appointment, setAppointment] = useState(null);
+
 
 
     /**
@@ -38,25 +41,28 @@ export default function ApproveAppointment() {
 
 
     /**
-     * Debugging
-     */
-    useEffect(() => {
-        console.log(selectedStaff)
-    }, [selectedStaff]);
-
-
-
-    /**
      * Handlers
      */
-    const handleApprovePage = (appointmentId) => {
+    const handleAssignStaff = (staff) => {
+        setSelectedStaffs(prev => 
+            prev.some(prevStaff => prevStaff.id === staff.id)
+            ? prev.filter(prevStaff => prevStaff.id !== staff.id) // Remove staff if already selected
+            : [...prev, staff] // Add staff if not already selected
+        );
+    }
+
+    const handleApproveAppointment = (appointmentId) => {
         const formData = new FormData();
         formData.append('appointmentId', appointmentId);
+
+        selectedStaffs.forEach(staff => {
+            formData.append('staffs[]', staff.id);
+        })
 
         axiosClient.post(`/approve-appointment`, formData)
         .then(({ data }) => {
             if (data.status === 200) {
-
+                navigate('/AdminIndex/Appointments/Approved')
             }
 
             notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
@@ -87,9 +93,9 @@ export default function ApproveAppointment() {
                                         Cancel Appointment
                                     </button>
                                     <button 
-                                    disabled={!selectedStaff}
-                                    className={`primary-btn-blue1 ${selectedStaff ? "" : "disabled"} left-margin-s`} 
-                                    onClick={() => handleApprovePage(appointment.id)}>
+                                    disabled={selectedStaffs.length < 1}
+                                    className={`primary-btn-blue1 ${selectedStaffs.length < 1 ? "disabled" : ""} left-margin-s`} 
+                                    onClick={() => handleApproveAppointment(appointment.id)}>
                                         Approve Appointment
                                     </button>
                                 </div>
@@ -144,7 +150,7 @@ export default function ApproveAppointment() {
                                             <div 
                                             key={staff.id} 
                                             className='staff-item d-flex flex-column justify-content-between' 
-                                            onClick={() => setSelectedStaff(staff)}>
+                                            onClick={() => handleAssignStaff(staff)}>
                                                 <div className="left circle staff-pic m-auto">
                                                     <img className='position-absolute h-100' src={`/assets/media/pfp/${staff.picture}`} alt="pfp"/>
                                                 </div>
@@ -168,23 +174,25 @@ export default function ApproveAppointment() {
                             <div className='right side'>
                                 <div className='small-form inventory-appt'>
                                     <div className="semi-small-medium-f" style={{marginBottom: "10px"}}>Assigned Staff</div>
-                                    {!selectedStaff
+                                    {selectedStaffs.length < 1
                                     ? (
                                         <>Assign a staff for this appointment</>
                                     )
                                     : (                                        
-                                        <div className='d-flex align-items-center w-100 justify-content-between'>
-                                            <div className='d-flex align-items-center gap1'>
-                                                <div className="left circle staff-pic">
-                                                    <img className='position-absolute h-100' src={`/assets/media/pfp/${selectedStaff.picture}`} alt="pfp"/>
+                                        selectedStaffs.map(selectedStaff => (
+                                            <div key={selectedStaff.id} className='d-flex align-items-center w-100 justify-content-between' style={{marginBottom: "20px"}}>
+                                                <div className='d-flex align-items-center gap1'>
+                                                    <div className="left circle staff-pic">
+                                                        <img className='position-absolute h-100' src={`/assets/media/pfp/${selectedStaff.picture}`} alt="pfp"/>
+                                                    </div>
+                                                    <div>
+                                                        <div className="small-f fw-bold">{selectedStaff.fname} {selectedStaff.lname}</div>
+                                                        <div className="semi-small-f">{selectedStaff.role.role}</div>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <div className="small-f fw-bold">{selectedStaff.fname} {selectedStaff.lname}</div>
-                                                    <div className="semi-small-f">{selectedStaff.role.role}</div>
-                                                </div>
+                                                <button className='primary-btn-red1' onClick={() => handleAssignStaff(selectedStaff)}>Unassign</button>
                                             </div>
-                                            <button className='primary-btn-red1' onClick={() => setSelectedStaff(null)}>Unassign</button>
-                                        </div>
+                                        ))
                                     )}
                                 </div>
                             </div>

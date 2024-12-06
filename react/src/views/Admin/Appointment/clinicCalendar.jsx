@@ -59,7 +59,7 @@ function ClinicCalendar() {
                 <div className="mini-nav bottom-margin-s">
                     <div className="anybody medium-f bold">Clinic Calendar</div>
                     <div className="separator left-margin-s right-margin-s"></div>
-                    <Link to={'Appointments'}>
+                    <Link to={'/AdminIndex/Appointments'}>
                         <div className="anybody small-f semi-bold">Appointments</div>
                     </Link>
                 </div>
