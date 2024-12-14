@@ -1,5 +1,11 @@
 .staff-appt{
     height:34vh;
+    margin-bottom:3vh;
+}
+.inventory-appt-sm {
+    max-height: 100vh;
+    overflow-y: auto;
+    margin-bottom:3vh;
 }
 .details-appt{
     height:34vh;
@@ -7,6 +13,8 @@
 }
 .inventory-appt{
     height:71vh;
+    overflow-y: auto;
+    margin-bottom:3vh;
 }
 .approve-appt .left .pic{
     width:25vh;
@@ -31,6 +39,12 @@
 }
 .staff-list{
     height:min-content;
+}
+.inventory-list{
+    height:min-content;    
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 .approve-appt .right{
 height:25vh;
