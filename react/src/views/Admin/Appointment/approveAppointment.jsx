@@ -14,7 +14,7 @@ export default function ApproveAppointment() {
     const {appointmentId} = useParams();
 
     const [selectedStaffs, setSelectedStaffs] = useState([]);
-    const [selectedItem, setSelectedItem] = useState([]);
+    const [selectedItems, setselectedItems] = useState([]);
 
     const [staffs, setStaffs] = useState(null);
     const [appointment, setAppointment] = useState(null);
@@ -71,7 +71,7 @@ export default function ApproveAppointment() {
             )
         );
 
-        setSelectedItem(prev => {
+        setselectedItems(prev => {
             const existingItemIndex = prev.findIndex(prevItem => prevItem.id === item.id);
     
             if (existingItemIndex !== -1) {
@@ -90,15 +90,15 @@ export default function ApproveAppointment() {
     };
 
     const handleDeselectItem = (item) => {
-        setSelectedItem(prev => {
-            const selectedItemQty = prev.find(prevItem => prevItem.id === item.id)?.selected_qty || 0;
-    
-            // Restore inventory separately
-            updateInventoryItemQty(item.id, selectedItemQty);
-    
+        setselectedItems(prev => {
             // Remove the deselected item
             return prev.filter(prevItem => prevItem.id !== item.id);
         });
+
+        const selectedItemQty = selectedItems.find(prevItem => prevItem.id === item.id)?.selected_qty || 0;
+    
+        // Restore inventory separately
+        updateInventoryItemQty(item.id, selectedItemQty);
     };
     
     const updateInventoryItemQty = (itemId, qtyToAdd) => {
@@ -109,9 +109,7 @@ export default function ApproveAppointment() {
                     : prevItem
             )
         );
-    };
-    
-    
+    };   
 
     const handleApproveAppointment = (appointmentId) => {
         const formData = new FormData();
@@ -119,6 +117,10 @@ export default function ApproveAppointment() {
 
         selectedStaffs.forEach(staff => {
             formData.append('staffs[]', staff.id);
+        });
+
+        selectedItems.forEach(item => {
+            formData.append('items[]', JSON.stringify({id:parseInt(item.id), qty: item.selected_qty}));
         })
 
         axiosClient.post(`/approve-appointment`, formData)
@@ -155,8 +157,8 @@ export default function ApproveAppointment() {
                                         Cancel Appointment
                                     </button>
                                     <button 
-                                    disabled={selectedStaffs.length < 1}
-                                    className={`primary-btn-blue1 ${selectedStaffs.length < 1 ? "disabled" : ""} left-margin-s`} 
+                                    disabled={selectedStaffs.length < 1 || selectedItems.length < 1}
+                                    className={`primary-btn-blue1 ${selectedStaffs.length < 1 || selectedItems.length < 1 ? "disabled" : ""} left-margin-s`} 
                                     onClick={() => handleApproveAppointment(appointment.id)}>
                                         Approve Appointment
                                     </button>
@@ -282,12 +284,12 @@ export default function ApproveAppointment() {
                                 {/* For Assigned Inventory items */}
                                 <div className='small-form inventory-appt'>
                                     <div className="semi-small-medium-f" style={{marginBottom: "10px"}}>Assigned Item</div>
-                                    {selectedItem.length < 1
+                                    {selectedItems.length < 1
                                     ? (
                                         <>Assign items for this appointment</>
                                     )
                                     : (                                        
-                                        selectedItem.map(selectedItem => (
+                                        selectedItems.map(selectedItem => (
                                             <div key={selectedItem.id} className='d-flex align-items-center w-100 justify-content-between' style={{marginBottom: "20px"}}>
                                                 <div className='d-flex align-items-center gap1'>
                                                     <div className="left circle staff-pic">

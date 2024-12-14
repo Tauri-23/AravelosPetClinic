@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('appointment_assigned_staffs', function (Blueprint $table) {
+        Schema::create('appointment_assigned_items', function (Blueprint $table) {
             $table->id();
             $table->string('appointment', 12)->nullable();
-            $table->string('staff',6)->nullable();
+            $table->unsignedBigInteger('inventory')->nullable();
+            $table->integer('qty');
             $table->timestamps();
 
             $table->foreign('appointment')
@@ -23,9 +24,9 @@ return new class extends Migration
             ->cascadeOnDelete()
             ->cascadeOnUpdate();
 
-            $table->foreign('staff')
+            $table->foreign('inventory')
             ->references('id')
-            ->on('user_admins')
+            ->on('inventories')
             ->cascadeOnDelete()
             ->cascadeOnUpdate();
         });
@@ -36,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('appointment_assigned_staffs');
+        Schema::dropIfExists('appointment_assigned_items');
     }
 };

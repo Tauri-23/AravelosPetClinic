@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Contracts\IGenerateIdService;
 use App\Http\Controllers\Controller;
+use App\Models\appointment_assigned_items;
 use App\Models\appointment_assigned_staffs;
 use App\Models\appointments;
+use App\Models\inventory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -145,6 +147,26 @@ class AppointmentsController extends Controller
                 $appointmentStaff->staff = $staff;
                 $appointmentStaff->appointment = $request->appointmentId;
                 $appointmentStaff->save();
+            }
+
+            foreach($request->items as $item)
+            {
+                $decodedItem = json_decode($item);
+                
+                // return response()->json([
+                //     'status'=> 500,
+                //     'message'=> $decodedItem->qty
+                // ], 500);
+
+                $inventory = inventory::find((int)$decodedItem->id);
+                $inventory->qty -= (int)$decodedItem->qty;
+                $inventory->save();
+
+                $appointmentItem = new appointment_assigned_items();
+                $appointmentItem->inventory = (int)$decodedItem->id;
+                $appointmentItem->qty = (int)$decodedItem->qty;
+                $appointmentItem->appointment = $request->appointmentId;
+                $appointmentItem->save();
             }
 
             DB::commit();
