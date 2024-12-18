@@ -12,6 +12,8 @@ from datetime import datetime
 from collections import defaultdict, Counter
 import re
 import string
+import random
+
 
 class VetFeedbackAnalyzer:
     def __init__(self, batch_size=16):
@@ -64,7 +66,7 @@ class VetFeedbackAnalyzer:
                 'en': ['good', 'great', 'excellent', 'awesome', 'satisfied', 'happy', 'clean', 'neat', 'tidy', 'pristine', 'fresh',
                         'spotless', 'hygienic', 'sterile', 'orderly', 'sanitary', 'quick', 'fast', 'efficient', 'nice', 'pleasant',
                         'friendly', 'helpful', 'attentive', 'compassionate', 'knowledgeable', 'skilled', 'responsive', 'professional',
-                        'respectful', 'welcoming', 'understanding', 'timely', 'reasonable', 'swift', 'thorough', 'reliable', 'gentle',
+                        'respectful', 'welcoming', 'understanding', 'timely', 'swift', 'thorough', 'reliable', 'gentle',
                         'trustworthy', 'caring', 'dedicated', 'reputable', 'affordable', 'fair', 'justifiable', 'budget-friendly',
                         'compassionate', 'minimal', 'short', 'prompt', 'value based', 'cost effective', 'patient focused', 'accessible',
                         'competitive', 'organized', 'manageable', 'supportive', 'proactive', 'empathetic'
@@ -102,11 +104,12 @@ class VetFeedbackAnalyzer:
                 'en': ['okay', 'average', 'normal', 'standard', 'typical', 'moderate', 'fair', 'regular', 'common', 'usual',
                        'ordinary', 'basic', 'acceptable', 'decent', 'mediocre', 'middle', 'intermediate', 'medium', 'so so',
                        'alright', 'fine', 'satisfactory', 'adequate', 'sufficient', 'passable', 'tolerable', 'reasonable',
-                       'conventional', 'routine', 'customary', 'neutral', 'but', 'could', 'neither'
+                       'conventional', 'routine', 'customary', 'neutral', 'but', 'could', 'neither', 'bit'
                     ],
                 'tl': ['pwede na', 'sakto', 'katamtaman', 'karaniwan', 'pangkaraniwan', 'karaniwang', 'tama lang',
                        'sapat', 'kasya', 'kainaman', 'hindi masama', 'pwede pa', 'ganun', 'ganon',
-                       'hindi naman masama', 'hindi naman maganda', 'ayos lang', 'ok lang', 'puwede na', 'pero', 'pwede'
+                       'hindi naman masama', 'hindi naman maganda', 'ayos lang', 'ok lang', 'puwede na', 'pero', 'pwede', 'ngunit',
+                       'okay naman', 'ayos', 'medyo', 'katamtaman'
                     ]
             }
         }
@@ -308,17 +311,175 @@ class VetFeedbackAnalyzer:
 
         return loss.item()
     #used
-    def train(self, dataset_path: str, model_save_path: str, epochs=3):
-        """Train model with augmented sentiment signals"""
+    def train(self, dataset_path: str, model_save_path: str, epochs=4):
+        """Train model with handling for imbalanced data"""
         print("Starting training...")
         self._load_base_model()
         self.model.train()
-        self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=2e-5)
+
+        # Calculate class weights from dataset
+        print("Calculating class distribution...")
+        class_counts = defaultdict(int)
+        total_samples = 0
+        
+        for chunk in pd.read_csv(dataset_path, chunksize=self.batch_size):
+            for text in chunk['review']:
+                sentiment = self.analyze_sentiment(text)
+                class_counts[sentiment] += 1
+                total_samples += 1
+        
+        # Calculate class weights inversely proportional to frequency
+        class_weights = {
+            'negative': total_samples / (3 * class_counts['negative']),
+            'positive': total_samples / (3 * class_counts['positive']),
+            'neutral': total_samples / (3 * class_counts['neutral'])
+        }
+        
+        print("\nClass distribution:")
+        for cls, count in class_counts.items():
+            print(f"{cls}: {count} samples (weight: {class_weights[cls]:.2f})")
+
+        # Convert class weights to tensor format
+        weight_mapping = {'negative': 0, 'positive': 1, 'neutral': 2}
+        class_weight_tensor = torch.tensor(
+            [class_weights[k] for k in ['negative', 'positive', 'neutral']],
+            device=self.device
+        )
+
+        # Initialize optimizer with weight decay
+        self.optimizer = torch.optim.AdamW(
+            self.model.parameters(),
+            lr=2e-5,
+            weight_decay=0.01  # L2 regularization
+        )
+        
+        # Learning rate scheduler
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            self.optimizer,
+            mode='min',
+            factor=0.5,
+            patience=2,
+            verbose=True
+        )
 
         best_metrics = None
         best_epoch = None
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         base_save_path = f"{model_save_path}_{timestamp}"
+
+        def augment_text(text: str, lang: str) -> str:
+            """Simple text augmentation"""
+            words = text.split()
+            if len(words) < 3:
+                return text
+                
+            # Random word dropout
+            if random.random() < 0.3:
+                drop_idx = random.randint(0, len(words)-1)
+                words.pop(drop_idx)
+                
+            # Random word repetition for emphasis
+            if random.random() < 0.3:
+                repeat_idx = random.randint(0, len(words)-1)
+                words.insert(repeat_idx, words[repeat_idx])
+                
+            return ' '.join(words)
+
+        for epoch in range(epochs):
+            total_loss = 0
+            batch_count = 0
+
+            # Training loop with augmentation for minority classes
+            for chunk in tqdm(pd.read_csv(dataset_path, chunksize=self.batch_size),
+                            desc=f'Epoch {epoch+1}/{epochs}'):
+                texts = []
+                labels = []
+                
+                for text in chunk['review']:
+                    sentiment = self.analyze_sentiment(text)
+                    lang = self.detect_language(text)
+                    label = weight_mapping[sentiment]
+                    
+                    # Add original sample
+                    texts.append(text)
+                    labels.append(label)
+                    
+                    # Augment minority classes
+                    if sentiment in ['negative', 'neutral']:  # assuming these are minority classes
+                        # Add augmented versions
+                        for _ in range(2):  # Create 2 augmented versions
+                            aug_text = augment_text(text, lang)
+                            texts.append(aug_text)
+                            labels.append(label)
+
+                # Process batch with weighted loss
+                encoded = self.tokenizer(
+                    texts,
+                    padding=True,
+                    truncation=True,
+                    max_length=128,
+                    return_tensors='pt'
+                )
+
+                input_ids = encoded['input_ids'].to(self.device)
+                attention_mask = encoded['attention_mask'].to(self.device)
+                label_tensor = torch.tensor(labels).to(self.device)
+
+                self.optimizer.zero_grad()
+                outputs = self.model(
+                    input_ids,
+                    attention_mask=attention_mask,
+                    labels=label_tensor
+                )
+
+                # Apply class weights to loss
+                loss = outputs.loss * class_weight_tensor[label_tensor].mean()
+
+                loss.backward()
+                
+                # Gradient clipping
+                torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
+                
+                self.optimizer.step()
+
+                total_loss += loss.item()
+                batch_count += 1
+
+                del input_ids, attention_mask, outputs, label_tensor
+                torch.cuda.empty_cache() if self.device.type == 'cuda' else None
+                gc.collect()
+
+            avg_loss = total_loss / batch_count
+            print(f'Epoch {epoch+1} - Average loss: {avg_loss:.4f}')
+            
+            # Update learning rate
+            scheduler.step(avg_loss)
+
+            # Save epoch model
+            epoch_save_path = f"{base_save_path}_epoch_{epoch+1}"
+            os.makedirs(epoch_save_path, exist_ok=True)
+            self.model.save_pretrained(epoch_save_path)
+
+            # Evaluate current epoch
+            self.current_model_path = epoch_save_path
+            self.is_base_model = False
+            metrics = self.evaluate(dataset_path, quiet=True)
+
+            # Track best model
+            if best_metrics is None or metrics['f1_score'] > best_metrics['f1_score']:
+                best_metrics = metrics
+                best_epoch = epoch + 1
+                self.best_model_path = epoch_save_path
+                self.best_metrics = metrics
+
+            print(f"Epoch {epoch+1} metrics:")
+            self._print_metrics(metrics)
+
+        print("\nTraining completed!")
+        print(f"Best performing model was epoch {best_epoch}:")
+        self._print_metrics(best_metrics)
+        print(f"Best model saved at: {self.best_model_path}")
+
 
         def get_sentiment_score(text: str) -> float:
             """Get sentiment score based on keyword presence"""
@@ -713,6 +874,92 @@ class VetFeedbackAnalyzer:
         }
 
         return result
+    def balance_dataset(self, input_path: str, output_path: str):
+        """Balance dataset by augmenting minority classes"""
+        print("Starting dataset balancing...")
+            
+        # Read the entire dataset
+        df = pd.read_csv(input_path)
+        print(f"Original dataset size: {len(df)} samples")
+            
+        # Get sentiment distribution
+        df['sentiment'] = df['review'].apply(self.analyze_sentiment)
+        sentiment_counts = df['sentiment'].value_counts()
+            
+        print("\nOriginal class distribution:")
+        for sentiment, count in sentiment_counts.items():
+            print(f"{sentiment}: {count} samples")
+                
+        # Find majority class count
+        max_count = sentiment_counts.max()
+            
+        # Initialize list for balanced data
+        balanced_data = []
+            
+        # Process each sentiment class
+        for sentiment in ['positive', 'negative', 'neutral']:
+            sentiment_df = df[df['sentiment'] == sentiment]
+            current_count = len(sentiment_df)
+                
+            # Add original samples
+            balanced_data.extend(sentiment_df.to_dict('records'))
+                
+            # Calculate how many more samples we need
+            samples_needed = max_count - current_count
+                
+            if samples_needed > 0:
+                print(f"\nAugmenting {sentiment} class with {samples_needed} samples...")
+                    
+                # Augment data until we reach the majority class count
+                while len(balanced_data) < len(df) + samples_needed:
+                    # Randomly select a sample to augment
+                    sample = sentiment_df.sample(n=1).iloc[0]
+                    text = sample['review']
+                    lang = self.detect_language(text)
+                        
+                    # Apply augmentation
+                    words = text.split()
+                    if len(words) >= 3:
+                        # Random word dropout
+                        if random.random() < 0.3:
+                            drop_idx = random.randint(0, len(words)-1)
+                            words.pop(drop_idx)
+                            
+                        # Random word repetition for emphasis
+                        if random.random() < 0.3:
+                            repeat_idx = random.randint(0, len(words)-1)
+                            words.insert(repeat_idx, words[repeat_idx])
+                        
+                        # Random word order swap
+                        if random.random() < 0.3 and len(words) >= 4:
+                            idx1 = random.randint(0, len(words)-2)
+                            words[idx1], words[idx1+1] = words[idx1+1], words[idx1]
+                        
+                        augmented_text = ' '.join(words)
+                        
+                        # Add augmented sample
+                        augmented_sample = sample.copy()
+                        augmented_sample['review'] = augmented_text
+                        balanced_data.append(augmented_sample)
+            
+        # Create balanced dataset
+        balanced_df = pd.DataFrame(balanced_data)
+            
+        # Shuffle the dataset
+        balanced_df = balanced_df.sample(frac=1).reset_index(drop=True)
+            
+        # Save balanced dataset
+        balanced_df.to_csv(output_path, index=False)
+            
+        print("\nFinal class distribution:")
+        final_counts = balanced_df['sentiment'].value_counts()
+        for sentiment, count in final_counts.items():
+            print(f"{sentiment}: {count} samples")
+                
+        print(f"\nBalanced dataset saved to: {output_path}")
+        print(f"Total samples: {len(balanced_df)}")
+
+    
 def list_available_models(base_path: str) -> List[Dict]:
     """List all available trained models with enhanced information"""
     available_models = []
@@ -751,9 +998,10 @@ def main():
         print("3. Test model")
         print("4. View accuracy metrics")
         print("5. View Statistics")
-        print("6. Exit")
+        print("6. Balance dataset")
+        print("7. Exit")
 
-        choice = input("\nEnter your choice (1-6): ")
+        choice = input("\nEnter your choice (1-7): ")
         if choice == '1':
             dataset_path = input("Enter dataset path (CSV file): ")
             model_save_path = input("Enter path to save model: ")
@@ -845,11 +1093,19 @@ def main():
                 print(f"Error during statistics collection: {str(e)}")
 
         elif choice == '6':
+            input_path = input("Enter input dataset path (CSV file): ")
+            output_path = input("Enter output path for balanced dataset (CSV file): ")
+            try:
+                analyzer.balance_dataset(input_path, output_path)
+            except Exception as e:
+                print(f"Error during dataset balancing: {str(e)}")
+
+        elif choice == '7':
             print("Goodbye!")
             break
 
         else:
-            print("Invalid choice! Please enter a number between 1 and 6.")
+            print("Invalid choice! Please enter a number between 1 and 7.")
 
 if __name__ == "__main__":
     main()
