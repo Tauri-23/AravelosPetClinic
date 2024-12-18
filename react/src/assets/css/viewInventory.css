@@ -51,7 +51,22 @@
 
 .view-inventory-cont2 {
     width: 100%;
-    padding: 30px;
-    flex-wrap: wrap;
-    gap: 30px;
+    margin-bottom: 50px;
+    padding: 0;
+    overflow: hidden;    
+    background: white;
+    filter: drop-shadow(0 0 1px var(--grey1));
+    border-radius: 10px;
+}
+.view-inventory-cont2-thead, .view-inventory-cont2-tbody {
+    width: 100%;
+}
+.view-inventory-cont2-thead {
+    border-bottom: 1px solid #00000056;
+}
+.view-inventory-cont2-thead th {
+    padding: 15px;
+}
+.view-inventory-cont2-tbody td {
+    padding: 10px;
 }
