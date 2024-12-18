@@ -25,6 +25,7 @@ import AdminPendingAppointments from "./views/Admin/Appointment/admin_pending_ap
 import AdminApprovedAppointments from "./views/Admin/Appointment/admin_approved_appointments";
 import AdminCompletedAppointments from "./views/Admin/Appointment/admin_completed_appointments";
 import AdminCancelledAppointments from "./views/Admin/Appointment/admin_cancelled_appointments";
+import AdminViewInventory from "./views/Admin/Inventory/viewInventory";
 
 const router = createBrowserRouter([
     /*
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
             }
         ]
     },
+
+
+
+
 
     /*
     |----------
@@ -88,6 +93,10 @@ const router = createBrowserRouter([
         ]
     },
 
+
+
+
+
     /*
     |----------
     | Admin
@@ -112,6 +121,10 @@ const router = createBrowserRouter([
                     {
                         path: 'AddItem',
                         element: <AddItem/>
+                    },
+                    {
+                        path: 'ViewInventory/:inventoryId',
+                        element: <AdminViewInventory/>
                     }
                 ]
             },

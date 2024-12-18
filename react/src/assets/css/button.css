@@ -7,14 +7,14 @@
     color:white;
     padding: 10px 20px;
     cursor: pointer;
-    transition: background-color 0.3s; /* Smooth transition */
+    transition: background-color 0.3s; /* Smooth transition */    
+    user-select: none;
 }
 .primary-btn-blue1:hover {
     background-color: #3058bb;
   }
-.primary-btn-blue1.disabled {
+.primary-btn-blue1.disabled, .primary-btn-red1.disabled {
     opacity: .5;
-    user-select: none;
     cursor: not-allowed;
 }
 

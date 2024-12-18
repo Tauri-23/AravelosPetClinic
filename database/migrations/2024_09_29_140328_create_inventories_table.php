@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('qty');
             $table->longText('desc');
             $table->longText('picture');
+            $table->integer('measurement_value')->nullable();
+            $table->string('measurement_unit')->nullable();
             $table->timestamps();
 
             $table->foreign('category')

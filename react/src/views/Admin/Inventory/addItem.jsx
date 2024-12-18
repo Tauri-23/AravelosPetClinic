@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import AddItemConfirmationModal1 from '../../../components/Modals/addItemConfirmationModal1';
 
 export default function AddItem() {
+    const navigate = useNavigate();
+
     const [categoryOptions, setCategoryOptions] = useState(null);
     const [categoryValue, setCategoryValues] = useState('');
     const [itemName, setItemName] = useState('');
@@ -16,19 +18,17 @@ export default function AddItem() {
     const [itemImagePrev, setItemImagePrev] = useState(null);
     const [itemImage, setItemImage] = useState(null);
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-
+    
     // Measurement feature states
     const [measurementRequired, setMeasurementRequired] = useState(false);
     const [measurementValue, setMeasurementValue] = useState("");
     const [measurementUnit, setMeasurementUnit] = useState("");
-
-    // Expiration Date
-    const [expirationDateRequired, setExpirationDateRequired] = useState(false);
-    const [expirationDate, setExpirationDate] = useState('');
-
-
-    const navigate = useNavigate();
     
+
+
+    /**
+     * Fetch All Necessary Data
+     */
     useEffect(() => {
         const getAllCategories = async () => {
             try {
@@ -42,6 +42,11 @@ export default function AddItem() {
         getAllCategories();
     }, []);
 
+
+
+    /**
+     * Handlers
+     */
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -70,11 +75,11 @@ export default function AddItem() {
             formData.append('measurementUnit', measurementUnit);
         }
 
-        axiosClient.post('/add-inventory-item', formData)
+        axiosClient.post('/add-inventory', formData)
             .then(({ data }) => {
                 if (data.status === 200) {
                     notify('success', data.message, 'top-center', 3000);
-                    navigate('/inventory_index');
+                    navigate('/AdminIndex/InventoryTracking');
                 } else {
                     notify('error', data.message, 'top-center', 3000);
                 }
@@ -101,137 +106,124 @@ export default function AddItem() {
         setShowConfirmationModal(false);
     };
 
-    if (categoryOptions) {
-        return (
-            <div className='page'>
-                <div className='inventory-tracking gen-margin'>
-                    <h1 className='anybody'>Add Item</h1>
 
-                    <div className="d-flex add small-form">
-                        {/* Left Side - Image with Upload */}
-                        <div className="image-upload">
-                            <input type="file" accept="image/*" onChange={handleImageUpload} />
-                            <div className="image-preview">
-                                {itemImagePrev ? (
-                                    <img src={itemImagePrev} alt="Item Preview" />
-                                ) : (
-                                    <div className="placeholder">Image Preview</div>
-                                )}
-                            </div>
-                        </div>
+    
+    /**
+     * Render
+     */
+    return (
+        <div className='page'>
+            {categoryOptions
+            ? (
+                <>
+                    <div className='inventory-tracking gen-margin'>
+                        <h1 className='anybody'>Add Item</h1>
 
-                        {/* Right Side - Dropdown and Text Fields */}
-                        <div className="addItemDetails">
-                            <label htmlFor="category">Category</label>
-                            <Dropdown2
-                                options={categoryOptions}
-                                name="category"
-                                onChange={setCategoryValues}
-                                placeholder="Choose Category"
-                            />
-
-                            <label htmlFor="itemName">Item Name</label>
-                            <input
-                                type="text"
-                                name="itemName"
-                                placeholder="Item Name"
-                                value={itemName}
-                                onChange={(e) => setItemName(e.target.value)}
-                            />
-
-                            <label htmlFor="itemStock">Item Stock</label>
-                            <input
-                                type="number"
-                                name="itemStock"
-                                placeholder="Item Stock"
-                                value={itemStock}
-                                onChange={(e) => setItemStock(e.target.value)}
-                                min={0}
-                            />
-
-                            <label htmlFor="itemDescription">Item Description</label>
-                            <textarea
-                                style={{ resize: "none" }}
-                                name="itemDescription"
-                                placeholder="Item Description"
-                                value={itemDesc}
-                                onChange={(e) => setItemDesc(e.target.value)}
-                            />
-
-                            {/* Measurement Section */}
-                            <div className="measurement-section">
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        checked={measurementRequired}
-                                        onChange={() => setMeasurementRequired(!measurementRequired)}
-                                    />
-                                    Measurement:
-                                </label>
-                                {measurementRequired && (
-                                    <div className="measurement-inputs">
-                                        <input
-                                            type="number"
-                                            placeholder="Value"
-                                            value={measurementValue}
-                                            onChange={(e) => setMeasurementValue(e.target.value)}
-                                        />
-                                        <select
-                                            value={measurementUnit}
-                                            onChange={(e) => setMeasurementUnit(e.target.value)}
-                                        >
-                                            <option value="">Unit</option>
-                                            <option value="m">ml</option>
-                                            <option value="mg">mg</option>
-                                            <option value="g">g</option>
-                                        </select>
-                                    </div>
-                                )}
-                            </div>
-                            <div className="expiration-date-section">
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={expirationDateRequired}
-                                  onChange={() => setExpirationDateRequired(!expirationDateRequired)}
-                                />
-                                Expiration Date:
-                              </label>
-                              {expirationDateRequired && (
-                                <div className="expiration-date-inputs">
-                                  <input
-                                    type="date"
-                                    value={expirationDate}
-                                    onChange={(e) => setExpirationDate(e.target.value)}
-                                    required
-                                  />
+                        <div className="d-flex add small-form">
+                            {/* Left Side - Image with Upload */}
+                            <div className="image-upload">
+                                <input type="file" accept="image/*" onChange={handleImageUpload} />
+                                <div className="image-preview">
+                                    {itemImagePrev ? (
+                                        <img src={itemImagePrev} alt="Item Preview" />
+                                    ) : (
+                                        <div className="placeholder">Image Preview</div>
+                                    )}
                                 </div>
-                              )}
                             </div>
-                          
-                            {/* Button Group */}
-                            <div className="button-group">
-                                <button type="button" onClick={handleShowModal} className="primary-btn-blue1">
-                                    Submit
-                                </button>
-                                <button type="button" onClick={handleCancel} className="sub-button">
-                                    Cancel
-                                </button>
+
+                            {/* Right Side - Dropdown and Text Fields */}
+                            <div className="addItemDetails">
+                                <label htmlFor="category">Category</label>
+                                <Dropdown2
+                                    options={categoryOptions}
+                                    name="category"
+                                    onChange={setCategoryValues}
+                                    placeholder="Choose Category"
+                                />
+
+                                <label htmlFor="itemName">Item Name</label>
+                                <input
+                                    type="text"
+                                    name="itemName"
+                                    placeholder="Item Name"
+                                    value={itemName}
+                                    onChange={(e) => setItemName(e.target.value)}
+                                />
+
+                                {/* <label htmlFor="itemStock">Item Stock</label>
+                                <input
+                                    type="number"
+                                    name="itemStock"
+                                    placeholder="Item Stock"
+                                    value={itemStock}
+                                    onChange={(e) => setItemStock(e.target.value)}
+                                    min={0}
+                                /> */}
+
+                                <label htmlFor="itemDescription">Item Description</label>
+                                <textarea
+                                    style={{ resize: "none" }}
+                                    name="itemDescription"
+                                    placeholder="Item Description"
+                                    value={itemDesc}
+                                    onChange={(e) => setItemDesc(e.target.value)}
+                                />
+
+                                {/* Measurement Section */}
+                                <div className="measurement-section">
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            checked={measurementRequired}
+                                            onChange={() => setMeasurementRequired(!measurementRequired)}
+                                        />
+                                        Measurement:
+                                    </label>
+                                    {measurementRequired && (
+                                        <div className="measurement-inputs">
+                                            <input
+                                                type="number"
+                                                placeholder="Value"
+                                                value={measurementValue}
+                                                onChange={(e) => setMeasurementValue(e.target.value)}
+                                            />
+                                            <select
+                                                value={measurementUnit}
+                                                onChange={(e) => setMeasurementUnit(e.target.value)}
+                                            >
+                                                <option value="">Unit</option>
+                                                <option value="m">ml</option>
+                                                <option value="mg">mg</option>
+                                                <option value="g">g</option>
+                                            </select>
+                                        </div>
+                                    )}
+                                </div>
+                            
+                                {/* Button Group */}
+                                <div className="button-group">
+                                    <button type="button" onClick={handleShowModal} className="primary-btn-blue1">
+                                        Submit
+                                    </button>
+                                    <button type="button" onClick={handleCancel} className="sub-button">
+                                        Cancel
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Confirmation Modal */}
-                    {showConfirmationModal && (
-                        <AddItemConfirmationModal1
-                            onConfirm={handleConfirmAdd}
-                            onCancel={handleCloseModal}
-                        />
-                    )}
-                </div>
-            </div>
-        );
-    } else {
-        return <>Loading</>;
-    }
+                        {/* Confirmation Modal */}
+                        {showConfirmationModal && (
+                            <AddItemConfirmationModal1
+                                onConfirm={handleConfirmAdd}
+                                onCancel={handleCloseModal}
+                            />
+                        )}
+                    </div>
+                </>
+            )
+            : (<>Loading...</>)}
+        </div>
+    )
 }

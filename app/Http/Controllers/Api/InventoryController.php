@@ -17,7 +17,7 @@ class InventoryController extends Controller
     }
 
     // POST
-    public function createInventoryItem(Request $request)
+    public function createInventory(Request $request)
     {
         try 
         {
@@ -30,9 +30,15 @@ class InventoryController extends Controller
             $inventory = new inventory();
             $inventory->category = $request->category;
             $inventory->name = $request->name;
-            $inventory->qty = $request->stock;
+            $inventory->qty = 0;
             $inventory->desc = $request->desc;
             $inventory->picture = $newFilename;
+
+            if($request->measurementValue && $request->measurementUnit) 
+            {
+                $inventory->measurement_value = $request->measurementValue;
+                $inventory->measurement_unit = $request->measurementUnit;
+            }
 
             $inventory->save();
 
@@ -80,5 +86,10 @@ class InventoryController extends Controller
     public function GetAllInventory()
     {
         return response()->json(inventory::all());
+    }
+
+    public function GetFullInventoryWhereId($id)
+    {
+        return response()->json(inventory::with('inventory_items')->find($id));
     }
 }

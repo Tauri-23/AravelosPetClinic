@@ -11,15 +11,18 @@ import InventoryBox from "../../../components/inventory_box.jsx";
 import { useModal } from "../../../contexts/ModalContext.jsx";
 
 export default function AdminInventoryIndex() {
+    const navigate = useNavigate();
+
     const { showModal } = useModal();
     const [categories, setCategories] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [inventoryItems, setInventoryItems] = useState(null);
 
     const [activeCategory, setActiveCategory] = useState(null);
-    const navigate = useNavigate();
 
-    // Get All Items From DB
+    /**
+     * Fetch all items from DB
+     */
     useEffect(() => {
         const getAllCategories = async () => {
             try {
@@ -46,19 +49,18 @@ export default function AdminInventoryIndex() {
         getAll();
     }, []);
 
-    // SetActive Category
+
+
+    /**
+     * SetActive Category
+     */
     useEffect(() => {
         if (categories?.length > 0 && inventoryItems?.length > 0) {
             setActiveCategory(categories[0].id);
         }
     }, [categories]);
 
-    /*
-  | Debugging
-  */
-    useEffect(() => {
-        console.log(inventoryItems);
-    }, [inventoryItems]);
+
 
     /**
      * Search Handlers
@@ -66,6 +68,8 @@ export default function AdminInventoryIndex() {
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
     };
+
+
 
     /**
      * Inventory Handlers
@@ -112,6 +116,8 @@ export default function AdminInventoryIndex() {
             })
             .catch((error) => console.error(error));
     };
+
+
 
     /**
      * Category Handlers
@@ -317,13 +323,7 @@ export default function AdminInventoryIndex() {
                                             <InventoryBox
                                                 key={item.id}
                                                 handleInventoryBoxClick={() =>
-                                                    handleInventoryBoxClick(
-                                                        item.id,
-                                                        item.name,
-                                                        item.picture,
-                                                        item.qty,
-                                                        item.desc
-                                                    )
+                                                    navigate(`ViewInventory/${item.id}`)
                                                 }
                                                 itemName={item.name}
                                                 itemImage={item.picture}

@@ -24,3 +24,13 @@ export const fetchAllInventoryItems = async() => {
         throw error;
     }
 }
+
+export const fetchFullInventoryItemsWhereId = async(id) => {
+    try {
+        const response = await axiosClient.get(`/get-full-inventory-where-id/${id}`);
+        return response.data;
+    } catch(error) {
+        console.error(error)
+        throw error;
+    }
+}
