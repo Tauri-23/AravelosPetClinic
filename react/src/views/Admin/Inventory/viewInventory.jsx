@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { fetchFullInventoryItemsWhereId } from "../../../services/InventoryServices";
 import '../../../assets/css/viewInventory.css';
 import { useModal } from "../../../contexts/ModalContext";
+import axiosClient from "../../../axios-client";
+import { formatDate, notify } from "../../../assets/js/utils";
 
 export default function AdminViewInventory() {
     const {inventoryId} = useParams();
@@ -18,10 +20,9 @@ export default function AdminViewInventory() {
         const getAll = async() => {
             try {
                 const data = await fetchFullInventoryItemsWhereId(inventoryId);
-                console.log(data);
                 setInventory(data);
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         }
 
@@ -33,8 +34,37 @@ export default function AdminViewInventory() {
     /**
      * Handlers
      */
-    const handleAddMedicineItemsClick = () => {
+    const handleAddInventoryItemsClick = () => {
+        showModal("AddInventoryItemsModal1", {handleAdd: (expiration) => {
+            const formData = new FormData();
+            formData.append('inventoryId', inventory.id);
+            formData.append("expirationDate", expiration);
 
+            axiosClient.post("/add-inventory-item", formData)
+            .then(({data}) => {
+                if(data.status === 200) {
+                    setInventory(data.inventory);
+                }                
+                notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
+            }).catch(error => console.error(error));
+        }});
+    }
+
+    const handleDeleteInventoryItemsClick = (inventoryItemId) => {
+        
+        const formData = new FormData();
+        formData.append('itemId', inventoryItemId);
+
+        axiosClient.post("/del-inventory-item", formData)
+        .then(({data}) => {
+            if(data.status === 200) {
+                setInventory((prev) => ({
+                    ...prev,
+                    inventory_items: prev.inventory_items.filter((item) => item.id !== inventoryItemId),
+                }));
+            }                
+            notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
+        }).catch(error => console.error(error));
     }
 
 
@@ -66,13 +96,13 @@ export default function AdminViewInventory() {
 
                     <div className="d-flex align-items-center justify-content-between" style={{marginBottom: "30px"}}>
                         <h3>Inventory Items</h3>
-                        <div className="primary-btn-blue1">Add Item</div>
+                        <button className="primary-btn-blue1" onClick={handleAddInventoryItemsClick}>Add Item</button>
                     </div>
 
                     <table className="view-inventory-cont2">
                         <thead className="view-inventory-cont2-thead">
                             <tr>
-                                <th>Medicine ID</th>
+                                <th>Item ID</th>
                                 <th>Expiration Date</th>
                                 <th>Date Added</th>
                                 <th>Actions</th>
@@ -86,13 +116,13 @@ export default function AdminViewInventory() {
                             )}
 
                             {inventory.inventory_items.length > 0 && inventory.inventory_items.map(item => (
-                                <tr>
-                                    <td>1</td>
-                                    <td>MM dd, YYYY</td>
-                                    <td>MM dd, YYYY</td>
+                                <tr key={item.id}>
+                                    <td>{item.id}</td>
+                                    <td>{formatDate(item.expiration_date)}</td>
+                                    <td>{formatDate(item.created_at)}</td>
                                     <td className="d-flex">
-                                        <div className="primary-btn-blue1">Edit</div>
-                                        <div className="primary-btn-red1">Delete</div>
+                                        <button className="primary-btn-blue1">Edit</button>
+                                        <button className="primary-btn-red1" onClick={() => handleDeleteInventoryItemsClick(item.id)}>Delete</button>
                                     </td>
                                 </tr>
                             ))}

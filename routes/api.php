@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AppointmentsController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\inventoryCategoriesController;
 use App\Http\Controllers\Api\InventoryController;
+use App\Http\Controllers\Api\InventoryItemsController;
 use App\Http\Controllers\Api\PetsController;
 use App\Http\Controllers\Api\StaffsController;
 use App\Http\Controllers\Api\UserAdminsController;
@@ -37,7 +38,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 /*
 |----------------------------------------
-| Inventory Items
+| Inventories
 |----------------------------------------
 */
 Route::get('/get-all-inventory', [InventoryController::class,'GetAllInventory']);
@@ -45,6 +46,18 @@ Route::get('/get-full-inventory-where-id/{id}', [InventoryController::class,'Get
 
 Route::post('/add-inventory', [InventoryController::class,'createInventory']);
 Route::post('/edit-inventory', [InventoryController::class,'editInventoryItem']);
+
+
+
+
+
+/*
+|----------------------------------------
+| Inventory Items
+|----------------------------------------
+*/
+Route::post('/add-inventory-item', [InventoryItemsController::class,'AddInventoryItem']);
+Route::post('/del-inventory-item', [InventoryItemsController::class,'DelInventoryItem']);
 
 
 
