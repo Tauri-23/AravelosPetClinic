@@ -20,6 +20,7 @@ import TransactionDetailsModal1 from '../components/Modals/transactionDetailsMod
 import AdminShowAppointment from "../components/Modals/adminshowappointment.jsx";
 import AddCategoryConfirmationModal1 from "../components/Modals/addCategoryConfirmationModal1.jsx";
 import AddInventoryItemsModal1 from "../components/Modals/addInventoryItemModal1.jsx";
+import GeneralConfirmationModal from "../components/Modals/general_confirmation_modal1.jsx";
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -92,6 +93,16 @@ const ModalManager = () => {
 
             case 'AddInventoryItemsModal1':
                 return <AddInventoryItemsModal1 {...modalState.props} onClose={hideModal}/>;
+
+
+            
+
+            
+            /**
+             * General
+             */
+            case 'GeneralConfirmationModal':
+                return <GeneralConfirmationModal {...modalState.props} onClose={hideModal}/>;
 
                     
             /*

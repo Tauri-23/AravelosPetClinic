@@ -54,21 +54,38 @@ class InventoryItemsController extends Controller
 
     public function DelInventoryItem(Request $request)
     {
-        $inventoryItem = inventory_items::find($request->itemId);
-
-        if(!$inventoryItem) 
+        try
         {
+            DB::beginTransaction();
+            $inventoryItem = inventory_items::find($request->itemId);
+
+            if(!$inventoryItem) 
+            {
+                return response()->json([
+                    'status'=> 404,
+                    'message'=> 'Item not found.'
+                ]);
+            }
+            $inventory = inventory::find($request->inventoryId);
+            $inventory->qty--;
+            $inventory->save();
+            $inventoryItem->delete();
+
+            DB::commit();
+
             return response()->json([
-                'status'=> 404,
-                'message'=> 'Item not found.'
+                'status'=> 200,
+                'message'=> 'Item deleted.',
+                'inventory' => inventory::with('inventory_items')->find($request->inventoryId)
             ]);
         }
-
-        $inventoryItem->delete();
-
-        return response()->json([
-            'status'=> 200,
-            'message'=> 'Item deleted.'
-        ]);
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            return response()->json([
+                'status'=> 500,
+                'message'=> $e->getMessage()
+            ], 500);
+        }
     }
 }

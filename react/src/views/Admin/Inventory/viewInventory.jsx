@@ -51,20 +51,28 @@ export default function AdminViewInventory() {
     }
 
     const handleDeleteInventoryItemsClick = (inventoryItemId) => {
-        
-        const formData = new FormData();
-        formData.append('itemId', inventoryItemId);
+        showModal("GeneralConfirmationModal", {
+            title: "Delete Item", 
+            text: "Item will be permanently deleted.",
+            positiveBtnText: "Delete",
+            handlePositiveBtnClick: () => {
+                const formData = new FormData();
+                formData.append('itemId', inventoryItemId);
+                formData.append('inventoryId', inventory.id);
 
-        axiosClient.post("/del-inventory-item", formData)
-        .then(({data}) => {
-            if(data.status === 200) {
-                setInventory((prev) => ({
-                    ...prev,
-                    inventory_items: prev.inventory_items.filter((item) => item.id !== inventoryItemId),
-                }));
-            }                
-            notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
-        }).catch(error => console.error(error));
+                axiosClient.post("/del-inventory-item", formData)
+                .then(({data}) => {
+                    if(data.status === 200) {
+                        setInventory(data.inventory);
+                        // setInventory((prev) => ({
+                        //     ...prev,
+                        //     inventory_items: prev.inventory_items.filter((item) => item.id !== inventoryItemId),
+                        // }));
+                    }                
+                    notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
+                }).catch(error => console.error(error));
+            },
+        });
     }
 
 
