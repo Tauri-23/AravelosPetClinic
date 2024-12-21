@@ -31,6 +31,7 @@ class InventoryController extends Controller
             $inventory->category = $request->category;
             $inventory->name = $request->name;
             $inventory->qty = 0;
+            $inventory->price = $request->price;
             $inventory->desc = $request->desc;
             $inventory->picture = $newFilename;
 

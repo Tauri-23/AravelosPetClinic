@@ -4,7 +4,7 @@ import { fetchFullInventoryItemsWhereId } from "../../../services/InventoryServi
 import '../../../assets/css/viewInventory.css';
 import { useModal } from "../../../contexts/ModalContext";
 import axiosClient from "../../../axios-client";
-import { formatDate, notify } from "../../../assets/js/utils";
+import { formatDate, formatToPhilPeso, notify } from "../../../assets/js/utils";
 
 export default function AdminViewInventory() {
     const {inventoryId} = useParams();
@@ -93,6 +93,7 @@ export default function AdminViewInventory() {
                         </div>
                         <div className="view-inventory-cont1-info">
                             <h2>{inventory.name} {inventory.measurement_value}{inventory.measurement_unit}</h2>
+                            <h4>{formatToPhilPeso(inventory.price)}</h4>
                             <h4>Instock: {inventory.qty}</h4>
                             <p>{inventory.desc}</p>
                         </div>
@@ -110,7 +111,7 @@ export default function AdminViewInventory() {
                     <table className="view-inventory-cont2">
                         <thead className="view-inventory-cont2-thead">
                             <tr>
-                                <th>Item ID</th>
+                                <th>SKU</th>
                                 <th>Expiration Date</th>
                                 <th>Date Added</th>
                                 <th>Actions</th>

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->longText('picture');
             $table->integer('measurement_value')->nullable();
             $table->string('measurement_unit')->nullable();
+            $table->float('price')->default(0);
             $table->timestamps();
 
             $table->foreign('category')

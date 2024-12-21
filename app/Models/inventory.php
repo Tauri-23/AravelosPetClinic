@@ -11,6 +11,6 @@ class inventory extends Model
 
     public function inventory_items()
     {
-        return $this->hasMany(inventory_items::class, "inventory","id")->orderBy("created_at", "asc");
+        return $this->hasMany(inventory_items::class, "inventory","id")->orderBy("expiration_date", "asc");
     }
 }

@@ -14,6 +14,7 @@ export default function AddItem() {
     const [categoryValue, setCategoryValues] = useState('');
     const [itemName, setItemName] = useState('');
     const [itemStock, setItemStock] = useState(0);
+    const [itemPrice, setItemPrice] = useState(0);
     const [itemDesc, setItemDesc] = useState('');
     const [itemImagePrev, setItemImagePrev] = useState(null);
     const [itemImage, setItemImage] = useState(null);
@@ -65,7 +66,7 @@ export default function AddItem() {
         const formData = new FormData();
         formData.append('category', categoryValue);
         formData.append('name', itemName);
-        formData.append('stock', itemStock);
+        formData.append('price', itemPrice);
         formData.append('desc', itemDesc);
         formData.append('img', itemImage);
 
@@ -91,7 +92,7 @@ export default function AddItem() {
     const handleCancel = () => {
         setCategoryValues('');
         setItemName('');
-        setItemStock(0);
+        setItemPrice(0);
         setItemDesc('');
         setItemImage(null);
         setItemImagePrev(null);
@@ -161,6 +162,14 @@ export default function AddItem() {
                                     min={0}
                                 /> */}
 
+                                <label htmlFor="price">Item Price</label>
+                                <input
+                                    type="number"
+                                    name="price"
+                                    value={itemPrice}
+                                    onChange={(e) => setItemPrice(e.target.value)}
+                                />
+
                                 <label htmlFor="itemDescription">Item Description</label>
                                 <textarea
                                     style={{ resize: "none" }}
@@ -193,9 +202,10 @@ export default function AddItem() {
                                                 onChange={(e) => setMeasurementUnit(e.target.value)}
                                             >
                                                 <option value="">Unit</option>
-                                                <option value="m">ml</option>
+                                                <option value="ml">ml</option>
                                                 <option value="mg">mg</option>
                                                 <option value="g">g</option>
+                                                <option value="kg">kg</option>
                                             </select>
                                         </div>
                                     )}
