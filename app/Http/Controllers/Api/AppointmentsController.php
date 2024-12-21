@@ -8,6 +8,8 @@ use App\Models\appointment_assigned_items;
 use App\Models\appointment_assigned_staffs;
 use App\Models\appointments;
 use App\Models\inventory;
+use App\Models\inventory_items;
+use App\Models\inventory_items_used;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -149,24 +151,44 @@ class AppointmentsController extends Controller
                 $appointmentStaff->save();
             }
 
-            foreach($request->items as $item)
+            // Loop Through Selected Items from requests
+            foreach($request->items as $item) 
             {
                 $decodedItem = json_decode($item);
+
+                $inventoryItems = inventory_items::where('inventory', $decodedItem->id)
+                ->orderBy('expiration_date', 'asc')
+                ->take($decodedItem->qty)
+                ->get();
                 
                 // return response()->json([
                 //     'status'=> 500,
-                //     'message'=> $decodedItem->qty
+                //     'message'=> $inventoryItems
                 // ], 500);
 
+                // Move Inventory Items to Inventory Items Used
+                foreach($inventoryItems as $item)
+                {
+                    $inventoryItemsUsed = new inventory_items_used();
+                    $inventoryItemsUsed->id = $item->id;
+                    $inventoryItemsUsed->inventory = $item->inventory;
+                    $inventoryItemsUsed->expiration_date = $item->expiration_date;
+                    $inventoryItemsUsed->save();
+                    
+
+                    $appointmentItem = new appointment_assigned_items();
+                    $appointmentItem->item = (int)$item->id;
+                    $appointmentItem->appointment = $request->appointmentId;
+                    $appointmentItem->save();
+
+                    // Then Delete the item from the Inventory Items
+                    $item->delete();
+                }
+                
+                // Decrement the Inventory
                 $inventory = inventory::find((int)$decodedItem->id);
                 $inventory->qty -= (int)$decodedItem->qty;
                 $inventory->save();
-
-                $appointmentItem = new appointment_assigned_items();
-                $appointmentItem->inventory = (int)$decodedItem->id;
-                $appointmentItem->qty = (int)$decodedItem->qty;
-                $appointmentItem->appointment = $request->appointmentId;
-                $appointmentItem->save();
             }
 
             DB::commit();

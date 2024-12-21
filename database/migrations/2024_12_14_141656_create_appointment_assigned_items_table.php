@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('appointment_assigned_items', function (Blueprint $table) {
             $table->id();
             $table->string('appointment', 12)->nullable();
-            $table->unsignedBigInteger('inventory')->nullable();
-            $table->integer('qty');
+            $table->string('item', 12)->nullable();
             $table->timestamps();
 
             $table->foreign('appointment')
@@ -24,9 +23,9 @@ return new class extends Migration
             ->cascadeOnDelete()
             ->cascadeOnUpdate();
 
-            $table->foreign('inventory')
+            $table->foreign('item')
             ->references('id')
-            ->on('inventories')
+            ->on('inventory_items_useds')
             ->cascadeOnDelete()
             ->cascadeOnUpdate();
         });
