@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2024 at 04:32 PM
+-- Generation Time: Dec 21, 2024 at 07:08 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -74,8 +74,28 @@ CREATE TABLE `appointments` (
 --
 
 INSERT INTO `appointments` (`id`, `client`, `pet`, `service`, `date_time`, `approved_at`, `rejected_at`, `cancelled_at`, `reason`, `status`, `created_at`, `updated_at`) VALUES
-('182883942063', '936822', '396881', 'checkup', '2024-12-04 00:00:00', NULL, NULL, '2024-12-04 12:34:00', 'asd', 'Cancelled', '2024-11-29 07:32:21', '2024-12-04 04:34:00'),
-('566691794547', '936822', '396881', 'grooming', '2024-12-18 00:00:00', '2024-12-06 13:37:37', NULL, NULL, NULL, 'Completed', '2024-12-04 04:36:46', '2024-12-06 06:30:20');
+('943420043329', '936822', '396881', 'grooming', '2024-12-28 00:00:00', '2024-12-21 06:07:00', NULL, NULL, NULL, 'Approved', '2024-12-20 07:11:57', '2024-12-20 22:07:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `appointment_assigned_items`
+--
+
+CREATE TABLE `appointment_assigned_items` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `appointment` varchar(12) DEFAULT NULL,
+  `item` varchar(12) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `appointment_assigned_items`
+--
+
+INSERT INTO `appointment_assigned_items` (`id`, `appointment`, `item`, `created_at`, `updated_at`) VALUES
+(1, '943420043329', '463812914318', '2024-12-20 22:07:00', '2024-12-20 22:07:00');
 
 -- --------------------------------------------------------
 
@@ -96,8 +116,7 @@ CREATE TABLE `appointment_assigned_staffs` (
 --
 
 INSERT INTO `appointment_assigned_staffs` (`id`, `appointment`, `staff`, `created_at`, `updated_at`) VALUES
-(3, '566691794547', '907459', '2024-12-06 05:37:37', '2024-12-06 05:37:37'),
-(4, '566691794547', '186775', '2024-12-06 05:37:37', '2024-12-06 05:37:37');
+(21, '943420043329', '907459', '2024-12-20 22:07:00', '2024-12-20 22:07:00');
 
 -- --------------------------------------------------------
 
@@ -166,6 +185,9 @@ CREATE TABLE `inventories` (
   `qty` int(11) NOT NULL,
   `desc` longtext NOT NULL,
   `picture` longtext NOT NULL,
+  `measurement_value` int(11) DEFAULT NULL,
+  `measurement_unit` varchar(255) DEFAULT NULL,
+  `price` double NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -174,10 +196,11 @@ CREATE TABLE `inventories` (
 -- Dumping data for table `inventories`
 --
 
-INSERT INTO `inventories` (`id`, `category`, `name`, `qty`, `desc`, `picture`, `created_at`, `updated_at`) VALUES
-(1, 2, 'Nexgard', 30, 'Remove ticks', 'sd2m2nvHCWUHr1FYowRKXjKv.webp', '2024-09-29 23:14:09', '2024-09-29 23:14:09'),
-(2, 3, 'Yes', 23, 'Sana all', 'T9B4e02YxvTR0YCcLSQk0awq.jpg', '2024-09-30 08:37:38', '2024-09-30 08:37:38'),
-(3, 1, 'yeahs', 201, 'yeahs', 'Rncuv5ddQqicaxf5y7THaMzJ.jpg', '2024-09-30 08:59:49', '2024-10-23 08:01:53');
+INSERT INTO `inventories` (`id`, `category`, `name`, `qty`, `desc`, `picture`, `measurement_value`, `measurement_unit`, `price`, `created_at`, `updated_at`) VALUES
+(1, 3, 'Nexgard Chewable Tablets Dogs>10-25kg', 10, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vitae lorem a eros lacinia dapibus et vitae mi. Donec vulputate felis diam. Nulla feugiat nisl vitae viverra scelerisque. Aenean ultricies ultrices pharetra. Cras felis diam, tristique quis enim sit amet, vulputate egestas nulla. Nulla facilisi. Aenean rhoncus porttitor leo venenatis aliquet.', 'i7TXxt2VQZEUjeOTtrdvqEv1.webp', 68, 'mg', 2067, '2024-12-17 13:44:06', '2024-12-20 21:52:23'),
+(2, 3, 'Nexgard Chewable Tablets Dogs>4-10kg', 10, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vitae lorem a eros lacinia dapibus et vitae mi. Donec vulputate felis diam. Nulla feugiat nisl vitae viverra scelerisque. Aenean ultricies ultrices pharetra. Cras felis diam, tristique quis enim sit amet, vulputate egestas nulla. Nulla facilisi. Aenean rhoncus porttitor leo venenatis aliquet.', 'K8ozaxWlCHC3vhccnZ4O5TFf.webp', 28, 'mg', 1947, '2024-12-17 14:00:04', '2024-12-20 21:53:40'),
+(3, 3, 'Saint Roche Premium Happiness Scent Dog Shampoo', 4, 'Shampoo', 'BvQacQZEYQ8oBRFgyD1SBHZY.webp', 250, 'ml', 179, '2024-12-20 11:59:19', '2024-12-20 22:07:00'),
+(4, 3, 'The Fur Life Anti Mange 3-in-1 Pet Shampoo, Conditioner and Treatment', 5, 'Shampoo', 'gGrx6SyMFUNEklyKyV47YP49.webp', 250, 'ml', 169, '2024-12-20 20:21:37', '2024-12-20 21:54:39');
 
 -- --------------------------------------------------------
 
@@ -197,9 +220,77 @@ CREATE TABLE `inventory_categories` (
 --
 
 INSERT INTO `inventory_categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1, 'asdasdadEdited', '2024-09-29 22:11:53', '2024-10-23 07:09:11'),
-(2, 'Medicine', '2024-09-29 22:16:10', '2024-10-23 07:09:05'),
 (3, 'Supplies', '2024-09-29 22:16:23', '2024-09-29 22:16:23');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inventory_items`
+--
+
+CREATE TABLE `inventory_items` (
+  `id` varchar(12) NOT NULL,
+  `inventory` bigint(20) UNSIGNED DEFAULT NULL,
+  `expiration_date` date NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `inventory_items`
+--
+
+INSERT INTO `inventory_items` (`id`, `inventory`, `expiration_date`, `created_at`, `updated_at`) VALUES
+('178002368104', 2, '2026-12-31', '2024-12-20 21:53:39', '2024-12-20 21:53:39'),
+('210304032098', 2, '2026-12-31', '2024-12-20 21:53:40', '2024-12-20 21:53:40'),
+('240941811915', 2, '2026-12-31', '2024-12-20 21:53:38', '2024-12-20 21:53:38'),
+('250891225906', 4, '2026-12-31', '2024-12-20 21:54:37', '2024-12-20 21:54:37'),
+('260949422998', 3, '2026-12-31', '2024-12-20 21:54:08', '2024-12-20 21:54:08'),
+('281408698509', 2, '2026-12-31', '2024-12-20 21:53:40', '2024-12-20 21:53:40'),
+('42281796751', 1, '2025-12-31', '2024-12-20 21:52:10', '2024-12-20 21:52:10'),
+('454421751998', 4, '2025-12-31', '2024-12-20 21:54:31', '2024-12-20 21:54:31'),
+('487180666684', 2, '2026-12-31', '2024-12-20 21:53:38', '2024-12-20 21:53:38'),
+('543744880033', 4, '2026-12-31', '2024-12-20 21:54:38', '2024-12-20 21:54:38'),
+('554904300848', 2, '2026-12-31', '2024-12-20 21:53:39', '2024-12-20 21:53:39'),
+('556817306149', 1, '2026-12-31', '2024-12-20 21:52:20', '2024-12-20 21:52:20'),
+('566985344266', 2, '2025-12-31', '2024-12-20 21:53:31', '2024-12-20 21:53:31'),
+('581453351989', 1, '2026-12-31', '2024-12-20 21:52:20', '2024-12-20 21:52:20'),
+('582628968335', 2, '2025-12-31', '2024-12-20 21:53:32', '2024-12-20 21:53:32'),
+('595771343232', 4, '2026-12-31', '2024-12-20 21:54:39', '2024-12-20 21:54:39'),
+('651003557110', 1, '2026-12-31', '2024-12-20 21:52:19', '2024-12-20 21:52:19'),
+('661414603713', 3, '2026-12-31', '2024-12-20 21:54:09', '2024-12-20 21:54:09'),
+('666732046741', 1, '2025-12-31', '2024-12-20 21:52:09', '2024-12-20 21:52:09'),
+('672162452845', 3, '2025-12-31', '2024-12-20 21:54:00', '2024-12-20 21:54:00'),
+('674726241834', 1, '2025-12-31', '2024-12-20 21:52:08', '2024-12-20 21:52:08'),
+('746061886740', 2, '2025-12-31', '2024-12-20 21:53:32', '2024-12-20 21:53:32'),
+('746597337659', 1, '2026-12-31', '2024-12-20 21:52:23', '2024-12-20 21:52:23'),
+('798831105944', 2, '2025-12-31', '2024-12-20 21:53:33', '2024-12-20 21:53:33'),
+('800940192048', 1, '2026-12-31', '2024-12-20 21:52:19', '2024-12-20 21:52:19'),
+('850421904496', 3, '2026-12-31', '2024-12-20 21:54:13', '2024-12-20 21:54:13'),
+('870605163274', 1, '2026-12-31', '2024-12-20 21:52:21', '2024-12-20 21:52:21'),
+('968444821041', 1, '2026-12-31', '2024-12-20 21:52:22', '2024-12-20 21:52:22'),
+('968964529180', 4, '2025-12-31', '2024-12-20 21:54:31', '2024-12-20 21:54:31');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inventory_items_useds`
+--
+
+CREATE TABLE `inventory_items_useds` (
+  `id` varchar(12) NOT NULL,
+  `inventory` bigint(20) UNSIGNED DEFAULT NULL,
+  `expiration_date` date NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `inventory_items_useds`
+--
+
+INSERT INTO `inventory_items_useds` (`id`, `inventory`, `expiration_date`, `created_at`, `updated_at`) VALUES
+('463812914318', 3, '2025-12-31', '2024-12-20 22:07:00', '2024-12-20 22:07:00');
 
 -- --------------------------------------------------------
 
@@ -258,14 +349,17 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (3, '0001_01_01_000002_create_jobs_table', 1),
 (6, '2024_08_21_091030_create_personal_access_tokens_table', 3),
 (8, '2024_09_30_054506_create_inventory_categories_table', 5),
-(9, '2024_09_29_140328_create_inventories_table', 6),
 (17, '2024_09_30_090820_create_appointments_table', 9),
 (20, '2024_08_21_050816_create_user_clients_table', 12),
 (21, '2024_10_14_023210_create_feedback_table', 13),
 (22, '2024_10_18_040010_create_admin_roles_table', 13),
 (23, '2024_10_07_145653_create_user_admins_table', 14),
 (24, '2024_10_01_032309_create_pets_table', 15),
-(25, '2024_12_06_105705_create_appointment_assigned_staffs_table', 16);
+(27, '2024_12_06_105705_create_appointment_assigned_staffs_table', 18),
+(33, '2024_09_29_140328_create_inventories_table', 21),
+(34, '2024_12_21_052647_create_inventory_items_useds_table', 22),
+(36, '2024_12_14_141656_create_appointment_assigned_items_table', 24),
+(37, '2024_12_14_151231_create_inventory_items_table', 25);
 
 -- --------------------------------------------------------
 
@@ -326,8 +420,7 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (21, 'App\\Models\\user_clients', 0, 'main', '63fdba02d50457492dfd296e8d290917c2c0efb9625a367863e16d9d4cfacfe4', '[\"*\"]', NULL, NULL, '2024-08-21 02:59:44', '2024-08-21 02:59:44'),
 (22, 'App\\Models\\user_clients', 185147, 'main', '5a100b4faaadfb32fe3256cad1caf3e6b9d2b15a0d9455b0202f7ac390c48545', '[\"*\"]', '2024-08-21 03:00:20', NULL, '2024-08-21 03:00:06', '2024-08-21 03:00:20'),
 (31, 'App\\Models\\user_clients', 179411, 'main', 'f454e5fdb8699ae57be06d632b559ecc4a93a3731be03ac84ee2bb6257bfdf70', '[\"*\"]', '2024-10-07 05:08:52', NULL, '2024-10-03 08:29:53', '2024-10-07 05:08:52'),
-(50, 'App\\Models\\user_admins', 111111, 'main', '3cae9d9ed73c137cf319b6a2f186c2e92aab95e0ca1bcad529ff227537634cd5', '[\"*\"]', '2024-12-06 06:30:19', NULL, '2024-11-29 07:32:38', '2024-12-06 06:30:19'),
-(51, 'App\\Models\\user_clients', 936822, 'main', '828742e2a7dd9227db2b21ba749512f14e5a525d0be67ff8c42c5203873ba0c0', '[\"*\"]', '2024-12-06 05:37:20', NULL, '2024-12-04 04:34:57', '2024-12-06 05:37:20');
+(55, 'App\\Models\\user_admins', 111111, 'main', '6ee6f7b2e9985fdabb116b73c1237c75a91fc90562485cfdcf10bee86a197748', '[\"*\"]', '2024-12-20 21:42:16', NULL, '2024-12-20 07:12:03', '2024-12-20 21:42:16');
 
 -- --------------------------------------------------------
 
@@ -370,6 +463,14 @@ CREATE TABLE `sessions` (
   `payload` longtext NOT NULL,
   `last_activity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `sessions`
+--
+
+INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
+('1ggDaC22DRFJOTqwF53BKBD0bBCWyGU3bGjvO2lM', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiakRrMVIxWkFNTDRrVEc4cDRRQjRXcEgxRHN5cW5jSXlhbzRXZW5XYiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1734505426),
+('4GB5W3tU6CE4llSVZGmpSuYFk5iIxDClXlMW5DaP', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiYUZUM1l6ckMxTFBlc1NFN0JTUHN0WHh2NVdZMTNmN08yMGFGQnBucyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1734180026);
 
 -- --------------------------------------------------------
 
@@ -472,11 +573,20 @@ ALTER TABLE `appointments`
   ADD KEY `appointments_pet_foreign` (`pet`);
 
 --
+-- Indexes for table `appointment_assigned_items`
+--
+ALTER TABLE `appointment_assigned_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `appointment_assigned_items_appointment_foreign` (`appointment`),
+  ADD KEY `appointment_assigned_items_item_foreign` (`item`);
+
+--
 -- Indexes for table `appointment_assigned_staffs`
 --
 ALTER TABLE `appointment_assigned_staffs`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `appointment_assigned_staffs_appointment_foreign` (`appointment`);
+  ADD KEY `appointment_assigned_staffs_appointment_foreign` (`appointment`),
+  ADD KEY `appointment_assigned_staffs_staff_foreign` (`staff`);
 
 --
 -- Indexes for table `cache`
@@ -516,6 +626,20 @@ ALTER TABLE `inventories`
 --
 ALTER TABLE `inventory_categories`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `inventory_items`
+--
+ALTER TABLE `inventory_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `inventory_items_inventory_foreign` (`inventory`);
+
+--
+-- Indexes for table `inventory_items_useds`
+--
+ALTER TABLE `inventory_items_useds`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `inventory_items_useds_inventory_foreign` (`inventory`);
 
 --
 -- Indexes for table `jobs`
@@ -600,10 +724,16 @@ ALTER TABLE `admin_roles`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `appointment_assigned_items`
+--
+ALTER TABLE `appointment_assigned_items`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `appointment_assigned_staffs`
 --
 ALTER TABLE `appointment_assigned_staffs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -615,7 +745,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `inventories`
 --
 ALTER TABLE `inventories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `inventory_categories`
@@ -633,13 +763,13 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -659,10 +789,18 @@ ALTER TABLE `appointments`
   ADD CONSTRAINT `appointments_pet_foreign` FOREIGN KEY (`pet`) REFERENCES `pets` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
+-- Constraints for table `appointment_assigned_items`
+--
+ALTER TABLE `appointment_assigned_items`
+  ADD CONSTRAINT `appointment_assigned_items_appointment_foreign` FOREIGN KEY (`appointment`) REFERENCES `appointments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `appointment_assigned_items_item_foreign` FOREIGN KEY (`item`) REFERENCES `inventory_items_useds` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `appointment_assigned_staffs`
 --
 ALTER TABLE `appointment_assigned_staffs`
-  ADD CONSTRAINT `appointment_assigned_staffs_appointment_foreign` FOREIGN KEY (`appointment`) REFERENCES `appointments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `appointment_assigned_staffs_appointment_foreign` FOREIGN KEY (`appointment`) REFERENCES `appointments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `appointment_assigned_staffs_staff_foreign` FOREIGN KEY (`staff`) REFERENCES `user_admins` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `feedback`
@@ -675,6 +813,18 @@ ALTER TABLE `feedback`
 --
 ALTER TABLE `inventories`
   ADD CONSTRAINT `inventories_category_foreign` FOREIGN KEY (`category`) REFERENCES `inventory_categories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `inventory_items`
+--
+ALTER TABLE `inventory_items`
+  ADD CONSTRAINT `inventory_items_inventory_foreign` FOREIGN KEY (`inventory`) REFERENCES `inventories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `inventory_items_useds`
+--
+ALTER TABLE `inventory_items_useds`
+  ADD CONSTRAINT `inventory_items_useds_inventory_foreign` FOREIGN KEY (`inventory`) REFERENCES `inventories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `pets`
