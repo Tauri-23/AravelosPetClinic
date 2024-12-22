@@ -63,10 +63,14 @@
     transition: width 0.5s;
   -webkit-transition: width 0.5s;
 }
+.a-tab {
+    position: relative;
+    padding: 5px 20px;
+}
 .a-tab:hover .nav1-line {
     width: 40%;visibility: visible; /* Ensure visibility changes immediately on hover */
     transition: width 0.4s ease, visibility 0s linear 0s;
-  }
+}
 .nv-line{
     height: .5vw;
     width: auto;
@@ -93,4 +97,17 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+
+.notif-circle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    aspect-ratio: 1/1;
+    flex-shrink: 0;
+    background: var(--red1);
+    border-radius: 100%;
+    color: white;
 }
