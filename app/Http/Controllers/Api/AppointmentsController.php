@@ -62,11 +62,13 @@ class AppointmentsController extends Controller
         }
     }
 
+
     public function cancelAppointment(Request $request){
         try 
         {
             DB::beginTransaction();
             $appointment = appointments::find($request->appointmentId);
+            
             if (!$appointment) {
                 return response()->json([
                     'status' => 404,
@@ -79,6 +81,32 @@ class AppointmentsController extends Controller
             $appointment->reason = $request->reason;
 
             $appointment->save();
+
+            // Fetch all Items used in this appointment
+            $appointmentItemsUsed = appointment_assigned_items::where('appointment', $appointment->id)->get();
+
+            // Loop through it
+            foreach ($appointmentItemsUsed as $item) 
+            {
+                $itemInventory = $item->inventory_items_used()->first(); //get from inventory_items_used table
+
+                // Return the Item from inventory_items_used to inventory_items
+                $inventoryItems = new inventory_items();
+                $inventoryItems->id = $itemInventory->id;
+                $inventoryItems->inventory = $itemInventory->inventory;
+                $inventoryItems->expiration_date = $itemInventory->expiration_date;
+                $inventoryItems->created_at = $itemInventory->created_at;
+                $inventoryItems->updated_at = $itemInventory->updated_at;
+                $inventoryItems->save();
+
+                // Increment the Inventory Stocks
+                $inventory = inventory::find($itemInventory->inventory);
+                $inventory->qty ++;
+                $inventory->save();
+
+                // Delete the inventory_items_used
+                $itemInventory->delete();
+            }
 
             DB::commit();
             
@@ -97,6 +125,7 @@ class AppointmentsController extends Controller
         }
     }
     
+
     public function completeAppointment(Request $request){
         try 
         {
@@ -128,6 +157,7 @@ class AppointmentsController extends Controller
             ], 500);
         }
     }
+
 
     public function approveAppointment(Request $request){
         try 
@@ -213,6 +243,8 @@ class AppointmentsController extends Controller
             ], 500);
         }
     }
+
+
 
 
 
