@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Contracts\IGenerateIdService;
+use App\Contracts\ISMSService;
 use App\Http\Controllers\Controller;
 use App\Models\appointment_assigned_items;
 use App\Models\appointment_assigned_staffs;
@@ -10,16 +11,18 @@ use App\Models\appointments;
 use App\Models\inventory;
 use App\Models\inventory_items;
 use App\Models\inventory_items_used;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AppointmentsController extends Controller
 {
-    protected $generateId;
+    protected $generateId, $sendSms;
 
-    public function __construct(IGenerateIdService $generateId)
+    public function __construct(IGenerateIdService $generateId, ISMSService $sendSms)
     {
         $this->generateId = $generateId;
+        $this->sendSms = $sendSms;
     }
 
 
@@ -143,6 +146,7 @@ class AppointmentsController extends Controller
             $appointment->approved_at = now();
             $appointment->save();
 
+            // Assign Staffs
             foreach($request->staffs as $staff)
             {
                 $appointmentStaff = new appointment_assigned_staffs();
@@ -160,11 +164,6 @@ class AppointmentsController extends Controller
                 ->orderBy('expiration_date', 'asc')
                 ->take($decodedItem->qty)
                 ->get();
-                
-                // return response()->json([
-                //     'status'=> 500,
-                //     'message'=> $inventoryItems
-                // ], 500);
 
                 // Move Inventory Items to Inventory Items Used
                 foreach($inventoryItems as $item)
@@ -173,6 +172,8 @@ class AppointmentsController extends Controller
                     $inventoryItemsUsed->id = $item->id;
                     $inventoryItemsUsed->inventory = $item->inventory;
                     $inventoryItemsUsed->expiration_date = $item->expiration_date;
+                    $inventoryItemsUsed->created_at = $item->created_at;
+                    $inventoryItemsUsed->updated_at = $item->updated_at;
                     $inventoryItemsUsed->save();
                     
 
@@ -191,10 +192,16 @@ class AppointmentsController extends Controller
                 $inventory->save();
             }
 
+            // SEND SMS
+            $formattedDateTime = Carbon::parse($appointment->date_time)->format('M d, Y \a\t h:i A');
+            $smsMessage = "Your appointment for $appointment->service on $formattedDateTime has been approved.";
+            $smsStatus = $this->sendSms->sendSMS("+63" . substr($appointment->client()->first()->phone, 1), $smsMessage);
+
             DB::commit();
             return response()->json([
                 'status' => 200,
-                'message' => 'Appointment approved successfully.'
+                'message' => 'Appointment approved successfully.',
+                'smsStatus' => $smsStatus
             ]);
         }
         catch(\Exception $e)

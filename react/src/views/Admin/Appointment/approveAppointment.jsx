@@ -125,6 +125,7 @@ export default function ApproveAppointment() {
 
         axiosClient.post(`/approve-appointment`, formData)
         .then(({ data }) => {
+            console.log(data);
             if (data.status === 200) {
                 navigate('/AdminIndex/Appointments/Approved')
             }
