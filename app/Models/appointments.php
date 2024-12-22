@@ -13,4 +13,9 @@ class appointments extends Model
     {
         return $this->belongsTo(pets::class, 'pet', 'id');
     }
+
+    public function client()
+    {
+        return $this->belongsTo(user_clients::class, 'client','id');
+    }
 }

@@ -219,7 +219,7 @@ class AppointmentsController extends Controller
 
     public function getAppointmentWhereId($appointmentId)
     {
-        return response()->json(appointments::with('pet')->find($appointmentId));
+        return response()->json(appointments::with(['pet', 'client'])->find($appointmentId));
     }
 
     public function getAllAppointments()

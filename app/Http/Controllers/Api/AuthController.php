@@ -48,6 +48,7 @@ class AuthController extends Controller
         $client->email = $request->email;
         $client->password = bcrypt($request->password);
         $client->phone = $request->phone;
+        $client->picture = "defaultPFP.png";
 
         if($client->save())
         {

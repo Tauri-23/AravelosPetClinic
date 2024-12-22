@@ -2,69 +2,57 @@ import "../assets/css/calendar.css";
 import "../assets/css/app.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Calendar, momentLocalizer } from 'react-big-calendar';
-import PropTypes from 'prop-types';
 import moment from 'moment-timezone';
 import { useEffect, useState } from "react";
-import { useStateContext } from "../contexts/ContextProvider";
-import { fetchAllAppointments } from "../services/AppointmentServices";
 
-export default function AdminCalendar({ onDateSelect, initialView='month', CustomToolbar, onSelectEvent }) {
-    const {user} = useStateContext();
+export default function AdminCalendar({ appointments, onDateSelect, initialView='month', CustomToolbar, onSelectEvent }) {
     const localizer = momentLocalizer(moment);
-
-    const [appointments, setAppointments] = useState([]);
     const [events, setEvents] = useState([]);
     const [calendarView, setCalendarView] = useState(initialView); // Add state for calendarView
 
+    
+
+    /**
+     * Setup Events Data
+     */
+    useEffect(() => {
+        if(appointments) {
+            setEvents(appointments.map(appointment => {
+                // Initialize the service variable
+                let service = appointment.service; // Default to the raw service value
+    
+                // Format the service name based on the appointment type
+                if (appointment.service === "checkup") {
+                    service = "Check-up";
+                } else if (appointment.service === "grooming") {
+                    service = "Grooming";
+                } else if (appointment.service === "deworming") {
+                    service = "Deworming";
+                } else if (appointment.service === "parasiticControl") {
+                    service = "Parasitic Control";
+                }
+    
+                // Create the event object
+                let event = {
+                    start: moment(appointment.date_time, "YYYY-MM-DD HH:mm:ss", "Asia/Manila").toDate(),
+                    end: moment(appointment.date_time, "YYYY-MM-DD HH:mm:ss", "Asia/Manila").toDate(),
+                    title: `${service}`, // Use the formatted service name
+                    resource: `${appointment.id}`
+                };
+    
+                return event; // Return the modified event object
+            }));
+        }
+    }, [appointments]);
+
+
+
+    /**
+     * Handlers
+     */
     const handleViewChange = (view) => {
         setCalendarView(view); // Update the calendar view state
     };
-    useEffect(() => {
-        const getAllAppointments = async() => {
-            try {
-                const data = await fetchAllAppointments(user.id);
-                setAppointments(data)
-            } catch(error) {console.error(error)}
-        }
-
-        getAllAppointments();
-    }, []);
-
-    useEffect(() => {
-        setEvents(appointments.map(appointment => {
-            // Initialize the service variable
-            let service = appointment.service; // Default to the raw service value
-
-            // Format the service name based on the appointment type
-            if (appointment.service === "checkup") {
-                service = "Check-up";
-            } else if (appointment.service === "grooming") {
-                service = "Grooming";
-            } else if (appointment.service === "deworming") {
-                service = "Deworming";
-            } else if (appointment.service === "parasiticControl") {
-                service = "Parasitic Control";
-            }
-
-            // Create the event object
-            let event = {
-                start: moment(appointment.date_time, "YYYY-MM-DD HH:mm:ss", "Asia/Manila").toDate(),
-                end: moment(appointment.date_time, "YYYY-MM-DD HH:mm:ss", "Asia/Manila").toDate(),
-                title: `${service}`, // Use the formatted service name
-                resource: `${appointment.id}`
-            };
-
-            return event; // Return the modified event object
-        }));
-    }, [appointments]);
-
-
-    useEffect(() => {
-        console.log(appointments);
-    }, [appointments]);
-    useEffect(() => {
-        console.log(events);
-    }, [events]);
 
     const dayPropGetter = (date) => {
         const day = date.getDay();
@@ -98,6 +86,11 @@ export default function AdminCalendar({ onDateSelect, initialView='month', Custo
         onDateSelect(isoSelectedDate);
     };
 
+
+
+    /**
+     * Render
+     */
     return (
         <Calendar
             events={events}
@@ -119,11 +112,3 @@ export default function AdminCalendar({ onDateSelect, initialView='month', Custo
         />
     );
 }
-
-AdminCalendar.propTypes = {
-    onDateSelect: PropTypes.func,
-    calendarView: PropTypes.string,
-    CustomToolbar: PropTypes.elementType,
-    onSelectEvent: PropTypes.func,
-    onDoubleClickEvent: PropTypes.func,
-};

@@ -13,12 +13,28 @@
     width:20%;
     aspect-ratio: 1/1;
     border-radius: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+.client-pic img {
+    position: absolute;
+    height: 100%;
 }
 .pet-pic{
     background-color: var(--blue1);
     width:8%;
     aspect-ratio: 1/1;
     border-radius: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+.pet-pic img {
+    position: absolute;
+    height: 100%;
 }
 .client-name{
     font-size:1.75vw;

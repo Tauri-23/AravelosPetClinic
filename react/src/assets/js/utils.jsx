@@ -77,7 +77,7 @@ export function notify(type, message, position, ms) {
 
 /*
 |----------------------------------------
-| Date format
+| Date/Time DateTime format
 |----------------------------------------
 */
 export const formatDateForMySQL = (dateString) => {
@@ -118,6 +118,21 @@ export const getAge = (date) => {
     }
     
     return age;
+};
+
+export const formatTime = (time) => {
+    const [hours, minutes, seconds] = time.split(':');
+    
+    // Create a new Date object using the provided time
+    const realDateTime = new Date();
+    realDateTime.setHours(hours, minutes, seconds || 0); // Set hours, minutes, and seconds
+
+    const timeOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
+    
+    // Format the provided time
+    const formattedTime = realDateTime.toLocaleTimeString('en-PH', timeOptions);
+
+    return formattedTime;
 };
 
 
