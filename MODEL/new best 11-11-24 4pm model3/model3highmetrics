@@ -69,7 +69,7 @@ class VetFeedbackAnalyzer:
                         'respectful', 'welcoming', 'understanding', 'timely', 'swift', 'thorough', 'reliable', 'gentle',
                         'trustworthy', 'caring', 'dedicated', 'reputable', 'affordable', 'fair', 'justifiable', 'budget-friendly',
                         'compassionate', 'minimal', 'short', 'prompt', 'value based', 'cost effective', 'patient focused', 'accessible',
-                        'competitive', 'organized', 'manageable', 'supportive', 'proactive', 'empathetic'
+                        'competitive', 'organized', 'manageable', 'supportive', 'proactive', 'empathetic', 'speedy'
                     ],
                 'tl': ['maganda', 'mahusay', 'masaya', 'kontento', 'magaling', 'malinis', 'maayos', 'mura', 'makatarungan', 'mabait',
                         'mabilis', 'mabisa', 'matulungin', 'mapagkalinga', 'maalaga', 'mapagmalasakit', 'maasahan', 'masinsin',
