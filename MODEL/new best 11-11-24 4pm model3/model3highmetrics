@@ -45,7 +45,7 @@ class VetFeedbackAnalyzer:
             },
             'customer_service': {
                 'en': ['staff', 'service', 'friendly', 'rude', 'helpful', 'attentive'],
-                'tl': ['kawani', 'serbisyo', 'magalang', 'bastos', 'matulungin']
+                'tl': ['kawani', 'serbisyo', 'magalang', 'bastos', 'matulungin','tauhan']
             },
             'vet_care': {
                 'en': ['treatment', 'doctor', 'vet', 'examination', 'diagnosis', 'care'],
@@ -63,20 +63,20 @@ class VetFeedbackAnalyzer:
 
         self.sentiment_rules = {
             'positive': {
-                'en': ['good', 'great', 'excellent', 'awesome', 'satisfied', 'happy', 'clean', 'neat', 'tidy', 'pristine', 'fresh',
+                'en': ['good', 'great','greatest', 'amazing', 'excellent', 'awesome', 'satisfied', 'happy', 'clean', 'neat', 'tidy', 'pristine', 'fresh',
                         'spotless', 'hygienic', 'sterile', 'orderly', 'sanitary', 'quick', 'fast', 'efficient', 'nice', 'pleasant',
                         'friendly', 'helpful', 'attentive', 'compassionate', 'knowledgeable', 'skilled', 'responsive', 'professional',
                         'respectful', 'welcoming', 'understanding', 'timely', 'swift', 'thorough', 'reliable', 'gentle',
-                        'trustworthy', 'caring', 'dedicated', 'reputable', 'affordable', 'fair', 'justifiable', 'budget-friendly',
+                        'trustworthy', 'caring', 'dedicated', 'reputable', 'affordable', 'fair', 'justifiable', 'budget friendly',
                         'compassionate', 'minimal', 'short', 'prompt', 'value based', 'cost effective', 'patient focused', 'accessible',
-                        'competitive', 'organized', 'manageable', 'supportive', 'proactive', 'empathetic', 'speedy'
+                        'competitive', 'organized', 'manageable', 'supportive', 'proactive', 'empathetic', 'speedy', 'commendable'
                     ],
-                'tl': ['maganda', 'mahusay', 'masaya', 'kontento', 'magaling', 'malinis', 'maayos', 'mura', 'makatarungan', 'mabait',
-                        'mabilis', 'mabisa', 'matulungin', 'mapagkalinga', 'maalaga', 'mapagmalasakit', 'maasahan', 'masinsin',
-                        'maingat', 'matapat', 'kaaya-aya', 'mapag-unawa', 'masinop', 'maalwan', 'madaling lapitan', 'malinaw', 'maaliwalas',
+                'tl': ['maganda', 'mahusay', 'pinakamagaling','masaya', 'kontento', 'magaling', 'malinis', 'maayos', 'mura', 'makatarungan', 'mabait',
+                        'mabilis', 'mabisa', 'matulungin', 'mapagkalinga', 'maalaga', 'mapagmalasakit', 'maaasahan', 'masinsin',
+                        'maingat', 'matapat', 'kaaya aya', 'mapag unawa', 'masinop', 'maalwan', 'madaling lapitan', 'malinaw', 'maaliwalas',
                         'malambing', 'mapag aruga', 'kagalang galang', 'maasikaso', 'masipag', 'mapagbigay', 'mapagpakumbaba',
-                        'malasakit', 'marespeto', 'masigla', 'maingat', 'matapat', 'makonsiderasyon', 'mabango', 'maasikaso', 
-                        'nakikiramay'
+                        'malasakit', 'marespeto', 'masigla', 'maingat', 'matapat', 'makonsiderasyon', 'mabango', 'maasikaso',
+                        'nakikiramay','napakagaling','napakamatulungin','napakabait'
                     ]
             },
             'negative': {
@@ -85,7 +85,7 @@ class VetFeedbackAnalyzer:
                         'disrespectful', 'inattentive', 'unresponsive', 'unprofessional', 'cold', 'dismissive', 'indifferent',
                         'slow', 'condescending', 'unreliable', 'inconsiderate', 'long', 'extended', 'delayed', 'excessive',
                         'unreasonable', 'frustrating', 'tedious', 'prolonged', 'rough', 'inconsistent', 'rushed',
-                        'impersonal', 'hidden fees', 'overpriced', 'inflated', 'steep', 'costly', 'unaffordable', 'exorbitant', 'awful', 'disgusting', 
+                        'impersonal', 'hidden fees', 'overpriced', 'inflated', 'steep', 'costly', 'unaffordable', 'exorbitant', 'awful', 'disgusting',
                         'not transparent', 'too much', 'not cleaned', 'unclean', 'increasing', 'high', 'extra', 'double the price',
                         'huge amount', 'unacceptable', 'ridiculous', 'shocked', 'ignored', 'not empathetic', 'unorganized', 'unwelcome',
                         'stressful', 'lied'
@@ -95,7 +95,7 @@ class VetFeedbackAnalyzer:
                         'pabaya', 'walang malasakit', 'mapagsamantala', 'walang pakialam', 'hindi makatwiran', 'hindi kaaya-aya',
                         'nakakadismaya', 'hindi sigurado', 'pasaway', 'magulo', 'magaspang', 'mapanlait', 'palpak', 'masalimoot',
                         'mapagsamantala', 'walang malasakit', 'hindi kapani paniwala', 'madamot', 'masikip', 'mahirap lapitan',
-                        'hindi marespeto', 'nakakasakit', 'mapanlinlang', 'katakot', 'nakakatakot', 'nakakadiri', 'di nagsasabi', 
+                        'hindi marespeto', 'nakakasakit', 'mapanlinlang', 'katakot', 'nakakatakot', 'nakakadiri', 'di nagsasabi',
                         'di sinasabi', 'sobra', 'hindi nalinis', 'hindi malinis', 'padagdag', 'taas', 'dagdag', 'doble',
                         'malaking halaga', 'hindi katanggap tanggap', 'nakakagulat', 'hindi ako pinansin', 'nagsinungaling', 'hindi'
                     ]
@@ -235,22 +235,22 @@ class VetFeedbackAnalyzer:
         lang = self.detect_language(text)
         text = text.lower()
         words = text.split()
-        
+
         # Negation words with stronger impact
         negation_words = {
             'en': {'not', 'no', "don't", 'never', 'neither', 'none', 'without'},
             'tl': {'hindi', 'wala', 'ayaw', 'di', 'hinde', 'walang'}
         }
-        
+
         # Initialize scores
         sentiment_score = 0
         negation_active = False
-        
+
         # First check for complete negative phrases
         for neg_phrase in self.sentiment_rules['negative'][lang]:
             if neg_phrase in text:
                 sentiment_score -= 3  # Even stronger negative score for complete phrases
-        
+
         # Process words with context
         for i, word in enumerate(words):
             # Check for negation
@@ -258,22 +258,22 @@ class VetFeedbackAnalyzer:
                 negation_active = True
                 sentiment_score -= 1  # Negation itself contributes to negative score
                 continue
-            
+
             # Handle positive words
             if any(pos_word in word for pos_word in self.sentiment_rules['positive'][lang]):
                 if negation_active:
                     sentiment_score -= 2  # Negated positive is strongly negative
                 else:
                     sentiment_score += 1
-            
+
             # Handle negative words
             if any(neg_word in word for neg_word in self.sentiment_rules['negative'][lang]):
                 sentiment_score -= 2  # Negative words have stronger impact
-                
+
             # Reset negation after 2 words
             if negation_active and i > 0 and (i % 2 == 0):
                 negation_active = False
-        
+
         # Determine final sentiment with more aggressive thresholds
         if sentiment_score < -1:  # Lower threshold for negative
             return 'negative'
@@ -321,20 +321,20 @@ class VetFeedbackAnalyzer:
         print("Calculating class distribution...")
         class_counts = defaultdict(int)
         total_samples = 0
-        
+
         for chunk in pd.read_csv(dataset_path, chunksize=self.batch_size):
             for text in chunk['review']:
                 sentiment = self.analyze_sentiment(text)
                 class_counts[sentiment] += 1
                 total_samples += 1
-        
+
         # Calculate class weights inversely proportional to frequency
         class_weights = {
             'negative': total_samples / (3 * class_counts['negative']),
             'positive': total_samples / (3 * class_counts['positive']),
             'neutral': total_samples / (3 * class_counts['neutral'])
         }
-        
+
         print("\nClass distribution:")
         for cls, count in class_counts.items():
             print(f"{cls}: {count} samples (weight: {class_weights[cls]:.2f})")
@@ -352,7 +352,7 @@ class VetFeedbackAnalyzer:
             lr=2e-5,
             weight_decay=0.01  # L2 regularization
         )
-        
+
         # Learning rate scheduler
         scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
             self.optimizer,
@@ -372,17 +372,17 @@ class VetFeedbackAnalyzer:
             words = text.split()
             if len(words) < 3:
                 return text
-                
+
             # Random word dropout
             if random.random() < 0.3:
                 drop_idx = random.randint(0, len(words)-1)
                 words.pop(drop_idx)
-                
+
             # Random word repetition for emphasis
             if random.random() < 0.3:
                 repeat_idx = random.randint(0, len(words)-1)
                 words.insert(repeat_idx, words[repeat_idx])
-                
+
             return ' '.join(words)
 
         for epoch in range(epochs):
@@ -394,16 +394,16 @@ class VetFeedbackAnalyzer:
                             desc=f'Epoch {epoch+1}/{epochs}'):
                 texts = []
                 labels = []
-                
+
                 for text in chunk['review']:
                     sentiment = self.analyze_sentiment(text)
                     lang = self.detect_language(text)
                     label = weight_mapping[sentiment]
-                    
+
                     # Add original sample
                     texts.append(text)
                     labels.append(label)
-                    
+
                     # Augment minority classes
                     if sentiment in ['negative', 'neutral']:  # assuming these are minority classes
                         # Add augmented versions
@@ -436,10 +436,10 @@ class VetFeedbackAnalyzer:
                 loss = outputs.loss * class_weight_tensor[label_tensor].mean()
 
                 loss.backward()
-                
+
                 # Gradient clipping
                 torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
-                
+
                 self.optimizer.step()
 
                 total_loss += loss.item()
@@ -451,7 +451,7 @@ class VetFeedbackAnalyzer:
 
             avg_loss = total_loss / batch_count
             print(f'Epoch {epoch+1} - Average loss: {avg_loss:.4f}')
-            
+
             # Update learning rate
             scheduler.step(avg_loss)
 
@@ -877,46 +877,46 @@ class VetFeedbackAnalyzer:
     def balance_dataset(self, input_path: str, output_path: str):
         """Balance dataset by augmenting minority classes"""
         print("Starting dataset balancing...")
-            
+
         # Read the entire dataset
         df = pd.read_csv(input_path)
         print(f"Original dataset size: {len(df)} samples")
-            
+
         # Get sentiment distribution
         df['sentiment'] = df['review'].apply(self.analyze_sentiment)
         sentiment_counts = df['sentiment'].value_counts()
-            
+
         print("\nOriginal class distribution:")
         for sentiment, count in sentiment_counts.items():
             print(f"{sentiment}: {count} samples")
-                
+
         # Find majority class count
         max_count = sentiment_counts.max()
-            
+
         # Initialize list for balanced data
         balanced_data = []
-            
+
         # Process each sentiment class
         for sentiment in ['positive', 'negative', 'neutral']:
             sentiment_df = df[df['sentiment'] == sentiment]
             current_count = len(sentiment_df)
-                
+
             # Add original samples
             balanced_data.extend(sentiment_df.to_dict('records'))
-                
+
             # Calculate how many more samples we need
             samples_needed = max_count - current_count
-                
+
             if samples_needed > 0:
                 print(f"\nAugmenting {sentiment} class with {samples_needed} samples...")
-                    
+
                 # Augment data until we reach the majority class count
                 while len(balanced_data) < len(df) + samples_needed:
                     # Randomly select a sample to augment
                     sample = sentiment_df.sample(n=1).iloc[0]
                     text = sample['review']
                     lang = self.detect_language(text)
-                        
+
                     # Apply augmentation
                     words = text.split()
                     if len(words) >= 3:
@@ -924,42 +924,42 @@ class VetFeedbackAnalyzer:
                         if random.random() < 0.3:
                             drop_idx = random.randint(0, len(words)-1)
                             words.pop(drop_idx)
-                            
+
                         # Random word repetition for emphasis
                         if random.random() < 0.3:
                             repeat_idx = random.randint(0, len(words)-1)
                             words.insert(repeat_idx, words[repeat_idx])
-                        
+
                         # Random word order swap
                         if random.random() < 0.3 and len(words) >= 4:
                             idx1 = random.randint(0, len(words)-2)
                             words[idx1], words[idx1+1] = words[idx1+1], words[idx1]
-                        
+
                         augmented_text = ' '.join(words)
-                        
+
                         # Add augmented sample
                         augmented_sample = sample.copy()
                         augmented_sample['review'] = augmented_text
                         balanced_data.append(augmented_sample)
-            
+
         # Create balanced dataset
         balanced_df = pd.DataFrame(balanced_data)
-            
+
         # Shuffle the dataset
         balanced_df = balanced_df.sample(frac=1).reset_index(drop=True)
-            
+
         # Save balanced dataset
         balanced_df.to_csv(output_path, index=False)
-            
+
         print("\nFinal class distribution:")
         final_counts = balanced_df['sentiment'].value_counts()
         for sentiment, count in final_counts.items():
             print(f"{sentiment}: {count} samples")
-                
+
         print(f"\nBalanced dataset saved to: {output_path}")
         print(f"Total samples: {len(balanced_df)}")
 
-    
+
 def list_available_models(base_path: str) -> List[Dict]:
     """List all available trained models with enhanced information"""
     available_models = []
