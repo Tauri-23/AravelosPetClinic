@@ -44,11 +44,11 @@ class VetFeedbackAnalyzer:
                 'tl': ['maghintay', 'matagal', 'mabilis', 'oras', 'antay']
             },
             'customer_service': {
-                'en': ['staff', 'service', 'friendly', 'rude', 'helpful', 'attentive'],
+                'en': ['staff', 'service', 'friendly', 'rude', 'helpful', 'attentive','team','employee','employees'],
                 'tl': ['kawani', 'serbisyo', 'magalang', 'bastos', 'matulungin','tauhan']
             },
             'vet_care': {
-                'en': ['treatment', 'doctor', 'vet', 'examination', 'diagnosis', 'care'],
+                'en': ['treatment', 'doctor', 'vet', 'examination', 'diagnosis', 'care','veterinarians','physicians'],
                 'tl': ['gamot', 'doktor', 'beterinaryo', 'eksamin', 'alaga']
             },
             'pricing': {
@@ -69,14 +69,14 @@ class VetFeedbackAnalyzer:
                         'respectful', 'welcoming', 'understanding', 'timely', 'swift', 'thorough', 'reliable', 'gentle',
                         'trustworthy', 'caring', 'dedicated', 'reputable', 'affordable', 'fair', 'justifiable', 'budget friendly',
                         'compassionate', 'minimal', 'short', 'prompt', 'value based', 'cost effective', 'patient focused', 'accessible',
-                        'competitive', 'organized', 'manageable', 'supportive', 'proactive', 'empathetic', 'speedy', 'commendable'
+                        'competitive', 'organized', 'manageable', 'supportive', 'proactive', 'empathetic', 'speedy', 'commendable','cooperative','polite','well trained'
                     ],
                 'tl': ['maganda', 'mahusay', 'pinakamagaling','masaya', 'kontento', 'magaling', 'malinis', 'maayos', 'mura', 'makatarungan', 'mabait',
                         'mabilis', 'mabisa', 'matulungin', 'mapagkalinga', 'maalaga', 'mapagmalasakit', 'maaasahan', 'masinsin',
                         'maingat', 'matapat', 'kaaya aya', 'mapag unawa', 'masinop', 'maalwan', 'madaling lapitan', 'malinaw', 'maaliwalas',
                         'malambing', 'mapag aruga', 'kagalang galang', 'maasikaso', 'masipag', 'mapagbigay', 'mapagpakumbaba',
                         'malasakit', 'marespeto', 'masigla', 'maingat', 'matapat', 'makonsiderasyon', 'mabango', 'maasikaso',
-                        'nakikiramay','napakagaling','napakamatulungin','napakabait'
+                        'nakikiramay','napakagaling','napakamatulungin','napakabait','propesyunal','propesyonal','magalang','husay','madali'
                     ]
             },
             'negative': {
