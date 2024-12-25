@@ -33,12 +33,15 @@ export default function AdminAppointmentDefault() {
             {(pendingAppointments !== null && approvedAppointments !== null)
             ? (
                 <div className="bg book-appointment gen-margin">
-                    <div className="mini-nav bottom-margin">
-                        <div className="anybody medium-f bold">Appointments</div>
-                        <div className="separator left-margin-s right-margin-s"></div>
-                        <Link to={'../ClinicCalendar'}>
-                            <div className="anybody small-f semi-bold">Clinic Calendar</div>
-                        </Link>
+                    <div className="bottom-margin d-flex justify-content-between align-items-center">
+                        <div className="mini-nav">
+                            <div className="anybody medium-f bold">Appointments</div>
+                            <div className="separator left-margin-s right-margin-s"></div>
+                            <Link to={'../ClinicCalendar'}>
+                                <div className="anybody small-f semi-bold">Clinic Calendar</div>
+                            </Link>
+                        </div>
+                        <button className="primary-btn-blue1">Add Appointment</button>
                     </div>
 
                     <div className="myappt small-form bottom-margin-s text-center">
