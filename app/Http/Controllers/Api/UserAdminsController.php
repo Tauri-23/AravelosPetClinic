@@ -95,7 +95,10 @@ class UserAdminsController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => $message,
-                'admins' => user_admins::whereNot('status', 'deleted')->get()
+                'admins' => user_admins::whereNot('status', 'deleted')
+                ->whereNot('id', $request->signedId)
+                ->with("role")
+                ->get()
             ]);
         }
         else

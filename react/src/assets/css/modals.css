@@ -8,17 +8,43 @@
     justify-content: center;
     align-items: center;
 }
-.modal-box3{
+.modal-box3, .modal-box2{
     width: 35vw;
     padding: 25px;
     border-radius: var(--rounded_conts);
     background: white;
     filter: drop-shadow(0 0 10px var(--black2));
 }
+.modal-box2 {
+    width: 800px;
+}
+
 .circle-btn1{
     display: flex;
     flex-direction: row-reverse;
 }
 hr{
     margin:.5vw!important;
+}
+
+
+
+
+
+/* Mini Profiles */
+.mini-profile-pfp {
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
+    overflow: hidden;
+    position: relative;
+    background: var(--grey1);
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.mini-profile-pfp img {
+    position: absolute;
+    aspect-ratio: 3/2;
+    height: 100%;
 }
