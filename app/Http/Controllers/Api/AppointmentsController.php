@@ -42,6 +42,7 @@ class AppointmentsController extends Controller
             $appointment->pet = $request->pet;
             $appointment->service = $request->service;
             $appointment->date_time = $request->dateTime;
+            $appointment->note = $request->note;
             $appointment->status = $request->status;
             $appointment->save();
 

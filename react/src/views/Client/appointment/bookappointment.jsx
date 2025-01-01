@@ -43,6 +43,7 @@ export default function BookAppointment() {
     const [selectedPet, setSelectedPet] = useState('');
     const [selectedService, setSelectedService] = useState('');
     const [dateUnformatted, setDateUnformatted] = useState(null); // Add this line for unformatted date
+    const [note, setNote] = useState('');
 
     // State to hold submission message
     const [submissionMessage, setSubmissionMessage] = useState("");
@@ -55,6 +56,7 @@ export default function BookAppointment() {
         formData.append('client', user.id);
         formData.append("service", selectedService);
         formData.append("status", "Pending");
+        formData.append("note", note);
 
         axiosClient.post('/add-appointment', formData)
         .then(({data}) => {
@@ -102,17 +104,6 @@ export default function BookAppointment() {
         }
     };
 
-    /*
-    |Degubbing
-    */
-    // useEffect(() => {
-    //     console.log(selectedPet)
-    // }, [selectedPet])
-    // useEffect(() => {
-    //     console.log(selectedService)
-    // }, [selectedService])
-
-    // Check the btn state
 
     useEffect(() => {
         const getAllPets = async() => {
@@ -125,7 +116,8 @@ export default function BookAppointment() {
         }
 
         getAllPets();
-      }, []);
+    }, []);
+
     useEffect(() => {
         if(isEmptyOrSpaces(selectedDateTime) || isEmptyOrSpaces(selectedPet) || isEmptyOrSpaces(selectedService)) {
             setSubmitBtnActive(false);
@@ -135,6 +127,11 @@ export default function BookAppointment() {
         }
     }, [selectedDateTime, selectedPet, selectedService]);
 
+
+
+    /**
+     * Render
+     */
     return (
         <div className="page book-appointment">
             <div className="bg gen-margin">
@@ -185,6 +182,15 @@ export default function BookAppointment() {
                                     ))}
                                 </select>
                             </div>
+
+                            <div className="d-flex flex-direction-y gap4 mar-bottom-3">
+                                <label htmlFor="note" className="choose semi-bold">Note (optional)</label>
+                                <textarea 
+                                id="note"
+                                value={note}
+                                onInput={(e) => setNote(e.target.value)}></textarea>
+                            </div>
+
                             <div className="d-flex justify-content-center">
 
                             <button

@@ -130,7 +130,7 @@ export default function AdminCalendarEventInfo({appointment}) {
                 <div className="s-align-center label bold ">Notes:</div>
                 <textarea
                     className="notes"
-                    placeholder="madadagdagan pala ng notes na column yung appointments table..."
+                    value={appointment.note}
                     readOnly
                 />
             </div>

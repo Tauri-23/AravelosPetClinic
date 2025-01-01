@@ -22,6 +22,7 @@ return new class extends Migration
             $table->dateTime('rejected_at')->nullable();
             $table->dateTime('cancelled_at')->nullable();
             $table->text('reason')->nullable();
+            $table->longText('note')->nullable();
             $table->string('status');
             
             $table->timestamps();
