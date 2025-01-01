@@ -1,0 +1,8 @@
+.dashboard-box-sm {
+    width: calc(100% / 4 - 10px);
+    background: white;
+    padding: 20px;
+    filter: drop-shadow(0 0 3px var(--grey1));
+    border-radius: 10px;
+
+}

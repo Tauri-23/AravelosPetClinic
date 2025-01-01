@@ -35,6 +35,10 @@ a{
     overflow: scroll; /* Works in Chrome, Edge */
     scrollbar-gutter: stable; /* Ensures scrollbar doesn't shift content */
 }
+.content1 {
+    width: 100%;
+    padding: 50px;
+}
 #root{
     display: flex;
     flex-direction: column;
