@@ -157,3 +157,5 @@ Route::get('/get-all-admin-roles', [AdminRolesController::class, 'GetAllAdminRol
 |----------------------------------------
 */
 Route::get('/get-all-staffs', [StaffsController::class, 'GetAllStaffs']);
+
+Route::get('/get-all-staffs-where-status/{status}', [StaffsController::class, 'GetAllStaffsWhereStatus']);

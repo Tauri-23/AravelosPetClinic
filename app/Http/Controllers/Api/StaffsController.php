@@ -13,4 +13,9 @@ class StaffsController extends Controller
     {
         return response()->json(user_admins::whereNot("role", 1)->with("role")->get());
     }
+
+    public function GetAllStaffsWhereStatus($status)
+    {
+        return response()->json(user_admins::whereNot("role", 1)->with("role")->where('status', $status)->get());
+    }
 }

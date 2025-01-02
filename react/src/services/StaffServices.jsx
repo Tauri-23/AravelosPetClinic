@@ -10,3 +10,13 @@ export const fetchAllStaffs = async() => {
         throw error;
     }
 }
+
+export const fetchAllStaffsWhereStatus = async(status) => {
+    try {
+        const response = await axiosClient.get(`/get-all-staffs-where-status/${status}`);
+        return response.data;
+    } catch(error) {
+        console.error(error)
+        throw error;
+    }
+}

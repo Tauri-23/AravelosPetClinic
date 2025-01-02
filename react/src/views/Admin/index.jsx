@@ -6,7 +6,7 @@ import "../../assets/css/adminIndex.css";
 import '../../assets/css/adminDash.css'
 import { fetchAllInventoryItems } from "../../services/InventoryServices";
 import { fetchAllAppointmentsWhereStatus } from "../../services/AppointmentServices";
-import { fetchAllStaffs } from "../../services/StaffServices";
+import { fetchAllStaffs, fetchAllStaffsWhereStatus } from "../../services/StaffServices";
 
 export default function adminIndex() {
     const [feedbackLanguage, setFeedbackLanguage] = useState("english");
@@ -56,7 +56,7 @@ export default function adminIndex() {
             const [inventoryDb, approvedAppointmentsDb, staffsDb] = await Promise.all([
                 fetchAllInventoryItems(),
                 fetchAllAppointmentsWhereStatus("Approved"),
-                fetchAllStaffs()
+                fetchAllStaffsWhereStatus("active")
             ]);
             const inventoryDbQty = await inventoryDb.reduce((a, b) => a + b.qty, 0);
             setInventoryQty(inventoryDbQty);
@@ -78,213 +78,213 @@ export default function adminIndex() {
             ? (
                 <>
                     <header className="d-flex align-items-center justify-content-between w-100 mar-bottom-1">
-                    <h1>Veterinary Clinic Dashboard</h1>
-                    <div className="header-controls">
-                        <div className="date-filter">
-                            <button
-                            className={`filter-btn ${activeTab === "today" ? "active" : ""}`}
-                            onClick={() => setActiveTab("today")}
-                            >
-                                Today
-                            </button>
-                            <button
-                            className={`filter-btn ${activeTab === "week" ? "active" : ""}`}
-                            onClick={() => setActiveTab("week")}
-                            >
-                                This Week
-                            </button>
-                            <button
-                            className={`filter-btn ${activeTab === "month" ? "active" : ""}`}
-                            onClick={() => setActiveTab("month")}
-                            >
-                                This Month
-                            </button>
-                        </div>
-                    </div>
-                </header>
-
-                <div className="d-flex gap3 w-100 mar-bottom-1">
-                    <div className="dashboard-box-sm">
-                        <h3>{approvedAppointments.length}</h3>
-                        <small>Appointments</small>
-                    </div>
-                    <div className="dashboard-box-sm">
-                        <h3>{staffs.length}</h3>
-                        <small>Staffs</small>
-                    </div>
-                    <div className="dashboard-box-sm">
-                        <h3>{inventoryQty}</h3>
-                        <small>Inventory Stocks</small>
-                    </div>
-                    <div className="dashboard-box-sm">
-                        <h3>0</h3>
-                        <small>Low Stocks</small>
-                    </div>
-                </div>
-
-                <h3>Feedbacks</h3>
-                <div className="dashboard-box-lg" style={{height: "200px"}}>
-                    
-                </div>
-
-                {/* <div className="dashboard-grid">
-                    <div className="dashboard-card appointments-card">
-                        <div className="card-header">
-                            <h2>Upcoming Appointments</h2>
-                        </div>
-                        <div className="appointments-scroll">
-                            {filteredAppointments.length > 0 ? (
-                                filteredAppointments.map((apt) => (
-                                    <div
-                                        key={apt.id}
-                                        className="appointment-item"
-                                        onClick={() => setSelectedAppointment(apt)}
-                                    >
-                                        <div className="appointment-time">
-                                            {apt.time}
-                                        </div>
-                                        <div className="appointment-details">
-                                            <div className="pet-name">
-                                                {apt.petName}
-                                            </div>
-                                            <div className="owner-name">
-                                                {apt.ownerName}
-                                            </div>
-                                        </div>
-                                        <div className="appointment-date">
-                                            {new Date(
-                                                apt.date
-                                            ).toLocaleDateString()}
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="no-appointments">
-                                    <p>No appointments found for this period</p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="dashboard-card feedback-card">
-                        <div className="card-header">
-                            <h2>Customer Feedback</h2>
-                            <div className="language-toggle">
+                        <h1>Veterinary Clinic Dashboard</h1>
+                        <div className="header-controls">
+                            <div className="date-filter">
                                 <button
-                                    className={`toggle-btn ${
-                                        feedbackLanguage === "english"
-                                            ? "active"
-                                            : ""
-                                    }`}
-                                    onClick={() => setFeedbackLanguage("english")}
+                                className={`filter-btn ${activeTab === "today" ? "active" : ""}`}
+                                onClick={() => setActiveTab("today")}
                                 >
-                                    English
+                                    Today
                                 </button>
                                 <button
-                                    className={`toggle-btn ${
-                                        feedbackLanguage === "tagalog"
-                                            ? "active"
-                                            : ""
-                                    }`}
-                                    onClick={() => setFeedbackLanguage("tagalog")}
+                                className={`filter-btn ${activeTab === "week" ? "active" : ""}`}
+                                onClick={() => setActiveTab("week")}
                                 >
-                                    Tagalog
+                                    This Week
+                                </button>
+                                <button
+                                className={`filter-btn ${activeTab === "month" ? "active" : ""}`}
+                                onClick={() => setActiveTab("month")}
+                                >
+                                    This Month
                                 </button>
                             </div>
                         </div>
-                        <div className="feedback-chart">
-                            <BarChart width={600} height={300} data={chartData}>
-                                <XAxis dataKey="category" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Bar
-                                    dataKey="positive"
-                                    stackId="a"
-                                    fill="#4CAF50"
-                                    name="Positive"
-                                />
-                                <Bar
-                                    dataKey="negative"
-                                    stackId="a"
-                                    fill="#FF5252"
-                                    name="Negative"
-                                />
-                            </BarChart>
+                    </header>
+
+                    <div className="d-flex gap3 w-100 mar-bottom-1">
+                        <div className="dashboard-box-sm">
+                            <h3>{approvedAppointments.length}</h3>
+                            <small>Appointments</small>
+                        </div>
+                        <div className="dashboard-box-sm">
+                            <h3>{staffs.length}</h3>
+                            <small>Staffs</small>
+                        </div>
+                        <div className="dashboard-box-sm">
+                            <h3>{inventoryQty}</h3>
+                            <small>Inventory Stocks</small>
+                        </div>
+                        <div className="dashboard-box-sm">
+                            <h3>0</h3>
+                            <small>Low Stocks</small>
                         </div>
                     </div>
 
-                    <div className="dashboard-card inventory-card">
-                        <div className="card-header">
-                            <h2>Inventory Status</h2>
-                        </div>
-                        <div className="inventory-grid">
-                            {inventory.map((item) => (
-                                <div
-                                    key={item.id}
-                                    className={`inventory-item ${
-                                        item.stock < item.threshold
-                                            ? "low-stock"
-                                            : ""
-                                    }`}
-                                >
-                                    <div className="inventory-icon">
-                                        {item.stock < item.threshold && (
-                                            <AlertCircle size={20} />
-                                        )}
-                                    </div>
-                                    <div className="inventory-details">
-                                        <h3>{item.name}</h3>
-                                        <div className="stock-level">
-                                            <div className="stock-bar">
-                                                <div
-                                                    className="stock-fill"
-                                                    style={{
-                                                        width: `${
-                                                            (item.stock /
-                                                                item.threshold) *
-                                                            100
-                                                        }%`,
-                                                    }}
-                                                />
+                    <h2>Feedbacks</h2>
+                    <div className="dashboard-box-lg" style={{height: "200px"}}>
+                        
+                    </div>
+
+                    {/* <div className="dashboard-grid">
+                        <div className="dashboard-card appointments-card">
+                            <div className="card-header">
+                                <h2>Upcoming Appointments</h2>
+                            </div>
+                            <div className="appointments-scroll">
+                                {filteredAppointments.length > 0 ? (
+                                    filteredAppointments.map((apt) => (
+                                        <div
+                                            key={apt.id}
+                                            className="appointment-item"
+                                            onClick={() => setSelectedAppointment(apt)}
+                                        >
+                                            <div className="appointment-time">
+                                                {apt.time}
                                             </div>
-                                            <span>{item.stock} units</span>
+                                            <div className="appointment-details">
+                                                <div className="pet-name">
+                                                    {apt.petName}
+                                                </div>
+                                                <div className="owner-name">
+                                                    {apt.ownerName}
+                                                </div>
+                                            </div>
+                                            <div className="appointment-date">
+                                                {new Date(
+                                                    apt.date
+                                                ).toLocaleDateString()}
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="no-appointments">
+                                        <p>No appointments found for this period</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="dashboard-card feedback-card">
+                            <div className="card-header">
+                                <h2>Customer Feedback</h2>
+                                <div className="language-toggle">
+                                    <button
+                                        className={`toggle-btn ${
+                                            feedbackLanguage === "english"
+                                                ? "active"
+                                                : ""
+                                        }`}
+                                        onClick={() => setFeedbackLanguage("english")}
+                                    >
+                                        English
+                                    </button>
+                                    <button
+                                        className={`toggle-btn ${
+                                            feedbackLanguage === "tagalog"
+                                                ? "active"
+                                                : ""
+                                        }`}
+                                        onClick={() => setFeedbackLanguage("tagalog")}
+                                    >
+                                        Tagalog
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="feedback-chart">
+                                <BarChart width={600} height={300} data={chartData}>
+                                    <XAxis dataKey="category" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Bar
+                                        dataKey="positive"
+                                        stackId="a"
+                                        fill="#4CAF50"
+                                        name="Positive"
+                                    />
+                                    <Bar
+                                        dataKey="negative"
+                                        stackId="a"
+                                        fill="#FF5252"
+                                        name="Negative"
+                                    />
+                                </BarChart>
+                            </div>
+                        </div>
+
+                        <div className="dashboard-card inventory-card">
+                            <div className="card-header">
+                                <h2>Inventory Status</h2>
+                            </div>
+                            <div className="inventory-grid">
+                                {inventory.map((item) => (
+                                    <div
+                                        key={item.id}
+                                        className={`inventory-item ${
+                                            item.stock < item.threshold
+                                                ? "low-stock"
+                                                : ""
+                                        }`}
+                                    >
+                                        <div className="inventory-icon">
+                                            {item.stock < item.threshold && (
+                                                <AlertCircle size={20} />
+                                            )}
+                                        </div>
+                                        <div className="inventory-details">
+                                            <h3>{item.name}</h3>
+                                            <div className="stock-level">
+                                                <div className="stock-bar">
+                                                    <div
+                                                        className="stock-fill"
+                                                        style={{
+                                                            width: `${
+                                                                (item.stock /
+                                                                    item.threshold) *
+                                                                100
+                                                            }%`,
+                                                        }}
+                                                    />
+                                                </div>
+                                                <span>{item.stock} units</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="dashboard-card users-card">
-                        <div className="card-header">
-                            <h2>Active Staff</h2>
+                        <div className="dashboard-card users-card">
+                            <div className="card-header">
+                                <h2>Active Staff</h2>
+                            </div>
+                            <div className="users-grid">
+                                {activeUsers.map((user) => (
+                                    <div key={user.id} className="user-item">
+                                        <div className="user-avatar">
+                                            <Users size={24} />
+                                        </div>
+                                        <div className="user-details">
+                                            <h3>{user.name}</h3>
+                                            <p>{user.role}</p>
+                                        </div>
+                                        <div className="user-status">
+                                            <span className="status-dot"></span>
+                                            {user.status}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                        <div className="users-grid">
-                            {activeUsers.map((user) => (
-                                <div key={user.id} className="user-item">
-                                    <div className="user-avatar">
-                                        <Users size={24} />
-                                    </div>
-                                    <div className="user-details">
-                                        <h3>{user.name}</h3>
-                                        <p>{user.role}</p>
-                                    </div>
-                                    <div className="user-status">
-                                        <span className="status-dot"></span>
-                                        {user.status}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div> */}
+                    </div> */}
 
-                {/* <AdminShowAppointment
-                    isOpen={!!selectedAppointment}
-                    onClose={() => setSelectedAppointment(null)}
-                    appointment={selectedAppointment}
-                /> */}
+                    {/* <AdminShowAppointment
+                        isOpen={!!selectedAppointment}
+                        onClose={() => setSelectedAppointment(null)}
+                        appointment={selectedAppointment}
+                    /> */}
                 </>
             )
             : (<>Loading...</>)}
