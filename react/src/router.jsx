@@ -26,6 +26,7 @@ import AdminApprovedAppointments from "./views/Admin/Appointment/admin_approved_
 import AdminCompletedAppointments from "./views/Admin/Appointment/admin_completed_appointments";
 import AdminCancelledAppointments from "./views/Admin/Appointment/admin_cancelled_appointments";
 import AdminViewInventory from "./views/Admin/Inventory/viewInventory";
+import AdminTrainModel from "./views/Admin/TrainModel/admin_train_model";
 
 const router = createBrowserRouter([
     /*
@@ -176,8 +177,17 @@ const router = createBrowserRouter([
             {
                 path: 'AdminFeedbackAnalysis', // Remove leading `/`
                 element: <AdminFeedbackAnalysis />
-            }
+            },
 
+
+
+            /**
+             * Train Model
+             */
+            {
+                path: 'TrainModel',
+                element: <AdminTrainModel/>
+            }
         ]
     }
 ]);

@@ -12,12 +12,15 @@ from datetime import datetime
 from collections import defaultdict, Counter
 import re
 import string
+import random
+import json
+
 
 class VetFeedbackAnalyzer:
     def __init__(self, batch_size=16):
         self.batch_size = batch_size
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        print(f"Using device: {self.device}")
+        # print(f"Using device: {self.device}")
 
         # Initialize tokenizer
         self.tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
@@ -31,7 +34,7 @@ class VetFeedbackAnalyzer:
         # Initialize with base model
         self._load_base_model()
 
-        # Aspect keywords 
+        # Aspect keywords (same as original)
         self.aspect_keywords = {
             'hygiene': {
                 'en': ['clean', 'sanitize', 'hygiene', 'dirty', 'smell', 'neat'],
@@ -42,18 +45,18 @@ class VetFeedbackAnalyzer:
                 'tl': ['maghintay', 'matagal', 'mabilis', 'oras', 'antay']
             },
             'customer_service': {
-                'en': ['staff', 'service', 'friendly', 'rude', 'helpful', 'attentive', 'receptionist', 'customer service'],
-                'tl': ['kawani', 'serbisyo', 'magalang', 'bastos', 'matulungin']
+                'en': ['staff', 'service', 'friendly', 'rude', 'helpful', 'attentive','team','employee','employees'],
+                'tl': ['kawani', 'serbisyo', 'magalang', 'bastos', 'matulungin','tauhan']
             },
             'vet_care': {
-                'en': ['treatment', 'doctor', 'vet', 'examination', 'diagnosis', 'care'],
+                'en': ['treatment', 'doctor', 'vet', 'examination', 'diagnosis', 'care','veterinarians','physicians'],
                 'tl': ['gamot', 'doktor', 'beterinaryo', 'eksamin', 'alaga']
             },
             'pricing': {
-                'en': ['price', 'expensive', 'cheap', 'cost', 'affordable', 'fee', 'charge'],
-                'tl': ['presyo', 'mahal', 'mura', 'halaga', 'bayad', 'singil']
+                'en': ['price', 'expensive', 'cheap', 'cost', 'affordable', 'fee'],
+                'tl': ['presyo', 'mahal', 'mura', 'halaga', 'bayad']
             },
-            'booking_experience': {
+             'booking_experience': {
                 'en': ['book', 'appointment', 'schedule', 'reservation', 'slot', 'available', 'unavailable', 'full', 'online', 'phone', 'call'],
                 'tl': ['reserba', 'iskedyul', 'tawag', 'puno', 'bakante']
             }
@@ -61,20 +64,20 @@ class VetFeedbackAnalyzer:
 
         self.sentiment_rules = {
             'positive': {
-                'en': ['good', 'great', 'excellent', 'awesome', 'satisfied', 'happy', 'clean', 'neat', 'tidy', 'pristine', 'fresh',
+                'en': ['good', 'great','greatest', 'amazing', 'excellent', 'awesome', 'satisfied', 'happy', 'clean', 'neat', 'tidy', 'pristine', 'fresh',
                         'spotless', 'hygienic', 'sterile', 'orderly', 'sanitary', 'quick', 'fast', 'efficient', 'nice', 'pleasant',
                         'friendly', 'helpful', 'attentive', 'compassionate', 'knowledgeable', 'skilled', 'responsive', 'professional',
-                        'respectful', 'welcoming', 'understanding', 'timely', 'reasonable', 'swift', 'thorough', 'reliable', 'gentle',
-                        'trustworthy', 'caring', 'dedicated', 'reputable', 'affordable', 'fair', 'justifiable', 'budget-friendly',
+                        'respectful', 'welcoming', 'understanding', 'timely', 'swift', 'thorough', 'reliable', 'gentle',
+                        'trustworthy', 'caring', 'dedicated', 'reputable', 'affordable', 'fair', 'justifiable', 'budget friendly',
                         'compassionate', 'minimal', 'short', 'prompt', 'value based', 'cost effective', 'patient focused', 'accessible',
-                        'competitive', 'organized', 'manageable', 'supportive', 'proactive', 'empathetic'
+                        'competitive', 'organized', 'manageable', 'supportive', 'proactive', 'empathetic', 'speedy', 'commendable','cooperative','polite','well trained'
                     ],
-                'tl': ['maganda', 'mahusay', 'masaya', 'kontento', 'magaling', 'malinis', 'maayos', 'mura', 'makatarungan', 'mabait',
-                        'mabilis', 'mabisa', 'matulungin', 'mapagkalinga', 'maalaga', 'mapagmalasakit', 'maasahan', 'masinsin',
-                        'maingat', 'matapat', 'kaaya-aya', 'mapag-unawa', 'masinop', 'maalwan', 'madaling lapitan', 'malinaw', 'maaliwalas',
+                'tl': ['maganda', 'mahusay', 'pinakamagaling','masaya', 'kontento', 'magaling', 'malinis', 'maayos', 'mura', 'makatarungan', 'mabait',
+                        'mabilis', 'mabisa', 'matulungin', 'mapagkalinga', 'maalaga', 'mapagmalasakit', 'maaasahan', 'masinsin',
+                        'maingat', 'matapat', 'kaaya aya', 'mapag unawa', 'masinop', 'maalwan', 'madaling lapitan', 'malinaw', 'maaliwalas',
                         'malambing', 'mapag aruga', 'kagalang galang', 'maasikaso', 'masipag', 'mapagbigay', 'mapagpakumbaba',
-                        'malasakit', 'marespeto', 'masigla', 'maingat', 'matapat', 'makonsiderasyon', 'mabango', 'maasikaso', 
-                        'nakikiramay'
+                        'malasakit', 'marespeto', 'masigla', 'maingat', 'matapat', 'makonsiderasyon', 'mabango', 'maasikaso',
+                        'nakikiramay','napakagaling','napakamatulungin','napakabait','propesyunal','propesyonal','magalang','husay','madali'
                     ]
             },
             'negative': {
@@ -83,7 +86,7 @@ class VetFeedbackAnalyzer:
                         'disrespectful', 'inattentive', 'unresponsive', 'unprofessional', 'cold', 'dismissive', 'indifferent',
                         'slow', 'condescending', 'unreliable', 'inconsiderate', 'long', 'extended', 'delayed', 'excessive',
                         'unreasonable', 'frustrating', 'tedious', 'prolonged', 'rough', 'inconsistent', 'rushed',
-                        'impersonal', 'hidden fees', 'overpriced', 'inflated', 'steep', 'costly', 'unaffordable', 'exorbitant', 'awful', 'disgusting', 
+                        'impersonal', 'hidden fees', 'overpriced', 'inflated', 'steep', 'costly', 'unaffordable', 'exorbitant', 'awful', 'disgusting',
                         'not transparent', 'too much', 'not cleaned', 'unclean', 'increasing', 'high', 'extra', 'double the price',
                         'huge amount', 'unacceptable', 'ridiculous', 'shocked', 'ignored', 'not empathetic', 'unorganized', 'unwelcome',
                         'stressful', 'lied'
@@ -93,24 +96,24 @@ class VetFeedbackAnalyzer:
                         'pabaya', 'walang malasakit', 'mapagsamantala', 'walang pakialam', 'hindi makatwiran', 'hindi kaaya-aya',
                         'nakakadismaya', 'hindi sigurado', 'pasaway', 'magulo', 'magaspang', 'mapanlait', 'palpak', 'masalimoot',
                         'mapagsamantala', 'walang malasakit', 'hindi kapani paniwala', 'madamot', 'masikip', 'mahirap lapitan',
-                        'hindi marespeto', 'nakakasakit', 'mapanlinlang', 'katakot', 'nakakatakot', 'nakakadiri', 'di nagsasabi', 
+                        'hindi marespeto', 'nakakasakit', 'mapanlinlang', 'katakot', 'nakakatakot', 'nakakadiri', 'di nagsasabi',
                         'di sinasabi', 'sobra', 'hindi nalinis', 'hindi malinis', 'padagdag', 'taas', 'dagdag', 'doble',
-                        'malaking halaga', 'hindi katanggap tanggap', 'nakakagulat', 'hindi ako pinansin', 'nagsinungaling'
+                        'malaking halaga', 'hindi katanggap tanggap', 'nakakagulat', 'hindi ako pinansin', 'nagsinungaling', 'hindi'
                     ]
             },
             'neutral': {
                 'en': ['okay', 'average', 'normal', 'standard', 'typical', 'moderate', 'fair', 'regular', 'common', 'usual',
                        'ordinary', 'basic', 'acceptable', 'decent', 'mediocre', 'middle', 'intermediate', 'medium', 'so so',
                        'alright', 'fine', 'satisfactory', 'adequate', 'sufficient', 'passable', 'tolerable', 'reasonable',
-                       'conventional', 'routine', 'customary', 'neutral'
+                       'conventional', 'routine', 'customary', 'neutral', 'but', 'could', 'neither', 'bit'
                     ],
                 'tl': ['pwede na', 'sakto', 'katamtaman', 'karaniwan', 'pangkaraniwan', 'karaniwang', 'tama lang',
-                       'sapat', 'kasya', 'kainaman', 'hindi masama', 'hindi maganda', 'pwede pa', 'ganun', 'ganon',
-                       'hindi naman masama', 'hindi naman maganda', 'ayos lang', 'ok lang', 'puwede na'
+                       'sapat', 'kasya', 'kainaman', 'hindi masama', 'pwede pa', 'ganun', 'ganon',
+                       'hindi naman masama', 'hindi naman maganda', 'ayos lang', 'ok lang', 'puwede na', 'pero', 'pwede', 'ngunit',
+                       'okay naman', 'ayos', 'medyo', 'katamtaman'
                     ]
             }
         }
-        
         self.model_info = {
             'path': None,
             'format': None,  # 'old' or 'new'
@@ -125,6 +128,9 @@ class VetFeedbackAnalyzer:
             'tl': {'ang', 'mga', 'sa', 'na', 'ng', 'at', 'ay', 'ko', 'mo', 'niya', 'ito', 'po',
                    'para', 'siya', 'nila', 'namin', 'natin', 'kami', 'tayo', 'kayo', 'sila'}
         }
+    
+    
+
     def preprocess_text(self, text: str, lang: str) -> str:
         """Preprocess text by removing punctuation, numbers, and stopwords"""
         # Convert to lowercase
@@ -136,7 +142,9 @@ class VetFeedbackAnalyzer:
         # Remove stopwords
         words = [word for word in words if word not in self.stopwords[lang]]
         return ' '.join(words)
-
+    
+    
+    
     def get_word_frequency(self, text: str, lang: str) -> int:
         """Calculate the frequency of repeated meaningful words"""
         processed_text = self.preprocess_text(text, lang)
@@ -144,7 +152,9 @@ class VetFeedbackAnalyzer:
         word_counts = Counter(words)
         # Sum the counts of words that appear more than once
         return sum(count for count in word_counts.values() if count > 1)
-
+    
+    
+    
     def _parse_model_path(self, model_path: str) -> dict:
         """Parse both old and new format model paths"""
         info = {}
@@ -161,6 +171,9 @@ class VetFeedbackAnalyzer:
                 info['epoch'] = int(model_path.split('_')[-1])
                 info['timestamp'] = None
         return info
+    
+    
+    
     def load(self, model_path: str):
         """Load a saved model with support for both formats"""
         try:
@@ -193,7 +206,9 @@ class VetFeedbackAnalyzer:
             print(f"Error loading model: {str(e)}")
             print("Falling back to base model...")
             self._load_base_model()
-
+    
+    
+    
     def _load_base_model(self):
         """Load the base BERT model"""
         self.model = BertForSequenceClassification.from_pretrained(
@@ -203,8 +218,10 @@ class VetFeedbackAnalyzer:
         ).to(self.device)
         self.is_base_model = True
         self.current_model_path = None
-        print("Base BERT model loaded")
-
+        # print("Base BERT model loaded")
+    
+    
+    
     def get_model_status(self) -> str:
         """Return current model status with detailed information"""
         if self.is_base_model:
@@ -216,7 +233,9 @@ class VetFeedbackAnalyzer:
         elif self.model_info['format'] == 'new':
             status += f" (Trained on {self.model_info['timestamp']}, Epoch {self.model_info['epoch']})"
         return status
-
+    
+    
+    
     def detect_language(self, text: str) -> str:
         """Detect if text is primarily English or Tagalog"""
         tagalog_markers = set(['ang', 'ng', 'mga', 'sa', 'na', 'at'])
@@ -225,7 +244,9 @@ class VetFeedbackAnalyzer:
             return 'en'
         tagalog_count = sum(1 for word in words if word in tagalog_markers)
         return 'tl' if tagalog_count / len(words) > 0.1 else 'en'
-
+    
+    
+    
     def identify_aspects(self, text: str, lang: str) -> List[str]:
         """Identify aspects mentioned in text"""
         text = text.lower()
@@ -234,28 +255,66 @@ class VetFeedbackAnalyzer:
             if any(keyword in text for keyword in keywords[lang]):
                 aspects.append(aspect)
         return aspects if aspects else ['general']
-
+    
+    
+    
     def analyze_sentiment(self, text: str) -> str:
-        """Rule-based sentiment analysis with explicit neutral detection"""
+        """Rule-based sentiment analysis with improved negation handling"""
         lang = self.detect_language(text)
         text = text.lower()
+        words = text.split()
 
-        # Count sentiment signals
-        pos_count = sum(1 for word in self.sentiment_rules['positive'][lang] if word in text)
-        neg_count = sum(1 for word in self.sentiment_rules['negative'][lang] if word in text)
-        neutral_count = sum(1 for word in self.sentiment_rules['neutral'][lang] if word in text)
+        # Negation words with stronger impact
+        negation_words = {
+            'en': {'not', 'no', "don't", 'never', 'neither', 'none', 'without'},
+            'tl': {'hindi', 'wala', 'ayaw', 'di', 'hinde', 'walang'}
+        }
 
-        # Determine sentiment based on counts
-        if neutral_count > pos_count and neutral_count > neg_count:
-            return 'neutral'
-        elif pos_count > neg_count:
-            return 'positive'
-        elif neg_count > pos_count:
+        # Initialize scores
+        sentiment_score = 0
+        negation_active = False
+
+        # First check for complete negative phrases
+        for neg_phrase in self.sentiment_rules['negative'][lang]:
+            if neg_phrase in text:
+                sentiment_score -= 3  # Even stronger negative score for complete phrases
+
+        # Process words with context
+        for i, word in enumerate(words):
+            # Check for negation
+            if word in negation_words[lang]:
+                negation_active = True
+                sentiment_score -= 1  # Negation itself contributes to negative score
+                continue
+
+            # Handle positive words
+            if any(pos_word in word for pos_word in self.sentiment_rules['positive'][lang]):
+                if negation_active:
+                    sentiment_score -= 2  # Negated positive is strongly negative
+                else:
+                    sentiment_score += 1
+
+            # Handle negative words
+            if any(neg_word in word for neg_word in self.sentiment_rules['negative'][lang]):
+                sentiment_score -= 2  # Negative words have stronger impact
+
+            # Reset negation after 2 words
+            if negation_active and i > 0 and (i % 2 == 0):
+                negation_active = False
+
+        # Determine final sentiment with more aggressive thresholds
+        if sentiment_score < -1:  # Lower threshold for negative
             return 'negative'
+        elif sentiment_score > 2:  # Higher threshold for positive
+            return 'positive'
         else:
-            return 'neutral'  # Default to neutral if no clear sentiment
+            # If there's any negation, lean towards negative
+            if any(neg in text for neg in negation_words[lang]):
+                return 'negative'
+            return 'neutral'
 
-
+    
+    
     def train_batch(self, texts, labels):
         """Process a single training batch"""
         encoded = self.tokenizer(
@@ -281,18 +340,193 @@ class VetFeedbackAnalyzer:
         torch.cuda.empty_cache() if self.device.type == 'cuda' else None
 
         return loss.item()
-
-    def train(self, dataset_path: str, model_save_path: str, epochs=3):
-        """Train model with augmented sentiment signals"""
+    
+    
+    
+    #used
+    def train(self, dataset_path: str, model_save_path: str, epochs=4):
+        """Train model with handling for imbalanced data"""
         print("Starting training...")
         self._load_base_model()
         self.model.train()
-        self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=2e-5)
+
+        # Calculate initial class distribution
+        print("Calculating initial class distribution...")
+        initial_class_counts = defaultdict(int)
+        
+        for chunk in pd.read_csv(dataset_path, chunksize=self.batch_size):
+            for sentiment in chunk['sentiment']:  # Using sentiment directly from dataset
+                initial_class_counts[sentiment] += 1
+        
+        total_initial_samples = sum(initial_class_counts.values())
+        
+        print("\nInitial class distribution (before augmentation):")
+        for cls, count in initial_class_counts.items():
+            print(f"{cls}: {count} samples ({count/total_initial_samples*100:.2f}%)")
+
+        # Calculate augmented distribution
+        augmented_class_counts = initial_class_counts.copy()
+        for sentiment in ['negative', 'neutral']:
+            augmented_class_counts[sentiment] += initial_class_counts[sentiment] * 2  # Adding 2 augmented versions
+        
+        total_augmented_samples = sum(augmented_class_counts.values())
+        
+        print("\nAugmented class distribution (after augmentation):")
+        for cls, count in augmented_class_counts.items():
+            print(f"{cls}: {count} samples ({count/total_augmented_samples*100:.2f}%)")
+
+        # Calculate class weights based on augmented distribution
+        class_weights = {
+            'negative': total_augmented_samples / (3 * augmented_class_counts['negative']),
+            'positive': total_augmented_samples / (3 * augmented_class_counts['positive']),
+            'neutral': total_augmented_samples / (3 * augmented_class_counts['neutral'])
+        }
+
+        print("\nClass weights:")
+        for cls, weight in class_weights.items():
+            print(f"{cls}: {weight:.2f}")
+
+        # Convert class weights to tensor format
+        weight_mapping = {'negative': 0, 'positive': 1, 'neutral': 2}
+        class_weight_tensor = torch.tensor(
+            [class_weights[k] for k in ['negative', 'positive', 'neutral']],
+            device=self.device
+        )
+
+        # Initialize optimizer with weight decay
+        self.optimizer = torch.optim.AdamW(
+            self.model.parameters(),
+            lr=2e-5,
+            weight_decay=0.01  # L2 regularization
+        )
+
+        # Learning rate scheduler
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            self.optimizer,
+            mode='min',
+            factor=0.5,
+            patience=2,
+            verbose=True
+        )
 
         best_metrics = None
         best_epoch = None
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         base_save_path = f"{model_save_path}_{timestamp}"
+
+        def augment_text(text: str, lang: str) -> str:
+            """Simple text augmentation"""
+            words = text.split()
+            if len(words) < 3:
+                return text
+
+            # Random word dropout
+            if random.random() < 0.3:
+                drop_idx = random.randint(0, len(words)-1)
+                words.pop(drop_idx)
+
+            # Random word repetition for emphasis
+            if random.random() < 0.3:
+                repeat_idx = random.randint(0, len(words)-1)
+                words.insert(repeat_idx, words[repeat_idx])
+
+            return ' '.join(words)
+
+        for epoch in range(epochs):
+            total_loss = 0
+            batch_count = 0
+
+            # Training loop with augmentation for minority classes
+            for chunk in tqdm(pd.read_csv(dataset_path, chunksize=self.batch_size),
+                            desc=f'Epoch {epoch+1}/{epochs}'):
+                texts = []
+                labels = []
+
+                for text in chunk['review']:
+                    sentiment = self.analyze_sentiment(text)
+                    lang = self.detect_language(text)
+                    label = weight_mapping[sentiment]
+
+                    # Add original sample
+                    texts.append(text)
+                    labels.append(label)
+
+                    # Augment minority classes
+                    if sentiment in ['negative', 'neutral']:  # assuming these are minority classes
+                        # Add augmented versions
+                        for _ in range(2):  # Create 2 augmented versions
+                            aug_text = augment_text(text, lang)
+                            texts.append(aug_text)
+                            labels.append(label)
+
+                # Process batch with weighted loss
+                encoded = self.tokenizer(
+                    texts,
+                    padding=True,
+                    truncation=True,
+                    max_length=128,
+                    return_tensors='pt'
+                )
+
+                input_ids = encoded['input_ids'].to(self.device)
+                attention_mask = encoded['attention_mask'].to(self.device)
+                label_tensor = torch.tensor(labels).to(self.device)
+
+                self.optimizer.zero_grad()
+                outputs = self.model(
+                    input_ids,
+                    attention_mask=attention_mask,
+                    labels=label_tensor
+                )
+
+                # Apply class weights to loss
+                loss = outputs.loss * class_weight_tensor[label_tensor].mean()
+
+                loss.backward()
+
+                # Gradient clipping
+                torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
+
+                self.optimizer.step()
+
+                total_loss += loss.item()
+                batch_count += 1
+
+                del input_ids, attention_mask, outputs, label_tensor
+                torch.cuda.empty_cache() if self.device.type == 'cuda' else None
+                gc.collect()
+
+            avg_loss = total_loss / batch_count
+            print(f'Epoch {epoch+1} - Average loss: {avg_loss:.4f}')
+
+            # Update learning rate
+            scheduler.step(avg_loss)
+
+            # Save epoch model
+            epoch_save_path = f"{base_save_path}_epoch_{epoch+1}"
+            os.makedirs(epoch_save_path, exist_ok=True)
+            self.model.save_pretrained(epoch_save_path)
+
+            # Evaluate current epoch
+            self.current_model_path = epoch_save_path
+            self.is_base_model = False
+            metrics = self.evaluate(dataset_path, quiet=True)
+
+            # Track best model
+            if best_metrics is None or metrics['f1_score'] > best_metrics['f1_score']:
+                best_metrics = metrics
+                best_epoch = epoch + 1
+                self.best_model_path = epoch_save_path
+                self.best_metrics = metrics
+
+            print(f"Epoch {epoch+1} metrics:")
+            self._print_metrics(metrics)
+
+        print("\nTraining completed!")
+        print(f"Best performing model was epoch {best_epoch}:")
+        self._print_metrics(best_metrics)
+        print(f"Best model saved at: {self.best_model_path}")
+
 
         def get_sentiment_score(text: str) -> float:
             """Get sentiment score based on keyword presence"""
@@ -392,7 +626,10 @@ class VetFeedbackAnalyzer:
         print(f"Best performing model was epoch {best_epoch}:")
         self._print_metrics(best_metrics)
         print(f"Best model saved at: {self.best_model_path}")
-
+    
+    
+    
+    #used
     def load(self, model_path: str):
         """Load a saved model"""
         try:
@@ -408,8 +645,9 @@ class VetFeedbackAnalyzer:
             print(f"Error loading model: {str(e)}")
             print("Falling back to base model...")
             self._load_base_model()
-
-
+    
+    
+    
     def evaluate_batch(self, texts, labels):
         """Evaluate a single batch"""
         encoded = self.tokenizer(
@@ -430,8 +668,9 @@ class VetFeedbackAnalyzer:
         torch.cuda.empty_cache() if self.device.type == 'cuda' else None
 
         return predictions
-
-
+    
+    
+    
     def collect_aspect_statistics(self, dataset_path: str, aspect: str) -> Dict:
         """Collect statistics for a specific aspect from the dataset"""
         print(f"\nAnalyzing {aspect} reviews...")
@@ -503,12 +742,14 @@ class VetFeedbackAnalyzer:
         }
 
         return stats
-
+    
+    
+    
     def collect_all_aspect_statistics(self, dataset_path: str) -> Dict[str, Dict]:
         """Collect statistics for all aspects from the dataset"""
-        print("\nAnalyzing all aspects...")
+        # print("\nAnalyzing all aspects...")
 
-        aspects = ['hygiene', 'waiting_time', 'customer_service', 'vet_care', 'pricing', 'booking_experience']
+        aspects = ['hygiene', 'waiting_time', 'customer_service', 'vet_care', 'pricing']
         all_stats = {}
 
         # Initialize statistics for each aspect
@@ -590,7 +831,9 @@ class VetFeedbackAnalyzer:
             }
 
         return all_stats
-
+    
+    
+    
     def display_aspect_statistics(self, stats: Dict):
         """Display statistics for an aspect in a formatted way"""
         print(f"\nPositive Reviews: {stats['positive']['count']} ({stats['positive']['percentage']:.1f}%)")
@@ -609,7 +852,9 @@ class VetFeedbackAnalyzer:
             print(f"- {comment}")
 
         print(f"\nTotal Reviews: {stats['total']}")
-
+    
+    
+    
     def display_all_aspect_statistics(self, all_stats: Dict[str, Dict]):
         """Display statistics for all aspects in a formatted way"""
         for aspect, stats in all_stats.items():
@@ -617,7 +862,9 @@ class VetFeedbackAnalyzer:
             print("=" * 80)
             self.display_aspect_statistics(stats)
             print("=" * 80)
-
+    
+    
+    
     def _print_metrics(self, metrics):
         """Helper to print evaluation metrics"""
         print(f"Accuracy: {metrics['accuracy']:.4f}")
@@ -625,7 +872,9 @@ class VetFeedbackAnalyzer:
         print(f"Recall: {metrics['recall']:.4f}")
         print(f"F1-Score: {metrics['f1_score']:.4f}")
         print(f"Matthews Correlation: {metrics['matthews_correlation_coefficient']:.4f}")
-
+    
+    
+    
     def evaluate(self, dataset_path: str, quiet=False):
         """Evaluate model performance"""
         if not quiet:
@@ -664,7 +913,9 @@ class VetFeedbackAnalyzer:
             self._print_metrics(metrics)
 
         return metrics
-
+    
+    
+    
     def test(self, feedback: str):
         """Test model on single feedback"""
         print(self.get_model_status())
@@ -697,6 +948,95 @@ class VetFeedbackAnalyzer:
         }
 
         return result
+    
+    
+    
+    def balance_dataset(self, input_path: str, output_path: str):
+        """Balance dataset by augmenting minority classes"""
+        print("Starting dataset balancing...")
+
+        # Read the entire dataset
+        df = pd.read_csv(input_path)
+        print(f"Original dataset size: {len(df)} samples")
+
+        # Get sentiment distribution
+        df['sentiment'] = df['review'].apply(self.analyze_sentiment)
+        sentiment_counts = df['sentiment'].value_counts()
+
+        print("\nOriginal class distribution:")
+        for sentiment, count in sentiment_counts.items():
+            print(f"{sentiment}: {count} samples")
+
+        # Find majority class count
+        max_count = sentiment_counts.max()
+
+        # Initialize list for balanced data
+        balanced_data = []
+
+        # Process each sentiment class
+        for sentiment in ['positive', 'negative', 'neutral']:
+            sentiment_df = df[df['sentiment'] == sentiment]
+            current_count = len(sentiment_df)
+
+            # Add original samples
+            balanced_data.extend(sentiment_df.to_dict('records'))
+
+            # Calculate how many more samples we need
+            samples_needed = max_count - current_count
+
+            if samples_needed > 0:
+                print(f"\nAugmenting {sentiment} class with {samples_needed} samples...")
+
+                # Augment data until we reach the majority class count
+                while len(balanced_data) < len(df) + samples_needed:
+                    # Randomly select a sample to augment
+                    sample = sentiment_df.sample(n=1).iloc[0]
+                    text = sample['review']
+                    lang = self.detect_language(text)
+
+                    # Apply augmentation
+                    words = text.split()
+                    if len(words) >= 3:
+                        # Random word dropout
+                        if random.random() < 0.3:
+                            drop_idx = random.randint(0, len(words)-1)
+                            words.pop(drop_idx)
+
+                        # Random word repetition for emphasis
+                        if random.random() < 0.3:
+                            repeat_idx = random.randint(0, len(words)-1)
+                            words.insert(repeat_idx, words[repeat_idx])
+
+                        # Random word order swap
+                        if random.random() < 0.3 and len(words) >= 4:
+                            idx1 = random.randint(0, len(words)-2)
+                            words[idx1], words[idx1+1] = words[idx1+1], words[idx1]
+
+                        augmented_text = ' '.join(words)
+
+                        # Add augmented sample
+                        augmented_sample = sample.copy()
+                        augmented_sample['review'] = augmented_text
+                        balanced_data.append(augmented_sample)
+
+        # Create balanced dataset
+        balanced_df = pd.DataFrame(balanced_data)
+
+        # Shuffle the dataset
+        balanced_df = balanced_df.sample(frac=1).reset_index(drop=True)
+
+        # Save balanced dataset
+        balanced_df.to_csv(output_path, index=False)
+
+        print("\nFinal class distribution:")
+        final_counts = balanced_df['sentiment'].value_counts()
+        for sentiment, count in final_counts.items():
+            print(f"{sentiment}: {count} samples")
+
+        print(f"\nBalanced dataset saved to: {output_path}")
+        print(f"Total samples: {len(balanced_df)}")
+
+
 
 def list_available_models(base_path: str) -> List[Dict]:
     """List all available trained models with enhanced information"""
@@ -724,9 +1064,10 @@ def list_available_models(base_path: str) -> List[Dict]:
     return sorted(available_models, key=lambda x: (x['format'] != 'old', x['epoch']))
 
 
+
 def main():
     analyzer = VetFeedbackAnalyzer()
-    base_model_path = "MODEL"
+    base_model_path = "../"
 
     while True:
         print("\nVet Feedback Analysis System")
@@ -736,16 +1077,17 @@ def main():
         print("3. Test model")
         print("4. View accuracy metrics")
         print("5. View Statistics")
-        print("6. Exit")
+        print("6. Balance dataset")
+        print("7. Exit")
 
-        choice = input("\nEnter your choice (1-6): ")
+        choice = input("\nEnter your choice (1-7): ")
         if choice == '1':
-            dataset_path = input("Enter dataset path (CSV file): ")
-            model_save_path = input("Enter path to save model: ")
-            try:
-                analyzer.train(dataset_path, model_save_path)
-            except Exception as e:
-                print(f"Error during training: {str(e)}")
+                dataset_path = input("Enter dataset path (CSV file): ")
+                model_save_path = input("Enter path to save model: ")
+                try:
+                    analyzer.train(dataset_path, model_save_path)
+                except Exception as e:
+                    print(f"Error during training: {str(e)}")
         elif choice == '2':
             print("\nAvailable trained models:")
             available_models = list_available_models(base_model_path)
@@ -830,11 +1172,47 @@ def main():
                 print(f"Error during statistics collection: {str(e)}")
 
         elif choice == '6':
+            input_path = input("Enter input dataset path (CSV file): ")
+            output_path = input("Enter output path for balanced dataset (CSV file): ")
+            try:
+                analyzer.balance_dataset(input_path, output_path)
+            except Exception as e:
+                print(f"Error during dataset balancing: {str(e)}")
+
+        elif choice == '7':
             print("Goodbye!")
             break
 
         else:
-            print("Invalid choice! Please enter a number between 1 and 6.")
+            print("Invalid choice! Please enter a number between 1 and 7.")
+
+
 
 if __name__ == "__main__":
-    main()
+    # main()
+
+    script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the script
+    dataset_path = os.path.join(script_dir, "..", "cleaned_by_code.csv")  # Resolve to absolute path
+    base_model_path = os.path.join(script_dir, "../")
+    analyzer = VetFeedbackAnalyzer()
+
+    aspects = ['hygiene', 'waiting_time', 'customer_service', 'vet_care', 'pricing']
+
+    # print(dataset_path)
+
+    try:
+        aspect_choice = 0
+        if aspect_choice == 0:
+            all_stats = analyzer.collect_all_aspect_statistics(dataset_path)
+            print(json.dumps(all_stats))
+            # analyzer.display_all_aspect_statistics(all_stats)
+        elif 1 <= aspect_choice <= len(aspects):
+            chosen_aspect = aspects[aspect_choice-1]
+            stats = analyzer.collect_aspect_statistics(dataset_path, chosen_aspect)
+            analyzer.display_aspect_statistics(stats)
+        else:
+            print("Invalid aspect choice!")
+    except ValueError:
+        print("Please enter a valid number")
+    except Exception as e:
+        print(f"Error during statistics collection: {str(e)}")

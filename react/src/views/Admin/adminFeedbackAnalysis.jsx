@@ -3,6 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { AlertCircle, CheckCircle } from 'lucide-react';
 import FeedbackModal from '../../components/Modals/feedbackModal1';
 import "../../assets/css/FeedbackChart.css";
+import { fetchAllSentiments } from '../../services/SentimentAnalisysService';
 
 const adminFeedbackAnalysis = () => {
     const feedbackData = [
@@ -67,9 +68,28 @@ const adminFeedbackAnalysis = () => {
             }
         }
     ];
-
     const [modalData, setModalData] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [feedbacks, setFeedbacks] = useState(null);
+
+
+
+    /**
+     * Fetch all necessary data
+     */
+    useState(() => {
+        const getAll = async() => {
+            try {
+                const data = await fetchAllSentiments();
+                console.log(data);
+                setFeedbacks(data);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        getAll();
+    }, []);
 
     const handleBarClick = (data, feedbackType) => {
         const aspectData = feedbackData.find(item => item.aspect === data.aspect);
@@ -104,6 +124,11 @@ const adminFeedbackAnalysis = () => {
         return null;
     };
 
+
+
+    /**
+     * Render
+     */
     return (
         <div className="feedback-dashboard">
             <div className="dashboard-header">

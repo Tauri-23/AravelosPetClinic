@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\inventoryCategoriesController;
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\InventoryItemsController;
 use App\Http\Controllers\Api\PetsController;
+use App\Http\Controllers\Api\SentimentAnalysisController;
 use App\Http\Controllers\Api\StaffsController;
 use App\Http\Controllers\Api\UserAdminsController;
 use App\Http\Controllers\Api\UserClientsController;
@@ -159,3 +160,17 @@ Route::get('/get-all-admin-roles', [AdminRolesController::class, 'GetAllAdminRol
 Route::get('/get-all-staffs', [StaffsController::class, 'GetAllStaffs']);
 
 Route::get('/get-all-staffs-where-status/{status}', [StaffsController::class, 'GetAllStaffsWhereStatus']);
+
+
+
+
+
+/*
+|----------------------------------------
+| Models
+|----------------------------------------
+*/
+Route::get('/get-statistics-from-model', [SentimentAnalysisController::class, 'GetStatisticsFromModel']);
+Route::get('/get-sentiments-from-db', [SentimentAnalysisController::class, 'GetSentimentsFromDB']);
+
+Route::post('/update-sentiment-statistics-table', [SentimentAnalysisController::class, 'UpdateSentimentStatisticsTable']);
