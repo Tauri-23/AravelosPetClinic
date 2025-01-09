@@ -52,17 +52,22 @@
 
 .percentage-bar {
     height: 8px;
+    display: flex;
     background: #FEE2E2;
     border-radius: 4px;
     overflow: hidden;
     margin-bottom: 8px;
 }
 
-.positive-bar {
+.positive-bar, .neutral-bar {
     height: 100%;
     background: #10B981;
-    border-radius: 4px;
+    /* border-radius: 4px; */
     transition: width 0.3s ease;
+}
+
+.neutral-bar {
+    background: #949494;
 }
 
 .stat-details {
@@ -73,6 +78,10 @@
 
 .positive-text {
     color: #059669;
+}
+
+.neutral-text {
+    color: #949494;
 }
 
 .negative-text {
@@ -102,6 +111,7 @@
 }
 
 .tooltip-positive,
+.tooltip-neutral,
 .tooltip-negative {
     display: flex;
     align-items: center;
@@ -113,6 +123,9 @@
     color: #059669;
 }
 
+.tooltip-neutral {
+    color: #949494;
+}
 .tooltip-negative {
     color: #DC2626;
 }

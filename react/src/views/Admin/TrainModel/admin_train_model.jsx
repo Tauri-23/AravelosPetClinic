@@ -36,7 +36,7 @@ export default function AdminTrainModel() {
 
     const updateStatisticsToDatabasePost = (data) => {
         console.log(data);
-        const aspects = ["hygiene", "waiting_time", "customer_service", "vet_care", "pricing"];
+        const aspects = ['hygiene', 'waiting_time', 'customer_service', 'booking_experience', 'vet_care', 'pricing'];
 
         const formData = new FormData();
         aspects.forEach(aspect => {

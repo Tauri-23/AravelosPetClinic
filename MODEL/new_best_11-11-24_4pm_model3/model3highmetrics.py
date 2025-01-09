@@ -749,7 +749,7 @@ class VetFeedbackAnalyzer:
         """Collect statistics for all aspects from the dataset"""
         # print("\nAnalyzing all aspects...")
 
-        aspects = ['hygiene', 'waiting_time', 'customer_service', 'vet_care', 'pricing']
+        aspects = ['hygiene', 'waiting_time', 'customer_service', 'booking_experience', 'vet_care', 'pricing']
         all_stats = {}
 
         # Initialize statistics for each aspect
@@ -806,7 +806,7 @@ class VetFeedbackAnalyzer:
             top_comments = {
                 sentiment: sorted(aspect_reviews[aspect]['top_comments'][sentiment],
                                 key=lambda x: x[1],
-                                reverse=True)[:5]
+                                reverse=True)
                 for sentiment in ['positive', 'negative', 'neutral']
             }
 
@@ -1196,7 +1196,7 @@ if __name__ == "__main__":
     base_model_path = os.path.join(script_dir, "../")
     analyzer = VetFeedbackAnalyzer()
 
-    aspects = ['hygiene', 'waiting_time', 'customer_service', 'vet_care', 'pricing']
+    aspects = ['hygiene', 'waiting_time', 'customer_service', 'booking_experience', 'vet_care', 'pricing']
 
     # print(dataset_path)
 

@@ -11,16 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('feedback', function (Blueprint $table) {
-            $table->string('id', 6)->primary();
+        Schema::create('feedbacks', function (Blueprint $table) {
+            $table->id();
             $table->string('client', 6)->nullable();
-            $table->string('service');
-            $table->dateTime('date');
+            $table->string('appointment', 12)->nullable();
             $table->text('content');
+            $table->timestamps();
 
             $table->foreign('client')
             ->references('id')
             ->on('user_clients')
+            ->nullOnDelete()
+            ->cascadeOnUpdate();
+
+            $table->foreign('appointment')
+            ->references('id')
+            ->on('appointments')
             ->nullOnDelete()
             ->cascadeOnUpdate();
         });
@@ -31,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('feedback');
+        Schema::dropIfExists('feedbacks');
     }
 };

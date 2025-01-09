@@ -62,7 +62,7 @@ export default function AdminCompletedAppointments() {
                         <div key={appointment.id} className='appt-record-three rejected' onClick={() => handleAppointmentRecordClick(appointment)}>
                             <div className='content-deet'>{appointment.pet.name}</div>
                             <div className='content-deet'>{appointment.service}</div>
-                            <div className='content-deet'>{formatDate(appointment.completed_at)}</div>
+                            <div className='content-deet'>{formatDate(appointment.updated_at)}</div>
                         </div>
                     ))}
 

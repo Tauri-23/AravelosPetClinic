@@ -18,4 +18,9 @@ class appointments extends Model
     {
         return $this->belongsTo(user_clients::class, 'client','id');
     }
+
+    public function feedback()
+    {
+        return $this->belongsTo(feedbacks::class, 'id', 'appointment');
+    }
 }

@@ -254,21 +254,23 @@ class AppointmentsController extends Controller
      */
     public function getAllAppointmentWhereClient($clientId)
     {
-        return response()->json(appointments::where('client', $clientId)->with('pet')->get());
+        return response()->json(
+            appointments::where('client', $clientId)->with(['pet', 'feedback'])->get()
+        );
     }
 
     public function getAppointmentWhereId($appointmentId)
     {
-        return response()->json(appointments::with(['pet', 'client'])->find($appointmentId));
+        return response()->json(appointments::with(['pet', 'client', 'feedback'])->find($appointmentId));
     }
 
     public function getAllAppointments()
     {
-        return response()->json(appointments::with('pet')->get());
+        return response()->json(appointments::with(['pet', 'feedback'])->get());
     }
     
     public function GetAllAppointmentsWhereStatus($status)
     {
-        return response()->json(appointments::where('status', $status)->with("pet")->get());
+        return response()->json(appointments::where('status', $status)->with(["pet", "feedback"])->get());
     }
 }

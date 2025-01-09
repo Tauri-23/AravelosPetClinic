@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminRolesController;
 use App\Http\Controllers\Api\AppointmentsController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\FeedbacksController;
 use App\Http\Controllers\Api\inventoryCategoriesController;
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\InventoryItemsController;
@@ -174,3 +175,16 @@ Route::get('/get-statistics-from-model', [SentimentAnalysisController::class, 'G
 Route::get('/get-sentiments-from-db', [SentimentAnalysisController::class, 'GetSentimentsFromDB']);
 
 Route::post('/update-sentiment-statistics-table', [SentimentAnalysisController::class, 'UpdateSentimentStatisticsTable']);
+
+
+
+
+
+/*
+|----------------------------------------
+| Feedbacks
+|----------------------------------------
+*/
+Route::get('/get-all-feedbacks', [FeedbacksController::class, 'GetAllFeedbacks']);
+
+Route::post('/post-feedback', [FeedbacksController::class, 'PostFeedback']);

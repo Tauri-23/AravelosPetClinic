@@ -7,19 +7,24 @@ const feedbackModal1 = ({ data, onClose }) => {
 
     // State for sentiment filter
     const [filter, setFilter] = useState('all'); // 'all', 'positive', 'negative'
+    const statusBasedNum = {
+        "0": "negative",
+        "1": "positive",
+        "2": "neutral"
+    }
 
     // Process feedback sentences to include sentiment
-    const feedbackSentences = data.comments.map(comment => {
-        // Split long comments into sentences
-        return comment.split(/[.!?]+/).filter(sentence => sentence.trim().length > 0).map(sentence => ({
-            text: sentence.trim(),
-            sentiment: data.feedbackType
-        }));
-    }).flat();
+    // const feedbackSentences = data.comments.map(comment => {
+    //     // Split long comments into sentences
+    //     return comment.split(/[.!?]+/).filter(sentence => sentence.trim().length > 0).map(sentence => ({
+    //         text: sentence.trim(),
+    //         sentiment: data.feedbackType
+    //     }));
+    // }).flat();
 
-    const filteredSentences = filter === 'all' 
-        ? feedbackSentences
-        : feedbackSentences.filter(sentence => sentence.sentiment === filter);
+    // const filteredSentences = filter === 'all' 
+    //     ? feedbackSentences
+    //     : feedbackSentences.filter(sentence => sentence.sentiment === filter);
 
     return (
         <div className="modal-overlay">
@@ -40,21 +45,21 @@ const feedbackModal1 = ({ data, onClose }) => {
                     </button>
                 </div>
                 <div className="modal-body">
-                    {filteredSentences.length > 0 ? (
+                    {data.comments.length > 0 ? (
                         <div className="feedback-list">
-                            {filteredSentences.map((sentence, index) => (
+                            {data.comments.map((sentence, index) => (
                                 <div 
                                     key={index} 
-                                    className={`feedback-item ${sentence.sentiment}`}
+                                    className={`feedback-item ${statusBasedNum[sentence[1]]}`}
                                 >
                                     <div className="feedback-icon">
-                                        {sentence.sentiment === 'positive' ? (
+                                        {sentence[1] === 1 ? (
                                             <ThumbsUp size={16} />
-                                        ) : (
+                                        ) : (sentence[1] === 0 && (
                                             <ThumbsDown size={16} />
-                                        )}
+                                        ))}
                                     </div>
-                                    <p>{sentence.text}</p>
+                                    <p>{sentence[0]}</p>
                                 </div>
                             ))}
                         </div>
