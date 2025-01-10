@@ -379,6 +379,9 @@ class VetFeedbackAnalyzer:
             print()
 
 
+        result_feedback_groups = feedback_groups.copy()
+
+
         # Calculate augmented distribution
         augmented_class_counts = initial_class_counts.copy()
         for sentiment in ['negative', 'neutral']:
@@ -638,11 +641,13 @@ class VetFeedbackAnalyzer:
 
             print(f"Epoch {epoch+1} metrics:")
             self._print_metrics(metrics)
-
+        
         print("\nTraining completed!")
         print(f"Best performing model was epoch {best_epoch}:")
         self._print_metrics(best_metrics)
         print(f"Best model saved at: {self.best_model_path}")
+        return result_feedback_groups
+
     
     
     
