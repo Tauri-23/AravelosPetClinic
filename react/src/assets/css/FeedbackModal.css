@@ -115,6 +115,10 @@
 .feedback-item.negative {
     border-left: 4px solid #EF4444;
 }
+.feedback-item.neutral {
+    border-left: 4px solid #949494;
+}
+
 
 .feedback-icon {
     color: #64748b;
@@ -128,6 +132,9 @@
 
 .feedback-item.negative .feedback-icon {
     color: #EF4444;
+}
+.feedback-item.neutral .feedback-icon {
+    color: #949494;
 }
 
 .feedback-item p {
@@ -149,30 +156,30 @@
     .modal-content {
         max-height: 90vh;
     }
-    
+
     .modal-header {
         padding: 20px 16px 12px 16px;
     }
-    
+
     .desktop-close {
         display: none;
     }
-    
+
     .mobile-close {
         display: flex;
     }
-    
+
     .sentiment-filter {
         padding: 12px 16px;
         overflow-x: auto;
     }
-    
+
     .filter-btn {
         padding: 6px 12px;
         font-size: 13px;
         white-space: nowrap;
     }
-    
+
     .modal-body {
         padding: 16px;
     }

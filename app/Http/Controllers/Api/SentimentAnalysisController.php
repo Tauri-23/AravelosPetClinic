@@ -11,8 +11,8 @@ class SentimentAnalysisController extends Controller
 {
     public function GetStatisticsFromModel()
     {
-        ini_set('max_execution_time', 300);
-        
+        ini_set('max_execution_time', 600);
+
         $pythonScriptPath = base_path("MODEL/new_best_11-11-24_4pm_model3/model3highmetrics.py");
         $output = [];
         $errorOutput = [];
@@ -49,7 +49,7 @@ class SentimentAnalysisController extends Controller
     public function GetModelMetrics()
     {
         ini_set('max_execution_time', 300);
-        
+
         $pythonScriptPath = base_path("MODEL/new_best_11-11-24_4pm_model3/model3highmetrics.py");
         $output = [];
         $errorOutput = [];
@@ -81,12 +81,12 @@ class SentimentAnalysisController extends Controller
     // POST
     public function UpdateSentimentStatisticsTable(Request $request)
     {
-        try 
+        try
         {
             // DB::beginTransaction();
             // Delete all rows
             sentiment_analysis::truncate();
-            
+
             $index = 0;
             foreach ($request->aspects as $aspect) {
                 $sentimentRecord = new sentiment_analysis();

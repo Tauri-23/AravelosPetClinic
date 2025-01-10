@@ -29,14 +29,14 @@ export default function AdminCancelledAppointments() {
      * Handlers
      */
     const handleAppointmentRecordClick = (record) => {
-        showModal('AppointmentRecordModalAdmin1', {record, handleCancel, handleApprovePage});
+        showModal('AppointmentRecordModalAdmin1', {record, handleCancel});
     }
 
     const handleApprovePage = (recordId) =>{
         navigate(`/AdminIndex/ClinicCalendar/ApproveAppointment/${recordId}`);
     }
 
-    
+
     const handleCancel = (recordId) =>{
         console.log(recordId);
         const handleFunction = "handleCancelPost";

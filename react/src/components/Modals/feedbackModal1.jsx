@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, MessageSquare, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { X, Meh, MessageSquare, ThumbsUp, ThumbsDown } from 'lucide-react';
 import "../../assets/css/FeedbackModal.css";
 
 const feedbackModal1 = ({ data, onClose }) => {
@@ -22,7 +22,7 @@ const feedbackModal1 = ({ data, onClose }) => {
     //     }));
     // }).flat();
 
-    // const filteredSentences = filter === 'all' 
+    // const filteredSentences = filter === 'all'
     //     ? feedbackSentences
     //     : feedbackSentences.filter(sentence => sentence.sentiment === filter);
 
@@ -48,16 +48,18 @@ const feedbackModal1 = ({ data, onClose }) => {
                     {data.comments.length > 0 ? (
                         <div className="feedback-list">
                             {data.comments.map((sentence, index) => (
-                                <div 
-                                    key={index} 
+                                <div
+                                    key={index}
                                     className={`feedback-item ${statusBasedNum[sentence[1]]}`}
                                 >
                                     <div className="feedback-icon">
                                         {sentence[1] === 1 ? (
                                             <ThumbsUp size={16} />
-                                        ) : (sentence[1] === 0 && (
+                                        ) : sentence[1] === 0 ? (
                                             <ThumbsDown size={16} />
-                                        ))}
+                                        ) : (
+                                            <Meh size={16} />
+                                        )}
                                     </div>
                                     <p>{sentence[0]}</p>
                                 </div>
