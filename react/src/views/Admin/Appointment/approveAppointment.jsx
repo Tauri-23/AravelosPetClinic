@@ -50,7 +50,7 @@ export default function ApproveAppointment() {
      * Handlers
      */
     const handleAssignStaff = (staff) => {
-        setSelectedStaffs(prev => 
+        setSelectedStaffs(prev =>
             prev.some(prevStaff => prevStaff.id === staff.id)
             ? prev.filter(prevStaff => prevStaff.id !== staff.id) // Remove staff if already selected
             : [...prev, staff] // Add staff if not already selected
@@ -63,7 +63,7 @@ export default function ApproveAppointment() {
         }
 
         // Decrement the qty in inventoryItems
-        setInventoryItems(prev => 
+        setInventoryItems(prev =>
             prev.map(prevItem =>
                 prevItem.id === item.id
                     ? { ...prevItem, qty: prevItem.qty - 1 } // Safely decrement qty
@@ -73,7 +73,7 @@ export default function ApproveAppointment() {
 
         setselectedItems(prev => {
             const existingItemIndex = prev.findIndex(prevItem => prevItem.id === item.id);
-    
+
             if (existingItemIndex !== -1) {
                 // Increment `selected_qty` for existing item
                 const updatedItems = [...prev];
@@ -96,20 +96,20 @@ export default function ApproveAppointment() {
         });
 
         const selectedItemQty = selectedItems.find(prevItem => prevItem.id === item.id)?.selected_qty || 0;
-    
+
         // Restore inventory separately
         updateInventoryItemQty(item.id, selectedItemQty);
     };
-    
+
     const updateInventoryItemQty = (itemId, qtyToAdd) => {
-        setInventoryItems(prev => 
-            prev.map(prevItem => 
+        setInventoryItems(prev =>
+            prev.map(prevItem =>
                 prevItem.id === itemId
                     ? { ...prevItem, qty: prevItem.qty + qtyToAdd }
                     : prevItem
             )
         );
-    };   
+    };
 
     const handleApproveAppointment = (appointmentId) => {
         const formData = new FormData();
@@ -157,9 +157,9 @@ export default function ApproveAppointment() {
                                     <button className='sub-button right-margin-s' onClick={(e) => handleCancel(record.id,record.reason)}>
                                         Cancel Appointment
                                     </button>
-                                    <button 
+                                    <button
                                     disabled={selectedStaffs.length < 1 || selectedItems.length < 1}
-                                    className={`primary-btn-blue1 ${selectedStaffs.length < 1 || selectedItems.length < 1 ? "disabled" : ""} left-margin-s`} 
+                                    className={`primary-btn-blue1 ${selectedStaffs.length < 1 || selectedItems.length < 1 ? "disabled" : ""} left-margin-s`}
                                     onClick={() => handleApproveAppointment(appointment.id)}>
                                         Approve Appointment
                                     </button>
@@ -212,15 +212,15 @@ export default function ApproveAppointment() {
                                     </div>
                                     <div className="staff-list d-flex">
                                         {staffs.map(staff => (
-                                            <div 
-                                            key={staff.id} 
-                                            className='staff-item d-flex flex-column justify-content-between' 
+                                            <div
+                                            key={staff.id}
+                                            className='staff-item d-flex flex-column justify-content-between'
                                             onClick={() => handleAssignStaff(staff)}>
                                                 <div className="left circle staff-pic m-auto">
                                                     <img className='position-absolute h-100' src={`/assets/media/pfp/${staff.picture}`} alt="pfp"/>
                                                 </div>
                                                 <div style={{marginTop: "10px"}}>
-                                                    <div className="anybody bold small-f t-align-center">
+                                                    <div className="staffname anybody bold small-f t-align-center">
                                                         Dr. {staff.fname} {staff.lname}
                                                     </div>
                                                     <div className="anybody small-f t-align-center">
@@ -264,7 +264,7 @@ export default function ApproveAppointment() {
                                     ? (
                                         <>Assign a staff for this appointment</>
                                     )
-                                    : (                                        
+                                    : (
                                         selectedStaffs.map(selectedStaff => (
                                             <div key={selectedStaff.id} className='d-flex align-items-center w-100 justify-content-between' style={{marginBottom: "20px"}}>
                                                 <div className='d-flex align-items-center gap1'>
@@ -289,7 +289,7 @@ export default function ApproveAppointment() {
                                     ? (
                                         <>Assign items for this appointment</>
                                     )
-                                    : (                                        
+                                    : (
                                         selectedItems.map(selectedItem => (
                                             <div key={selectedItem.id} className='d-flex align-items-center w-100 justify-content-between' style={{marginBottom: "20px"}}>
                                                 <div className='d-flex align-items-center gap1'>
