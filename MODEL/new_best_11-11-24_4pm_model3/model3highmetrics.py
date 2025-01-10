@@ -14,6 +14,7 @@ import re
 import string
 import random
 import json
+import sys
 
 
 class VetFeedbackAnalyzer:
@@ -177,7 +178,7 @@ class VetFeedbackAnalyzer:
     def load(self, model_path: str):
         """Load a saved model with support for both formats"""
         try:
-            print(f"Loading model from: {model_path}")
+            # print(f"Loading model from: {model_path}")
             # Parse model path information
             info = self._parse_model_path(model_path)
 
@@ -196,9 +197,9 @@ class VetFeedbackAnalyzer:
             self.current_model_path = model_path
             self.is_base_model = False
 
-            print("\nModel loaded successfully!")
-            print(f"Format: {'New' if info.get('format') == 'new' else 'Old'}")
-            print(f"Epoch: {info.get('epoch')}")
+            # print("\nModel loaded successfully!")
+            # print(f"Format: {'New' if info.get('format') == 'new' else 'Old'}")
+            # print(f"Epoch: {info.get('epoch')}")
             if info.get('timestamp'):
                 print(f"Trained on: {info.get('timestamp')}")
 
@@ -633,14 +634,14 @@ class VetFeedbackAnalyzer:
     def load(self, model_path: str):
         """Load a saved model"""
         try:
-            print(f"Loading model from: {model_path}")
+            # print(json.dumps(f"Loading model from: {model_path}"))
             self.model = BertForSequenceClassification.from_pretrained(
                 model_path,
                 torch_dtype=torch.float32
             ).to(self.device)
             self.current_model_path = model_path
             self.is_base_model = False
-            print("Model loaded successfully!")
+            # print(json.dumps("Model loaded successfully!"))
         except Exception as e:
             print(f"Error loading model: {str(e)}")
             print("Falling back to base model...")
@@ -1187,15 +1188,20 @@ def main():
             print("Invalid choice! Please enter a number between 1 and 7.")
 
 
+def loadModel(base_model_path, analyzer):
+    available_models = list_available_models(base_model_path)
 
-if __name__ == "__main__":
-    # main()
+    try:
+        choice = 1
+        if 1 <= choice <= len(available_models):
+            model_path = available_models[choice-1]['path']
+            analyzer.load(model_path)
+        else:
+            print("Invalid choice!")
+    except ValueError:
+        print("Please enter a valid number")
 
-    script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the script
-    dataset_path = os.path.join(script_dir, "..", "cleaned_by_code.csv")  # Resolve to absolute path
-    base_model_path = os.path.join(script_dir, "../")
-    analyzer = VetFeedbackAnalyzer()
-
+def getStatistics(dataset_path, analyzer):
     aspects = ['hygiene', 'waiting_time', 'customer_service', 'booking_experience', 'vet_care', 'pricing']
 
     # print(dataset_path)
@@ -1216,3 +1222,27 @@ if __name__ == "__main__":
         print("Please enter a valid number")
     except Exception as e:
         print(f"Error during statistics collection: {str(e)}")
+
+def viewAccuracy(dataset_path, analyzer):
+    try:
+        analyzer.evaluate(dataset_path)
+    except Exception as e:
+        print(f"Error during evaluation: {str(e)}")
+
+
+if __name__ == "__main__":
+    # main()
+    mode = sys.argv[1]
+
+    script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the script
+    dataset_path = os.path.join(script_dir, "..", "cleaned_by_code.csv")  # Resolve to absolute path
+    base_model_path = os.path.join(script_dir, "../")
+    analyzer = VetFeedbackAnalyzer()
+
+    # FIRST LOAD THE MODEL (IMPORTANT STEP)
+    loadModel(base_model_path, analyzer)
+
+    if mode == "1":
+        getStatistics(dataset_path, analyzer)
+    elif mode == "2":
+        viewAccuracy(dataset_path, analyzer)

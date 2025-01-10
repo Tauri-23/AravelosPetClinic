@@ -29,7 +29,7 @@ export default function AdminCompletedAppointments() {
      * Handlers
      */
     const handleAppointmentRecordClick = (appointment) => {
-        showModal('AppointmentRecordModalAdmin1', {appointment, handleCancel, handleApprovePage});
+        showModal('AppointmentRecordModalAdmin1', {appointment, handleCancel});
     }
     
     const handleCancel = (recordId) =>{

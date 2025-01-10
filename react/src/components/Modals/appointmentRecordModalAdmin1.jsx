@@ -12,6 +12,7 @@ export default function AppointmentRecordModalAdmin1({
         { id: "vaccination", label: "Vaccination" },
     ];
     const serviceLabel = serviceOptions?.find(option => option.id === record.service)?.label || "Unknown Service";
+    
     const renderDetails = () => {
         switch(record.status){
             case 'Pending':

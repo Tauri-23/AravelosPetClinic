@@ -172,6 +172,7 @@ Route::get('/get-all-staffs-where-status/{status}', [StaffsController::class, 'G
 |----------------------------------------
 */
 Route::get('/get-statistics-from-model', [SentimentAnalysisController::class, 'GetStatisticsFromModel']);
+Route::get('/get-metrics-from-model', [SentimentAnalysisController::class, 'GetModelMetrics']);
 Route::get('/get-sentiments-from-db', [SentimentAnalysisController::class, 'GetSentimentsFromDB']);
 
 Route::post('/update-sentiment-statistics-table', [SentimentAnalysisController::class, 'UpdateSentimentStatisticsTable']);

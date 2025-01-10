@@ -17,7 +17,7 @@ class SentimentAnalysisController extends Controller
         $output = [];
         $errorOutput = [];
 
-        $command = "python " . escapeshellarg($pythonScriptPath);
+        $command = "python " . escapeshellarg($pythonScriptPath) . " " . escapeshellarg(1);
         exec($command, $output, $returnVar);
 
         if ($returnVar !== 0) {
@@ -43,6 +43,31 @@ class SentimentAnalysisController extends Controller
         return response()->json([
             'success' => true,
             'data' => $resultJson,
+        ]);
+    }
+
+    public function GetModelMetrics()
+    {
+        ini_set('max_execution_time', 300);
+        
+        $pythonScriptPath = base_path("MODEL/new_best_11-11-24_4pm_model3/model3highmetrics.py");
+        $output = [];
+        $errorOutput = [];
+
+        $command = "python " . escapeshellarg($pythonScriptPath) . " " . escapeshellarg(2);
+        exec($command, $output, $returnVar);
+
+        if ($returnVar !== 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Python script failed to execute',
+                'error' => implode("\n", $errorOutput),
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $output,
         ]);
     }
 
