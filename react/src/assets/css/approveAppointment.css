@@ -1,5 +1,5 @@
 .staff-appt{
-    height:34vh;
+    height:min-content;
     margin-bottom:3vh;
 }
 .inventory-appt-sm {
@@ -12,7 +12,7 @@
     margin-bottom:3vh;
 }
 .inventory-appt{
-    height:71vh;
+    height:75vh;
     overflow-y: auto;
     margin-bottom:3vh;
 }
@@ -36,12 +36,20 @@
 .staff-item{
     width: 10vw;
     height: auto;
+
+}
+.staffname{
+    display: inline-block; /* Ensure text inside allows ellipsis to work */
+    width: 100%; /* Constrain to the parent width */
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .staff-list{
     height:min-content;
 }
 .inventory-list{
-    height:min-content;    
+    height:min-content;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;

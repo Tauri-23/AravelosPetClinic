@@ -351,19 +351,36 @@ class VetFeedbackAnalyzer:
         self._load_base_model()
         self.model.train()
 
-        # Calculate initial class distribution
-        print("Calculating initial class distribution...")
+        # Calculate initial class distribution and group feedbacks
+        print("Calculating initial class distribution and grouping feedbacks...")
         initial_class_counts = defaultdict(int)
+        feedback_groups = {
+            'positive': [],
+            'negative': [],
+            'neutral': []
+        }
         
+        # Process dataset to group feedbacks
         for chunk in pd.read_csv(dataset_path, chunksize=self.batch_size):
-            for sentiment in chunk['sentiment']:  # Using sentiment directly from dataset
+            for _, row in chunk.iterrows():
+                sentiment = self.analyze_sentiment(row['review'])
                 initial_class_counts[sentiment] += 1
+                feedback_groups[sentiment].append(row['review'])
         
         total_initial_samples = sum(initial_class_counts.values())
         
         print("\nInitial class distribution (before augmentation):")
         for cls, count in initial_class_counts.items():
             print(f"{cls}: {count} samples ({count/total_initial_samples*100:.2f}%)")
+            print(f"Sample {cls} feedbacks:")
+            # Print first 3 examples of each sentiment
+            for i, feedback in enumerate(feedback_groups[cls][:3]):
+                print(f"  {i+1}. {feedback}")
+            print()
+
+
+        result_feedback_groups = feedback_groups.copy()
+
 
         # Calculate augmented distribution
         augmented_class_counts = initial_class_counts.copy()
@@ -375,6 +392,8 @@ class VetFeedbackAnalyzer:
         print("\nAugmented class distribution (after augmentation):")
         for cls, count in augmented_class_counts.items():
             print(f"{cls}: {count} samples ({count/total_augmented_samples*100:.2f}%)")
+
+        ##return feedback_groups
 
         # Calculate class weights based on augmented distribution
         class_weights = {
@@ -622,11 +641,13 @@ class VetFeedbackAnalyzer:
 
             print(f"Epoch {epoch+1} metrics:")
             self._print_metrics(metrics)
-
+        
         print("\nTraining completed!")
         print(f"Best performing model was epoch {best_epoch}:")
         self._print_metrics(best_metrics)
         print(f"Best model saved at: {self.best_model_path}")
+        return result_feedback_groups
+
     
     
     

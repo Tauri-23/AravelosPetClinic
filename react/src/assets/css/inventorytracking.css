@@ -137,8 +137,8 @@ h3 {
   overflow-y: auto;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for a lifted effect */
   border: 1px solid #d9d9d9; /* Adds a border around the section */
-  border-radius: 8px; /* Smooth corners */
-  background: #f9f9f9; /* Light background color for contrast */
+  border-radius: 1.4vw; /* Smooth corners */
+  background: white; /* Light background color for contrast */
   padding: 15px; /* Adds space inside the container */
 }
 
@@ -170,7 +170,7 @@ h3 {
   padding: 12px; /* More padding for a comfortable layout */
   display: flex;
   align-items: center; /* Ensures everything is centered vertically */
-  background: #fff; /* White background for items */
+  background: white; /* White background for items */
   border: 1px solid #eaeaea; /* Light border around each item */
   border-radius: 5px; /* Rounded corners for individual items */
   margin-bottom: 10px; /* Add spacing between items */
