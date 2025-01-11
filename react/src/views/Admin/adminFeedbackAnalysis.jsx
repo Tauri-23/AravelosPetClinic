@@ -19,6 +19,7 @@ export default function adminFeedbackAnalysis() {
         const getAll = async() => {
             try {
                 const data = await fetchAllSentiments();
+                console.log(data);
                 setFeedbacks(data);
             } catch (error) {
                 console.error(error);
@@ -33,7 +34,10 @@ export default function adminFeedbackAnalysis() {
         setModalData({
             aspect: data.aspect,
             feedbackType,
-            comments: aspectData[feedbackType]
+            comments: aspectData[feedbackType],
+            positive_comments: aspectData.positive_comments,
+            neutral_comments: aspectData.neutral_comments,
+            negative_comments: aspectData.negative_comments,
         });
         setIsModalOpen(true);
     };

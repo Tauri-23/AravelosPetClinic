@@ -47,19 +47,35 @@ const feedbackModal1 = ({ data, onClose }) => {
                 <div className="modal-body">
                     {data.comments.length > 0 ? (
                         <div className="feedback-list">
-                            {data.comments.map((sentence, index) => (
+                            {data.positive_comments.map((sentence, index) => (
                                 <div
                                     key={index}
-                                    className={`feedback-item ${statusBasedNum[sentence[1]]}`}
+                                    className={`feedback-item positive`}
                                 >
                                     <div className="feedback-icon">
-                                        {sentence[1] === 1 ? (
-                                            <ThumbsUp size={16} />
-                                        ) : sentence[1] === 0 ? (
-                                            <ThumbsDown size={16} />
-                                        ) : (
-                                            <Meh size={16} />
-                                        )}
+                                        <ThumbsUp size={16} />
+                                    </div>
+                                    <p>{sentence[0]}</p>
+                                </div>
+                            ))}
+                            {data.neutral_comments.map((sentence, index) => (
+                                <div
+                                    key={index}
+                                    className={`feedback-item neutral`}
+                                >
+                                    <div className="feedback-icon">
+                                        <Meh size={16} />
+                                    </div>
+                                    <p>{sentence[0]}</p>
+                                </div>
+                            ))}
+                            {data.negative_comments.map((sentence, index) => (
+                                <div
+                                    key={index}
+                                    className={`feedback-item negative`}
+                                >
+                                    <div className="feedback-icon">
+                                        <ThumbsDown size={16} />
                                     </div>
                                     <p>{sentence[0]}</p>
                                 </div>
