@@ -1248,10 +1248,18 @@ def testModel(analyzer, feedback):
     try:
         result = analyzer.test(feedback)
         # print("\nAnalysis Results:")
-        print(f"Feedback: {result['text']}")
-        print(f"Language: {result['language']}")
-        print(f"Aspects: {', '.join(result['aspects'])}")
-        print(f"Sentiment: {result['sentiment']}")
+        resultToReturn = {
+            'Feedback': result['text'],
+            'Language': result['language'],
+            'Aspects': ', '.join(result['aspects']),
+            'Sentiment': result['sentiment']
+        }
+
+        return resultToReturn
+        # print(f"Feedback: {result['text']}")
+        # print(f"Language: {result['language']}")
+        # print(f"Aspects: {', '.join(result['aspects'])}")
+        # print(f"Sentiment: {result['sentiment']}")
     except Exception as e:
         print(json.dumps(f"Error during testing: {str(e)}"))
 
@@ -1279,5 +1287,18 @@ if __name__ == "__main__":
     elif mode == "2":
         viewAccuracy(dataset_path, analyzer)
     elif mode == "3":
-        feedback = sys.argv[2]
-        testModel(analyzer, feedback)
+        feedback_string = sys.argv[2]  # Receive the JSON string as the second argument
+
+        # print("Received JSON:", feedback_string)  # Debugging print to check received JSON
+
+        # Manually process the feedback string (removing the square brackets and extra spaces)
+        feedback_string = feedback_string.strip('[]').strip()  # Remove the brackets
+        feedback_list = [item.strip().strip('"') for item in feedback_string.split(',')]
+
+        resultToReturn = []
+
+        for feedback in feedback_list:
+            resultToReturn.append(testModel(analyzer, feedback))
+
+        print(json.dumps(resultToReturn))
+

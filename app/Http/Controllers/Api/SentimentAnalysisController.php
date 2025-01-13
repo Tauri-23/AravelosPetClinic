@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\feedbacks;
 use App\Models\sentiment_analysis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -78,40 +79,137 @@ class SentimentAnalysisController extends Controller
 
     public function TestModel()
     {
-        ini_set('max_execution_time', 600);
+        try
+        {
+            DB::beginTransaction();
+            ini_set('max_execution_time', 600);
 
-        $pythonScriptPath = base_path("MODEL/new_best_11-11-24_4pm_model3/model3highmetrics.py");
-        $output = [];
-        $errorOutput = [];
 
-        $command = "python " . escapeshellarg($pythonScriptPath) . " " . escapeshellarg(3) . " " . escapeshellarg("Mabait");
-        exec($command, $output, $returnVar);
+            /**
+             * Retrieve feedbacks from the database
+             */
+            $feedbacksDb = feedbacks::where('status', 'not-processed')->get();
+            $feedbackArray = $feedbacksDb->pluck('content')->toArray();
 
-        if ($returnVar !== 0) {
+            if(count($feedbackArray) < 1)
+            {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'There are no unprocessed feedbacks in the database.'
+                ]);
+            }
+
+            $feedbackJson = json_encode($feedbackArray);
+
+
+            /**
+             * Path to the Python script
+             */
+            $pythonScriptPath = base_path("MODEL/new_best_11-11-24_4pm_model3/model3highmetrics.py");
+            $command = "python " . escapeshellarg($pythonScriptPath) . " " . escapeshellarg(3) . " " . escapeshellarg($feedbackJson);
+
+            $output = [];
+            $returnVar = 0;
+            exec($command, $output, $returnVar);
+
+            if ($returnVar !== 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Python script failed to execute',
+                    'error' => implode("\n", $output),
+                ], 500);
+            }
+
+
+            /**
+             * Convert string output to JSON
+             */
+            $resultString = implode("", $output); // Concatenate the output array into a single string
+            $resultJson = json_decode($resultString, true); // Decode the string into a PHP array
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'Failed to decode JSON',
+                    'error' => json_last_error_msg(),
+                ], 500);
+            }
+
+
+            /**
+             * Update the CSV
+             */
+            $datasetLocation = base_path("MODEL/cleaned_by_code.csv");
+
+            try {
+                $resultJson = json_decode($resultString, true); // Decode JSON as associative array
+
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Failed to decode JSON',
+                        'error' => json_last_error_msg(),
+                    ], 500);
+                }
+
+                // Open the CSV file in append mode
+                $fileHandle = fopen($datasetLocation, 'a');
+                if ($fileHandle === false) {
+                    throw new \Exception('Failed to open the CSV file for writing');
+                }
+
+                // Iterate over the array of results
+                foreach ($resultJson as $result) {
+                    $review = $result['Feedback'] ?? ''; // Extract Feedback field
+                    $sentiment = $result['Sentiment'] ?? ''; // Extract Sentiment field
+
+                    // Write to CSV (tab-separated values)
+                    fputcsv($fileHandle, [$review, $sentiment]);
+                }
+
+                fclose($fileHandle); // Close the file
+
+                /**
+                 * Update the status of the feedback to the database
+                 */
+                foreach($feedbacksDb as $feedback)
+                {
+                    $feedback->status = 'processed';
+
+                    $feedback->save();
+                }
+
+                DB::commit();
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Success'
+                ]);
+            } 
+            catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'status' => 500,
+                    'message' => $e->getMessage(),
+                ], 500);
+            }
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
             return response()->json([
-                'success' => false,
-                'message' => 'Python script failed to execute',
-                'error' => implode("\n", $errorOutput),
+                'status' => 500,
+                'message' => $e->getMessage(),
             ], 500);
         }
-
-        // Convert string output to JSON
-        // $resultString = implode("", $output); // Concatenate the output array into a single string
-        // $resultJson = json_decode($resultString, true); // Decode the string into a PHP array
-
-        // if (json_last_error() !== JSON_ERROR_NONE) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'Failed to decode JSON',
-        //         'error' => json_last_error_msg(),
-        //     ], 500);
-        // }
-
-        return response()->json([
-            'success' => true,
-            'data' => $output,
-        ]);
     }
+
+
+
+
+
+
+
 
 
 

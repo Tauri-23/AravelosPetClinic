@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('client', 6)->nullable();
             $table->string('appointment', 12)->nullable();
             $table->text('content');
+            $table->string('status')->default('not-processed');
             $table->timestamps();
 
             $table->foreign('client')

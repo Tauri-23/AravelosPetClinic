@@ -41,7 +41,7 @@ export default function AdminTrainModel() {
         setLoading(true);
         axiosClient.get('/test-model')
         .then(({data}) => {
-            console.log(data);
+            notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
             setLoading(false)
         }).catch(error => {console.error(error); setLoading(false)});
     }
