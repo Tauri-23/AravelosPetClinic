@@ -940,7 +940,7 @@ class VetFeedbackAnalyzer:
     
     def test(self, feedback: str):
         """Test model on single feedback"""
-        print(self.get_model_status())
+        # print(self.get_model_status())
         self.model.eval()
 
         encoded = self.tokenizer(
@@ -1244,6 +1244,17 @@ def getStatistics(dataset_path, analyzer):
     except Exception as e:
         print(f"Error during statistics collection: {str(e)}")
 
+def testModel(analyzer, feedback):
+    try:
+        result = analyzer.test(feedback)
+        # print("\nAnalysis Results:")
+        print(f"Feedback: {result['text']}")
+        print(f"Language: {result['language']}")
+        print(f"Aspects: {', '.join(result['aspects'])}")
+        print(f"Sentiment: {result['sentiment']}")
+    except Exception as e:
+        print(json.dumps(f"Error during testing: {str(e)}"))
+
 def viewAccuracy(dataset_path, analyzer):
     try:
         analyzer.evaluate(dataset_path)
@@ -1267,3 +1278,6 @@ if __name__ == "__main__":
         getStatistics(dataset_path, analyzer)
     elif mode == "2":
         viewAccuracy(dataset_path, analyzer)
+    elif mode == "3":
+        feedback = sys.argv[2]
+        testModel(analyzer, feedback)

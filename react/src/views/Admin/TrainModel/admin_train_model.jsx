@@ -37,6 +37,15 @@ export default function AdminTrainModel() {
         }).catch(error => {console.error(error); setLoading(false)});
     }
 
+    const handleTestModel = () => {
+        setLoading(true);
+        axiosClient.get('/test-model')
+        .then(({data}) => {
+            console.log(data);
+            setLoading(false)
+        }).catch(error => {console.error(error); setLoading(false)});
+    }
+
 
     const formatAspect = (str) => {
         return str
@@ -102,6 +111,7 @@ export default function AdminTrainModel() {
                         {/* <button className="primary-btn-blue1">Train Model</button><br /> */}
                         {/* <button className="primary-btn-blue1">Load Model</button><br /> */}
                         <button className="primary-btn-blue1" onClick={handleUpdateStatistics}>Update Statistics to Database</button><br />
+                        <button className="primary-btn-blue1" onClick={handleTestModel}>Test Model</button><br />
                         <button className="primary-btn-blue1" onClick={handleGetMetrics}>Show Metrics</button><br />
                         <button className="primary-btn-blue1" onClick={handleExitModel}>Close Model</button>
                     </>

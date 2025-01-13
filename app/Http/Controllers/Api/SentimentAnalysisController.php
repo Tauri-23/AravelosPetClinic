@@ -76,6 +76,43 @@ class SentimentAnalysisController extends Controller
         return response()->json(sentiment_analysis::all());
     }
 
+    public function TestModel()
+    {
+        ini_set('max_execution_time', 600);
+
+        $pythonScriptPath = base_path("MODEL/new_best_11-11-24_4pm_model3/model3highmetrics.py");
+        $output = [];
+        $errorOutput = [];
+
+        $command = "python " . escapeshellarg($pythonScriptPath) . " " . escapeshellarg(3) . " " . escapeshellarg("Mabait");
+        exec($command, $output, $returnVar);
+
+        if ($returnVar !== 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Python script failed to execute',
+                'error' => implode("\n", $errorOutput),
+            ], 500);
+        }
+
+        // Convert string output to JSON
+        // $resultString = implode("", $output); // Concatenate the output array into a single string
+        // $resultJson = json_decode($resultString, true); // Decode the string into a PHP array
+
+        // if (json_last_error() !== JSON_ERROR_NONE) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Failed to decode JSON',
+        //         'error' => json_last_error_msg(),
+        //     ], 500);
+        // }
+
+        return response()->json([
+            'success' => true,
+            'data' => $output,
+        ]);
+    }
+
 
 
     // POST

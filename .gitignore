@@ -18,3 +18,5 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+/MODEL/new_best_01022025_epoch_7
+/venv/Lib/site-packages/torch
