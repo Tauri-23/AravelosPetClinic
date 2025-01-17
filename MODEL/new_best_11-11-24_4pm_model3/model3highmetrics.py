@@ -564,7 +564,7 @@ class VetFeedbackAnalyzer:
             return (pos_signals - neg_signals) / total
 
         def get_sentiment_label(score: float) -> int:
-            """Convert score to label with some uncertainty"""
+            "Convert score to label with some uncertainty #scoring"
             if score > 0.2:  # Positive threshold
                 return 1
             elif score < -0.2:  # Negative threshold
