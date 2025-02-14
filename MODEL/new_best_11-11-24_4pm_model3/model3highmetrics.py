@@ -15,7 +15,7 @@ import string
 import random
 import json
 import sys
-
+from tqdm import tqdm
 
 class VetFeedbackAnalyzer:
     def __init__(self, batch_size=16):
@@ -345,147 +345,83 @@ class VetFeedbackAnalyzer:
     
     
     #used
-    def train(self, dataset_path: str, model_save_path: str, epochs=4):
-        """Train model with handling for imbalanced data"""
-        print("Starting training...")
+    def train(self, dataset_path: str, model_save_path: str, epochs=50):
+        """Train model with optimized memory handling for long training"""
+
+        print("starting training...")
         self._load_base_model()
         self.model.train()
 
-        # Calculate initial class distribution and group feedbacks
-        print("Calculating initial class distribution and grouping feedbacks...")
-        initial_class_counts = defaultdict(int)
-        feedback_groups = {
-            'positive': [],
-            'negative': [],
-            'neutral': []
-        }
-        
-        # Process dataset to group feedbacks
+        # track initial class distribution
+        print("calculating initial class distribution...")
+        class_counts = defaultdict(int)
+
         for chunk in pd.read_csv(dataset_path, chunksize=self.batch_size):
             for _, row in chunk.iterrows():
                 sentiment = self.analyze_sentiment(row['review'])
-                initial_class_counts[sentiment] += 1
-                feedback_groups[sentiment].append(row['review'])
-        
-        total_initial_samples = sum(initial_class_counts.values())
-        
-        print("\nInitial class distribution (before augmentation):")
-        for cls, count in initial_class_counts.items():
-            print(f"{cls}: {count} samples ({count/total_initial_samples*100:.2f}%)")
-            print(f"Sample {cls} feedbacks:")
-            # Print first 3 examples of each sentiment
-            for i, feedback in enumerate(feedback_groups[cls][:3]):
-                print(f"  {i+1}. {feedback}")
-            print()
+                class_counts[sentiment] += 1
 
+        total_samples = sum(class_counts.values())
 
-        result_feedback_groups = feedback_groups.copy()
+        print("\ninitial class distribution:")
+        for cls, count in class_counts.items():
+            print(f"{cls}: {count} samples ({count/total_samples*100:.2f}%)")
 
-
-        # Calculate augmented distribution
-        augmented_class_counts = initial_class_counts.copy()
-        for sentiment in ['negative', 'neutral']:
-            augmented_class_counts[sentiment] += initial_class_counts[sentiment] * 2  # Adding 2 augmented versions
-        
-        total_augmented_samples = sum(augmented_class_counts.values())
-        
-        print("\nAugmented class distribution (after augmentation):")
-        for cls, count in augmented_class_counts.items():
-            print(f"{cls}: {count} samples ({count/total_augmented_samples*100:.2f}%)")
-
-        ##return feedback_groups
-
-        # Calculate class weights based on augmented distribution
-        class_weights = {
-            'negative': total_augmented_samples / (3 * augmented_class_counts['negative']),
-            'positive': total_augmented_samples / (3 * augmented_class_counts['positive']),
-            'neutral': total_augmented_samples / (3 * augmented_class_counts['neutral'])
-        }
-
-        print("\nClass weights:")
-        for cls, weight in class_weights.items():
-            print(f"{cls}: {weight:.2f}")
-
-        # Convert class weights to tensor format
+        # compute class weights
+        class_weights = {cls: total_samples / (3 * count) for cls, count in class_counts.items()}
         weight_mapping = {'negative': 0, 'positive': 1, 'neutral': 2}
+
         class_weight_tensor = torch.tensor(
             [class_weights[k] for k in ['negative', 'positive', 'neutral']],
             device=self.device
         )
 
-        # Initialize optimizer with weight decay
-        self.optimizer = torch.optim.AdamW(
-            self.model.parameters(),
-            lr=2e-5,
-            weight_decay=0.01  # L2 regularization
-        )
-
-        # Learning rate scheduler
-        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-            self.optimizer,
-            mode='min',
-            factor=0.5,
-            patience=2,
-            verbose=True
-        )
+        # optimizer & scheduler
+        self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=2e-5, weight_decay=0.01)
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, mode='min', factor=0.5, patience=2)
 
         best_metrics = None
         best_epoch = None
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         base_save_path = f"{model_save_path}_{timestamp}"
 
-        def augment_text(text: str, lang: str) -> str:
-            """Simple text augmentation"""
+        def augment_text(text: str) -> str:
+            """simple text augmentation"""
             words = text.split()
             if len(words) < 3:
                 return text
-
-            # Random word dropout
             if random.random() < 0.3:
-                drop_idx = random.randint(0, len(words)-1)
-                words.pop(drop_idx)
-
-            # Random word repetition for emphasis
+                words.pop(random.randint(0, len(words)-1))
             if random.random() < 0.3:
                 repeat_idx = random.randint(0, len(words)-1)
                 words.insert(repeat_idx, words[repeat_idx])
-
             return ' '.join(words)
 
         for epoch in range(epochs):
             total_loss = 0
             batch_count = 0
 
-            # Training loop with augmentation for minority classes
             for chunk in tqdm(pd.read_csv(dataset_path, chunksize=self.batch_size),
-                            desc=f'Epoch {epoch+1}/{epochs}'):
+                            desc=f'epoch {epoch+1}/{epochs}'):
                 texts = []
                 labels = []
 
                 for text in chunk['review']:
                     sentiment = self.analyze_sentiment(text)
-                    lang = self.detect_language(text)
                     label = weight_mapping[sentiment]
 
-                    # Add original sample
                     texts.append(text)
                     labels.append(label)
 
-                    # Augment minority classes
-                    if sentiment in ['negative', 'neutral']:  # assuming these are minority classes
-                        # Add augmented versions
-                        for _ in range(2):  # Create 2 augmented versions
-                            aug_text = augment_text(text, lang)
-                            texts.append(aug_text)
+                    # augment minority classes
+                    if sentiment in ['negative', 'neutral']:
+                        for _ in range(2):
+                            texts.append(augment_text(text))
                             labels.append(label)
 
-                # Process batch with weighted loss
+                # process batch
                 encoded = self.tokenizer(
-                    texts,
-                    padding=True,
-                    truncation=True,
-                    max_length=128,
-                    return_tensors='pt'
+                    texts, padding=True, truncation=True, max_length=128, return_tensors='pt'
                 )
 
                 input_ids = encoded['input_ids'].to(self.device)
@@ -493,18 +429,13 @@ class VetFeedbackAnalyzer:
                 label_tensor = torch.tensor(labels).to(self.device)
 
                 self.optimizer.zero_grad()
-                outputs = self.model(
-                    input_ids,
-                    attention_mask=attention_mask,
-                    labels=label_tensor
-                )
+                outputs = self.model(input_ids, attention_mask=attention_mask, labels=label_tensor)
 
-                # Apply class weights to loss
+                # apply class weights
                 loss = outputs.loss * class_weight_tensor[label_tensor].mean()
-
                 loss.backward()
 
-                # Gradient clipping
+                # gradient clipping
                 torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
 
                 self.optimizer.step()
@@ -512,143 +443,42 @@ class VetFeedbackAnalyzer:
                 total_loss += loss.item()
                 batch_count += 1
 
+                # clear memory
                 del input_ids, attention_mask, outputs, label_tensor
-                torch.cuda.empty_cache() if self.device.type == 'cuda' else None
+                torch.cuda.empty_cache()
                 gc.collect()
 
             avg_loss = total_loss / batch_count
-            print(f'Epoch {epoch+1} - Average loss: {avg_loss:.4f}')
+            print(f'epoch {epoch+1} - average loss: {avg_loss:.4f}')
 
-            # Update learning rate
+            # update learning rate
             scheduler.step(avg_loss)
 
-            # Save epoch model
+            # save model per epoch
             epoch_save_path = f"{base_save_path}_epoch_{epoch+1}"
             os.makedirs(epoch_save_path, exist_ok=True)
             self.model.save_pretrained(epoch_save_path)
 
-            # Evaluate current epoch
+            # evaluate model
             self.current_model_path = epoch_save_path
             self.is_base_model = False
             metrics = self.evaluate(dataset_path, quiet=True)
 
-            # Track best model
+            # track best model
             if best_metrics is None or metrics['f1_score'] > best_metrics['f1_score']:
                 best_metrics = metrics
                 best_epoch = epoch + 1
                 self.best_model_path = epoch_save_path
                 self.best_metrics = metrics
 
-            print(f"Epoch {epoch+1} metrics:")
+            print(f"epoch {epoch+1} metrics:")
             self._print_metrics(metrics)
 
-        print("\nTraining completed!")
-        print(f"Best performing model was epoch {best_epoch}:")
+        print("\ntraining completed!")
+        print(f"best performing model was epoch {best_epoch}:")
         self._print_metrics(best_metrics)
-        print(f"Best model saved at: {self.best_model_path}")
+        print(f"best model saved at: {self.best_model_path}")
 
-
-        def get_sentiment_score(text: str) -> float:
-            """Get sentiment score based on keyword presence"""
-            lang = self.detect_language(text)
-            text = text.lower()
-
-            # Count positive and negative signals
-            pos_signals = sum(word in text for word in self.sentiment_rules['positive'][lang])
-            neg_signals = sum(word in text for word in self.sentiment_rules['negative'][lang])
-
-            # Get sentiment strength (-1 to 1)
-            total = pos_signals + neg_signals
-            if total == 0:
-                return 0.0
-            return (pos_signals - neg_signals) / total
-
-        def get_sentiment_label(score: float) -> int:
-            "Convert score to label with some uncertainty #scoring"
-            if score > 0.2:  # Positive threshold
-                return 1
-            elif score < -0.2:  # Negative threshold
-                return 0
-            return 2  # Neutral
-
-        for epoch in range(epochs):
-            total_loss = 0
-            batch_count = 0
-
-            for chunk in tqdm(pd.read_csv(dataset_path, chunksize=self.batch_size),
-                            desc=f'Epoch {epoch+1}/{epochs}'):
-                texts = chunk['review'].tolist()
-
-                # Get initial sentiment signals from keywords
-                sentiment_scores = [get_sentiment_score(text) for text in texts]
-                labels = [get_sentiment_label(score) for score in sentiment_scores]
-
-                # Train batch with soft labels
-                encoded = self.tokenizer(
-                    texts,
-                    padding=True,
-                    truncation=True,
-                    max_length=128,
-                    return_tensors='pt'
-                )
-
-                input_ids = encoded['input_ids'].to(self.device)
-                attention_mask = encoded['attention_mask'].to(self.device)
-                label_tensor = torch.tensor(labels).to(self.device)
-
-                self.optimizer.zero_grad()
-                outputs = self.model(
-                    input_ids,
-                    attention_mask=attention_mask,
-                    labels=label_tensor
-                )
-
-                # Add confidence weighting based on keyword presence
-                loss = outputs.loss * torch.tensor(
-                    [abs(score) + 0.5 for score in sentiment_scores],
-                    device=self.device
-                ).mean()
-
-                loss.backward()
-                self.optimizer.step()
-
-                total_loss += loss.item()
-                batch_count += 1
-
-                del input_ids, attention_mask, outputs, label_tensor
-                torch.cuda.empty_cache() if self.device.type == 'cuda' else None
-                gc.collect()
-
-            avg_loss = total_loss / batch_count
-            print(f'Epoch {epoch+1} - Average loss: {avg_loss:.4f}')
-
-            # Save epoch model
-            epoch_save_path = f"{base_save_path}_epoch_{epoch+1}"
-            os.makedirs(epoch_save_path, exist_ok=True)
-            self.model.save_pretrained(epoch_save_path)
-
-            # Evaluate current epoch
-            self.current_model_path = epoch_save_path
-            self.is_base_model = False
-            metrics = self.evaluate(dataset_path, quiet=True)
-
-            # Track best model
-            if best_metrics is None or metrics['f1_score'] > best_metrics['f1_score']:
-                best_metrics = metrics
-                best_epoch = epoch + 1
-                self.best_model_path = epoch_save_path
-                self.best_metrics = metrics
-
-            print(f"Epoch {epoch+1} metrics:")
-            self._print_metrics(metrics)
-        
-        print("\nTraining completed!")
-        print(f"Best performing model was epoch {best_epoch}:")
-        self._print_metrics(best_metrics)
-        print(f"Best model saved at: {self.best_model_path}")
-        return result_feedback_groups
-
-    
     
     
     #used
@@ -1271,7 +1101,7 @@ def viewAccuracy(dataset_path, analyzer):
 
 
 if __name__ == "__main__":
-    # main()
+    main()
     mode = sys.argv[1]
 
     script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the script
