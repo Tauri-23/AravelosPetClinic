@@ -1102,33 +1102,33 @@ def viewAccuracy(dataset_path, analyzer):
 
 if __name__ == "__main__":
     main()
-    mode = sys.argv[1]
+    # mode = sys.argv[1]
 
-    script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the script
-    dataset_path = os.path.join(script_dir, "..", "cleaned_by_code.csv")  # Resolve to absolute path
-    base_model_path = os.path.join(script_dir, "../")
-    analyzer = VetFeedbackAnalyzer()
+    # script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the script
+    # dataset_path = os.path.join(script_dir, "..", "cleaned_by_code.csv")  # Resolve to absolute path
+    # base_model_path = os.path.join(script_dir, "../")
+    # analyzer = VetFeedbackAnalyzer()
 
-    # FIRST LOAD THE MODEL (IMPORTANT STEP)
-    loadModel(base_model_path, analyzer)
+    # # FIRST LOAD THE MODEL (IMPORTANT STEP)
+    # loadModel(base_model_path, analyzer)
 
-    if mode == "1":
-        getStatistics(dataset_path, analyzer)
-    elif mode == "2":
-        viewAccuracy(dataset_path, analyzer)
-    elif mode == "3":
-        feedback_string = sys.argv[2]  # Receive the JSON string as the second argument
+    # if mode == "1":
+    #     getStatistics(dataset_path, analyzer)
+    # elif mode == "2":
+    #     viewAccuracy(dataset_path, analyzer)
+    # elif mode == "3":
+    #     feedback_string = sys.argv[2]  # Receive the JSON string as the second argument
 
-        # print("Received JSON:", feedback_string)  # Debugging print to check received JSON
+    #     # print("Received JSON:", feedback_string)  # Debugging print to check received JSON
 
-        # Manually process the feedback string (removing the square brackets and extra spaces)
-        feedback_string = feedback_string.strip('[]').strip()  # Remove the brackets
-        feedback_list = [item.strip().strip('"') for item in feedback_string.split(',')]
+    #     # Manually process the feedback string (removing the square brackets and extra spaces)
+    #     feedback_string = feedback_string.strip('[]').strip()  # Remove the brackets
+    #     feedback_list = [item.strip().strip('"') for item in feedback_string.split(',')]
 
-        resultToReturn = []
+    #     resultToReturn = []
 
-        for feedback in feedback_list:
-            resultToReturn.append(testModel(analyzer, feedback))
+    #     for feedback in feedback_list:
+    #         resultToReturn.append(testModel(analyzer, feedback))
 
-        print(json.dumps(resultToReturn))
+    #     print(json.dumps(resultToReturn))
 
