@@ -16,6 +16,9 @@ import random
 import json
 import sys
 from tqdm import tqdm
+from torch.utils.data import TensorDataset, DataLoader
+from transformers import get_linear_schedule_with_warmup
+
 
 class VetFeedbackAnalyzer:
     def __init__(self, batch_size=16):
@@ -346,138 +349,93 @@ class VetFeedbackAnalyzer:
     
     #used
     def train(self, dataset_path: str, model_save_path: str, epochs=50):
-        """Train model with optimized memory handling for long training"""
-
+        "Optimized training with improved efficiency and memory handling."
         print("starting training...")
         self._load_base_model()
         self.model.train()
-
-        # track initial class distribution
-        print("calculating initial class distribution...")
-        class_counts = defaultdict(int)
-
-        for chunk in pd.read_csv(dataset_path, chunksize=self.batch_size):
-            for _, row in chunk.iterrows():
-                sentiment = self.analyze_sentiment(row['review'])
-                class_counts[sentiment] += 1
-
+        
+        # load dataset once and preprocess
+        df = pd.read_csv(dataset_path)
+        df.dropna(inplace=True)  # remove any NaN values in dataset
+        class_counts = df['sentiment'].value_counts().to_dict()
         total_samples = sum(class_counts.values())
-
+        
         print("\ninitial class distribution:")
         for cls, count in class_counts.items():
             print(f"{cls}: {count} samples ({count/total_samples*100:.2f}%)")
-
-        # compute class weights
-        class_weights = {cls: total_samples / (3 * count) for cls, count in class_counts.items()}
+        
+        # compute normalized class weights (capped to prevent instability)
+        class_weights = {cls: max(min(total_samples / (3 * count), 10.0), 0.1) for cls, count in class_counts.items()}
         weight_mapping = {'negative': 0, 'positive': 1, 'neutral': 2}
-
-        class_weight_tensor = torch.tensor(
-            [class_weights[k] for k in ['negative', 'positive', 'neutral']],
-            device=self.device
-        )
-
+        class_weight_tensor = torch.tensor([class_weights.get(k, 1.0) for k in ['negative', 'positive', 'neutral']], device=self.device)
+        
+        # tokenize dataset upfront
+        encoded_data = self.tokenizer(df['review'].tolist(), padding=True, truncation=True, max_length=128, return_tensors='pt')
+        labels = torch.tensor([weight_mapping[label] for label in df['sentiment']]).to(self.device)
+        dataset = TensorDataset(encoded_data['input_ids'], encoded_data['attention_mask'], labels)
+        dataloader = DataLoader(dataset, batch_size=self.batch_size, shuffle=True)
+        
         # optimizer & scheduler
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=2e-5, weight_decay=0.01)
-        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, mode='min', factor=0.5, patience=2)
-
-        best_metrics = None
-        best_epoch = None
+        scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=0, num_training_steps=len(dataloader) * epochs)
+        
+        loss_fn = torch.nn.CrossEntropyLoss(weight=class_weight_tensor)
+        best_metrics, best_epoch = None, None
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         base_save_path = f"{model_save_path}_{timestamp}"
-
-        def augment_text(text: str) -> str:
-            """simple text augmentation"""
-            words = text.split()
-            if len(words) < 3:
-                return text
-            if random.random() < 0.3:
-                words.pop(random.randint(0, len(words)-1))
-            if random.random() < 0.3:
-                repeat_idx = random.randint(0, len(words)-1)
-                words.insert(repeat_idx, words[repeat_idx])
-            return ' '.join(words)
-
+        
         for epoch in range(epochs):
             total_loss = 0
-            batch_count = 0
-
-            for chunk in tqdm(pd.read_csv(dataset_path, chunksize=self.batch_size),
-                            desc=f'epoch {epoch+1}/{epochs}'):
-                texts = []
-                labels = []
-
-                for text in chunk['review']:
-                    sentiment = self.analyze_sentiment(text)
-                    label = weight_mapping[sentiment]
-
-                    texts.append(text)
-                    labels.append(label)
-
-                    # augment minority classes
-                    if sentiment in ['negative', 'neutral']:
-                        for _ in range(2):
-                            texts.append(augment_text(text))
-                            labels.append(label)
-
-                # process batch
-                encoded = self.tokenizer(
-                    texts, padding=True, truncation=True, max_length=128, return_tensors='pt'
-                )
-
-                input_ids = encoded['input_ids'].to(self.device)
-                attention_mask = encoded['attention_mask'].to(self.device)
-                label_tensor = torch.tensor(labels).to(self.device)
-
+            
+            for input_ids, attention_mask, label_tensor in tqdm(dataloader, desc=f'epoch {epoch+1}/{epochs}'):
+                input_ids, attention_mask, label_tensor = input_ids.to(self.device), attention_mask.to(self.device), label_tensor.to(self.device)
+                
                 self.optimizer.zero_grad()
-                outputs = self.model(input_ids, attention_mask=attention_mask, labels=label_tensor)
-
-                # apply class weights
-                loss = outputs.loss * class_weight_tensor[label_tensor].mean()
-                loss.backward()
-
-                # gradient clipping
+                
+                outputs = self.model(input_ids, attention_mask=attention_mask)
+                loss = loss_fn(outputs.logits, label_tensor)
+                
+                if torch.isnan(loss):
+                    print("warning: nan detected in loss, skipping batch")
+                    continue
+                
+                # clip gradients before backward pass to prevent exploding gradients
                 torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
-
+                
+                loss.backward()
                 self.optimizer.step()
-
+                scheduler.step()
+                
                 total_loss += loss.item()
-                batch_count += 1
-
-                # clear memory
-                del input_ids, attention_mask, outputs, label_tensor
-                torch.cuda.empty_cache()
-                gc.collect()
-
-            avg_loss = total_loss / batch_count
+                
+            avg_loss = total_loss / len(dataloader)
             print(f'epoch {epoch+1} - average loss: {avg_loss:.4f}')
-
-            # update learning rate
-            scheduler.step(avg_loss)
-
+            
             # save model per epoch
             epoch_save_path = f"{base_save_path}_epoch_{epoch+1}"
             os.makedirs(epoch_save_path, exist_ok=True)
             self.model.save_pretrained(epoch_save_path)
-
+            
             # evaluate model
             self.current_model_path = epoch_save_path
             self.is_base_model = False
             metrics = self.evaluate(dataset_path, quiet=True)
-
-            # track best model
+            
             if best_metrics is None or metrics['f1_score'] > best_metrics['f1_score']:
                 best_metrics = metrics
                 best_epoch = epoch + 1
                 self.best_model_path = epoch_save_path
                 self.best_metrics = metrics
-
+            
             print(f"epoch {epoch+1} metrics:")
             self._print_metrics(metrics)
-
+            
         print("\ntraining completed!")
         print(f"best performing model was epoch {best_epoch}:")
         self._print_metrics(best_metrics)
         print(f"best model saved at: {self.best_model_path}")
+
+
 
     
     
