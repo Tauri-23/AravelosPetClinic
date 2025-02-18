@@ -852,25 +852,38 @@ def list_available_models(base_path: str) -> List[Dict]:
     """List all available trained models with enhanced information"""
     available_models = []
     try:
-        for item in os.listdir(base_path):
-            full_path = os.path.join(base_path, item)
-            if os.path.isdir(full_path) and "epoch" in item:
-                model_info = {
-                    'path': full_path,
-                    'name': item
-                }
-                if '_20' in item:  # New format
-                    parts = item.split('_')
-                    model_info['format'] = 'new'
-                    model_info['epoch'] = int(parts[-1])
-                    model_info['timestamp'] = f"{parts[-4]}_{parts[-3]}"
-                else:  # Old format
-                    model_info['format'] = 'old'
-                    model_info['epoch'] = int(item.split('_')[-1])
-                    model_info['timestamp'] = None
-                available_models.append(model_info)
+        # Convert relative path to absolute path
+        abs_path = os.path.abspath(base_path)
+        if not os.path.exists(abs_path):
+            print(f"Path does not exist: {abs_path}")
+            return available_models
+
+        # Walk through all subdirectories
+        for root, dirs, files in os.walk(abs_path):
+            for dir_name in dirs:
+                if "epoch" in dir_name:
+                    full_path = os.path.join(root, dir_name)
+                    # Check if this is actually a model directory by looking for expected files
+                    if os.path.exists(os.path.join(full_path, "config.json")):
+                        model_info = {
+                            'path': full_path,
+                            'name': dir_name
+                        }
+                        
+                        if '_20' in dir_name:  # New format
+                            parts = dir_name.split('_')
+                            model_info['format'] = 'new'
+                            model_info['epoch'] = int(parts[-1])
+                            model_info['timestamp'] = f"{parts[-4]}_{parts[-3]}"
+                        else:  # Old format
+                            model_info['format'] = 'old'
+                            model_info['epoch'] = int(dir_name.split('_')[-1])
+                            model_info['timestamp'] = None
+                        
+                        available_models.append(model_info)
     except Exception as e:
         print(f"Error listing models: {str(e)}")
+    
     return sorted(available_models, key=lambda x: (x['format'] != 'old', x['epoch']))
 
 
