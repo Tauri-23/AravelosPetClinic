@@ -7,6 +7,7 @@ export default function AddInventoryItemsModal1({handleAdd, onClose}) {
     const minDate = nextWeek.toISOString().split("T")[0];
 
     const [expiration, setExpiration] = useState("");
+    const [qty, setQty] = useState(1);
 
 
     return(
@@ -17,10 +18,13 @@ export default function AddInventoryItemsModal1({handleAdd, onClose}) {
                 </div>
                 <h3>Add Inventory Item</h3>
 
-                <label htmlFor="expiration" style={{marginTop: "30px"}}>Expiration Date</label>
+                <label htmlFor="quantity" style={{marginTop: "30px"}}>Quantity</label>
+                <input type="number" id="quantity" min={1} value={qty} onChange={(e) => setQty(e.target.value)} />
+
+                <label htmlFor="expiration" style={{marginTop: "10px"}}>Expiration Date</label>
                 <input type="date" id="expiration" min={minDate} value={expiration} onInput={(e) => setExpiration(e.target.value)} />
 
-                <button className="primary-btn-blue1" style={{marginTop: "30px"}} onClick={() => handleAdd(expiration)}>Add</button>
+                <button className="primary-btn-blue1" style={{marginTop: "30px"}} onClick={() => handleAdd(expiration, qty)}>Add</button>
             </div>
         </div>
     )

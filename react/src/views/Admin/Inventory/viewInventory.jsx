@@ -35,10 +35,11 @@ export default function AdminViewInventory() {
      * Handlers
      */
     const handleAddInventoryItemsClick = () => {
-        showModal("AddInventoryItemsModal1", {handleAdd: (expiration) => {
+        showModal("AddInventoryItemsModal1", {handleAdd: (expiration, qty) => {
             const formData = new FormData();
             formData.append('inventoryId', inventory.id);
             formData.append("expirationDate", expiration);
+            formData.append("qty", qty);
 
             axiosClient.post("/add-inventory-item", formData)
             .then(({data}) => {
