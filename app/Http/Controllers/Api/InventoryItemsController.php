@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Contracts\IGenerateIdService;
 use App\Http\Controllers\Controller;
 use App\Models\inventory;
+use App\Models\inventory_history;
 use App\Models\inventory_items;
 use DB;
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ class InventoryItemsController extends Controller
         try
         {
             DB::beginTransaction();
+            $inventory = inventory::find($request->inventoryId);
 
             for($i = 0; $i < (int) $request->qty; $i++) {
                 $inventoryItem = new inventory_items();
@@ -32,12 +34,13 @@ class InventoryItemsController extends Controller
                 $inventoryItem->inventory = $request->inventoryId;
                 $inventoryItem->expiration_date = $request->expirationDate;
                 $inventoryItem->save();
-
-                $inventory = inventory::find($request->inventoryId);
-                $inventory->qty++;
-                $inventory->save();
             }
-            
+
+            $inventory->qty += (int) $request->qty;
+            $inventory->save();
+
+            $addInventoryHistory = new InventoryHistoryController();
+            $addInventoryHistory->AddInventoryHistory($inventory->name, "+", (int) $request->qty);   
 
             DB::commit();
 
@@ -71,7 +74,12 @@ class InventoryItemsController extends Controller
                     'message'=> 'Item not found.'
                 ]);
             }
+            
             $inventory = inventory::find($request->inventoryId);
+
+            $addInventoryHistory = new InventoryHistoryController();
+            $addInventoryHistory->AddInventoryHistory($inventory->name, "-", 1);
+
             $inventory->qty--;
             $inventory->save();
             $inventoryItem->delete();
