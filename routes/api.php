@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FeedbacksController;
 use App\Http\Controllers\Api\inventoryCategoriesController;
 use App\Http\Controllers\Api\InventoryController;
+use App\Http\Controllers\Api\InventoryHistoryController;
 use App\Http\Controllers\Api\InventoryItemsController;
 use App\Http\Controllers\Api\PetsController;
 use App\Http\Controllers\Api\SentimentAnalysisController;
@@ -59,6 +60,17 @@ Route::post('/edit-inventory', [InventoryController::class,'editInventoryItem'])
 */
 Route::post('/add-inventory-item', [InventoryItemsController::class,'AddInventoryItem']);
 Route::post('/del-inventory-item', [InventoryItemsController::class,'DelInventoryItem']);
+
+
+
+
+
+/*
+|----------------------------------------
+| Inventory Items
+|----------------------------------------
+*/
+Route::get('/get-all-inventory-history', [InventoryHistoryController::class,'GetAllInventoryHistory']);
 
 
 

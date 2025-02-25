@@ -5,10 +5,11 @@ import {
     fetchAllInventoryItems,
 } from "../../../services/InventoryServices.jsx";
 import axiosClient from "../../../axios-client.js";
-import { notify } from "../../../assets/js/utils.jsx";
+import { formatDate, formatDateForMySQL, notify } from "../../../assets/js/utils.jsx";
 import "../../../assets/css/InventoryTracking.css";
 import InventoryBox from "../../../components/inventory_box.jsx";
 import { useModal } from "../../../contexts/ModalContext.jsx";
+import { fetchAllInventoryHistory } from "../../../services/InventoryHistoryServices.jsx";
 
 export default function AdminInventoryIndex() {
     const navigate = useNavigate();
@@ -18,33 +19,25 @@ export default function AdminInventoryIndex() {
     const [searchQuery, setSearchQuery] = useState("");
     const [inventoryItems, setInventoryItems] = useState(null);
 
+    const [inventoryHistory, setInventoryHistory] = useState(null);
+
     const [activeCategory, setActiveCategory] = useState(null);
 
     /**
      * Fetch all items from DB
      */
     useEffect(() => {
-        const getAllCategories = async () => {
-            try {
-                const data = await fetchAllInventoryCategories();
-                setCategories(data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        const getAllInventoryItems = async () => {
-            try {
-                const data = await fetchAllInventoryItems();
-                setInventoryItems(data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
+        const getAll = async() => {
+            const [categoresDb, inventoryItemsDb, inventoryHistoryDb] = await Promise.all([
+                fetchAllInventoryCategories(),
+                fetchAllInventoryItems(),
+                fetchAllInventoryHistory()
+            ]);
 
-        const getAll = async () => {
-            getAllCategories();
-            getAllInventoryItems();
-        };
+            setCategories(categoresDb);
+            setInventoryItems(inventoryItemsDb);
+            setInventoryHistory(inventoryHistoryDb);
+        }
 
         getAll();
     }, []);
@@ -350,33 +343,20 @@ export default function AdminInventoryIndex() {
                         {/* Added Transactions */}
                         <div className="added-transactions">
                             <ul>
-                                {sortedTransactions
-                                    .filter(
-                                        (transaction) =>
-                                            transaction.qtyAdded > 0
-                                    )
-                                    .map((transaction) => (
+                                {inventoryHistory?.map((transaction) => (
                                         <li
                                             key={`added-${transaction.id}`}
                                             className="transaction-item"
                                         >
-                                            <img
-                                                src={transaction.itemImageUrl}
-                                                alt={transaction.itemName}
-                                                className="item-image"
-                                            />
                                             <span className="inter">
                                                 {" "}
-                                                +{transaction.qtyAdded}{" "}
+                                                {transaction.operator}{transaction.qty}{" "}
                                             </span>
                                             <span className="inter">
-                                                {transaction.itemName}{" "}
+                                                {transaction.item_name}{" "}
                                             </span>
                                             <span className="inter">
-                                                {transaction.date.toLocaleDateString()}
-                                            </span>
-                                            <span className="inter">
-                                                {transaction.date.toLocaleTimeString()}
+                                                {formatDate(transaction.created_at)}
                                             </span>
                                         </li>
                                     ))}
@@ -384,7 +364,7 @@ export default function AdminInventoryIndex() {
                         </div>
 
                         {/* Used Transactions */}
-                        <div
+                        {/* <div
                             className="used-transactions"
                             style={{ marginTop: "20px" }}
                         >
@@ -419,7 +399,7 @@ export default function AdminInventoryIndex() {
                                         </li>
                                     ))}
                             </ul>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

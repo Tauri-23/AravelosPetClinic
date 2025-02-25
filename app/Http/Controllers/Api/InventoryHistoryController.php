@@ -9,6 +9,17 @@ use Illuminate\Http\Request;
 
 class InventoryHistoryController extends Controller
 {
+    // GET
+    public function GetAllInventoryHistory()
+    {
+        return inventory_history::orderBy("created_at", "DESC")->get();
+    }
+
+
+
+
+
+    // POST
     public function AddInventoryHistory($itemName, $operator, $qty)
     {
         try
