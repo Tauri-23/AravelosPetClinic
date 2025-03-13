@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\user_clients;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -126,5 +127,31 @@ class UserClientsController extends Controller
             'message' => 'Profile updated',
             'client' => $client
         ]);
+    }
+
+    public function ChangeClientPassword(Request $request)
+    {
+        try
+        {
+            DB::beginTransaction();
+            $client = user_clients::where('email', $request->email)->firstOrFail();
+
+            $client->password = bcrypt($request->password);
+            $client->save();
+            DB::commit();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Password changed successfully'
+            ]);
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

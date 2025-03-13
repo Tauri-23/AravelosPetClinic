@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminRolesController;
 use App\Http\Controllers\Api\AppointmentsController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\EmailOTPsController;
 use App\Http\Controllers\Api\FeedbacksController;
 use App\Http\Controllers\Api\inventoryCategoriesController;
 use App\Http\Controllers\Api\InventoryController;
@@ -201,3 +202,14 @@ Route::post('/update-sentiment-statistics-table', [SentimentAnalysisController::
 Route::get('/get-all-feedbacks', [FeedbacksController::class, 'GetAllFeedbacks']);
 
 Route::post('/post-feedback', [FeedbacksController::class, 'PostFeedback']);
+
+
+
+
+
+/*
+|----------------------------------------
+| OTP
+|----------------------------------------
+*/
+Route::post('/client-send-email-otp', [EmailOTPsController::class, 'GenerateAndSendOTPToEmail']);

@@ -46,7 +46,7 @@ class UserAdminsController extends Controller
             $admin = new user_admins();
             $admin->id = $adminId;
             $admin->fname = $request->fname;
-            $admin->mname = $request->mname ? $request->mname : null;
+            $admin->mname = $request->mname ?? null;
             $admin->lname = $request->lname;
             $admin->email = $request->email;
             $admin->password = bcrypt($request->password);
