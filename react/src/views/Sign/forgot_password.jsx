@@ -3,19 +3,24 @@ import "../../assets/css/sign.css";
 import "../../assets/css/app.css";
 import { notify } from "../../assets/js/utils";
 import axiosClient from "../../axios-client";
+import { useNavigate } from "react-router-dom";
+import {Input} from "antd";
 
 export default function ForgotPassword() {
+    const navigate = useNavigate();
+
     const [isEmailOTPSent, setEmailOTPSent] = useState(false);
     const [isOTPApproved, setOTPApproved] = useState(false);
+
+    const [email, setEmail] = useState("");
+    const [otp, setOtp] = useState("");
+    const [newPass, setNewPass] = useState("");
+    const [conPass, setConPass] = useState("");
 
 
     /**
      * Render
      */
-    const emailRef = useRef(null);
-    const otpRef = useRef(null);
-    const newPassRef = useRef(null);
-    const conPassRef = useRef(null);
 
 
 
@@ -26,7 +31,7 @@ export default function ForgotPassword() {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append("email", emailRef.current.value);
+        formData.append("email", email);
         formData.append("for", "forgot password");
 
         axiosClient.post('/client-send-email-otp', formData)
@@ -42,26 +47,41 @@ export default function ForgotPassword() {
 
     const handleVerifyOTP = (e) => {
         e.preventDefault();
-        setOTPApproved(true);
+
+        const formData = new FormData();
+        formData.append("email", email);
+        formData.append("otp", otp);
+        formData.append("for", "forgot password");
+
+        axiosClient.post("/client-verify-email-otp", formData)
+        .then(({data}) => {
+            if(data.status === 200) {
+                notify("success", data.message, "top-center", 3000);
+                setOTPApproved(true);
+                return;
+            }
+            notify("error", data.message, "top-center", 3000);
+        }).catch(error => console.error(error));
     }
 
     const handleChangePass = (e) => {
         e.preventDefault();
 
-        if(newPassRef.current.value !== conPassRef.current.value) {
+        if(newPass !== conPass) {
             notify("error", "Passwords doesn't match", "top-center", 3000);
             return;
         }
 
         const formData = new FormData();
-        formData.append("newPass", newPassRef.current.value);
+        formData.append("email", email);
+        formData.append("password", newPass);
 
-        axiosClient.post('', formData)
+        axiosClient.post('/update-client-password', formData)
         .then(({data}) => {
             if(data.status === 200) {
                 notify("success", data.message, "top-center", 3000);
-                
-            } 
+                navigate("/");
+            }
         }).catch(error => console.error(error));
     }
 
@@ -79,10 +99,16 @@ export default function ForgotPassword() {
                 
                 {/* Email Input Form */}
                 {(!isEmailOTPSent && !isOTPApproved) && (
-                    <form onSubmit={handleSendEmailVerification}>
-                        <div>
+                    <form onSubmit={handleSendEmailVerification} className="d-flex flex-direction-y gap3">
+                        <div className="">
                             <label htmlFor="email">Email</label>
-                            <input ref={emailRef} type="email" id="email" required/>
+                            <Input
+                            type="email" 
+                            id="email" 
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            />
                         </div>
                         <input type="submit" className="primary-btn-blue1" value="Send Verification" />
                     </form>
@@ -90,10 +116,16 @@ export default function ForgotPassword() {
 
                 {/* OTP Input form */}
                 {(isEmailOTPSent && !isOTPApproved) && (
-                    <form onSubmit={handleVerifyOTP}>
+                    <form onSubmit={handleVerifyOTP} className="d-flex flex-direction-y gap3">
                         <div>
                             <label htmlFor="otp">6-Digit OTP</label>
-                            <input ref={otpRef} type="text" id="otp" maxLength={6} required/>
+                            <Input 
+                            type="text" 
+                            id="otp" 
+                            maxLength={6} 
+                            value={otp}
+                            onChange={(e) => setOtp(e.target.value)}
+                            required/>
                         </div>
                         <input type="submit" className="primary-btn-blue1" value="Verify" />
                     </form>
@@ -101,14 +133,14 @@ export default function ForgotPassword() {
 
                 {/* Change Password */}
                 {(isEmailOTPSent && isOTPApproved) && (
-                    <form onSubmit={handleChangePass}>
-                        <div>
+                    <form onSubmit={handleChangePass} className="d-flex flex-direction-y gap3 w-100">
+                        <div className="w-100">
                             <label htmlFor="newPass">New Password</label>
-                            <input ref={newPassRef} type="password" id="newPass" required/>
+                            <Input.Password value={newPass} type="password" id="newPass" onChange={(e) => setNewPass(e.target.value)} required/>
                         </div>
-                        <div>
+                        <div className="w-100">
                             <label htmlFor="conPass">Confirm Password</label>
-                            <input ref={conPassRef} type="password" id="conPass" required/>
+                            <Input.Password value={conPass} type="password" id="conPass" onChange={(e) => setConPass(e.target.value)} required/>
                         </div>
                         <input type="submit" className="primary-btn-blue1" value="Change password" />
                     </form>

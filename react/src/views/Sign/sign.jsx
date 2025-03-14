@@ -5,12 +5,16 @@ import "../../assets/css/sign.css";
 import axiosClient from "../../axios-client.js";
 import { useStateContext } from "../../contexts/ContextProvider.jsx";
 import { notify } from "../../assets/js/utils.jsx";
+import {Input}  from "antd";
 
 
 export default function Sign() {
     const navigate = useNavigate();
     const [isSignUp, setIsSignUp] = useState(false);
     const {setUser, setToken, setUserType} = useStateContext();
+
+    const [loginEmail, setLoginEmail] = useState("");
+    const [loginPass, setLoginPass] = useState("");
 
 
     /**
@@ -22,9 +26,6 @@ export default function Sign() {
     const phoneRef = useRef(null);
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
-
-    const loginEmailRef = useRef();
-    const loginPassRef = useRef();
 
 
 
@@ -64,8 +65,8 @@ export default function Sign() {
     const handleSigninPost = (ev) => {
     ev.preventDefault();
     const formData = new FormData();
-    formData.append('email', loginEmailRef.current.value);
-    formData.append('password', loginPassRef.current.value);
+    formData.append('email', loginEmail);
+    formData.append('password', loginPass);
 
     axiosClient.post('/login', formData)
     .then(({data}) => {
@@ -107,11 +108,25 @@ export default function Sign() {
         {/* SignIn */}
         <div className={`form-container sign-in-container ${!isSignUp ? 'active' : ''}`}>
             <form onSubmit={handleSigninPost}>
-            <h1 style={{ marginBottom: '20px' }}>Sign In</h1>
-            <input ref={loginEmailRef} type="email" placeholder="Email" />
-            <input ref={loginPassRef} type="password" placeholder="Password" />
-            <Link to='/ForgotPassword'>Forgot your password?</Link>
-            <button type="submit">Sign In</button>
+                <h1 style={{ marginBottom: '20px' }}>Sign In</h1>
+                <div className="d-flex flex-direction-y gap3 w-100">
+                    <Input
+                    type="email"
+                    size="large"
+                    placeholder="Email"
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                    />
+                    
+                    <Input.Password
+                    size="large"
+                    placeholder="password"
+                    value={loginPass}
+                    onChange={(e) => setLoginPass(e.target.value)}
+                    />
+                </div>
+                <Link to='/ForgotPassword'>Forgot your password?</Link>
+                <button type="submit">Sign In</button>
             </form>
         </div>
 

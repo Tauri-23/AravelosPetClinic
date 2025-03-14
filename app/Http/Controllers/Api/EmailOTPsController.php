@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\ClientForgotPassOTP;
 use App\Models\email_otps;
 use App\Models\user_clients;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 
@@ -41,11 +42,19 @@ class EmailOTPsController extends Controller
                 ]);
             }
 
+            // Mark as Expired passed otps
+            email_otps::where([
+                ['for', '=', $request->for],
+                ['status', '=', 'active'],
+                ['client', '=', $client->id]
+            ])->update(['status' => 'Expired']);
+
             $emailOtpTable = new email_otps();
             $emailOtpTable->otp = $otp;
             $emailOtpTable->for = $request->for;
             $emailOtpTable->client = $client->id;
-            $emailOtpTable->save();
+            $emailOtpTable->save();            
+
             DB::commit();
 
             $this->sendEmail->send(new ClientForgotPassOTP($otp), $client->email);
@@ -65,5 +74,54 @@ class EmailOTPsController extends Controller
         }
 
         
+    }
+
+    
+    public function VerifyEmailOTP(Request $request)
+    {
+        try
+        {
+            DB::beginTransaction();
+            $client = user_clients::where("email", $request->email)->first();
+            $emailOtp = email_otps::where("otp", $request->otp)
+            ->where("for", $request->for)
+            ->where("client", $client->id)
+            ->where("status", "Active")
+            ->first();
+
+            if(!$emailOtp)
+            {
+                return response()->json([
+                    'status' => 401,
+                    'message' => "Invalid OTP."
+                ]);
+            }
+
+            if(Carbon::parse($emailOtp->created_at)->diffInMinutes(now()) > 5)
+            {
+                $emailOtp->status = "Expired";
+                $emailOtp->save();
+
+                DB::commit();
+
+                return response()->json([
+                    'status' => 401,
+                    'message' => "OTP Expired."
+                ]);
+            }
+
+            return response()->json([
+                "status" => 200,
+                "message" => "success"
+            ]);
+        }
+        catch(\Exception $e)
+        {
+
+            return response()->json([
+                "status" => 500,
+                "message" => $e->getMessage()
+            ]);
+        }
     }
 }

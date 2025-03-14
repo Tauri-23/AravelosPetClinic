@@ -134,6 +134,7 @@ Route::get('/retrieve-all-clients-not-deleted', [UserClientsController::class, '
 Route::post('/suspend-unsuspend-client', [UserClientsController::class, 'SuspendUnsuspendClient']);
 Route::post('/del-client', [UserClientsController::class, 'DeleteClient']);
 Route::post('/update-client-profile', [UserClientsController::class, 'UpdateClientProfile']);
+Route::post('/update-client-password', [UserClientsController::class, 'ChangeClientPassword']);
 
 
 
@@ -213,3 +214,4 @@ Route::post('/post-feedback', [FeedbacksController::class, 'PostFeedback']);
 |----------------------------------------
 */
 Route::post('/client-send-email-otp', [EmailOTPsController::class, 'GenerateAndSendOTPToEmail']);
+Route::post('/client-verify-email-otp', [EmailOTPsController::class, 'VerifyEmailOTP']);
