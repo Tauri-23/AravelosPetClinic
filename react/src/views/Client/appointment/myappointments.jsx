@@ -18,20 +18,16 @@ export default function MyAppointments() {
     const [activeTab, setActiveTab] = useState("Pending");
     const [appointments, setAppointments] = useState([]);
 
-    const serviceOptions = [
-        { id: "checkup", label: "Check-up" },
-        { id: "deworming", label: "Deworming" },
-        { id: "grooming", label: "Grooming" },
-        { id: "parasiticControl", label: "Parasitic Control" },
-        { id: "vaccination", label: "Vaccination" },
-    ];
 
+
+    /**
+     * Onmount
+     */
     useEffect(() => {
         const getAllAppointments = async () => {
             try {
-                const data = await fetchAllClientAppointments(user.id); // Pass clientId here
+                const data = await fetchAllClientAppointments(user.id);
                 setAppointments(data);
-                console.log(data); // Log the received appointments
             } catch (error) {
                 console.error(error);
             }
@@ -41,67 +37,62 @@ export default function MyAppointments() {
     }, []);
 
 
-    /*
-    | Debugging
-    */
-    useEffect(() => {
-        console.log(appointments);
-    }, [appointments])
 
-
-
-
+    /**
+     * Handlers
+     */
     const handleAppointmentRecordClick = (record)=> {
         showModal('AppointmentRecordModal1', {record, handleCancel})
     }
-
-
-    const handleCancelPost =(recordId, recordReason) => {
-
-        const formData=new FormData();
-        formData.append('appointmentId', recordId);
-        formData.append('reason', recordReason || 'No reason provided.');
-
-        const canceledRecord = appointments.find(record => record.id === recordId);
-        console.log(recordId);
-        axiosClient.post(`/cancel-appointment`, formData)
-            .then(({ data }) => {
-                if (data.status === 200) {
-                    notify('success', data.message, 'top-center', 3000);
-                    // Remove the canceled appointment from the current list
-                    setAppointments(prev => prev.filter(record => record.id !== recordId));
-
-                    // Add the canceled appointment back with status updated to 'Cancelled'
-                    setAppointments(prev => [...prev, { ...canceledRecord, status: 'Cancelled', cancelled_at: new Date().toISOString(), reason: recordReason || 'No reason provided.' }]);
-
-                    // Optionally switch to the 'Cancelled' tab to reflect the change
-                    setActiveTab('Cancelled');
-
-
-                    //setAppointments(prev => prev.filter(record => record.id !== recordId)); // Remove the canceled appointment from state
-                } else {
-                    notify('error', data.message + record.id, 'top-center', 3000);
-                }
-            }).catch(error => {
-                console.error(error);
-                notify('error', data.message, 'top-center', 3000);
-            });
-    }
+    
     const handleCancel = (recordId) =>{
-
-        console.log(recordId);
         const handleFunction = "handleCancelPost";
+
         if (isEmptyOrSpaces(String(recordId))) {
             console.error("No appointment selected for cancellation.");
             return;
         }
-        showModal('ConfirmActionModal1',  {handlePost:handleCancelPost, recordId, handleFunction});
+
+        showModal('ConfirmActionModal1',  {
+            handlePost: (recordId, recordReason) => {
+                const formData=new FormData();
+                formData.append('appointmentId', recordId);
+                formData.append('reason', recordReason || 'No reason provided.');
+        
+                const canceledRecord = appointments.find(record => record.id === recordId);
+                console.log(recordId);
+                axiosClient.post(`/cancel-appointment`, formData)
+                    .then(({ data }) => {
+                        if (data.status === 200) {
+                            notify('success', data.message, 'top-center', 3000);
+                            // Remove the canceled appointment from the current list
+                            setAppointments(prev => prev.filter(record => record.id !== recordId));
+        
+                            // Add the canceled appointment back with status updated to 'Cancelled'
+                            setAppointments(prev => [...prev, { ...canceledRecord, status: 'Cancelled', cancelled_at: new Date().toISOString(), reason: recordReason || 'No reason provided.' }]);
+        
+                            // Optionally switch to the 'Cancelled' tab to reflect the change
+                            setActiveTab('Cancelled');
+        
+        
+                            //setAppointments(prev => prev.filter(record => record.id !== recordId)); // Remove the canceled appointment from state
+                        } else {
+                            notify('error', data.message + record.id, 'top-center', 3000);
+                        }
+                    }).catch(error => {
+                        console.error(error);
+                        notify('error', data.message, 'top-center', 3000);
+                    });
+            }, 
+            recordId, 
+            handleFunction
+        });
     }
 
 
 
 
-      const renderHeaders = () => {
+    const renderHeaders = () => {
         switch (activeTab) {
             case "Pending":
                 return (
@@ -143,61 +134,61 @@ export default function MyAppointments() {
         }
     };
 
-  return (
-
-    <div className = "page inter">
-        <div className="bg book-appointment gen-margin">
-            <div className="mini-nav bottom-margin"><div className="anybody medium-f bold">My Appointments</div><div className="separator left-margin-s right-margin-s"></div><Link to={'../BookAppointment'}><div className="anybody small-f semi-bold">Book Appointment</div></Link></div>
-            <div className="myappt small-form bottom-margin-s">
-                <div className="text-center">
-                    <div className='myappt-navigation d-flex '>
-                        <Link to={''} className="anybody semi-bold right-margin">
-                            <div className="a-tab" onClick={() => setActiveTab("Pending")}>
-                                Pending
-                                <div className={`nav1-line${activeTab === "Pending" ? " active" : ""}`}></div>
-                            </div>
-                        </Link>
-                        <Link to={''} className="anybody semi-bold right-margin">
-                            <div className="a-tab" onClick={() => setActiveTab("Approved")}>
-                            Approved
-                                <div className={`nav1-line${activeTab === "Approved" ? " active" : ""}`}></div>
-                            </div>
-                        </Link>
-                        <Link to={''} className="anybody semi-bold right-margin">
-                            <div className="a-tab" onClick={() => setActiveTab("Completed")}>
-                                Completed
-                                <div className={`nav1-line${activeTab === "Completed" ? " active" : ""}`}></div>
-                            </div>
-                        </Link>
-                        <Link to={''} className="anybody semi-bold right-margin">
-                            <div className="a-tab" onClick={() => setActiveTab("Cancelled")}>
-                                Cancelled
-                                <div className={`nav1-line${activeTab === "Cancelled" ? " active" : ""}`}></div>
-                            </div>
-                        </Link>
+    
+    return (
+        <div className = "page inter">
+            <div className="bg book-appointment gen-margin">
+                <div className="mini-nav bottom-margin"><div className="anybody medium-f bold">My Appointments</div><div className="separator left-margin-s right-margin-s"></div><Link to={'../BookAppointment'}><div className="anybody small-f semi-bold">Book Appointment</div></Link></div>
+                <div className="myappt small-form bottom-margin-s">
+                    <div className="text-center">
+                        <div className='myappt-navigation d-flex '>
+                            <Link to={''} className="anybody semi-bold right-margin">
+                                <div className="a-tab" onClick={() => setActiveTab("Pending")}>
+                                    Pending
+                                    <div className={`nav1-line${activeTab === "Pending" ? " active" : ""}`}></div>
+                                </div>
+                            </Link>
+                            <Link to={''} className="anybody semi-bold right-margin">
+                                <div className="a-tab" onClick={() => setActiveTab("Approved")}>
+                                Approved
+                                    <div className={`nav1-line${activeTab === "Approved" ? " active" : ""}`}></div>
+                                </div>
+                            </Link>
+                            <Link to={''} className="anybody semi-bold right-margin">
+                                <div className="a-tab" onClick={() => setActiveTab("Completed")}>
+                                    Completed
+                                    <div className={`nav1-line${activeTab === "Completed" ? " active" : ""}`}></div>
+                                </div>
+                            </Link>
+                            <Link to={''} className="anybody semi-bold right-margin">
+                                <div className="a-tab" onClick={() => setActiveTab("Cancelled")}>
+                                    Cancelled
+                                    <div className={`nav1-line${activeTab === "Cancelled" ? " active" : ""}`}></div>
+                                </div>
+                            </Link>
+                        </div>
+                        {/* <div className="anybody medium-f bold">No Appointments</div>
+                        <div className="anybody semi-bold">You haven't made any appointments yet.</div>
+                        <Link to={'../BookAppointment'}><button className="main-button">Book an Appointment</button></Link> */}
                     </div>
-                    {/* <div className="anybody medium-f bold">No Appointments</div>
-                    <div className="anybody semi-bold">You haven't made any appointments yet.</div>
-                    <Link to={'../BookAppointment'}><button className="main-button">Book an Appointment</button></Link> */}
                 </div>
-            </div>
-            <div className="myappt headers small-form d-flex bottom-margin-s">
-                {renderHeaders()}
-            </div>
-            <div className="myappt small-form">
-                    {appointments.length > 0 &&
-                        appointments.map(record =>
-                            record.status === activeTab && (
-                                <AppointmentRecord e key={record.id}
-                                handleAppointmentRecordClick={handleAppointmentRecordClick}
-                                record={record}
-                                handleCancel={(e) => handleCancel(record.id, e)}/>
+                <div className="myappt headers small-form d-flex bottom-margin-s">
+                    {renderHeaders()}
+                </div>
+                <div className="myappt small-form">
+                        {appointments.length > 0 &&
+                            appointments.map(record =>
+                                record.status === activeTab && (
+                                    <AppointmentRecord key={record.id}
+                                    handleAppointmentRecordClick={handleAppointmentRecordClick}
+                                    record={record}
+                                    handleCancel={(e) => handleCancel(record.id, e)}/>
+                                )
                             )
-                        )
-                    }
-            </div>
+                        }
+                </div>
 
+            </div>
         </div>
-    </div>
-  )
+    )
 }

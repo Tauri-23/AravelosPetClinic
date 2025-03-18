@@ -23,4 +23,9 @@ class appointments extends Model
     {
         return $this->belongsTo(feedbacks::class, 'id', 'appointment');
     }
+
+    public function service()
+    {
+        return $this->belongsTo(clinic_services::class, 'service', 'id');
+    }
 }

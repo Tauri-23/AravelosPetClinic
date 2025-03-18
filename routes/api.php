@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminRolesController;
 use App\Http\Controllers\Api\AppointmentsController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ClinicServiceControllers;
 use App\Http\Controllers\Api\EmailOTPsController;
 use App\Http\Controllers\Api\FeedbacksController;
 use App\Http\Controllers\Api\inventoryCategoriesController;
@@ -203,6 +204,17 @@ Route::post('/update-sentiment-statistics-table', [SentimentAnalysisController::
 Route::get('/get-all-feedbacks', [FeedbacksController::class, 'GetAllFeedbacks']);
 
 Route::post('/post-feedback', [FeedbacksController::class, 'PostFeedback']);
+
+
+
+
+
+/*
+|----------------------------------------
+| Clinic Services
+|----------------------------------------
+*/
+Route::get('/get-all-clinic-services', [ClinicServiceControllers::class, "GetAllClinicServices"]);
 
 
 

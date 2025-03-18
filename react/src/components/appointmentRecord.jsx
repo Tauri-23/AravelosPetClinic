@@ -11,15 +11,17 @@ export default function AppointmentRecord({
         { id: "parasiticControl", label: "Parasitic Control" },
         { id: "vaccination", label: "Vaccination" },
     ];
+
     const serviceLabel = serviceOptions?.find(option => option.id === record.service)?.label || "Unknown Service";
- // Function to render the record based on status
+
+    // Function to render the record based on status
     const renderRecordByStatus = () => {
         switch (record.status) {
             case 'Pending':
                 return (
                     <div className='appt-record-three pending' onClick={() => handleAppointmentRecordClick(record)}>
                         <div className='content-deet'>{record.pet.name}</div>
-                        <div className='content-deet'>{serviceLabel}</div>
+                        <div className='content-deet'>{record.service.service ?? "Unknown Service"}</div>
                         <div className='content-deet'>
                             {new Date(record.date_time).toLocaleString('en-US', {
                                 year: 'numeric',
@@ -40,7 +42,7 @@ export default function AppointmentRecord({
                 return (
                     <div className='appt-record-four approved' onClick={() => handleAppointmentRecordClick(record)}>
                         <div className='content-deet'>{record.pet.name}</div>
-                        <div className='content-deet'>{serviceLabel}</div>
+                        <div className='content-deet'>{record.service.service ?? "Unknown Service"}</div>
                         <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
                                 year: 'numeric',
                                 month: 'long',
@@ -72,7 +74,7 @@ export default function AppointmentRecord({
                 return (
                     <div className='appt-record-three rejected' onClick={() => handleAppointmentRecordClick(record)}>
                         <div className='content-deet'>{record.pet.name}</div>
-                        <div className='content-deet'>{serviceLabel}</div>
+                        <div className='content-deet'>{record.service.service ?? "Unknown Service"}</div>
                         <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
                                 year: 'numeric',
                                 month: 'long',
@@ -91,7 +93,7 @@ export default function AppointmentRecord({
                 return (
                     <div className='appt-record-five rejected' onClick={() => handleAppointmentRecordClick(record)}>
                         <div className='content-deet'>{record.pet.name}</div>
-                        <div className='content-deet'>{serviceLabel}</div>
+                        <div className='content-deet'>{record.service.service ?? "Unknown Service"}</div>
                         <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
                                 year: 'numeric',
                                 month: 'long',
@@ -123,7 +125,7 @@ export default function AppointmentRecord({
                 return (
                     <div className='appt-record-five rejected' onClick={() => handleAppointmentRecordClick(record)}>
                         <div className='content-deet'>{record.pet.name}</div>
-                        <div className='content-deet'>{serviceLabel}</div>
+                        <div className='content-deet'>{record.service.service ?? "Unknown Service"}</div>
                         <div className='content-deet'>{new Date(record.date_time).toLocaleString('en-US', {
                                 year: 'numeric',
                                 month: 'long',
