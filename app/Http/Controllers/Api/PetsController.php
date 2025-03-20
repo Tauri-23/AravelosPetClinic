@@ -65,6 +65,8 @@ class PetsController extends Controller
     // GET
     public function GetPetWhereClient($clientId)
     {
-        return response()->json(pets::where('client', $clientId)->get());
+        return response()->json(pets::where('client', $clientId)
+        ->with(["allergies", "medications", "diseases"])
+        ->get());
     }
 }

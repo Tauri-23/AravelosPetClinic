@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 14, 2025 at 02:08 AM
+-- Generation Time: Mar 20, 2025 at 02:35 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -58,7 +58,7 @@ CREATE TABLE `appointments` (
   `id` varchar(12) NOT NULL,
   `client` varchar(6) DEFAULT NULL,
   `pet` varchar(6) DEFAULT NULL,
-  `service` varchar(255) NOT NULL,
+  `service` bigint(20) UNSIGNED DEFAULT NULL,
   `date_time` datetime NOT NULL,
   `approved_at` datetime DEFAULT NULL,
   `rejected_at` datetime DEFAULT NULL,
@@ -75,9 +75,7 @@ CREATE TABLE `appointments` (
 --
 
 INSERT INTO `appointments` (`id`, `client`, `pet`, `service`, `date_time`, `approved_at`, `rejected_at`, `cancelled_at`, `reason`, `note`, `status`, `created_at`, `updated_at`) VALUES
-('265648932507', '936822', '996845', 'checkup', '2025-01-16 09:00:00', '2025-01-13 07:17:46', NULL, NULL, NULL, 'asd', 'Completed', '2025-01-12 23:16:56', '2025-01-12 23:17:54'),
-('427842914862', '936822', '396881', 'grooming', '2025-01-12 08:30:00', '2025-01-09 08:49:07', NULL, NULL, NULL, 'Sample', 'Completed', '2025-01-08 23:34:04', '2025-01-09 00:49:13'),
-('636702974477', '936822', '396881', 'checkup', '2025-01-18 00:00:00', NULL, NULL, NULL, NULL, NULL, 'Pending', '2025-01-10 18:08:46', '2025-01-10 18:08:46');
+('396313663909', '936822', '396881', 2, '2025-03-21 00:00:00', NULL, NULL, NULL, NULL, 'Sana all', 'Pending', '2025-03-18 02:19:11', '2025-03-18 02:19:11');
 
 -- --------------------------------------------------------
 
@@ -93,14 +91,6 @@ CREATE TABLE `appointment_assigned_items` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `appointment_assigned_items`
---
-
-INSERT INTO `appointment_assigned_items` (`id`, `appointment`, `item`, `created_at`, `updated_at`) VALUES
-(5, '427842914862', '672162452845', '2025-01-09 00:49:07', '2025-01-09 00:49:07'),
-(6, '265648932507', '566985344266', '2025-01-12 23:17:46', '2025-01-12 23:17:46');
-
 -- --------------------------------------------------------
 
 --
@@ -114,14 +104,6 @@ CREATE TABLE `appointment_assigned_staffs` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `appointment_assigned_staffs`
---
-
-INSERT INTO `appointment_assigned_staffs` (`id`, `appointment`, `staff`, `created_at`, `updated_at`) VALUES
-(24, '427842914862', '907459', '2025-01-09 00:49:07', '2025-01-09 00:49:07'),
-(25, '265648932507', '186775', '2025-01-12 23:17:46', '2025-01-12 23:17:46');
 
 -- --------------------------------------------------------
 
@@ -146,6 +128,71 @@ CREATE TABLE `cache_locks` (
   `owner` varchar(255) NOT NULL,
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cat_breeds`
+--
+
+CREATE TABLE `cat_breeds` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `cat_breed` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `clinic_services`
+--
+
+CREATE TABLE `clinic_services` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `service` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `clinic_services`
+--
+
+INSERT INTO `clinic_services` (`id`, `service`, `created_at`, `updated_at`) VALUES
+(1, 'Check-up', '2025-03-18 09:50:03', '2025-03-18 09:50:03'),
+(2, 'Deworming', '2025-03-18 09:50:03', '2025-03-18 09:50:03'),
+(3, 'Grooming', '2025-03-18 09:50:03', '2025-03-18 09:50:03'),
+(4, 'Parasitic Control', '2025-03-18 09:50:03', '2025-03-18 09:50:03'),
+(5, 'Vaccination', '2025-03-18 09:50:03', '2025-03-18 09:50:03');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `email_otps`
+--
+
+CREATE TABLE `email_otps` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `otp` varchar(6) NOT NULL,
+  `for` varchar(255) NOT NULL,
+  `client` varchar(255) DEFAULT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'Active',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `email_otps`
+--
+
+INSERT INTO `email_otps` (`id`, `otp`, `for`, `client`, `status`, `created_at`, `updated_at`) VALUES
+(27, '095646', 'forgot password', '936822', 'Expired', '2025-03-14 06:28:36', '2025-03-14 06:28:43'),
+(28, '547016', 'forgot password', '936822', 'Expired', '2025-03-14 06:28:43', '2025-03-14 06:29:03'),
+(29, '038943', 'forgot password', '936822', 'Expired', '2025-03-14 06:29:03', '2025-03-14 06:35:28'),
+(30, '412194', 'forgot password', '936822', 'Expired', '2025-03-14 06:35:28', '2025-03-14 06:57:56'),
+(31, '092757', 'forgot password', '936822', 'Expired', '2025-03-14 06:57:56', '2025-03-19 16:20:29'),
+(32, '801863', 'forgot password', '936822', 'Active', '2025-03-19 16:20:29', '2025-03-19 16:20:29');
 
 -- --------------------------------------------------------
 
@@ -214,7 +261,7 @@ CREATE TABLE `inventories` (
 INSERT INTO `inventories` (`id`, `category`, `name`, `qty`, `desc`, `picture`, `measurement_value`, `measurement_unit`, `price`, `created_at`, `updated_at`) VALUES
 (1, 3, 'Nexgard Chewable Tablets Dogs>10-25kg', 10, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vitae lorem a eros lacinia dapibus et vitae mi. Donec vulputate felis diam. Nulla feugiat nisl vitae viverra scelerisque. Aenean ultricies ultrices pharetra. Cras felis diam, tristique quis enim sit amet, vulputate egestas nulla. Nulla facilisi. Aenean rhoncus porttitor leo venenatis aliquet.', 'i7TXxt2VQZEUjeOTtrdvqEv1.webp', 68, 'mg', 2067, '2024-12-17 13:44:06', '2024-12-20 21:52:23'),
 (2, 3, 'Nexgard Chewable Tablets Dogs>4-10kg', 9, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vitae lorem a eros lacinia dapibus et vitae mi. Donec vulputate felis diam. Nulla feugiat nisl vitae viverra scelerisque. Aenean ultricies ultrices pharetra. Cras felis diam, tristique quis enim sit amet, vulputate egestas nulla. Nulla facilisi. Aenean rhoncus porttitor leo venenatis aliquet.', 'K8ozaxWlCHC3vhccnZ4O5TFf.webp', 28, 'mg', 1947, '2024-12-17 14:00:04', '2025-01-12 23:17:46'),
-(3, 3, 'Saint Roche Premium Happiness Scent Dog Shampoo', 3, 'Shampoo', 'BvQacQZEYQ8oBRFgyD1SBHZY.webp', 250, 'ml', 179, '2024-12-20 11:59:19', '2025-01-09 00:49:07'),
+(3, 3, 'Saint Roche Premium Happiness Scent Dog Shampoo', 16, 'Shampoo', 'BvQacQZEYQ8oBRFgyD1SBHZY.webp', 250, 'ml', 179, '2024-12-20 11:59:19', '2025-02-24 08:40:48'),
 (4, 3, 'The Fur Life Anti Mange 3-in-1 Pet Shampoo, Conditioner and Treatment', 5, 'Shampoo', 'gGrx6SyMFUNEklyKyV47YP49.webp', 250, 'ml', 169, '2024-12-20 20:21:37', '2024-12-20 21:54:39');
 
 -- --------------------------------------------------------
@@ -240,6 +287,29 @@ INSERT INTO `inventory_categories` (`id`, `name`, `created_at`, `updated_at`) VA
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `inventory_histories`
+--
+
+CREATE TABLE `inventory_histories` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `item_name` varchar(255) NOT NULL,
+  `operator` varchar(255) NOT NULL,
+  `qty` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `inventory_histories`
+--
+
+INSERT INTO `inventory_histories` (`id`, `item_name`, `operator`, `qty`, `created_at`, `updated_at`) VALUES
+(1, 'Saint Roche Premium Happiness Scent Dog Shampoo', '+', '10', '2025-02-24 07:10:12', '2025-02-24 07:10:12'),
+(2, 'Saint Roche Premium Happiness Scent Dog Shampoo', '-', '1', '2025-02-24 08:40:48', '2025-02-24 08:40:48');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `inventory_items`
 --
 
@@ -256,33 +326,46 @@ CREATE TABLE `inventory_items` (
 --
 
 INSERT INTO `inventory_items` (`id`, `inventory`, `expiration_date`, `created_at`, `updated_at`) VALUES
+('159033964314', 3, '2028-04-05', '2025-02-24 07:10:12', '2025-02-24 07:10:12'),
 ('178002368104', 2, '2026-12-31', '2024-12-20 21:53:39', '2024-12-20 21:53:39'),
 ('210304032098', 2, '2026-12-31', '2024-12-20 21:53:40', '2024-12-20 21:53:40'),
 ('240941811915', 2, '2026-12-31', '2024-12-20 21:53:38', '2024-12-20 21:53:38'),
 ('250891225906', 4, '2026-12-31', '2024-12-20 21:54:37', '2024-12-20 21:54:37'),
+('25341451089', 3, '2028-04-05', '2025-02-24 07:10:12', '2025-02-24 07:10:12'),
 ('260949422998', 3, '2026-12-31', '2024-12-20 21:54:08', '2024-12-20 21:54:08'),
 ('281408698509', 2, '2026-12-31', '2024-12-20 21:53:40', '2024-12-20 21:53:40'),
+('322547463794', 3, '2028-04-05', '2025-02-24 07:10:12', '2025-02-24 07:10:12'),
+('34233874557', 3, '2027-03-31', '2025-02-23 20:44:49', '2025-02-23 20:44:49'),
+('342655569460', 3, '2027-03-31', '2025-02-23 20:44:49', '2025-02-23 20:44:49'),
+('354967159326', 3, '2028-04-05', '2025-02-24 07:10:12', '2025-02-24 07:10:12'),
+('357199370169', 3, '2028-04-05', '2025-02-24 07:10:12', '2025-02-24 07:10:12'),
 ('42281796751', 1, '2025-12-31', '2024-12-20 21:52:10', '2024-12-20 21:52:10'),
 ('454421751998', 4, '2025-12-31', '2024-12-20 21:54:31', '2024-12-20 21:54:31'),
 ('487180666684', 2, '2026-12-31', '2024-12-20 21:53:38', '2024-12-20 21:53:38'),
+('493364427689', 3, '2027-03-31', '2025-02-23 20:44:49', '2025-02-23 20:44:49'),
 ('543744880033', 4, '2026-12-31', '2024-12-20 21:54:38', '2024-12-20 21:54:38'),
 ('554904300848', 2, '2026-12-31', '2024-12-20 21:53:39', '2024-12-20 21:53:39'),
 ('556817306149', 1, '2026-12-31', '2024-12-20 21:52:20', '2024-12-20 21:52:20'),
 ('581453351989', 1, '2026-12-31', '2024-12-20 21:52:20', '2024-12-20 21:52:20'),
 ('582628968335', 2, '2025-12-31', '2024-12-20 21:53:32', '2024-12-20 21:53:32'),
 ('595771343232', 4, '2026-12-31', '2024-12-20 21:54:39', '2024-12-20 21:54:39'),
+('59887421571', 3, '2027-03-31', '2025-02-23 20:44:49', '2025-02-23 20:44:49'),
 ('651003557110', 1, '2026-12-31', '2024-12-20 21:52:19', '2024-12-20 21:52:19'),
-('661414603713', 3, '2026-12-31', '2024-12-20 21:54:09', '2024-12-20 21:54:09'),
+('663262095586', 3, '2028-04-05', '2025-02-24 07:10:12', '2025-02-24 07:10:12'),
 ('666732046741', 1, '2025-12-31', '2024-12-20 21:52:09', '2024-12-20 21:52:09'),
 ('674726241834', 1, '2025-12-31', '2024-12-20 21:52:08', '2024-12-20 21:52:08'),
+('676079167723', 3, '2028-04-05', '2025-02-24 07:10:12', '2025-02-24 07:10:12'),
 ('746061886740', 2, '2025-12-31', '2024-12-20 21:53:32', '2024-12-20 21:53:32'),
 ('746597337659', 1, '2026-12-31', '2024-12-20 21:52:23', '2024-12-20 21:52:23'),
 ('798831105944', 2, '2025-12-31', '2024-12-20 21:53:33', '2024-12-20 21:53:33'),
 ('800940192048', 1, '2026-12-31', '2024-12-20 21:52:19', '2024-12-20 21:52:19'),
 ('850421904496', 3, '2026-12-31', '2024-12-20 21:54:13', '2024-12-20 21:54:13'),
+('858845533378', 3, '2028-04-05', '2025-02-24 07:10:12', '2025-02-24 07:10:12'),
 ('870605163274', 1, '2026-12-31', '2024-12-20 21:52:21', '2024-12-20 21:52:21'),
+('904123355985', 3, '2028-04-05', '2025-02-24 07:10:12', '2025-02-24 07:10:12'),
 ('968444821041', 1, '2026-12-31', '2024-12-20 21:52:22', '2024-12-20 21:52:22'),
-('968964529180', 4, '2025-12-31', '2024-12-20 21:54:31', '2024-12-20 21:54:31');
+('968964529180', 4, '2025-12-31', '2024-12-20 21:54:31', '2024-12-20 21:54:31'),
+('982701118590', 3, '2028-04-05', '2025-02-24 07:10:12', '2025-02-24 07:10:12');
 
 -- --------------------------------------------------------
 
@@ -373,8 +456,16 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (36, '2024_12_14_141656_create_appointment_assigned_items_table', 24),
 (37, '2024_12_14_151231_create_inventory_items_table', 25),
 (38, '2025_01_07_043223_create_sentiment_analyses_table', 26),
-(39, '2024_09_30_090820_create_appointments_table', 27),
-(42, '2025_01_09_125629_create_feedbacks_table', 28);
+(42, '2025_01_09_125629_create_feedbacks_table', 28),
+(43, '2025_02_17_194346_create_cat_breeds_table', 29),
+(45, '2025_02_24_140148_create_inventory_histories_table', 30),
+(46, '2025_03_13_144754_create_email_otps_table', 31),
+(47, '2025_03_18_091220_create_clinic_services_table', 32),
+(48, '2024_09_30_090820_create_appointments_table', 33),
+(49, '2025_03_20_010050_create_pet_medical_history_medications_table', 34),
+(50, '2025_03_20_010423_create_pet_medical_history_allergies_table', 34),
+(51, '2025_03_20_010542_create_pet_medical_history_diseases_table', 34),
+(52, '2025_03_20_011002_create_pet_medical_history_vaccinations_table', 34);
 
 -- --------------------------------------------------------
 
@@ -435,7 +526,7 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (21, 'App\\Models\\user_clients', 0, 'main', '63fdba02d50457492dfd296e8d290917c2c0efb9625a367863e16d9d4cfacfe4', '[\"*\"]', NULL, NULL, '2024-08-21 02:59:44', '2024-08-21 02:59:44'),
 (22, 'App\\Models\\user_clients', 185147, 'main', '5a100b4faaadfb32fe3256cad1caf3e6b9d2b15a0d9455b0202f7ac390c48545', '[\"*\"]', '2024-08-21 03:00:20', NULL, '2024-08-21 03:00:06', '2024-08-21 03:00:20'),
 (31, 'App\\Models\\user_clients', 179411, 'main', 'f454e5fdb8699ae57be06d632b559ecc4a93a3731be03ac84ee2bb6257bfdf70', '[\"*\"]', '2024-10-07 05:08:52', NULL, '2024-10-03 08:29:53', '2024-10-07 05:08:52'),
-(72, 'App\\Models\\user_admins', 111111, 'main', '367124192904fdad3551d02102af3432f45366c3ef02f9d84330f337e80a91eb', '[\"*\"]', '2025-01-13 03:10:14', NULL, '2025-01-12 23:18:56', '2025-01-13 03:10:14');
+(81, 'App\\Models\\user_clients', 936822, 'main', 'bd39eed5a31d52411b372d2890e3b70e191f81cf0fc6017091e2cd28b302b337', '[\"*\"]', '2025-03-19 17:34:11', NULL, '2025-03-19 16:21:14', '2025-03-19 17:34:11');
 
 -- --------------------------------------------------------
 
@@ -464,6 +555,62 @@ CREATE TABLE `pets` (
 INSERT INTO `pets` (`id`, `client`, `name`, `type`, `breed`, `gender`, `status`, `dob`, `picture`, `created_at`, `updated_at`) VALUES
 ('396881', '936822', 'Lucky', 'Dog', 'Shiranian', 'Male', 'active', '2020-09-16', 'ZOVJgroAJvlGO1E3ekAQW4vW.png', '2024-11-29 07:31:49', '2024-11-29 07:31:49'),
 ('996845', '936822', 'Heart', 'Dog', 'Shih Apso', 'Female', 'active', '2022-10-16', 'gB4Mk9HFhKDj1AuRB2Qi7AKe.png', '2025-01-10 18:10:44', '2025-01-10 18:10:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pet_medical_history_allergies`
+--
+
+CREATE TABLE `pet_medical_history_allergies` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `pet` varchar(6) DEFAULT NULL,
+  `allergy` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pet_medical_history_diseases`
+--
+
+CREATE TABLE `pet_medical_history_diseases` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `pet` varchar(6) DEFAULT NULL,
+  `disease` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pet_medical_history_medications`
+--
+
+CREATE TABLE `pet_medical_history_medications` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `pet` varchar(6) DEFAULT NULL,
+  `medication` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pet_medical_history_vaccinations`
+--
+
+CREATE TABLE `pet_medical_history_vaccinations` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `pet` varchar(6) DEFAULT NULL,
+  `filename` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -612,7 +759,7 @@ CREATE TABLE `user_clients` (
 
 INSERT INTO `user_clients` (`id`, `fname`, `mname`, `lname`, `email`, `password`, `bday`, `gender`, `address`, `phone`, `picture`, `status`, `created_at`, `updated_at`) VALUES
 ('179411', 'Xander Aleck Gwynnz', NULL, 'Deloso', 'xagdeloso02@gmail.com', '$2y$12$9Xv83N59bzRSzFY5fSbzdOpdPUtZGfQNJk9c6hshzaeO.yW064J5q', NULL, 'Female', NULL, '09273915985', 'defaultPFP.png', 'active', '2024-09-29 10:19:58', '2024-10-17 19:57:14'),
-('936822', 'Airich Jay', NULL, 'Diawan', 'airichjaydiawan@gmail.com', '$2y$12$l8ezeHSrUoGZxylSaYKhL.v0z15YXiK0Ym8VGY9R2JzWT3KHhcv4W', NULL, 'Male', NULL, '09677644695', 'defaultPFP.png', 'active', '2024-08-20 11:01:53', '2024-10-30 21:23:50');
+('936822', 'Airich Jay', NULL, 'Diawan', 'airichjaydiawan@gmail.com', '$2y$12$gMBTcbHP/8gwJ95jjXV8X.0RbkqVUOhM2QPPZ.D31n79laSdcMjdC', NULL, 'Male', NULL, '09677644695', 'defaultPFP.png', 'active', '2024-08-20 11:01:53', '2025-03-14 07:00:07');
 
 --
 -- Indexes for dumped tables
@@ -630,7 +777,8 @@ ALTER TABLE `admin_roles`
 ALTER TABLE `appointments`
   ADD PRIMARY KEY (`id`),
   ADD KEY `appointments_client_foreign` (`client`),
-  ADD KEY `appointments_pet_foreign` (`pet`);
+  ADD KEY `appointments_pet_foreign` (`pet`),
+  ADD KEY `appointments_service_foreign` (`service`);
 
 --
 -- Indexes for table `appointment_assigned_items`
@@ -661,6 +809,25 @@ ALTER TABLE `cache_locks`
   ADD PRIMARY KEY (`key`);
 
 --
+-- Indexes for table `cat_breeds`
+--
+ALTER TABLE `cat_breeds`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `clinic_services`
+--
+ALTER TABLE `clinic_services`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `email_otps`
+--
+ALTER TABLE `email_otps`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `email_otps_client_foreign` (`client`);
+
+--
 -- Indexes for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -686,6 +853,12 @@ ALTER TABLE `inventories`
 -- Indexes for table `inventory_categories`
 --
 ALTER TABLE `inventory_categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `inventory_histories`
+--
+ALTER TABLE `inventory_histories`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -741,6 +914,34 @@ ALTER TABLE `personal_access_tokens`
 ALTER TABLE `pets`
   ADD PRIMARY KEY (`id`),
   ADD KEY `pets_client_foreign` (`client`);
+
+--
+-- Indexes for table `pet_medical_history_allergies`
+--
+ALTER TABLE `pet_medical_history_allergies`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pet_medical_history_allergies_pet_foreign` (`pet`);
+
+--
+-- Indexes for table `pet_medical_history_diseases`
+--
+ALTER TABLE `pet_medical_history_diseases`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pet_medical_history_diseases_pet_foreign` (`pet`);
+
+--
+-- Indexes for table `pet_medical_history_medications`
+--
+ALTER TABLE `pet_medical_history_medications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pet_medical_history_medications_pet_foreign` (`pet`);
+
+--
+-- Indexes for table `pet_medical_history_vaccinations`
+--
+ALTER TABLE `pet_medical_history_vaccinations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pet_medical_history_vaccinations_pet_foreign` (`pet`);
 
 --
 -- Indexes for table `sentiment_analyses`
@@ -803,6 +1004,24 @@ ALTER TABLE `appointment_assigned_staffs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
+-- AUTO_INCREMENT for table `cat_breeds`
+--
+ALTER TABLE `cat_breeds`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `clinic_services`
+--
+ALTER TABLE `clinic_services`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `email_otps`
+--
+ALTER TABLE `email_otps`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
 -- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -827,22 +1046,52 @@ ALTER TABLE `inventory_categories`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
+-- AUTO_INCREMENT for table `inventory_histories`
+--
+ALTER TABLE `inventory_histories`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+
+--
+-- AUTO_INCREMENT for table `pet_medical_history_allergies`
+--
+ALTER TABLE `pet_medical_history_allergies`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `pet_medical_history_diseases`
+--
+ALTER TABLE `pet_medical_history_diseases`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `pet_medical_history_medications`
+--
+ALTER TABLE `pet_medical_history_medications`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `pet_medical_history_vaccinations`
+--
+ALTER TABLE `pet_medical_history_vaccinations`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `sentiment_analyses`
@@ -865,7 +1114,8 @@ ALTER TABLE `users`
 --
 ALTER TABLE `appointments`
   ADD CONSTRAINT `appointments_client_foreign` FOREIGN KEY (`client`) REFERENCES `user_clients` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `appointments_pet_foreign` FOREIGN KEY (`pet`) REFERENCES `pets` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `appointments_pet_foreign` FOREIGN KEY (`pet`) REFERENCES `pets` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `appointments_service_foreign` FOREIGN KEY (`service`) REFERENCES `clinic_services` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `appointment_assigned_items`
@@ -880,6 +1130,12 @@ ALTER TABLE `appointment_assigned_items`
 ALTER TABLE `appointment_assigned_staffs`
   ADD CONSTRAINT `appointment_assigned_staffs_appointment_foreign` FOREIGN KEY (`appointment`) REFERENCES `appointments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `appointment_assigned_staffs_staff_foreign` FOREIGN KEY (`staff`) REFERENCES `user_admins` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `email_otps`
+--
+ALTER TABLE `email_otps`
+  ADD CONSTRAINT `email_otps_client_foreign` FOREIGN KEY (`client`) REFERENCES `user_clients` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `feedbacks`
@@ -911,6 +1167,30 @@ ALTER TABLE `inventory_items_useds`
 --
 ALTER TABLE `pets`
   ADD CONSTRAINT `pets_client_foreign` FOREIGN KEY (`client`) REFERENCES `user_clients` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `pet_medical_history_allergies`
+--
+ALTER TABLE `pet_medical_history_allergies`
+  ADD CONSTRAINT `pet_medical_history_allergies_pet_foreign` FOREIGN KEY (`pet`) REFERENCES `pets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `pet_medical_history_diseases`
+--
+ALTER TABLE `pet_medical_history_diseases`
+  ADD CONSTRAINT `pet_medical_history_diseases_pet_foreign` FOREIGN KEY (`pet`) REFERENCES `pets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `pet_medical_history_medications`
+--
+ALTER TABLE `pet_medical_history_medications`
+  ADD CONSTRAINT `pet_medical_history_medications_pet_foreign` FOREIGN KEY (`pet`) REFERENCES `pets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `pet_medical_history_vaccinations`
+--
+ALTER TABLE `pet_medical_history_vaccinations`
+  ADD CONSTRAINT `pet_medical_history_vaccinations_pet_foreign` FOREIGN KEY (`pet`) REFERENCES `pets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `user_admins`
