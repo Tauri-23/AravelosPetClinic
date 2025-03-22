@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\inventoryCategoriesController;
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\InventoryHistoryController;
 use App\Http\Controllers\Api\InventoryItemsController;
+use App\Http\Controllers\Api\PetMedicalHistoriesController;
 use App\Http\Controllers\Api\PetsController;
 use App\Http\Controllers\Api\SentimentAnalysisController;
 use App\Http\Controllers\Api\StaffsController;
@@ -120,6 +121,19 @@ Route::post('/approve-appointment', [AppointmentsController::class,'approveAppoi
 */
 Route::post('/add-pet', [PetsController::class,'CreatePet']);
 Route::get('/retrieve-pet-where-client/{clientId}', [PetsController::class,'GetPetWhereClient']);
+
+
+
+
+
+/*
+|----------------------------------------
+| PET MEDICAL HISTORY
+|----------------------------------------
+*/
+Route::post('/add-pet-allergies', [PetMedicalHistoriesController::class,'AddPetAllergies']);
+Route::post('/add-pet-medications', [PetMedicalHistoriesController::class,'AddPetMedications']);
+Route::post('/add-pet-diseases', [PetMedicalHistoriesController::class,'AddPetDiseases']);
 
 
 

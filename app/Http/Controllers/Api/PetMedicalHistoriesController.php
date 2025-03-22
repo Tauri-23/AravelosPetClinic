@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\pet_medical_history_allergies;
 use App\Models\pet_medical_history_diseases;
 use App\Models\pet_medical_history_medications;
+use App\Models\pets;
 use DB;
 use Illuminate\Http\Request;
 
@@ -26,7 +27,7 @@ class PetMedicalHistoriesController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => 'success',
-                'allergies' => $allergies
+                'pets' => pets::where('client', $request->client)->with(["allergies", "medications", "diseases"])->get()
             ]);
         }
         catch(\Exception $e)
@@ -53,7 +54,7 @@ class PetMedicalHistoriesController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => 'success',
-                'medication' => $medications
+                'pets' => pets::where('client', $request->client)->with(["allergies", "medications", "diseases"])->get()
             ]);
         }
         catch(\Exception $e)

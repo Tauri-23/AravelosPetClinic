@@ -22,6 +22,9 @@ import AddCategoryConfirmationModal1 from "../components/Modals/addCategoryConfi
 import AddInventoryItemsModal1 from "../components/Modals/addInventoryItemModal1.jsx";
 import GeneralConfirmationModal from "../components/Modals/general_confirmation_modal1.jsx";
 import AdminViewAccountInfo from "../components/Modals/adminViewAccountInfo.jsx";
+import AddPetAllergiesModal from "../components/Modals/addPetAllergiesModal.jsx";
+import AddPetMedicationsModal from "../components/Modals/addPetMedicationsModal.jsx";
+import AddPetDiseasesModal from "../components/Modals/addPetDiseasesModal.jsx";
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -93,6 +96,20 @@ const ModalManager = () => {
 
             case 'AddInventoryItemsModal1':
                 return <AddInventoryItemsModal1 {...modalState.props} onClose={hideModal}/>;
+
+
+
+
+
+            /**
+             * PET PROFILE
+             */
+            case 'AddPetAllergiesModal':
+                return <AddPetAllergiesModal {...modalState.props} onClose={hideModal}/>;
+            case 'AddPetMedicationsModal':
+                return <AddPetMedicationsModal {...modalState.props} onClose={hideModal}/>;
+            case 'AddPetDiseasesModal':
+                return <AddPetDiseasesModal {...modalState.props} onClose={hideModal}/>;
             
             
             

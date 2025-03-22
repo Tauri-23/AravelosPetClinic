@@ -83,8 +83,93 @@ const userprofiles = () => {
         showModal('AddPetModal1', { handleAddPetPost });
     };
 
-    const handleAddPetMedicalHistory = () => {
+    /**
+     * 
+     * @param {string} mode - (allergy | medication | disease)
+     */
+    const handleAddPetMedicalHistory = (mode) => {
+        switch(mode) {
+            // Pet Allergies
+            case "allergy":
+                showModal("AddPetAllergiesModal", {
+                    handleAddPetAllergy: (allergy) => {
+                        const formData = new FormData();
+                        formData.append('petId', selectedPet.id);
+                        formData.append('client', user.id);
+                        formData.append('allergy', allergy);
 
+
+                        axiosClient.post("/add-pet-allergies", formData)
+                        .then(({data}) => {
+                            console.log(data.pets);
+                            if(data.status === 200) {
+                                setPets(data.pets);
+                                setSelectedPet(data.pets.filter(x => x.id == selectedPet.id)[0]);
+                            }
+                        }).catch(e => console.error(e));
+                    }
+                });
+                break;
+            case "medication":
+                showModal("AddPetMedicationsModal", {
+                    handleAddPetMedication: (medication) => {
+                        const formData = new FormData();
+                        formData.append('petId', selectedPet.id);
+                        formData.append('client', user.id);
+                        formData.append('medication', medication);
+
+
+                        axiosClient.post("/add-pet-medications", formData)
+                        .then(({data}) => {
+                            console.log(data.pets);
+                            if(data.status === 200) {
+                                setPets(data.pets);
+                                setSelectedPet(data.pets.filter(x => x.id == selectedPet.id)[0]);
+                            }
+                        }).catch(e => console.error(e));
+                    }
+                });
+                break;
+            case "disease":
+                showModal("AddPetDiseasesModal", {
+                    handleAddPetDisease: (disease) => {
+                        const formData = new FormData();
+                        formData.append('petId', selectedPet.id);
+                        formData.append('client', user.id);
+                        formData.append('disease', disease);
+
+                        
+                        axiosClient.post("/add-pet-diseases", formData)
+                        .then(({data}) => {
+                            console.log(data.pets);
+                            if(data.status === 200) {
+                                setPets(data.pets);
+                                setSelectedPet(data.pets.filter(x => x.id == selectedPet.id)[0]);
+                            }
+                        }).catch(e => console.error(e));
+                    }
+                });
+                break;
+            default:
+                return;
+        }
+    }
+
+    const handleAddPetMedicalHistoryPost = (mode, data) => {
+        const apiUrls = {
+            allergy: "/add-pet-allergies",
+            medication: "/add-pet-medications",
+            disease: "/add-pet-diseases"
+        }
+
+
+        
+
+        if(mode != "vaccination") {
+            formData.append(String(mode), data);
+        }
+
+        
     }
 
 
@@ -191,6 +276,10 @@ const userprofiles = () => {
 
                     </div>
                 </div>
+
+
+
+                {/* PET PROFILE */}
                 <div className='prof small-form user-pets'>
                     <div className="prof header bold anybody semi-medium-f">Pet Profiles</div>
                     <div className="pet-profiles">
@@ -219,39 +308,46 @@ const userprofiles = () => {
                             <div>
                                 <div className="d-flex justify-content-between align-items-center">
                                     <h5>Allergies</h5>
-                                    <button className="primary-btn-blue1" onClick={() => handleAddPetMedicalHistory()}>Add Item</button>
+                                    <button className="primary-btn-blue1" onClick={() => handleAddPetMedicalHistory("allergy")}>Add Item</button>
                                 </div>
-                                {selectedPet?.allergies.length > 0
-                                ? selectedPet?.allergies.map(allergy => (
-                                    <>{allergy.allergy}</>
-                                ))
-                                : (<>No Records</>)}
+                                <div className="d-flex flex-direction-y gap3">
+                                    {selectedPet?.allergies.length > 0
+                                    ? selectedPet?.allergies.map((allergy, index) => (
+                                        <div key={index}>{allergy.allergy}</div>
+                                    ))
+                                    : (<>No Records</>)}
+                                </div>
                             </div>
 
                             {/* Medications */}
                             <div>
                                 <div className="d-flex justify-content-between align-items-center">
                                     <h5>Medications</h5>
-                                    <button className="primary-btn-blue1" onClick={() => handleAddPetMedicalHistory()}>Add Item</button>
+                                    <button className="primary-btn-blue1" onClick={() => handleAddPetMedicalHistory("medication")}>Add Item</button>
                                 </div>
-                                {selectedPet?.medications.length > 0
-                                ? selectedPet?.medications.map(medication => (
-                                    <>{medication.medication}</>
-                                ))
-                                : (<>No Records</>)}
+                                <div className="d-flex flex-direction-y gap3">
+                                    {selectedPet?.medications.length > 0
+                                    ? selectedPet?.medications.map((medication, index) => (
+                                        <div key={index}>{medication.medication}</div>
+                                    ))
+                                    : (<>No Records</>)}
+                                </div>
                             </div>
 
                             {/* Diseases */}
                             <div>
                                 <div className="d-flex justify-content-between align-items-center">
                                     <h5>Diseases / Conditions</h5>
-                                    <button className="primary-btn-blue1" onClick={() => handleAddPetMedicalHistory()}>Add Item</button>
+                                    <button className="primary-btn-blue1" onClick={() => handleAddPetMedicalHistory("disease")}>Add Item</button>
                                 </div>
-                                {selectedPet?.diseases.length > 0
-                                ? selectedPet?.diseases.map(disease => (
-                                    <>{disease.disease}</>
-                                ))
-                                : (<>No Records</>)}
+                                <div className="d-flex flex-direction-y gap3">
+                                    {selectedPet?.diseases.length > 0
+                                    ? selectedPet?.diseases.map((disease, index) => (
+                                        <div key={index}>{disease.disease}</div>
+                                    ))
+                                    : (<>No Records</>)}
+                                </div>
+                                
                             </div>
 
                             {/* Vaccinations */}
