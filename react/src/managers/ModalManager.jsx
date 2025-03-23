@@ -25,6 +25,7 @@ import AdminViewAccountInfo from "../components/Modals/adminViewAccountInfo.jsx"
 import AddPetAllergiesModal from "../components/Modals/addPetAllergiesModal.jsx";
 import AddPetMedicationsModal from "../components/Modals/addPetMedicationsModal.jsx";
 import AddPetDiseasesModal from "../components/Modals/addPetDiseasesModal.jsx";
+import VerifyPhoneModal from "../components/Modals/verifyPhoneModal.jsx";
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -110,6 +111,16 @@ const ModalManager = () => {
                 return <AddPetMedicationsModal {...modalState.props} onClose={hideModal}/>;
             case 'AddPetDiseasesModal':
                 return <AddPetDiseasesModal {...modalState.props} onClose={hideModal}/>;
+
+
+
+
+
+            /**
+             * Profile
+             */
+            case 'VerifyPhoneModal':
+                return <VerifyPhoneModal {...modalState.props} onClose={hideModal}/>
             
             
             

@@ -10,6 +10,7 @@
     import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
     import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
     import * as Icon from 'react-bootstrap-icons';
+import { Button } from 'antd';
 
 const userprofiles = () => {
     const { showModal } = useModal();
@@ -155,21 +156,34 @@ const userprofiles = () => {
         }
     }
 
-    const handleAddPetMedicalHistoryPost = (mode, data) => {
-        const apiUrls = {
-            allergy: "/add-pet-allergies",
-            medication: "/add-pet-medications",
-            disease: "/add-pet-diseases"
-        }
+    const handleVerifyPhone = () => {
+        const formData = new FormData();
+        formData.append('client', user.id);
+        formData.append('for', 'phone verification');
 
+        axiosClient.post('/client-send-sms-otp', formData)
+        .then(({data}) => {
+            console.log(data.smsStatus);
+            if(data.status === 200) {
+                showModal('VerifyPhoneModal');
+            }
+            notify(data.status === 200 ? "success" : "error", data.message, "top-center", 3000);
+        }).catch(error => console.error(error));
+    }
 
-        
+    const handleVerifyEmail = () => {
+        const formData = new FormData();
+        formData.append('client', user.id);
+        formData.append('for', 'email verification');
 
-        if(mode != "vaccination") {
-            formData.append(String(mode), data);
-        }
-
-        
+        axiosClient.post('/client-send-sms-otp', formData)
+        .then(({data}) => {
+            console.log(data.smsStatus);
+            if(data.status === 200) {
+                showModal('VerifyPhoneModal');
+            }
+            notify(data.status === 200 ? "success" : "error", data.message, "top-center", 3000);
+        }).catch(error => console.error(error));
     }
 
 
@@ -200,8 +214,8 @@ const userprofiles = () => {
                             <p>Address: {user.address || "n/a"}</p>
                             <p>Phone: {user.phone || "n/a"}</p>
                             <button onClick={() => handleEditUserClick(user)} className="primary-btn-blue1">Update</button> */}
-
                         </div>
+                        
 
                     </div>
                     <div className="left-margin top-margin">
@@ -263,13 +277,34 @@ const userprofiles = () => {
                             {/* <div className="primary-btn-blue1">Change Password</div> */}
                             {/* <u>Change Password</u> */}
                             <div className='detail-row semi-bold'>
-                            <div className="label-div">Password: </div>
-                            <input 
-                            className="left-margin ud detail-cont" 
-                            type="password" 
-                            value="********" 
-                            readOnly />
-                            <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("phone")}/>
+                                <div className="label-div">Password: </div>
+                                <input 
+                                className="left-margin ud detail-cont" 
+                                type="password" 
+                                value="********" 
+                                readOnly />
+                                <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("phone")}/>
+                            </div>
+                            
+
+                            {/*  */}
+                            <div className='d-flex w-100 align-items-center gap1 mar-top-1'>
+                                <div>Phone: {user.phone}</div>
+                                <Button
+                                disabled={user.phone_verified}
+                                onClick={handleVerifyPhone}
+                                type='primary'
+                                >
+                                    {user.phone_verified ? "Verified" : 'Verify Phone'}
+                                </Button>
+                            </div>
+                            <div className='d-flex w-100 align-items-center gap1 mar-top-3'>
+                                <div>email: {user.email}</div>
+                                <Button
+                                type='primary'
+                                >
+                                    Verify Email
+                                </Button>
                             </div>
 
                         </div>

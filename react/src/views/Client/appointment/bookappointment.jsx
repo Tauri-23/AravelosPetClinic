@@ -3,12 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import "../../../assets/css/bookappointment.css";
 import ClientCalendar from "../../../components/clientCalendar.jsx";
 import CustomToolbar from "../../../components/custom_toolbar.jsx";
-import { isEmptyOrSpaces, notify } from "../../../assets/js/utils.jsx";
+import { formatTime, isEmptyOrSpaces, notify } from "../../../assets/js/utils.jsx";
 import axiosClient from "../../../axios-client.js";
 import { useModal } from "../../../contexts/ModalContext.jsx";
 import { useStateContext } from "../../../contexts/ContextProvider.jsx";
 import { fetchAllPetsWhereClient } from '../../../services/PetServices';
-import {Select, Spin} from "antd";
+import {Button, Calendar, DatePicker, Select, Spin, Steps, TimePicker} from "antd";
 import { fetchAllClinicServices } from "../../../services/ClinicServicesServices.jsx";
 
 export default function BookAppointment() {
@@ -20,23 +20,21 @@ export default function BookAppointment() {
     const {showModal} = useModal();
 
     // Data from database
-    const {user} = useStateContext();const schedOptions = [
-        { value: "month", label: "By Day" },
-        { value: "week", label: "By Day Timeslot" },
-    ];
+    const {user} = useStateContext();
     const [clinicServices, setClinicServices] = useState(null);
     const [pets, setPets] = useState(null);
 
-    // Btn State
-    const [submitBtnActive, setSubmitBtnActive] = useState(false);
+    const timeOptions = ["08:00:00", "09:00:00", "10:00:00", "11:00:00", "13:00:00", "14:00:00", "15:00:00", "16:00:00"]
 
-    // selecteds
-    const [selectedDateTime, setSelectedDateTime] = useState(null);
-    const [calendarView, setCalendarView] = useState("month"); // Default to "month" view // State to hold calendar view
-    const [selectedPet, setSelectedPet] = useState('');
-    const [selectedService, setSelectedService] = useState('');
-    const [dateUnformatted, setDateUnformatted] = useState(null); // Add this line for unformatted date
-    const [note, setNote] = useState('');
+    // selected
+    const [selectedPet, setSelectedPet] = useState("");
+    const [selectedService, setSelectedService] = useState("");
+    const [note, setNote] = useState("");
+
+    const [selectedDate, setSelectedDate] = useState("");
+    const [selectedTime, setSelectedTime] = useState("");
+
+    const [step, setStep] = useState(0);
     
 
 
@@ -68,7 +66,7 @@ export default function BookAppointment() {
         showModal('ConfirmActionModal1', {
             handlePost: () => {
                 const formData = new FormData();
-                formData.append("dateTime", dateUnformatted);
+                formData.append("dateTime", `${selectedDate} ${selectedTime}`);
                 formData.append("pet", selectedPet);
                 formData.append('client', user.id);
                 formData.append("service", selectedService);
@@ -90,41 +88,18 @@ export default function BookAppointment() {
 
     };
 
-    const handleDateSelect = (dateTime) => {
-        const date = new Date(dateTime);
-        if (calendarView === "month") {
-            const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);//CONVERT TO UTC >:(
-            setDateUnformatted(date.toISOString().slice(0, 10));
-            const formattedDate = date.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-            });
-            setDateUnformatted(localDate.toISOString().slice(0, 19).replace('T', ' '));
-            setSelectedDateTime(formattedDate);
-        } else if (calendarView === "week") {
-            const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);//CONVERT TO UTC >:(
-            const formattedDateTime = date.toLocaleString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
-                hour12: true,
-            });
-            setSelectedDateTime(formattedDateTime);
-            setDateUnformatted(localDate.toISOString().slice(0, 19).replace('T', ' '));
+    const isButtonDisabled = () => {
+        switch(step) {
+            case 0:
+                return selectedPet == "" || selectedService == "";
+            default:
+                return isEmptyOrSpaces(selectedDate) || isEmptyOrSpaces(selectedTime);
         }
-    };
+    }
 
-    useEffect(() => {
-        if(selectedDateTime === null || selectedPet === "" || selectedService === "") {
-            setSubmitBtnActive(false);
-        }
-        else {
-            setSubmitBtnActive(true);
-        }
-    }, [selectedDateTime, selectedPet, selectedService]);
+    const onDateSelect = (date, dateString) => {
+        setSelectedDate(dateString);
+    };
 
 
 
@@ -145,36 +120,23 @@ export default function BookAppointment() {
                                 </Link>
                         </div>
 
-                        <div className="grid inter">
-                            <ClientCalendar
-                                onDateSelect={handleDateSelect}
-                                calendarView={calendarView}
-                                CustomToolbar={CustomToolbar} // Pass the custom toolbar here
-                            />
+                        <div className="grid inter justify-content-center">
                             <div className="bookapt small-form">
-                                <div className="bottom-margin semi-bold anybody semi-medium-f">Appointment Details</div>
-                                <form className="d-flex row"onSubmit={handleSubmit}>
-                                    <div className="bottom-margin-s"><span className="semi-bold">Date: </span><span className="bottom-margin">{selectedDateTime || 'Select a date'}</span></div>
+                                <Steps
+                                size="small"
+                                current={step}
+                                labelPlacement="vertical"
+                                items={[
+                                    {title: "Appointment Details"},
+                                    {title: "Schedule"},
+                                ]}
+                                className="mar-bottom-1"/>
 
-                                    {/* Choose Schedule Type */}
-                                    <div className="d-flex flex-direction-y gap4 mar-bottom-3">
+                                {step === 0 && (
+                                    <form className="d-flex row"onSubmit={handleSubmit}>
 
-                                            <label htmlFor="viewType" className="choose semi-bold">Choose Scheduling</label>
-                                            <Select
-                                            id="viewType"
-                                            size="large"
-                                            value={calendarView}
-                                            options={[
-                                                ...schedOptions.map(sched => 
-                                                ({label: sched.label, value: sched.value})
-                                                )
-                                            ]}
-                                            onChange={(e) => setCalendarView(e)}/>
-
-                                    </div>
-
-                                    {/* Select a Pet */}
-                                    <div className="d-flex flex-direction-y gap4 mar-bottom-3">
+                                        {/* Select a Pet */}
+                                        <div className="d-flex flex-direction-y gap4 mar-bottom-3">
 
                                             <label htmlFor="petSelect" className="choose semi-bold">Choose Pet</label>
                                             <Select
@@ -190,10 +152,10 @@ export default function BookAppointment() {
                                             onChange={(e) => setSelectedPet(e)}
                                             />
 
-                                    </div>
+                                        </div>
 
-                                    {/* Select a Service Type */}
-                                    <div className="d-flex flex-direction-y gap4 mar-bottom-3">
+                                        {/* Select a Service Type */}
+                                        <div className="d-flex flex-direction-y gap4 mar-bottom-3">
 
                                             <label htmlFor="serviceType" className="choose semi-bold">Choose Service</label>
                                             <Select
@@ -209,28 +171,80 @@ export default function BookAppointment() {
                                             onChange={(e) => setSelectedService(e)}
                                             />
 
-                                    </div>
+                                        </div>
 
-                                    <div className="d-flex flex-direction-y gap4 mar-bottom-3">
+                                        <div className="d-flex flex-direction-y gap4 mar-bottom-3">
                                             <label htmlFor="note" className="choose semi-bold">Note (optional)</label>
                                             <textarea 
                                             id="note"
                                             value={note}
                                             onInput={(e) => setNote(e.target.value)}></textarea>
-                                    </div>
+                                        </div>
 
-                                    <div className="d-flex justify-content-center">
+                                        <div className="d-flex justify-content-center">
+                                            <Button
+                                            size="large"
+                                            type="primary"
+                                            disabled={isButtonDisabled()}
+                                            onClick={() => setStep(prev => prev + 1)}
+                                            >
+                                                Next
+                                            </Button>
+                                        </div>
+                                    </form>
+                                )}
 
-                                    <button
-                                            disabled={!submitBtnActive}
-                                            className={`primary-btn-blue1 ${submitBtnActive ? '' : 'disabled'}`}
+                                {step === 1 && (
+                                    <div className="d-flex flex-direction-y gap3">
+                                        <div>
+                                            <label htmlFor="date">Select Date</label>
+                                            <DatePicker 
+                                            size="large" 
+                                            id="date" 
+                                            className="w-100"
+                                            onChange={onDateSelect}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label htmlFor="time">Select Date</label>
+                                            <div className="d-flex gap3 flex-wrap">
+                                                {timeOptions.map(time => (
+                                                    <Button
+                                                    key={time}
+                                                    type={selectedTime === time ? "primary" : "default"}
+                                                    onClick={() => setSelectedTime(time)}>
+                                                        {formatTime(time)}
+                                                    </Button>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        
+
+                                        <div className="d-flex justify-content-center gap3">
+                                            <Button
+                                            type="default"
+                                            size="large"
+                                            onClick={() => setStep(prev => prev -1)}
+                                            >
+                                                Back
+                                            </Button>
+
+                                            <Button
+                                            type="primary"
+                                            size="large"
+                                            disabled={isButtonDisabled()}
                                             onClick={handleSubmit}
-                                        >
-                                            Book Appointment
-                                    </button>
+                                            >
+                                                Book Appointment
+                                            </Button>
+                                        </div>
                                     </div>
-                                </form>
+                                )}
                             </div>
+
+
                         </div>
                     </>
                 )

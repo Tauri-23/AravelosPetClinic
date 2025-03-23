@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('phone');
             $table->longtext('picture')->nullable();
+            $table->boolean("email_verified")->default(false);
+            $table->boolean('phone_verified')->default(false);
             $table->string('status')->default('active');
             $table->timestamps();
         });

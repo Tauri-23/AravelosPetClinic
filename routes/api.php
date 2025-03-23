@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\InventoryItemsController;
 use App\Http\Controllers\Api\PetMedicalHistoriesController;
 use App\Http\Controllers\Api\PetsController;
 use App\Http\Controllers\Api\SentimentAnalysisController;
+use App\Http\Controllers\Api\SMSOTPsController;
 use App\Http\Controllers\Api\StaffsController;
 use App\Http\Controllers\Api\UserAdminsController;
 use App\Http\Controllers\Api\UserClientsController;
@@ -236,8 +237,20 @@ Route::get('/get-all-clinic-services', [ClinicServiceControllers::class, "GetAll
 
 /*
 |----------------------------------------
-| OTP
+| EMAIL OTP
 |----------------------------------------
 */
 Route::post('/client-send-email-otp', [EmailOTPsController::class, 'GenerateAndSendOTPToEmail']);
 Route::post('/client-verify-email-otp', [EmailOTPsController::class, 'VerifyEmailOTP']);
+
+
+
+
+
+/*
+|----------------------------------------
+| SMS/PHONE OTP
+|----------------------------------------
+*/
+Route::post('/client-send-sms-otp', [SMSOTPsController::class, 'GenerateOTPAndSendToSMS']);
+Route::post('/client-verify-sms-otp', [SMSOTPsController::class, 'verifyPhoneOTP']);
