@@ -1,18 +1,18 @@
-.primary-btn-blue1, .primary-btn-red1{ /*for submission or confirm btns example: yes/submit/confirm*/
+.primary-btn-blue1, .primary-btn-red1, 
+.secondary-btn-blue1 { /*for submission or confirm btns example: yes/submit/confirm*/
     font-family: Inter;
-    font-weight: 700;
-    border-radius: 20px;
+    border-radius: 10px;
     border: 2px white solid;
     background-color: var(--blue1);
     color:white;
-    padding: 10px 20px;
+    padding: 8px 10px;
     cursor: pointer;
     transition: background-color 0.3s; /* Smooth transition */    
     user-select: none;
 }
 .primary-btn-blue1:hover {
     background-color: #3058bb;
-  }
+}
 .primary-btn-blue1.disabled, .primary-btn-red1.disabled {
     opacity: .5;
     cursor: not-allowed;
@@ -21,6 +21,19 @@
 .primary-btn-red1 {
     background-color: var(--red1);
 }
+.secondary-btn-blue1 {
+    background: transparent;
+    border: 1px solid var(--blue1);
+    color: var(--blue1);
+}
+
+
+
+
+
+
+
+
 
 .sub-button{ /*for cancel btns example: no/back/cancel*/
     font-family: Inter;

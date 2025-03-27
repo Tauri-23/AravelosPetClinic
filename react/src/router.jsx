@@ -13,18 +13,18 @@ import ClientuserProfile from "./views/Client/userprofiles";
 import AdminInventoryDefault from "./views/Admin/Inventory/inventory_default";
 import AdminInventoryIndex from "./views/Admin/Inventory/inventory_index";
 import AddItem from "./views/Admin/Inventory/addItem";
-import ClinicCalendar from "./views/Admin/Appointment/clinicCalendar";
-import ApproveAppointment from "./views/Admin/Appointment/approveAppointment";
+import ClinicCalendar from "./views/Admin/Appointments/clinicCalendar";
+import ApproveAppointment from "./views/Admin/Appointments/approveAppointment";
 import BookAppointment from "./views/Client/appointment/bookappointment";
 import MyAppointments from "./views/Client/appointment/myappointments";
 import ManageProfiles from "./views/Admin/manageProfiles";
 import AdminFeedback from "./views/Admin/adminFeedback";
 import AdminFeedbackAnalysis from "./views/Admin/adminFeedbackAnalysis";
-import AdminAppointmentDefault from "./views/Admin/Appointment/admin_appointment_default";
-import AdminPendingAppointments from "./views/Admin/Appointment/admin_pending_appointments";
-import AdminApprovedAppointments from "./views/Admin/Appointment/admin_approved_appointments";
-import AdminCompletedAppointments from "./views/Admin/Appointment/admin_completed_appointments";
-import AdminCancelledAppointments from "./views/Admin/Appointment/admin_cancelled_appointments";
+import AdminAppointmentDefault from "./views/Admin/Appointments/admin_appointment_default";
+import AdminPendingAppointments from "./views/Admin/Appointments/admin_pending_appointments";
+import AdminApprovedAppointments from "./views/Admin/Appointments/admin_approved_appointments";
+import AdminCompletedAppointments from "./views/Admin/Appointments/admin_completed_appointments";
+import AdminCancelledAppointments from "./views/Admin/Appointments/admin_cancelled_appointments";
 import AdminViewInventory from "./views/Admin/Inventory/viewInventory";
 import AdminTrainModel from "./views/Admin/TrainModel/admin_train_model";
 
@@ -107,36 +107,18 @@ const router = createBrowserRouter([
         path: '/AdminIndex',
         element: <AdminDefault/>,
         children: [
+            /**
+             * Dashboard
+             */
             {
                 index:true,
                 element: <AdminIndex/>
             },
-            {
-                path: 'InventoryTracking',
-                element: <AdminInventoryDefault />,
-                children: [
-                    {
-                        index: true,
-                        element: <AdminInventoryIndex/>
-                    },
-                    {
-                        path: 'AddItem',
-                        element: <AddItem/>
-                    },
-                    {
-                        path: 'ViewInventory/:inventoryId',
-                        element: <AdminViewInventory/>
-                    }
-                ]
-            },
+
 
             /**
              * Appointments
-             */
-            {
-                path: "ClinicCalendar",
-                element: <ClinicCalendar />
-            },
+             */            
             {
                 path: "Appointments",
                 element: <AdminAppointmentDefault/>,
@@ -163,6 +145,40 @@ const router = createBrowserRouter([
                 path: 'ApproveAppointment/:appointmentId',
                 element: <ApproveAppointment />
             },
+
+
+            /**
+             * Calendar
+             */
+            {
+                path: "ClinicCalendar",
+                element: <ClinicCalendar />
+            },
+
+
+            /**
+             * Inventory
+             */
+            {
+                path: 'InventoryTracking',
+                element: <AdminInventoryDefault />,
+                children: [
+                    {
+                        index: true,
+                        element: <AdminInventoryIndex/>
+                    },
+                    {
+                        path: 'AddItem',
+                        element: <AddItem/>
+                    },
+                    {
+                        path: 'ViewInventory/:inventoryId',
+                        element: <AdminViewInventory/>
+                    }
+                ]
+            },
+
+            
 
 
 

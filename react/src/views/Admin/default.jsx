@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react";
-import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import "../../assets/css/app.css";
 import "../../assets/css/navbar.css";
-import AdminNavbar from "../../components/admin_navbar";
+import AdminNavbar from "./components/admin_navbar";
 import { ToastContainer } from "react-toastify";
 import { ModalProvider } from "../../contexts/ModalContext";
 import ModalManager from "../../managers/modalManager";
 import { useStateContext } from "../../contexts/ContextProvider";
 import axiosClient from "../../axios-client";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import AdminSideNav from "./components/admin_sidenav";
+
 export default function AdminDefault () {
     const { user, userType, token, setUserType, setUser, setToken } = useStateContext();
+    const [activeNavLink, setActiveNavLink] = useState("Dashboard");
+
+
+
+    /**
+     * Onmount
+     */
     useEffect(() => {
         if (token) {
             axiosClient.get('/user')
@@ -43,14 +51,21 @@ export default function AdminDefault () {
         return <Navigate to="/" />;
     }
 
+
+
+    /**
+     * Render
+     */
     return(
         <ModalProvider>
             <div className="position-relative">
                 <ModalManager/>
-                <AdminNavbar onLogout={onLogout}/>
+                <AdminNavbar activeNavLink={activeNavLink} onLogout={onLogout}/>
+                <AdminSideNav activeNavLink={activeNavLink}/>
 
                 {/* Children Elements */}
-                <Outlet/>
+                <Outlet context={{setActiveNavLink}}/>
+                
 
                 <ToastContainer/>
             </div>

@@ -104,6 +104,15 @@ export const formatDate = (date) => {
     return realDate.toLocaleDateString('en-PH', options);
 }
 
+export const formatDateTime = (dateTime) => {
+    const realDateTime = new Date();
+
+    const timeOptions = {hour: 'numeric', minute: 'numeric', hour12: true};
+    const formattedTime = realDateTime.toLocaleTimeString('en-PH', timeOptions);
+
+    return `${formatDate(dateTime)} ${formattedTime}`;
+}
+
 export const getAge = (date) => {
     const birthDate = new Date(date); // Convert input date to Date object
     const today = new Date();

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, act } from "react";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import "../../assets/css/manageaccs.css";
 import { fetchAllClientsNotDeleted } from "../../services/UserClientsServices";
 import axiosClient from "../../axios-client";
@@ -10,6 +10,7 @@ import { useModal } from "../../contexts/ModalContext";
 import addAdminModal1 from "../../components/Modals/addAdminModal1";
 
 function ManageProfiles() {
+    const {setActiveNavLink} = useOutletContext();
     const { user } = useStateContext();
     const { showModal } = useModal();
     const [activeTab, setActiveTab] = useState("ManageClients");
@@ -17,9 +18,11 @@ function ManageProfiles() {
     const [clients, setClients] = useState(null);
 
     /**
-     * Render from db
+     * Onmount
      */
     useEffect(() => {
+        setActiveNavLink("Manage Accounts");
+
         const getAll = async () => {
             try {
                 const [clientsDb, adminsDb] = await Promise.all([
@@ -280,95 +283,93 @@ function ManageProfiles() {
 	 * Render
 	 */
     return (
-        <div className="page inter">
-            <div className="manage-users gen-margin">
-                {renderHeaders()}
+        <div className="content1 compressed">
+            {renderHeaders()}
 
-                {/* Manage Clients */}
-                {activeTab === "ManageClients" && (
-                    <div className="myappt small-form">
-                        {clients?.length > 0 &&
-                            clients.map((client) => (
-                                <div
-                                    className="manage-users appt-record-five pending"
-                                    key={client.id}
-                                >
-                                    <div className="content-deet">
-                                        {client.fname} {client.mname}{" "}
-                                        {client.lname}
-                                    </div>
-                                    <div className="content-deet">
-                                        {client.gender}
-                                    </div>
-                                    <div className="content-deet">
-                                        {client.email}
-                                    </div>
-                                    <div className="content-deet">
-                                        {client.status}
-                                    </div>
-                                    <div className="content-deet">
-                                        <button
-                                            className="primary-btn-blue1"
-                                            onClick={() =>
-                                                handleSuspendUnsuspendClient(
-                                                    client.id
-                                                )
-                                            }
-                                        >
-                                            {client.status === "active"
-                                                ? "Suspend"
-                                                : "Unsuspend"}
-                                        </button>
-                                        <button
-                                            className="sub-button"
-                                            onClick={() =>
-                                                handleDeleteClient(client.id)
-                                            }
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
+            {/* Manage Clients */}
+            {activeTab === "ManageClients" && (
+                <div className="myappt small-form">
+                    {clients?.length > 0 &&
+                        clients.map((client) => (
+                            <div
+                                className="manage-users appt-record-five pending"
+                                key={client.id}
+                            >
+                                <div className="content-deet">
+                                    {client.fname} {client.mname}{" "}
+                                    {client.lname}
                                 </div>
-                            ))}
-                        {!clients && <>Loading</>}
-
-                        {clients?.length < 1 && <>No Records</>}
-                    </div>
-                )}
-
-                {activeTab === "ManageAdmins" && (
-                    <div className="myappt small-form">
-                        {admins?.length > 0 &&
-                            admins.map((admin) => (
-                                <div
-                                    className="manage-users appt-record-five pending"
-									onClick={() => handleAdminRowClick(admin)}
-                                    key={admin.id}
-                                >
-                                    <div className="content-deet">
-                                        {admin.fname} {admin.mname}{" "}
-                                        {admin.lname}
-                                    </div>
-                                    <div className="content-deet">
-                                        {admin.gender}
-                                    </div>
-                                    <div className="content-deet">
-                                        {admin.email}
-                                    </div>
-                                    <div className="content-deet">
-                                        {admin.role.role}
-                                    </div>
-                                    <div className="content-deet">
-                                        {admin.status}
-                                    </div>
+                                <div className="content-deet">
+                                    {client.gender}
                                 </div>
-                            ))}
-                        {!admins && <>Loading</>}
+                                <div className="content-deet">
+                                    {client.email}
+                                </div>
+                                <div className="content-deet">
+                                    {client.status}
+                                </div>
+                                <div className="content-deet">
+                                    <button
+                                        className="primary-btn-blue1"
+                                        onClick={() =>
+                                            handleSuspendUnsuspendClient(
+                                                client.id
+                                            )
+                                        }
+                                    >
+                                        {client.status === "active"
+                                            ? "Suspend"
+                                            : "Unsuspend"}
+                                    </button>
+                                    <button
+                                        className="sub-button"
+                                        onClick={() =>
+                                            handleDeleteClient(client.id)
+                                        }
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    {!clients && <>Loading</>}
 
-                        {admins?.length < 1 && <>No Records</>}
-                    </div>
-                )}
-            </div>
+                    {clients?.length < 1 && <>No Records</>}
+                </div>
+            )}
+
+            {activeTab === "ManageAdmins" && (
+                <div className="myappt small-form">
+                    {admins?.length > 0 &&
+                        admins.map((admin) => (
+                            <div
+                                className="manage-users appt-record-five pending"
+                                onClick={() => handleAdminRowClick(admin)}
+                                key={admin.id}
+                            >
+                                <div className="content-deet">
+                                    {admin.fname} {admin.mname}{" "}
+                                    {admin.lname}
+                                </div>
+                                <div className="content-deet">
+                                    {admin.gender}
+                                </div>
+                                <div className="content-deet">
+                                    {admin.email}
+                                </div>
+                                <div className="content-deet">
+                                    {admin.role.role}
+                                </div>
+                                <div className="content-deet">
+                                    {admin.status}
+                                </div>
+                            </div>
+                        ))}
+                    {!admins && <>Loading</>}
+
+                    {admins?.length < 1 && <>No Records</>}
+                </div>
+            )}
         </div>
     );
 }

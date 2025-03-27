@@ -11,17 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pet_medical_history_vaccinations', function (Blueprint $table) {
+        Schema::create('pet_breeds', function (Blueprint $table) {
             $table->id();
-            $table->string('pet', 6)->nullable();
-            $table->string("filename");
+            $table->string("breed");
             $table->timestamps();
-
-            $table->foreign("pet")
-            ->references("id")
-            ->on("pets")
-            ->cascadeOnDelete()
-            ->cascadeOnUpdate();
         });
     }
 
@@ -30,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pet_medical_history_vaccinations');
+        Schema::dropIfExists('pet_breeds');
     }
 };

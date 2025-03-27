@@ -261,7 +261,7 @@ class AppointmentsController extends Controller
 
     public function getAppointmentWhereId($appointmentId)
     {
-        return response()->json(appointments::with(['pet', 'client', 'feedback'])->find($appointmentId));
+        return response()->json(appointments::with(relations: ["service", 'pet', 'client', 'feedback'])->find($appointmentId));
     }
 
     public function getAllAppointments()
@@ -271,6 +271,6 @@ class AppointmentsController extends Controller
     
     public function GetAllAppointmentsWhereStatus($status)
     {
-        return response()->json(appointments::where('status', $status)->with(["pet", "feedback"])->get());
+        return response()->json(appointments::where('status', $status)->with(["service", "pet", "feedback"])->get());
     }
 }

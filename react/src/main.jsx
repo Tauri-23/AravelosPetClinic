@@ -7,6 +7,7 @@ import { ContextProvider } from './contexts/ContextProvider.jsx';
 
 
 import "././assets/css/app.css";
+import "././assets/css/elements.css";
 import "././assets/css/navbar.css";
 import "././assets/css/dropdown.css";
 import "././assets/css/button.css";

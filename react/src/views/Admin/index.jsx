@@ -7,8 +7,11 @@ import '../../assets/css/adminDash.css'
 import { fetchAllInventoryItems } from "../../services/InventoryServices";
 import { fetchAllAppointmentsWhereStatus } from "../../services/AppointmentServices";
 import { fetchAllStaffs, fetchAllStaffsWhereStatus } from "../../services/StaffServices";
+import { useOutletContext } from "react-router-dom";
+import { Spin } from "antd";
 
 export default function adminIndex() {
+    const {setActiveNavLink} = useOutletContext();
     const [feedbackLanguage, setFeedbackLanguage] = useState("english");
     const [activeTab, setActiveTab] = useState("today");
     const [selectedAppointment, setSelectedAppointment] = useState(null);
@@ -48,10 +51,14 @@ export default function adminIndex() {
         })
     );
 
+
+
     /**
      * Fetch all data from database
      */
     useEffect(() => {
+        setActiveNavLink("Dashboard");
+
         const getAll = async() => {
             const [inventoryDb, approvedAppointmentsDb, staffsDb] = await Promise.all([
                 fetchAllInventoryItems(),
@@ -73,7 +80,7 @@ export default function adminIndex() {
 	 * Render
 	 */
     return (
-        <div className="content1">
+        <div className="content1 compressed">
             {(approvedAppointments !== null && staffs !== null)
             ? (
                 <>
@@ -287,7 +294,7 @@ export default function adminIndex() {
                     /> */}
                 </>
             )
-            : (<>Loading...</>)}
+            : (<Spin size="large"/>)}
         </div>
     );
 };

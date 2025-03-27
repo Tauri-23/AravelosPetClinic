@@ -165,7 +165,7 @@ export default function AppointmentRecordModalAdmin1({
                         <div className='bold inter d-flex'>Gender: <div className='left-margin-s normal'>{record.pet.gender.charAt(0).toUpperCase() + record.pet.gender.slice(1)}</div></div>
                         <div className='bold inter d-flex'>Breed: <div className='left-margin-s normal'>{record.pet.breed.charAt(0).toUpperCase() + record.pet.breed.slice(1)}{" "}({record.pet.type})</div></div>
                         <div className='bold inter d-flex'>Birthdate: <div className='left-margin-s normal'>{formatDate(record.pet.dob)} ({getAge(record.pet.dob)} yrs old)</div></div>
-                        <div className='service bold inter d-flex'>Service: <div className='left-margin-s normal'>{serviceLabel}</div></div>
+                        <div className='service bold inter d-flex'>Service: <div className='left-margin-s normal'>{record.service.service}</div></div>
                         {renderDetails()}
                     </div>
                 </div>

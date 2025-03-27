@@ -183,7 +183,7 @@ export default function ApproveAppointment() {
                                         <div className="inter appt-detail-rows small-f">
                                             <div className='cont-row d-flex'>
                                                 <div className='cont-lbl bold'>Service:</div>
-                                                <div className='cont-dtl'>{appointment.service}</div>
+                                                <div className='cont-dtl'>{appointment.service.service}</div>
                                             </div>
                                             <div className='cont-row d-flex'>
                                                 <div className='cont-lbl bold'>Gender:</div>

@@ -1,5 +1,96 @@
+.admin-navbar {
+    display: flex;
+    justify-content: flex-end;
+    width: calc(100% - var(--admin-sidenav-width));
+    position: sticky;
+    top: 0;
+    padding: 10px 50px;
+    height: var(--admin-navbar-height);
+    margin-left: var(--admin-sidenav-width);
+    background: white;
+    filter: drop-shadow(0 0 1px var(--grey1));
+    align-items: center;
+    z-index: 20;
+}
 
-.nav1{
+.admin-navbar-logo {
+    width: 50px;
+    aspect-ratio: 1/1;
+}
+
+.admin-navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+.admin-navbar-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0 0 10px 0;
+    text-decoration: none;
+    color: black;
+}
+.admin-navbar-link.active {
+    color: var(--blue1);
+    border-bottom: 1px solid var(--blue1);
+}
+
+
+
+
+
+/* ADMIN SIDE NAV */
+.admin-sidenav {
+    width: var(--admin-sidenav-width);
+    height: 100vh;
+    top: 0;
+    background: white;
+    filter: drop-shadow(0 0 2px var(--grey1));
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 15px;
+    position: fixed;
+    z-index: 21;
+}
+
+.admin-sidenav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: var(--text-m1);
+    font-weight: bold;
+}
+
+.admin-sidenav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.admin-sidenav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--blue1);
+}
+.admin-sidenav-link.active {
+    background-color: var(--blue1);
+    color: white;
+}
+
+
+
+
+
+
+
+
+/* .nav1{
     background-color: white;
     width: 100%;
     height: 4vw;
@@ -66,12 +157,12 @@
 .a-tab {
     position: relative;
     padding: 5px 20px;
-}
-.a-tab:hover .nav1-line {
-    width: 40%;visibility: visible; /* Ensure visibility changes immediately on hover */
+} */
+/* .a-tab:hover .nav1-line {
+    width: 40%;visibility: visible;
     transition: width 0.4s ease, visibility 0s linear 0s;
-}
-.nv-line{
+} */
+/* .nv-line{
     height: .5vw;
     width: auto;
     margin: 0.4vw auto;
@@ -97,10 +188,10 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-}
+} */
 
 
-.notif-circle {
+/* .notif-circle {
     position: absolute;
     top: 0;
     right: 0;
@@ -110,4 +201,4 @@
     background: var(--red1);
     border-radius: 100%;
     color: white;
-}
+} */

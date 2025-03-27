@@ -129,19 +129,6 @@ Route::get('/retrieve-pet-where-client/{clientId}', [PetsController::class,'GetP
 
 /*
 |----------------------------------------
-| PET MEDICAL HISTORY
-|----------------------------------------
-*/
-Route::post('/add-pet-allergies', [PetMedicalHistoriesController::class,'AddPetAllergies']);
-Route::post('/add-pet-medications', [PetMedicalHistoriesController::class,'AddPetMedications']);
-Route::post('/add-pet-diseases', [PetMedicalHistoriesController::class,'AddPetDiseases']);
-
-
-
-
-
-/*
-|----------------------------------------
 | Clients
 |----------------------------------------
 */

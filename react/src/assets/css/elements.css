@@ -1,0 +1,8 @@
+.content1 {
+    width: 100%;
+    padding: 50px;
+}
+.content1.compressed {
+    margin: 0 0 0 var(--admin-sidenav-width);
+    width: calc(100% - var(--admin-sidenav-width));
+}

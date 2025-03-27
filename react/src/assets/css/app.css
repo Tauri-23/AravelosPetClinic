@@ -10,6 +10,21 @@
     --bs-modal-bg:white;
     --bs-modal-border-radius: var(--rounded_conts);
     --circle:50%;
+
+    --text-xl1: 60px;
+    --text-xl2: 50px;
+    --text-xl3: 40px;
+    --text-l1: 30px;
+    --text-l2: 24px;
+    --text-l3: 20px;
+    --text-m1: 18px;
+    --text-m2: 16px;
+    --text-m3: 14px;
+    --text-m4: 12px;
+
+    /* Navigation Sizes */
+    --admin-navbar-height: 70px;
+    --admin-sidenav-width: 300px;
 }
 
 
@@ -34,10 +49,6 @@ a{
     background-color: #f8f8f8!important;
     overflow: scroll; /* Works in Chrome, Edge */
     scrollbar-gutter: stable; /* Ensures scrollbar doesn't shift content */
-}
-.content1 {
-    width: 100%;
-    padding: 50px;
 }
 #root{
     display: flex;
@@ -85,9 +96,9 @@ a{
 .anybody{
     font-family: anybody;
 }
-*{
+/* *{
     color:#1D3675;
-}
+} */
 .white{
     color: white!important;
 }

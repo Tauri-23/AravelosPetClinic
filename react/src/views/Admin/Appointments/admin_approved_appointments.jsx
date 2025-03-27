@@ -1,28 +1,50 @@
 import { useEffect, useState } from "react"
-import { fetchAllAppointmentsWhereStatus } from "../../../services/AppointmentServices";
 import { useModal } from "../../../contexts/ModalContext";
-import { formatDate, isEmptyOrSpaces, notify } from "../../../assets/js/utils";
+import { formatDate, formatDateTime, isEmptyOrSpaces, notify } from "../../../assets/js/utils";
 import { useOutletContext } from "react-router-dom";
 import axiosClient from "../../../axios-client";
+import { Table } from "antd";
 
 export default function AdminApprovedAppointments() {
-    const {setActiveTab} = useOutletContext();
+    const {setActiveTab, approvedAppointments} = useOutletContext();
     const {showModal} = useModal();
-    const [appointments, setAppointments] = useState(null);
 
 
 
     /**
-     * Fetch All necessary data
+     * Onmount
      */
     useEffect(() => {
-        const getAll = async() => {
-            const data = await fetchAllAppointmentsWhereStatus("Approved");
-            setAppointments(data);
-        }
         setActiveTab("Approved");
-        getAll();
     }, []);
+
+
+
+    /**
+     * Setup Columns
+     */
+    const appointmentColumns = [
+        {
+            title: "Appointment ID",
+            dataIndex: 'id',
+        },
+        {
+            title: "Pet Name",
+            render: (_, row) => row.pet.name
+        },
+        {
+            title: "Appointment Type",
+            render: (_, row) => row.service.service
+        },
+        {
+            title: "Appointment Date",
+            render: (_, row) => formatDateTime(row.date_time)
+        },
+        {
+            title: "Date Approved",
+            render: (_, row) => formatDateTime(row.approved_at)
+        },
+    ]
 
 
 
@@ -65,7 +87,6 @@ export default function AdminApprovedAppointments() {
 
         axiosClient.post(`/m-complete-appointment`, formData)
         .then(({ data }) => {
-            console.log(data);
             if(data.status === 200) {
                 setAppointments(prev => prev.filter(appointment => appointment.id != appointmentId));
             }
@@ -82,30 +103,11 @@ export default function AdminApprovedAppointments() {
      */
     return(
         <>
-            <div className="myappt headers small-form d-flex bottom-margin-s">
-                <div className='detailHeader column semi-bold'>Pet Name</div>
-                <div className='detailHeader column semi-bold'>Appointment Type</div>
-                <div className='detailHeader column semi-bold'>Scheduled Date</div>
-                <div className='detailHeader column semi-bold'>Date Approved</div>
-            </div>
-            <div className="myappt small-form">
-                    {!appointments && (
-                        <>Loading...</>
-                    )}
-                    
-                    {appointments?.length > 0 && appointments.map(appointment => (
-                        <div key={appointment.id} className='appt-record-four approved' onClick={() => handleAppointmentRecordClick(appointment)}>
-                            <div className='content-deet'>{appointment.pet.name}</div>
-                            <div className='content-deet'>{appointment.service}</div>
-                            <div className='content-deet'>{formatDate(appointment.date_time)}</div>
-                            <div className='content-deet'>{formatDate(appointment.approved_at)}</div>
-                        </div>
-                    ))}
-
-                    {appointments?.length < 1 && (
-                        <>No Appointments</>
-                    )}
-            </div>
+            <Table
+            columns={appointmentColumns}
+            dataSource={approvedAppointments}
+            bordered
+            />
         </>
     )
 }
