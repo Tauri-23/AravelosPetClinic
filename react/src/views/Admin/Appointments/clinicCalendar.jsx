@@ -59,7 +59,7 @@ function ClinicCalendar() {
      * Render
      */
     return (
-        <div className="page book-appointment clinic-cal">
+        <div className="content1 compressed">
             {appointments
             ? (
                 <div className="bg gen-margin">
