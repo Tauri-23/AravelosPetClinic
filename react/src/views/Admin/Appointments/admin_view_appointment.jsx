@@ -10,6 +10,7 @@ import { fetchAllInventoryItems } from "../../../services/InventoryServices";
 import React from "react";
 import InventoryBox from "../../../components/inventory_box";
 import axiosClient from "../../../axios-client";
+import MedicalHistoryForm from "./components/medical_history_form";
 
 export default function AdminViewAppointment() {
     const {appointmentId} = useParams();
@@ -143,6 +144,15 @@ export default function AdminViewAppointment() {
 
 
     /**
+     * Handlers FOR APPROVED ONLY
+     */
+    const handleApprove = () => {
+
+    }
+
+
+
+    /**
      * Render
      */
     return(
@@ -171,7 +181,7 @@ export default function AdminViewAppointment() {
                             {appointment.status === "Approved" && (
                                 <button 
                                 className={`primary-btn-blue1`}
-                                onClick={() => handleApproveAppointment(appointment.id)}
+                                onClick={() => setMarkingComplete(true)}
                                 >
                                     Mark as Complete
                                 </button>
@@ -349,7 +359,7 @@ export default function AdminViewAppointment() {
                         </div>
                     )}
 
-                    {(appointment.status !== "Pending" && appointment.assigned_staffs) && (
+                    {(appointment.status !== "Pending" && appointment.assigned_staffs && !isMarkingComplete) && (
                         <>
                             <div 
                             className="appointment-cont1 w-100 mar-bottom-1"
@@ -387,6 +397,13 @@ export default function AdminViewAppointment() {
                                 ))}
                             </div>
                         </>
+                    )}
+
+                    {/**
+                     * Mark as Complete Form
+                     */}
+                    {isMarkingComplete && (
+                        <MedicalHistoryForm/>
                     )}
                 </>
             )
