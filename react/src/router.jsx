@@ -27,6 +27,7 @@ import AdminCompletedAppointments from "./views/Admin/Appointments/admin_complet
 import AdminCancelledAppointments from "./views/Admin/Appointments/admin_cancelled_appointments";
 import AdminViewInventory from "./views/Admin/Inventory/viewInventory";
 import AdminTrainModel from "./views/Admin/TrainModel/admin_train_model";
+import AdminViewAppointment from "./views/Admin/Appointments/admin_view_appointment";
 
 const router = createBrowserRouter([
     /*
@@ -140,6 +141,10 @@ const router = createBrowserRouter([
                         element: <AdminCancelledAppointments/>
                     },               
                 ]
+            },
+            {
+                path: "ViewAppointment/:appointmentId",
+                element: <AdminViewAppointment/>
             },
             {
                 path: 'ApproveAppointment/:appointmentId',

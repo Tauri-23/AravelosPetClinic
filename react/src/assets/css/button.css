@@ -1,5 +1,5 @@
 .primary-btn-blue1, .primary-btn-red1, 
-.secondary-btn-blue1 { /*for submission or confirm btns example: yes/submit/confirm*/
+.secondary-btn-blue1 {
     font-family: Inter;
     border-radius: 10px;
     border: 2px white solid;
@@ -7,8 +7,9 @@
     color:white;
     padding: 8px 10px;
     cursor: pointer;
-    transition: background-color 0.3s; /* Smooth transition */    
+    transition: background-color 0.3s;
     user-select: none;
+    text-decoration: none;
 }
 .primary-btn-blue1:hover {
     background-color: #3058bb;

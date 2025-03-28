@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
 import { useModal } from "../../../contexts/ModalContext";
 import { formatDate, formatDateTime, isEmptyOrSpaces, notify } from "../../../assets/js/utils";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import axiosClient from "../../../axios-client";
 import { Table } from "antd";
 
 export default function AdminApprovedAppointments() {
+    const navigate = useNavigate();
     const {setActiveTab, approvedAppointments} = useOutletContext();
     const {showModal} = useModal();
 
@@ -105,8 +106,11 @@ export default function AdminApprovedAppointments() {
         <>
             <Table
             columns={appointmentColumns}
-            dataSource={approvedAppointments}
+            dataSource={approvedAppointments.map((item) => ({...item, key: item.id}))}
             bordered
+            onRow={(record) => ({
+                onClick: () => navigate(`/AdminIndex/ViewAppointment/${record.id}`)
+            })}
             />
         </>
     )

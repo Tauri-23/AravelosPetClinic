@@ -28,4 +28,14 @@ class appointments extends Model
     {
         return $this->belongsTo(clinic_services::class, 'service', 'id');
     }
+
+    public function assigned_staffs()
+    {
+        return $this->hasMany(appointment_assigned_staffs:: class, "appointment", "id")->with("staff");
+    }
+
+    public function assigned_items()
+    {
+        return $this->hasMany(appointment_assigned_items::class, "appointment", "id")->with("inventory_items_used");
+    }
 }

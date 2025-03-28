@@ -76,6 +76,9 @@ export default function AdminPendingAppointments() {
             columns={appointmentColumns}
             dataSource={pendingAppointments?.map((item) => ({...item, key: item.id}))}
             bordered
+            onRow={(record) => ({
+                onClick: () => navigate(`/AdminIndex/ViewAppointment/${record.id}`)
+            })}
             />
         </>
     )

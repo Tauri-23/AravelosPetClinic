@@ -1,0 +1,50 @@
+.appointment-cont1 {
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    filter: drop-shadow(0 0 3px var(--grey1));
+}
+.appointment-pet-pfp {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: white;
+    filter: drop-shadow(0 0 3px var(--grey1));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.appointment-pet-pfp img {
+    position: absolute;
+    height: 100%;
+}
+
+.appointment-staff-card {
+    width: calc(100% /2 - 10px);
+    padding: 10px;
+    border-radius: 10px;
+    background: white;
+    filter: drop-shadow(0 0 1px var(--grey1));
+    cursor: pointer;
+    display: flex;
+    gap: 10px;
+}
+.appointment-staff-card-pfp {
+    position: relative;
+    width: 100px;
+    aspect-ratio: 1/1;
+    background: white;
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.appointment-staff-card-pfp img {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}

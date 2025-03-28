@@ -11,6 +11,6 @@ class appointment_assigned_items extends Model
 
     public function inventory_items_used()
     {
-        return $this->belongsTo(inventory_items_used::class, "item","id");
+        return $this->belongsTo(inventory_items_used::class, "item","id")->with("inventory");
     }
 }

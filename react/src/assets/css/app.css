@@ -27,6 +27,10 @@
     --admin-sidenav-width: 300px;
 }
 
+body {
+    overflow-y: auto !important;
+}
+
 
 
 
@@ -36,25 +40,6 @@
 
 .t-align-center{
     text-align: center;
-}
-a{
-
-    text-decoration: none!important;
-
-}
-
-.page {
-    height: 100vh;
-    margin:0;
-    background-color: #f8f8f8!important;
-    overflow: scroll; /* Works in Chrome, Edge */
-    scrollbar-gutter: stable; /* Ensures scrollbar doesn't shift content */
-}
-#root{
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow-y: hidden;
 }
 .indx{
     margin-left:1vw;

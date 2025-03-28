@@ -32,6 +32,13 @@ export const fetchAllAppointmentsWhereStatus = async(status) => {
     }
 }
 
+
+
+/**
+ * 
+ * @param {string} appointmentId
+ * @returns appointment
+ */
 export const fetchAppointmentDetails = async(appointmentId) => {
     try {
         const response = await axiosClient.get(`/get-appt-where-id/${appointmentId}`);
