@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\inventoryCategoriesController;
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\InventoryHistoryController;
 use App\Http\Controllers\Api\InventoryItemsController;
+use App\Http\Controllers\Api\MedicalHistoryController;
 use App\Http\Controllers\Api\PetMedicalHistoriesController;
 use App\Http\Controllers\Api\PetsController;
 use App\Http\Controllers\Api\SentimentAnalysisController;
@@ -109,6 +110,17 @@ Route::post('/add-appointment', [AppointmentsController::class,'createAppointmen
 Route::post('/cancel-appointment', [AppointmentsController::class,'cancelAppointment']);
 Route::post('/m-complete-appointment', [AppointmentsController::class,'completeAppointment']);
 Route::post('/approve-appointment', [AppointmentsController::class,'approveAppointment']);
+
+
+
+
+
+/*
+|----------------------------------------
+| Medical Histories
+|----------------------------------------
+*/
+Route::post('/create-med-history', [MedicalHistoryController::class, 'CreateMedicalHistory']);
 
 
 

@@ -9,6 +9,12 @@ class appointments extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'status',
+        'medical_history',
+    ];
+
+
     public function pet()
     {
         return $this->belongsTo(pets::class, 'pet', 'id');
@@ -37,5 +43,10 @@ class appointments extends Model
     public function assigned_items()
     {
         return $this->hasMany(appointment_assigned_items::class, "appointment", "id")->with("inventory_items_used");
+    }
+
+    public function medical_history()
+    {
+        return $this->belongsTo(medical_histories::class, "medical_history", "id")->with(["physical_exams", "laboratory_exams", "diagnosis"]);
     }
 }

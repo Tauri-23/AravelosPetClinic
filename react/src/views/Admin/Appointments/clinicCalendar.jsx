@@ -1,5 +1,4 @@
-import React, { useCallback, useRef } from "react";
-import { Link } from "react-router-dom";
+import React, { useCallback } from "react";
 import AdminCalendar from "../../../components/adminCalendar.jsx";
 import CustomToolbar from "../../../components/custom_toolbar.jsx";
 import { useEffect, useState } from "react";
@@ -9,11 +8,12 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons"; // Solid icons
 import { far } from "@fortawesome/free-regular-svg-icons"; // Regular icons
 import { fab } from "@fortawesome/free-brands-svg-icons"; // Brand icons
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AdminCalendarEventInfo from "../../../components/adminCalendarEventInfo.jsx";
+import { useOutletContext } from "react-router-dom";
 
 library.add(fas, far, fab);
 function ClinicCalendar() {
+    const {setActiveNavLink} = useOutletContext();
     const [selectedAppointment, setSelectedAppointment] = useState(null); // State for selected appointment
     const [appointments, setAppointments] = useState(null);
 
@@ -23,6 +23,7 @@ function ClinicCalendar() {
      * Scripts for onmount
      */
     useEffect(() => {
+        setActiveNavLink("Calendar");
         const getAll = async() => {
             try {
                 const data = await fetchAllAppointmentsWhereStatus("Approved");
@@ -62,38 +63,25 @@ function ClinicCalendar() {
         <div className="content1 compressed">
             {appointments
             ? (
-                <div className="bg gen-margin">
-                    <div className="mini-nav bottom-margin-s">
-                        <div className="anybody medium-f bold">Clinic Calendar</div>
-                        <div className="separator left-margin-s right-margin-s"></div>
-                        <Link to={"/AdminIndex/Appointments"}>
-                            <div className="anybody small-f semi-bold">
-                                Appointments
-                            </div>
-                        </Link>
+                <div className="d-flex inter">
+                    <AdminCalendar
+                        CustomToolbar={CustomToolbar}
+                        onSelectEvent={onSelectEvent} // Pass the custom toolbar here
+                        appointments={appointments}
+                        onDateSelect={() => setSelectedAppointment(null)}
+                    />
+                    <div className="small-form">
+                        {selectedAppointment
+                        ? (
+                            <AdminCalendarEventInfo
+                                appointment={selectedAppointment}
+                            />
+                        )
+                        : (
+                            <>No Appointment Selected</>
+                        )}
                     </div>
-
-                    <div className="grid inter">
-                        <AdminCalendar
-                            CustomToolbar={CustomToolbar}
-                            onSelectEvent={onSelectEvent} // Pass the custom toolbar here
-                            appointments={appointments}
-                            onDateSelect={() => setSelectedAppointment(null)}
-                        />
-
-                        <div className="small-form">
-                            {selectedAppointment
-                            ? (
-                                <AdminCalendarEventInfo
-                                    appointment={selectedAppointment}
-                                />
-                            )
-                            : (
-                                <>No Appointment Selected</>
-                            )}
-                        </div>
-                        
-                    </div>
+                    
                 </div>
             )
             : (<>Loading...</>)}

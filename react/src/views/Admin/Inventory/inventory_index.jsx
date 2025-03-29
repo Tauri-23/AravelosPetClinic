@@ -239,7 +239,7 @@ export default function AdminInventoryIndex() {
      * Render
      */
     return (
-        <div className="page">
+        <div className="content1 compressed">
             <div className="inventory-tracking gen-margin">
                 <h1 className="anybody">Inventory Tracking</h1>
 

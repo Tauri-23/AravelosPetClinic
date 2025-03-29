@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import { useModal } from "../../../contexts/ModalContext";
 import { formatDate, formatDateTime } from "../../../assets/js/utils";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { Table } from "antd";
 
 export default function AdminCompletedAppointments() {
+    const navigate = useNavigate();
     const {setActiveTab, completedAppointments} = useOutletContext();
-    const {showModal} = useModal();
 
 
 
@@ -48,32 +48,17 @@ export default function AdminCompletedAppointments() {
 
 
     /**
-     * Handlers
-     */
-    const handleAppointmentRecordClick = (appointment) => {
-        showModal('AppointmentRecordModalAdmin1', {appointment, handleCancel});
-    }
-    
-    const handleCancel = (recordId) =>{
-        const handleFunction = "handleCancelPost";
-        if (isEmptyOrSpaces(String(recordId))) {
-            console.error("No appointment selected for cancellation.");
-            return;
-        }
-        showModal('ConfirmActionModal1',  {handlePost:handleCancelPost, recordId, handleFunction});
-    }
-
-
-
-    /**
      * Render
      */
     return(
         <>
             <Table
             columns={appointmentColumns}
-            dataSource={completedAppointments}
+            dataSource={completedAppointments.map((item) => ({...item, key: item.id}))}
             bordered
+            onRow={(record) => ({
+                onClick: () => navigate(`/AdminIndex/ViewAppointment/${record.id}`)
+            })}
             />
         </>
     )

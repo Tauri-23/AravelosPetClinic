@@ -47,8 +47,8 @@ return new class extends Migration
             $table->boolean("vaginal_smear")->default(false);
             $table->string("vaginal_smear_result")->nullable();
 
-            $table->boolean("x-ray")->default(false);
-            $table->string("x-ray_result")->nullable();
+            $table->boolean("xray")->default(false);
+            $table->string("xray_result")->nullable();
 
 
             $table->string("other_test")->nullable();

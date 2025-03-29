@@ -90,7 +90,7 @@
 
 
 
-/* .nav1{
+.nav1{
     background-color: white;
     width: 100%;
     height: 4vw;
@@ -157,12 +157,12 @@
 .a-tab {
     position: relative;
     padding: 5px 20px;
-} */
-/* .a-tab:hover .nav1-line {
+}
+.a-tab:hover .nav1-line {
     width: 40%;visibility: visible;
     transition: width 0.4s ease, visibility 0s linear 0s;
-} */
-/* .nv-line{
+}
+.nv-line{
     height: .5vw;
     width: auto;
     margin: 0.4vw auto;
@@ -180,18 +180,14 @@
     margin-bottom: 0.2vw;
     height: 1vw;
 }
-.active{
-    visibility: visible!important;
-    width: 40%;
-}
 .wx{
     display: flex;
     flex-direction: column;
     justify-content: center;
-} */
+}
 
 
-/* .notif-circle {
+.notif-circle {
     position: absolute;
     top: 0;
     right: 0;
@@ -201,4 +197,4 @@
     background: var(--red1);
     border-radius: 100%;
     color: white;
-} */
+}

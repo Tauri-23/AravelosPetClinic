@@ -24,6 +24,7 @@ return new class extends Migration
             $table->text('reason')->nullable();
             $table->longText('note')->nullable();
             $table->string('status');
+            $table->unsignedBigInteger("medical_history")->nullable();
             
             $table->timestamps();
 
@@ -42,6 +43,12 @@ return new class extends Migration
             $table->foreign('service')
             ->references('id')
             ->on('clinic_services')
+            ->nullOnDelete()
+            ->cascadeOnUpdate();
+
+            $table->foreign('medical_history')
+            ->references('id')
+            ->on('medical_histories')
             ->nullOnDelete()
             ->cascadeOnUpdate();
         });
