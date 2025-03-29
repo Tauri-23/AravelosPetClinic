@@ -7,7 +7,6 @@ import { notify } from "../../assets/js/utils";
 import { fetchAllAdminsNotDeleted } from "../../services/UserAdminsServices";
 import { useStateContext } from "../../contexts/ContextProvider";
 import { useModal } from "../../contexts/ModalContext";
-import addAdminModal1 from "../../components/Modals/addAdminModal1";
 
 function ManageProfiles() {
     const {setActiveNavLink} = useOutletContext();
