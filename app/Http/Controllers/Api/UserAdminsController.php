@@ -6,6 +6,8 @@ use App\Contracts\IGenerateFilenameService;
 use App\Contracts\IGenerateIdService;
 use App\Http\Controllers\Controller;
 use App\Models\user_admins;
+use App\Models\user_clients;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -35,14 +37,37 @@ class UserAdminsController extends Controller
     // POST
     public function CreateAdmin(Request $request)
     {
-        $adminId = $this->generateId->generate(user_admins::class, 6);
         try
         {
+            DB::beginTransaction();
+
+            $isEmailExistOnAdmins = user_admins::where("email", $request->email)->exists();
+            $isEmailExistOnClients = user_clients::where("email", $request->email)->exists();
+
+            $isPhoneExistOnAdmins = user_admins::where("phone", $request->phone)->exists();
+            $isPhoneExistOnClients = user_clients::where("phone", $request->phone)->exists();
+
+            if($isEmailExistOnAdmins || $isEmailExistOnClients)
+            {
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Email already exist.',
+                ]);
+            }
+
+            if($isPhoneExistOnAdmins || $isPhoneExistOnClients)
+            {
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Phone already exist.',
+                ]);
+            }
+            
             $photo = $request->file('pic');
             $targetDirectory = base_path('react/public/assets/media/pfp');
             $newFilename = $this->generateFilename->generate($photo, $targetDirectory);
-            $photo->move($targetDirectory, $newFilename);
-
+            
+            $adminId = $this->generateId->generate(user_admins::class, 6);
             $admin = new user_admins();
             $admin->id = $adminId;
             $admin->fname = $request->fname;
@@ -51,7 +76,7 @@ class UserAdminsController extends Controller
             $admin->email = $request->email;
             $admin->password = bcrypt($request->password);
             $admin->bday = $request->adminDOB;
-            $admin->gender = $request->Gender;
+            $admin->gender = $request->gender;
             $admin->address = $request->address;
             $admin->phone = $request->phone;
             $admin->role = $request->role;
@@ -59,17 +84,23 @@ class UserAdminsController extends Controller
 
             $admin->save();
 
+            DB::commit();
+
+            $photo->move($targetDirectory, $newFilename);
+
             return response()->json([
                 'status' => 200,
                 'message' => 'Admin added',
-                'admin' => $admin
+                'admin' => user_admins::with("role")->find($adminId)
             ]);
         }
-        catch (\Exception $ex)
+        catch (\Exception $e)
         {
+            DB::rollBack();
+
             return response()->json([
                 'status' => 500,
-                'message' =>'Failed to upload file: ' . $ex->getMessage()
+                'message' => $e->getMessage()
             ], 500);
         }
     }

@@ -11,7 +11,7 @@
 .modal-box3, .modal-box2{
     width: 35vw;
     padding: 25px;
-    border-radius: var(--rounded_conts);
+    border-radius: 10px;
     background: white;
     filter: drop-shadow(0 0 10px var(--black2));
     position: relative;

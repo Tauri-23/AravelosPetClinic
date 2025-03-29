@@ -14,7 +14,6 @@ import AdminInventoryDefault from "./views/Admin/Inventory/inventory_default";
 import AdminInventoryIndex from "./views/Admin/Inventory/inventory_index";
 import AddItem from "./views/Admin/Inventory/addItem";
 import ClinicCalendar from "./views/Admin/Appointments/clinicCalendar";
-import ApproveAppointment from "./views/Admin/Appointments/approveAppointment";
 import BookAppointment from "./views/Client/appointment/bookappointment";
 import MyAppointments from "./views/Client/appointment/myappointments";
 import ManageProfiles from "./views/Admin/manageProfiles";
@@ -28,6 +27,9 @@ import AdminCancelledAppointments from "./views/Admin/Appointments/admin_cancell
 import AdminViewInventory from "./views/Admin/Inventory/viewInventory";
 import AdminTrainModel from "./views/Admin/TrainModel/admin_train_model";
 import AdminViewAppointment from "./views/Admin/Appointments/admin_view_appointment";
+import AdminManageProfilesDefault from "./views/Admin/ManageProfiles/admin_manage_profiles_default";
+import AdminManageProfilesClients from "./views/Admin/ManageProfiles/admin_manage_profiles_clients";
+import AdminManageProfilesAdmins from "./views/Admin/ManageProfiles/admin_manage_profiles_admins";
 
 const router = createBrowserRouter([
     /*
@@ -146,10 +148,6 @@ const router = createBrowserRouter([
                 path: "ViewAppointment/:appointmentId",
                 element: <AdminViewAppointment/>
             },
-            {
-                path: 'ApproveAppointment/:appointmentId',
-                element: <ApproveAppointment />
-            },
 
 
             /**
@@ -158,6 +156,25 @@ const router = createBrowserRouter([
             {
                 path: "ClinicCalendar",
                 element: <ClinicCalendar />
+            },
+
+
+            /**
+             * Manage Profiles
+             */
+            {
+                path: 'ManageProfiles',
+                element: <AdminManageProfilesDefault />,
+                children: [
+                    {
+                        index: true,
+                        element: <AdminManageProfilesClients/>
+                    },
+                    {
+                        path: "Admins",
+                        element: <AdminManageProfilesAdmins/>
+                    }
+                ]
             },
 
 
@@ -187,10 +204,7 @@ const router = createBrowserRouter([
 
 
 
-            {
-                path: 'ManageProfiles', // Remove leading `/`
-                element: <ManageProfiles />
-            },
+            
             {
                 path: 'AdminFeedback', // Remove leading `/`
                 element: <AdminFeedback />

@@ -372,7 +372,7 @@ export default function AdminViewAppointment() {
                                 {appointment.assigned_staffs.map(staff => (
                                     <div key={staff.id} className='d-flex align-items-center w-100 justify-content-between mar-bottom-3' style={{marginBottom: "20px"}}>
                                         <div className='d-flex align-items-center gap1'>
-                                            <div className="left circle staff-pic">
+                                            <div className="appointment-staff-card-pfp">
                                                 <img className='position-absolute h-100' src={`/assets/media/pfp/${staff.staff.picture}`} alt="pfp"/>
                                             </div>
                                             <div>
@@ -390,7 +390,7 @@ export default function AdminViewAppointment() {
                                 <h4 className="mar-bottom-1">Assigned Items</h4>
                                 {appointment.assigned_items.map(item => (
                                     <div key={item.inventory_items_used.inventory.id} className='d-flex align-items-center gap1'>
-                                        <div className="left circle staff-pic">
+                                        <div className="appointment-staff-card-pfp">
                                             <img className='position-absolute h-100' src={`/assets/media/items/${item.inventory_items_used.inventory.picture}`} alt="pfp"/>
                                         </div>
                                         <div>
