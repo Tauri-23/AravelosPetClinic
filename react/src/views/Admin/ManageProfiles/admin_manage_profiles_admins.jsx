@@ -2,8 +2,10 @@ import { useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { formatDateTime } from "../../../assets/js/utils";
 import { Table } from "antd";
+import { useModal } from "../../../contexts/ModalContext";
 
 export default function AdminManageProfilesAdmins() {
+    const {showModal} = useModal();
     const {setActiveTab, filteredAdmins, setFilteredAdmins} = useOutletContext();
 
 
@@ -61,7 +63,7 @@ export default function AdminManageProfilesAdmins() {
      * Handlers
      */
     const handleAdminClick = (admin) => {
-        console.log(admin);
+        showModal("AdminViewMiniProfileModal", {userType: "Admin", user: admin});
     }
 
 
@@ -75,7 +77,7 @@ export default function AdminManageProfilesAdmins() {
         dataSource={filteredAdmins.map((item) => ({...item, key: item.id}))}
         bordered
         onRow={(record) => ({
-            onClick: () => handleClientClick(record)
+            onClick: () => handleAdminClick(record)
         })}
         />
     );

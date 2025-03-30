@@ -133,6 +133,7 @@ export default function AdminManageProfilesDefault() {
 
                     <Outlet context={{
                         setActiveTab,
+                        setClients,
                         filteredAdmins, setFilteredAdmins,
                         filteredClients, setFilteredClients
                     }}/>

@@ -1,0 +1,13 @@
+.avmp-pfp {
+    width: 150px;
+    aspect-ratio: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.avmp-pfp img {
+    position: absolute;
+    height: 100%;
+}

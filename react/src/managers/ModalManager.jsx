@@ -26,6 +26,7 @@ import AddPetMedicationsModal from "../components/Modals/addPetMedicationsModal.
 import AddPetDiseasesModal from "../components/Modals/addPetDiseasesModal.jsx";
 import VerifyPhoneModal from "../components/Modals/verifyPhoneModal.jsx";
 import AddAdminModal from "../views/Admin/ManageProfiles/components/AddAdminModal.jsx";
+import AdminViewMiniProfileModal from "../views/Admin/ManageProfiles/components/AdminViewMiniProfileModal.jsx";
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -104,6 +105,8 @@ const ModalManager = () => {
              */
             case 'AddAdminModal':
                 return <AddAdminModal {...modalState.props} onClose={hideModal}/>;
+            case 'AdminViewMiniProfileModal':
+                return <AdminViewMiniProfileModal {...modalState.props} onClose={hideModal}/>;
 
 
 

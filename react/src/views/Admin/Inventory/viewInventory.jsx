@@ -82,7 +82,7 @@ export default function AdminViewInventory() {
      * Render
      */
     return(
-        <section className="view-inventory-content1 page anyone">
+        <section className="content1 compressed">
             {inventory
             ? (
                 <>
