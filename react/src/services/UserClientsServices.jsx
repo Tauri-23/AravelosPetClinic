@@ -10,3 +10,13 @@ export const fetchAllClientsNotDeleted = async() => {
         throw error;
     }
 }
+
+export const fetchClientInfoWhereId = async(clientId) => {
+    try {
+        const response = await axiosClient.get(`/retrieve-client-info-where-id/${clientId}`);
+        return response.data;
+    } catch(error) {
+        console.error(error)
+        throw error;
+    }
+}

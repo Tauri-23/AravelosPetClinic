@@ -16,6 +16,11 @@ class UserClientsController extends Controller
         return response()->json(user_clients::whereNot('status', 'deleted')->get());
     }
 
+    public function GetClientInformationWhereId($clientId)
+    {
+        return response()->json(user_clients::with("pets")->find($clientId));
+    }
+
 
 
 

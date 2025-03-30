@@ -276,4 +276,13 @@ class AppointmentsController extends Controller
         ->with(["service", "pet", "feedback", "assigned_staffs"])
         ->get());
     }
+    
+    public function GetAllAppointmentsWherePetAndStatus($petId, $status)
+    {
+        return response()->json(appointments::where("pet", $petId)
+        ->where('status', $status)
+        ->with(["service", "pet", "feedback", "assigned_staffs"])
+        ->orderBy("date_time", "desc")
+        ->get());
+    }
 }

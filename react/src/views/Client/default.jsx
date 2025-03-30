@@ -7,13 +7,17 @@ import { useStateContext } from "../../contexts/ContextProvider";
 import { ToastContainer } from "react-toastify";
 import { ModalProvider } from "../../contexts/ModalContext";
 import ModalManager from "../../managers/modalManager";
+import ClientNavbar from "./components/client_navbar";
 
 export default function ClientDefault () {
-    const { user, userType, token, setUserType, setUser, setToken } = useStateContext();
-    const location = useLocation();
-    const url = location.pathname;
+    const { userType, token, setUserType, setUser, setToken } = useStateContext();
+    const [activeNavLink, setActiveNavLink] = useState("Home");
 
 
+
+    /**
+     * Onmount
+     */
     useEffect(() => {
         if (token) {
             axiosClient.get('/user')
@@ -47,29 +51,20 @@ export default function ClientDefault () {
     }
 
 
+
+    /**
+     * Render
+     */
     return(
         <ModalProvider>
             <div className="position-relative">
                 <ModalManager/>
 
-                <div className="nav nav1">
-                    <div className="nav1-logo-div">
-                        <img src="/assets/media/logos/paw.png" className="nav1-logo" alt="logo"/>
-                    </div>
-                    <div className="nav1-links">
-                        <Link to={'/ClientIndex'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/home.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Home</p><div className={`nav1-line${url === "/ClientIndex" ? " active" : ""}`} ></div></div></Link>
-                        <Link to={'BookAppointment'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/appointment.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Book Appointment</p><div className={`nav1-line${url.startsWith("/ClientIndex/BookAppointment") ? " active" : ""}`} ></div></div></Link>
-                        <Link to={'ClientContactUs'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/user.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Contact Us</p><div className={`nav1-line${url === "/ClientIndex/ClientContactUs" ? " active" : ""}`} ></div></div></Link>
-                        <Link to={'ClientuserProfile'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/user.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Profile</p><div className={`nav1-line${url === "/ClientIndex/ClientuserProfile" ? " active" : ""}`} ></div></div></Link>
+                <ClientNavbar activeNavLink={activeNavLink} onLogout={onLogout}/>
 
-                    </div>
-
-                    <div className="nav1-sign">
-                        <Link to={''} className="nav1-link" onClick={onLogout}>Sign out</Link>
-                    </div>
-                </div>
-
-                <Outlet/>
+                <Outlet context={{
+                    activeNavLink, setActiveNavLink
+                }}/>
 
                 <ToastContainer/>
             </div>

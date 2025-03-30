@@ -16,7 +16,6 @@ import AddItem from "./views/Admin/Inventory/addItem";
 import ClinicCalendar from "./views/Admin/Appointments/clinicCalendar";
 import BookAppointment from "./views/Client/appointment/bookappointment";
 import MyAppointments from "./views/Client/appointment/myappointments";
-import ManageProfiles from "./views/Admin/manageProfiles";
 import AdminFeedback from "./views/Admin/adminFeedback";
 import AdminFeedbackAnalysis from "./views/Admin/adminFeedbackAnalysis";
 import AdminAppointmentDefault from "./views/Admin/Appointments/admin_appointment_default";
@@ -30,6 +29,8 @@ import AdminViewAppointment from "./views/Admin/Appointments/admin_view_appointm
 import AdminManageProfilesDefault from "./views/Admin/ManageProfiles/admin_manage_profiles_default";
 import AdminManageProfilesClients from "./views/Admin/ManageProfiles/admin_manage_profiles_clients";
 import AdminManageProfilesAdmins from "./views/Admin/ManageProfiles/admin_manage_profiles_admins";
+import AdminManageProfileViewClientProfile from "./views/Admin/ManageProfiles/admin_manage_profile_view_client_profile";
+import AdminManageProfileViewPetProfile from "./views/Admin/ManageProfiles/admin_manage_profile_view_pet_profile";
 
 const router = createBrowserRouter([
     /*
@@ -175,6 +176,14 @@ const router = createBrowserRouter([
                         element: <AdminManageProfilesAdmins/>
                     }
                 ]
+            },
+            {
+                path: "ViewClientProfile/:clientId",
+                element: <AdminManageProfileViewClientProfile/>
+            },
+            {
+                path: "ViewPetProfile/:petId",
+                element: <AdminManageProfileViewPetProfile/>
             },
 
 

@@ -105,6 +105,7 @@ Route::get('/get-all-appointments-where-client/{clientId}', [AppointmentsControl
 Route::get('/get-appt-where-id/{appointmentId}', [AppointmentsController::class,'getAppointmentWhereId']);
 Route::get('/get-all-appointments', [AppointmentsController::class,'getAllAppointments']);
 Route::get('/get-all-appointments-where-status/{status}', [AppointmentsController::class,'GetAllAppointmentsWhereStatus']);
+Route::get('/get-all-appointments-where-pet-and-status/{petId}/{status}', [AppointmentsController::class,'GetAllAppointmentsWherePetAndStatus']);
 
 Route::post('/add-appointment', [AppointmentsController::class,'createAppointment']);
 Route::post('/cancel-appointment', [AppointmentsController::class,'cancelAppointment']);
@@ -132,8 +133,10 @@ Route::post('/create-med-history', [MedicalHistoryController::class, 'CreateMedi
 | Pets
 |----------------------------------------
 */
+Route::get('/retrieve-pets-where-client/{clientId}', [PetsController::class,'GetPetsWhereClient']);
+Route::get('/retrieve-pet-info-where-id/{petId}', [PetsController::class,'GetPetInfoWhereId']);
+
 Route::post('/add-pet', [PetsController::class,'CreatePet']);
-Route::get('/retrieve-pet-where-client/{clientId}', [PetsController::class,'GetPetWhereClient']);
 
 
 
@@ -145,6 +148,7 @@ Route::get('/retrieve-pet-where-client/{clientId}', [PetsController::class,'GetP
 |----------------------------------------
 */
 Route::get('/retrieve-all-clients-not-deleted', [UserClientsController::class, 'GetAllClientsNotDeleted']);
+Route::get('/retrieve-client-info-where-id/{clientId}', [UserClientsController::class, 'GetClientInformationWhereId']);
 
 Route::post('/suspend-unsuspend-client', [UserClientsController::class, 'SuspendUnsuspendClient']);
 Route::post('/del-client', [UserClientsController::class, 'DeleteClient']);

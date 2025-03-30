@@ -2,6 +2,7 @@ import { XLg } from "react-bootstrap-icons";
 import "../css/admin_view_mini_profile_modal.css";
 import { BsEnvelope, BsGenderAmbiguous, BsPhone } from "react-icons/bs";
 import { Popconfirm } from "antd";
+import { Link } from "react-router-dom";
 
 export default function AdminViewMiniProfileModal({
     handleDeleteClient,
@@ -64,9 +65,10 @@ export default function AdminViewMiniProfileModal({
                                     {user.status === "suspended" ? "Unsuspend Account" : "Suspend Account"}
                                 </button>
                             </Popconfirm>
+                            
+                            <Link to={`/AdminIndex/ViewClientProfile/${user.id}`} className="primary-btn-blue1" onClick={onClose}>View Full Profile</Link>
                         </>
                     )}
-                    <button className="primary-btn-blue1">View Full Profile</button>
                 </div>
             </div>
         </div>

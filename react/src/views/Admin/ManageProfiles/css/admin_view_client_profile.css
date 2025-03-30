@@ -1,0 +1,49 @@
+.avcp-cont1 {
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    filter: drop-shadow(0 0 1px var(--grey1));
+}
+
+.avcp-client-pic {
+    width: 150px;
+    aspect-ratio: 1/1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background: white;
+    filter: drop-shadow(0 0 1px var(--grey1));
+    overflow: hidden;
+}
+.avcp-client-pic img {
+    position: absolute;
+    height: 100%;
+}
+
+
+/* 
+ * PETS
+ */
+.avcp-pet-box {
+    width: 200px;
+    padding: 10px;
+    border-radius: 10px;
+    background: white;
+    filter: drop-shadow(0 0 1px var(--grey1));
+    cursor: pointer;
+}
+.avcp-pet-box-img {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 5px;
+    background: white;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+.avcp-pet-box-img img {
+    position: absolute;
+    height: 100%;
+}

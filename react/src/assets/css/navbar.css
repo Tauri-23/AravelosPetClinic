@@ -87,6 +87,47 @@
 
 
 
+/* CLIENT NAVBAR */
+.client-navbar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    padding: 0 50px;
+    height: var(--admin-navbar-height);
+    background: white;
+    filter: drop-shadow(0 0 1px var(--grey1));
+    align-items: center;
+    z-index: 20;
+}
+.client-navbar-logo {
+    height: calc(100% - 20px);
+    aspect-ratio: 1;
+}
+.client-navbar-links, .client-navbar-link {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+.client-navbar-link {
+    padding: 0 10px;
+    text-decoration: none;
+    color: black;
+    height: 100%;
+    gap: 10px;
+}
+.client-navbar-link.active {
+    font-weight: bold;
+    color: var(--blue1);
+    border-bottom: 2px solid var(--blue1);
+}
+
+
+
+
+
 
 
 

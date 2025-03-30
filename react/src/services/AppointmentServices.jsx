@@ -32,6 +32,22 @@ export const fetchAllAppointmentsWhereStatus = async(status) => {
     }
 }
 
+/**
+ * 
+ * @param {string} petId - 6 digit pet id
+ * @param {string} status - Pending | Approved | Completed | Cancelled
+ * @returns object[]
+ */
+export const fetchAllAppointmentsWherePetandStatus = async(petId, status) => {
+    try {
+        const response = await axiosClient.get(`/get-all-appointments-where-pet-and-status/${petId}/${status}`);
+        return response.data;
+    } catch(error) {
+        console.error(error)
+        throw error;
+    }
+}
+
 
 
 /**
