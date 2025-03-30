@@ -363,7 +363,14 @@ export default function AdminViewAppointment() {
                         </div>
                     )}
 
-                    {(appointment.status !== "Pending" && appointment.assigned_staffs && !isMarkingComplete) && (
+                    {(appointment.status === "Cancelled") && (
+                        <div className="appointment-cont1 w-100 mar-bottom-1">
+                            <h4 className="mar-bottom-1">Reason</h4>
+                            <p>{appointment.reason}</p>
+                        </div>
+                    )}
+
+                    {(appointment.status !== "Pending" && appointment.status !== "Cancelled" && appointment.assigned_staffs && !isMarkingComplete) && (
                         <>
                             <div 
                             className="appointment-cont1 w-100 mar-bottom-1"

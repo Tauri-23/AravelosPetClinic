@@ -1,9 +1,25 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "../../assets/css/app.css";
 import "../../assets/css/contactus.css";
 
 export default function ClientContactUs() {
+    const {setActiveNavLink} = useOutletContext();
+
+
+
+    /**
+     * OnMount
+     */
+    useEffect(() => {
+        setActiveNavLink("Contact Us");
+    }, []);
+
+
+
+    /**
+     * Render
+     */
     return (
         <div className="guest-contact-page page inter">
             <div className="gen-margin">

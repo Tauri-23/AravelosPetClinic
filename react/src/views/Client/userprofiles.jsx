@@ -11,9 +11,11 @@
     import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
     import * as Icon from 'react-bootstrap-icons';
 import { Button } from 'antd';
+import { useOutletContext } from 'react-router-dom';
 
 const userprofiles = () => {
     const { showModal } = useModal();
+    const {setActiveNavLink} = useOutletContext();
     const { user, setUser } = useStateContext();
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({});
@@ -27,14 +29,16 @@ const userprofiles = () => {
      * Onmount
      */
     useEffect(() => {
+        setActiveNavLink("Profile");
+
         const getAllPets = async () => {
-        try {
-            const data = await fetchAllPetsWhereClient(user.id);
-            console.log(data);
-            setPets(data);
-        } catch (error) {
-            console.error(error);
-        }
+            try {
+                const data = await fetchAllPetsWhereClient(user.id);
+                console.log(data);
+                setPets(data);
+            } catch (error) {
+                console.error(error);
+            }
         };
 
         getAllPets();
@@ -46,8 +50,7 @@ const userprofiles = () => {
      * Handlers
      */
     const handlePetClick = (pet) => {
-        setSelectedPet(pet); // Set the selected pet to show in modal
-        // showModal('EditPetModal1', { pet }); // Pass the entire pet object
+        showModal('EditPetModal1', { pet }); // Pass the entire pet object
     };
 
     const handleAddPetPost = (petName, petType, petGender, petDOB, petBreed, petPic) => {
@@ -85,7 +88,6 @@ const userprofiles = () => {
     };
 
     /**
-     * 
      * @param {string} mode - (allergy | medication | disease)
      */
     const handleAddPetMedicalHistory = (mode) => {
@@ -194,7 +196,9 @@ const userprofiles = () => {
     // Loading
     if (!user) return <div>Loading...</div>;
 
-    // Return component
+    /**
+     * Render
+     */
     return (
         <div className="page inter">
             <div className="prof gen-margin d-flex ">
@@ -333,69 +337,6 @@ const userprofiles = () => {
                             <div className="add-icon ">+</div>
                         </div>
                     </div>
-
-                    {/* Pet Medical History */}
-                    {(selectedPet !== null) && (
-                        <div className='d-flex flex-direction-y gap1' style={{overflowY: "scroll", height: "500px"}}>
-                            <h3>Pet Medical History ({selectedPet.name})</h3>
-
-                            {/* Allergies */}
-                            <div>
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <h5>Allergies</h5>
-                                    <button className="primary-btn-blue1" onClick={() => handleAddPetMedicalHistory("allergy")}>Add Item</button>
-                                </div>
-                                <div className="d-flex flex-direction-y gap3">
-                                    {selectedPet?.allergies.length > 0
-                                    ? selectedPet?.allergies.map((allergy, index) => (
-                                        <div key={index}>{allergy.allergy}</div>
-                                    ))
-                                    : (<>No Records</>)}
-                                </div>
-                            </div>
-
-                            {/* Medications */}
-                            <div>
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <h5>Medications</h5>
-                                    <button className="primary-btn-blue1" onClick={() => handleAddPetMedicalHistory("medication")}>Add Item</button>
-                                </div>
-                                <div className="d-flex flex-direction-y gap3">
-                                    {selectedPet?.medications.length > 0
-                                    ? selectedPet?.medications.map((medication, index) => (
-                                        <div key={index}>{medication.medication}</div>
-                                    ))
-                                    : (<>No Records</>)}
-                                </div>
-                            </div>
-
-                            {/* Diseases */}
-                            <div>
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <h5>Diseases / Conditions</h5>
-                                    <button className="primary-btn-blue1" onClick={() => handleAddPetMedicalHistory("disease")}>Add Item</button>
-                                </div>
-                                <div className="d-flex flex-direction-y gap3">
-                                    {selectedPet?.diseases.length > 0
-                                    ? selectedPet?.diseases.map((disease, index) => (
-                                        <div key={index}>{disease.disease}</div>
-                                    ))
-                                    : (<>No Records</>)}
-                                </div>
-                                
-                            </div>
-
-                            {/* Vaccinations */}
-                            <div>
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <h5>Vaccinations</h5>
-                                    <button className="primary-btn-blue1" onClick={() => handleAddPetMedicalHistory()}>Add Item</button>
-                                </div>
-                                No Records
-                            </div>
-
-                        </div>
-                    )}
                     
                 </div>
 

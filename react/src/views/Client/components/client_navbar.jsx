@@ -10,7 +10,10 @@ export default function ClientNavbar({activeNavLink, onLogout}) {
                 <Link to={'/ClientIndex'} className={`client-navbar-link ${activeNavLink === "Home" ? "active" : ""}`}>
                     Home
                 </Link>
-                <Link to={'BookAppointment'} className={`client-navbar-link ${activeNavLink === "Appointments" ? "active" : ""}`}>
+                <Link to={'BookAppointment'} className={`client-navbar-link ${activeNavLink === "Book Appointment" ? "active" : ""}`}>
+                    Book Appointments
+                </Link>
+                <Link to={'Appointments'} className={`client-navbar-link ${activeNavLink === "Appointments" ? "active" : ""}`}>
                     Appointments
                 </Link>
                 <Link to={'ClientContactUs'} className={`client-navbar-link ${activeNavLink === "Contact Us" ? "active" : ""}`}>
@@ -22,9 +25,7 @@ export default function ClientNavbar({activeNavLink, onLogout}) {
 
             </div>
 
-            <div className="nav1-sign">
-                <Link to={''} className="nav1-link" onClick={onLogout}>Sign out</Link>
-            </div>
+            <button className="primary-btn-red1" onClick={onLogout}>Sign out</button>
         </nav>
     );
 }

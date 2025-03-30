@@ -14,7 +14,7 @@ import AdminInventoryDefault from "./views/Admin/Inventory/inventory_default";
 import AdminInventoryIndex from "./views/Admin/Inventory/inventory_index";
 import AddItem from "./views/Admin/Inventory/addItem";
 import ClinicCalendar from "./views/Admin/Appointments/clinicCalendar";
-import BookAppointment from "./views/Client/appointment/bookappointment";
+import BookAppointment from "./views/Client/BookAppointment/bookappointment";
 import MyAppointments from "./views/Client/appointment/myappointments";
 import AdminFeedback from "./views/Admin/adminFeedback";
 import AdminFeedbackAnalysis from "./views/Admin/adminFeedbackAnalysis";
@@ -31,6 +31,12 @@ import AdminManageProfilesClients from "./views/Admin/ManageProfiles/admin_manag
 import AdminManageProfilesAdmins from "./views/Admin/ManageProfiles/admin_manage_profiles_admins";
 import AdminManageProfileViewClientProfile from "./views/Admin/ManageProfiles/admin_manage_profile_view_client_profile";
 import AdminManageProfileViewPetProfile from "./views/Admin/ManageProfiles/admin_manage_profile_view_pet_profile";
+import ClientAppointmentsDefault from "./views/Client/appointment/client_appointments_default";
+import ClientAppointmentsPending from "./views/Client/appointment/client_appointments_pending";
+import ClientAppointmentsApproved from "./views/Client/appointment/client_appointments_approved";
+import ClientAppointmentsCompleted from "./views/Client/appointment/client_appointments_completed";
+import ClientAppointmentsCancelled from "./views/Client/appointment/client_appointments_cancelled";
+import ClientViewAppointment from "./views/Client/appointment/client_view_appointment";
 
 const router = createBrowserRouter([
     /*
@@ -78,13 +84,45 @@ const router = createBrowserRouter([
                 index: true,
                 element: <ClientIndex />
             },
+
+
+            /**
+             * Book Appointment
+             */
             {
-                path: 'BookAppointment', // Remove leading `/`
+                path: 'BookAppointment',
                 element: <BookAppointment />
             },
+
+
+            /**
+             * Appointments
+             */
             {
-                path: 'BookAppointment/MyAppointments', // Remove leading `/`
-                element: <MyAppointments />
+                path: "Appointments",
+                element: <ClientAppointmentsDefault/>,
+                children: [
+                    {
+                        index: true,
+                        element: <ClientAppointmentsPending/>
+                    },
+                    {
+                        path: "Approved",
+                        element: <ClientAppointmentsApproved/>
+                    },
+                    {
+                        path: "Completed",
+                        element: <ClientAppointmentsCompleted/>
+                    },
+                    {
+                        path: "Cancelled",
+                        element: <ClientAppointmentsCancelled/>
+                    }
+                ]
+            },
+            {
+                path: "ViewAppointment/:appointmentId",
+                element: <ClientViewAppointment/>
             },
 
             {

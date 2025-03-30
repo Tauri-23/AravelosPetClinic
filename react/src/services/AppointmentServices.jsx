@@ -12,6 +12,23 @@ export const fetchAllClientAppointments = async(clientId) => {
     }
 }
 
+/**
+ * 
+ * @param {string} clientId - 6 digit client id
+ * @param {status} status - Pending | Approved | Completed | Cancelled
+ * @returns 
+ */
+export const fetchAllClientAppointmentsWhereClientIdAndStatus = async(clientId, status) => {
+    try {
+        const response = await axiosClient.get(`/get-all-appointments-where-clientid-and-status/${clientId}/${status}`);
+        return response.data; //end
+        // return response.data;
+    } catch(error) {
+        console.error(error)
+        throw error;
+    }
+}
+
 export const fetchAllAppointments = async() => {
     try {
         const response = await axiosClient.get('/get-all-appointments');

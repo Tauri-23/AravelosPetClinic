@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import "../../../assets/css/bookappointment.css";
 import ClientCalendar from "../../../components/clientCalendar.jsx";
 import CustomToolbar from "../../../components/custom_toolbar.jsx";
@@ -7,7 +7,7 @@ import { formatTime, isEmptyOrSpaces, notify } from "../../../assets/js/utils.js
 import axiosClient from "../../../axios-client.js";
 import { useModal } from "../../../contexts/ModalContext.jsx";
 import { useStateContext } from "../../../contexts/ContextProvider.jsx";
-import { fetchAllPetsWhereClient } from '../../../services/PetServices';
+import { fetchAllPetsWhereClient } from '../../../services/PetServices.jsx';
 import {Button, Calendar, DatePicker, Select, Spin, Steps, TimePicker} from "antd";
 import { fetchAllClinicServices } from "../../../services/ClinicServicesServices.jsx";
 
@@ -21,6 +21,7 @@ export default function BookAppointment() {
 
     // Data from database
     const {user} = useStateContext();
+    const {setActiveNavLink} = useOutletContext();
     const [clinicServices, setClinicServices] = useState(null);
     const [pets, setPets] = useState(null);
 
@@ -42,6 +43,8 @@ export default function BookAppointment() {
      * On mount
      */
     useEffect(() => {
+        setActiveNavLink("Book Appointment");
+        
         const getAll = async() => {
             const [clinicServicesDb, petsDb] = await Promise.all([
                 fetchAllClinicServices(),
@@ -77,7 +80,7 @@ export default function BookAppointment() {
                 .then(({data}) => {
                     if(data.status === 200) {
                         notify('success', data.message, 'top-center', 3000);
-                        navigate("MyAppointments");
+                        navigate("/ClientIndex/Appointments");
                     } else {
                         notify('success', data.message, 'top-center', 3000);
                     }
@@ -107,18 +110,11 @@ export default function BookAppointment() {
      * Render
      */
     return (
-        <div className="page book-appointment">
-            <div className="bg gen-margin">
-                {clinicServices
+        <div className="content1">
+            {clinicServices
                 ? (
                     <>
-                        <div className="mini-nav bottom-margin-s">
-                                <div className="anybody medium-f bold">Book Appointment</div>
-                                <div className="separator left-margin-s right-margin-s"></div>
-                                <Link to={'MyAppointments'}>
-                                    <div className="anybody small-f semi-bold">My Appointments</div>
-                                </Link>
-                        </div>
+                        <h3 className="fw-bold mar-bottom-1">Book Appointment</h3>
 
                         <div className="grid inter justify-content-center">
                             <div className="bookapt small-form">
@@ -251,7 +247,6 @@ export default function BookAppointment() {
                 : (
                     <Spin size="large"/>
                 )}
-            </div>
         </div>
     );
 }

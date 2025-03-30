@@ -1,21 +1,19 @@
-import { useEffect } from "react"
-import { useModal } from "../../../contexts/ModalContext";
-import { formatDate, formatDateTime } from "../../../assets/js/utils";
+import { useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import { formatDateTime } from "../../../assets/js/utils";
 import { Table } from "antd";
 
-export default function AdminCancelledAppointments() {
+export default function ClientAppointmentsCancelled() {
     const navigate = useNavigate();
-    const {setActiveTab, canceledAppointments} = useOutletContext();
-    const {showModal} = useModal();
+    const {canceledAppointments, setActiveTab} = useOutletContext();
 
 
 
     /**
-     * Fetch All necessary data
+     * Onmount
      */
     useEffect(() => {
-        setActiveTab("Cancelled")
+        setActiveTab("Cancelled");
     }, []);
 
 
@@ -53,27 +51,18 @@ export default function AdminCancelledAppointments() {
 
 
     /**
-     * Handlers
-     */
-    const handleAppointmentRecordClick = (record) => {
-        showModal('AppointmentRecordModalAdmin1', {record, handleCancel});
-    }
-
-
-
-    /**
      * Render
      */
     return(
         <>
             <Table
             columns={appointmentColumns}
-            dataSource={canceledAppointments.map((item) => ({...item, key: item.id}))}
+            dataSource={canceledAppointments?.map((item) => ({...item, key: item.id}))}
             bordered
             onRow={(record) => ({
-                onClick: () => navigate(`/AdminIndex/ViewAppointment/${record.id}`)
+                onClick: () => navigate(`/ClientIndex/ViewAppointment/${record.id}`)
             })}
             />
         </>
-    )
+    );
 }

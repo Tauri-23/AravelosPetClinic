@@ -101,9 +101,10 @@ Route::get('/get-all-inventory-categories', [inventoryCategoriesController::clas
 | Appointments
 |----------------------------------------
 */
+Route::get('/get-all-appointments', [AppointmentsController::class,'getAllAppointments']);
+Route::get('/get-all-appointments-where-clientid-and-status/{clientId}/{status}', [AppointmentsController::class,'GetAllAppointmentsWhereClientIdAndStatus']);
 Route::get('/get-all-appointments-where-client/{clientId}', [AppointmentsController::class,'getAllAppointmentWhereClient']);
 Route::get('/get-appt-where-id/{appointmentId}', [AppointmentsController::class,'getAppointmentWhereId']);
-Route::get('/get-all-appointments', [AppointmentsController::class,'getAllAppointments']);
 Route::get('/get-all-appointments-where-status/{status}', [AppointmentsController::class,'GetAllAppointmentsWhereStatus']);
 Route::get('/get-all-appointments-where-pet-and-status/{petId}/{status}', [AppointmentsController::class,'GetAllAppointmentsWherePetAndStatus']);
 
