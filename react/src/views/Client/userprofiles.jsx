@@ -6,12 +6,14 @@
     import { notify } from '../../assets/js/utils';
     import { useStateContext } from '../../contexts/ContextProvider';
     import { fetchAllPetsWhereClient } from '../../services/PetServices';
+    import { fetchAllAppointmentsWherePetandStatus } from "../../services/AppointmentServices";
     import EditPetModal1 from '../../components/Modals/editPetModal1';
+    import { formatDate, formatDateTime } from "../../assets/js/utils";
     import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
     import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
     import * as Icon from 'react-bootstrap-icons';
-import { Button } from 'antd';
-import { useOutletContext } from 'react-router-dom';
+    import { Button,Table} from 'antd';
+    import { useOutletContext } from 'react-router-dom';
 
 const userprofiles = () => {
     const { showModal } = useModal();
@@ -22,7 +24,7 @@ const userprofiles = () => {
     const [selectedPet, setSelectedPet] = useState(null); // For pet modal
     const [newProfilePicture, setNewProfilePicture] = useState(null); // For user's profile picture
     const [pets, setPets] = useState(null);
-
+    const [history, setHistory] = useState(null);
 
 
     /**
@@ -40,17 +42,26 @@ const userprofiles = () => {
                 console.error(error);
             }
         };
-
         getAllPets();
+
+
     }, []);
-
-
 
     /**
      * Handlers
      */
     const handlePetClick = (pet) => {
-        showModal('EditPetModal1', { pet }); // Pass the entire pet object
+        setSelectedPet(pet);
+        fetchAllAppointmentsWherePetandStatus(pet.id, "Completed")
+        .then((appts) => {
+            console.log(appts);  // Log the fetched appointments for debugging
+            setHistory(appts);   // Set the fetched appointments to the history state
+        })
+        .catch((error) => console.error(error));
+        console.log(appts)
+    };
+    const handleEditPetClick = (pet) =>{
+        showModal('EditPetModal1', { pet });
     };
 
     const handleAddPetPost = (petName, petType, petGender, petDOB, petBreed, petPic) => {
@@ -141,7 +152,7 @@ const userprofiles = () => {
                         formData.append('client', user.id);
                         formData.append('disease', disease);
 
-                        
+
                         axiosClient.post("/add-pet-diseases", formData)
                         .then(({data}) => {
                             console.log(data.pets);
@@ -188,6 +199,17 @@ const userprofiles = () => {
         }).catch(error => console.error(error));
     }
 
+    const historyColumns =[
+        {
+            title: "Appointment Type",
+            render: (_, row) => row.service.service
+        },
+        {
+            title: "Appointment Date",
+            render: (_, row) => formatDateTime(row.date_time)
+        },
+
+    ]
 
 
 
@@ -219,61 +241,43 @@ const userprofiles = () => {
                             <p>Phone: {user.phone || "n/a"}</p>
                             <button onClick={() => handleEditUserClick(user)} className="primary-btn-blue1">Update</button> */}
                         </div>
-                        
+
 
                     </div>
                     <div className="left-margin top-margin">
                         <div className='user-details'>
                             <div className='detail-row semi-bold'>
                             <div className="label-div">Name: </div>
-                            <input 
-                            className="left-margin ud detail-cont" 
-                            type="text" 
+                            <input
+                            className="left-margin ud detail-cont"
+                            type="text"
                             value={`${user.fname || ''} ${user.mname || ''} ${user.lname || ''}`.trim() || 'n/a'} readOnly />
                             <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("name")}/>
 
                             </div>
                             <div className='detail-row semi-bold'>
                             <div className="label-div">Gender: </div>
-                            <input 
-                            className="left-margin ud detail-cont" 
-                            type="text" 
+                            <input
+                            className="left-margin ud detail-cont"
+                            type="text"
                             value={user.gender || 'n/a'} readOnly />
                             <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("gender")}/>
 
                             </div>
                             <div className='detail-row semi-bold'>
                             <div className="label-div">Email: </div>
-                            <input 
-                            className="left-margin ud detail-cont"  
-                            type="text" 
+                            <input
+                            className="left-margin ud detail-cont"
+                            type="text"
                             value={user.email || 'n/a'} readOnly />
                             <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("email")}/>
 
                             </div>
                             <div className='detail-row semi-bold'>
-                            <div className="label-div">Birthday: </div>
-                            <input 
-                            className="left-margin ud detail-cont" 
-                            type="text" 
-                            value={user.birthday || 'n/a'} readOnly />
-                            <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("birthday")}/>
-
-                            </div>
-                            <div className='detail-row semi-bold'>
-                            <div className="label-div">Address: </div>
-                            <input 
-                            className="left-margin ud detail-cont" 
-                            type="text" 
-                            value={user.address || 'n/a'} readOnly />
-                            <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("address")}/>
-
-                            </div>
-                            <div className='detail-row semi-bold'>
                             <div className="label-div">Phone: </div>
-                            <input 
-                            className="left-margin ud detail-cont" 
-                            type="text" 
+                            <input
+                            className="left-margin ud detail-cont"
+                            type="text"
                             value={user.phone || 'n/a'} readOnly />
                             <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("phone")}/>
 
@@ -282,14 +286,14 @@ const userprofiles = () => {
                             {/* <u>Change Password</u> */}
                             <div className='detail-row semi-bold'>
                                 <div className="label-div">Password: </div>
-                                <input 
-                                className="left-margin ud detail-cont" 
-                                type="password" 
-                                value="********" 
+                                <input
+                                className="left-margin ud detail-cont"
+                                type="password"
+                                value="********"
                                 readOnly />
                                 <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("phone")}/>
                             </div>
-                            
+
 
                             {/*  */}
                             <div className='d-flex w-100 align-items-center gap1 mar-top-1'>
@@ -326,9 +330,16 @@ const userprofiles = () => {
                             <div
                                 key={pet.id}
                                 className="pet-profile"
-                                onClick={() => handlePetClick(pet)}
                                 >
-                                <img src={`/assets/media/pets/${pet.picture}`} alt={pet.name} className="pet-picture rounded-corners" />
+                                <div className="position-relative inline-block">
+                                    <img onClick={() => handlePetClick(pet)} src={`/assets/media/pets/${pet.picture}`} alt={pet.name} className="pet-picture rounded-corners" />
+                                    <Icon.PencilFill size={18} className="peteditbtn shadow position-absolute p-1 rounded full text-white cursor-pointer"
+                                    onClick={(e)=>{
+                                        e.stopPropagation();
+                                        handleEditPetClick(pet)}
+                                    }>
+                                    </Icon.PencilFill>
+                                </div>
                                 <p>{pet.name}</p>
                             </div>
                         ))}
@@ -337,7 +348,22 @@ const userprofiles = () => {
                             <div className="add-icon ">+</div>
                         </div>
                     </div>
-                    
+                    <div className="prof header bold anybody semi-medium-f">
+                        {selectedPet ? `${selectedPet.name}'s History` : "History"}
+                    </div>
+                    <div className ="pet-history">
+                        <Table
+                        columns={historyColumns}
+                        dataSource={history?.map((item) => ({...item, key: item.id}))}
+                        bordered
+                        pagination={{pageSize:2,showQuickJumper: true }}
+                        rowClassName="smaller-row"
+                        onRow={(record) => ({
+                            //onClick: () => navigate(`/AdminIndex/ViewAppointment/${record.id}`)
+                        })}
+                        />
+                    </div>
+
                 </div>
 
             </div>

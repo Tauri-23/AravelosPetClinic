@@ -68,13 +68,15 @@ export default function ClientIndex() {
                     </section>
 
                     <section className="cta">
-                        <button className="cta-button primary-btn-blue1">Book an Appointment Now</button>
+                        <Link to={"/ClientIndex/BookAppointment"}>
+                            <button className="cta-button primary-btn-blue1">Book an Appointment Now</button>
+                        </Link>
                     </section>
                 </section>
 
             </div>
         </div>
-        
+
     );
 }
 

@@ -112,7 +112,7 @@ gap:2vw;
     flex-wrap: wrap;
     justify-content: center;
     overflow-y: auto;
-    max-height:31vw;
+    max-height:11vw;
     scrollbar-gutter: stable;
 
 }
@@ -137,6 +137,7 @@ gap:2vw;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease-in-out;
 }
+
 
 .pet-profile.add-pet:hover {
   background-color: #ddd;
@@ -176,7 +177,15 @@ gap:2vw;
 .pet-name {
   padding: 10px;
 }
-
+.peteditbtn{
+    top:.5rem;
+    right:.5rem;
+    background: #1677ff;
+}
+.smaller-row{
+    height:15px;
+    line-height:15px;
+}
 /* Modal container (you can keep this section from your original CSS) */
 
 .modal {

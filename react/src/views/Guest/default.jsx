@@ -5,6 +5,7 @@ import axiosClient from "../../axios-client";
 import { ToastContainer } from "react-toastify";
 import { ModalProvider } from "../../contexts/ModalContext";
 import ModalManager from "../../managers/modalManager";
+import GuestNavbar from "./components/guest_navbar";
 
 
 
@@ -12,6 +13,7 @@ export default function GuestDefault() {
     const location = useLocation();
     const {token, setUser, userType, setUserType, setToken} = useStateContext();
     const url = location.pathname;
+    const [activeNavLink, setActiveNavLink] = useState("Home");
 
     useEffect(() => {
         console.log(token);
@@ -43,22 +45,17 @@ export default function GuestDefault() {
     return(
 
         <ModalProvider>
-            <ModalManager/>
-            <nav className="nav nav1">
-                <div className="nav1-logo-div">
-                <img src="/assets/media/logos/paw.png" className="nav1-logo" alt="logo"/>
-                </div>
-                <div className="nav1-links">
-                    <Link to={'/'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/home.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Home</p><div className={`nav1-line${url === "/" ? " active" : ""}`} ></div></div></Link>
-                    <Link to={'/GuestContactUs'} className="nav2-link"><div className="wx"><img src="/assets/media/icons/user.svg" className="nav1-icons" alt="logo"/></div><div className="nav1-link"><p>Contact Us</p><div className={`nav1-line${url === "/GuestContactUs" ? " active" : ""}`} ></div></div></Link>
-                </div>
+            <div className="position-relative">
+                <ModalManager/>
 
-                <div className="nav1-sign">
-                    <Link to={'/Sign'} className="nav1-link">Sign In</Link>
-                </div>
-            </nav>
-            <Outlet/>
-            <ToastContainer/>
+                <GuestNavbar activeNavLink={activeNavLink}/>
+
+                <Outlet context={{
+                    activeNavLink, setActiveNavLink
+                }}/>
+
+                <ToastContainer/>
+            </div>
         </ModalProvider>
 
     );

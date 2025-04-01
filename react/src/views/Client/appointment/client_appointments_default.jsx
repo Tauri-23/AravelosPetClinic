@@ -52,23 +52,22 @@ export default function ClientAppointmentsDefault() {
                 <>
                     <div className="mar-bottom-1 d-flex justify-content-between align-items-center">
                         <h3 className="fw-bold">Appointments</h3>
-                        <button className="primary-btn-blue1">Add Appointment</button>
                     </div>
 
                     <div className="d-flex gap3 mar-bottom-1">
-                        <Link to={''} 
+                        <Link to={''}
                         className={`${activeTab === "Pending" ? "primary" : "secondary"}-btn-blue1`}>
                             Pending {pendingAppointments.length > 0 ? pendingAppointments.length : ""}
                         </Link>
-                        <Link to={'Approved'} 
+                        <Link to={'Approved'}
                         className={`${activeTab === "Approved" ? "primary" : "secondary"}-btn-blue1`}>
                             Approved {approvedAppointments.length > 0 ? approvedAppointments.length : ""}
                         </Link>
-                        <Link to={'Completed'} 
+                        <Link to={'Completed'}
                         className={`${activeTab === "Completed" ? "primary" : "secondary"}-btn-blue1`}>
                             Completed {completedAppointments.length > 0 ? completedAppointments.length : ""}
                         </Link>
-                        <Link to={'Cancelled'} 
+                        <Link to={'Cancelled'}
                         className={`${activeTab === "Cancelled" ? "primary" : "secondary"}-btn-blue1`}>
                             Cancelled {canceledAppointments.length > 0 ? canceledAppointments.length : ""}
                         </Link>

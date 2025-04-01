@@ -36,7 +36,7 @@ export default function BookAppointment() {
     const [selectedTime, setSelectedTime] = useState("");
 
     const [step, setStep] = useState(0);
-    
+
 
 
     /**
@@ -44,7 +44,7 @@ export default function BookAppointment() {
      */
     useEffect(() => {
         setActiveNavLink("Book Appointment");
-        
+
         const getAll = async() => {
             const [clinicServicesDb, petsDb] = await Promise.all([
                 fetchAllClinicServices(),
@@ -58,7 +58,7 @@ export default function BookAppointment() {
         getAll();
     }, []);
 
-    
+
 
     /**
      * handlers
@@ -75,7 +75,7 @@ export default function BookAppointment() {
                 formData.append("service", selectedService);
                 formData.append("status", "Pending");
                 formData.append("note", note);
-        
+
                 axiosClient.post('/add-appointment', formData)
                 .then(({data}) => {
                     if(data.status === 200) {
@@ -85,7 +85,7 @@ export default function BookAppointment() {
                         notify('success', data.message, 'top-center', 3000);
                     }
                 }).catch(error =>console.error(error))
-            }, 
+            },
             handleFunction
         });
 
@@ -141,7 +141,7 @@ export default function BookAppointment() {
                                             value={selectedPet}
                                             options={[
                                                 {label: "Select pet", value: ""},
-                                                ...pets.map(pet => 
+                                                ...pets.map(pet =>
                                                     ({label: pet.name, value: pet.id})
                                                 )
                                             ]}
@@ -160,7 +160,7 @@ export default function BookAppointment() {
                                             value={selectedService}
                                             options={[
                                                 {label: "Select a service", value: ""},
-                                                ...clinicServices.map(service => 
+                                                ...clinicServices.map(service =>
                                                     ({label: service.service, value: service.id})
                                                 )
                                             ]}
@@ -171,7 +171,7 @@ export default function BookAppointment() {
 
                                         <div className="d-flex flex-direction-y gap4 mar-bottom-3">
                                             <label htmlFor="note" className="choose semi-bold">Note (optional)</label>
-                                            <textarea 
+                                            <textarea
                                             id="note"
                                             value={note}
                                             onInput={(e) => setNote(e.target.value)}></textarea>
@@ -194,9 +194,9 @@ export default function BookAppointment() {
                                     <div className="d-flex flex-direction-y gap3">
                                         <div>
                                             <label htmlFor="date">Select Date</label>
-                                            <DatePicker 
-                                            size="large" 
-                                            id="date" 
+                                            <DatePicker
+                                            size="large"
+                                            id="date"
                                             className="w-100"
                                             onChange={onDateSelect}
                                             />
@@ -216,7 +216,7 @@ export default function BookAppointment() {
                                             </div>
                                         </div>
 
-                                        
+
 
                                         <div className="d-flex justify-content-center gap3">
                                             <Button

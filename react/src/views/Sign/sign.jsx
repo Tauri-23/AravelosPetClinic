@@ -88,9 +88,9 @@ export default function Sign() {
      * Render
      */
     return (
-    <div className="signin-child">
+    <div className="signin-child py-5">
         <div className={`container ${isSignUp ? 'right-panel-active' : ''}`} id="container">
-        
+
         {/* SignUpContainer */}
         <div className={`form-container sign-up-container ${isSignUp ? 'active' : ''}`}>
             <form onSubmit={handleSignupPost}>
@@ -117,7 +117,7 @@ export default function Sign() {
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
                     />
-                    
+
                     <Input.Password
                     size="large"
                     placeholder="password"
