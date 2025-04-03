@@ -15,6 +15,7 @@
     import { Button,Table} from 'antd';
     import { useOutletContext } from 'react-router-dom';
 
+
 const userprofiles = () => {
     const { showModal } = useModal();
     const {setActiveNavLink} = useOutletContext();
@@ -60,8 +61,9 @@ const userprofiles = () => {
         .catch((error) => console.error(error));
         console.log(appts)
     };
-    const handleEditPetClick = (pet) =>{
-        showModal('EditPetModal1', { pet });
+    const handleEditPetClick = (pet) => {
+        // showModal('EditPetModal1', { pet });
+        showModal('EditPetModal1', { pet: pet, onClose: () => { setSelectedPet(null); }});
     };
 
     const handleAddPetPost = (petName, petType, petGender, petDOB, petBreed, petPic) => {

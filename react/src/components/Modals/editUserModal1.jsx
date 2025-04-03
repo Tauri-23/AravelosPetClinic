@@ -42,7 +42,7 @@ const handlePhoneChange = (e) => {
 //     const handleFunction = "handleUpdateProfile";
 //     showModal('ConfirmActionModal1', {handlePost: handleUpdateInfo});
 //   };
-  
+
   const handleUpdateInfo = (editType) => {
     const formData = new FormData();
 
@@ -116,8 +116,8 @@ const handlePhoneChange = (e) => {
                         <div className="label-div">Password: </div>
                         <input
                             className='top-margin-s'
-                            type="password" 
-                            placeholder="Re-enter Password" 
+                            type="password"
+                            placeholder="Re-enter Password"
                             title="Re-enter your password to verify changes"
                             value={password}
                             onInput={(e) => setPassword(e.target.value)}
@@ -161,8 +161,8 @@ const handlePhoneChange = (e) => {
                         <div className="label-div">Password: </div>
                         <input
                             className='top-margin-s'
-                            type="password" 
-                            placeholder="Re-enter Password" 
+                            type="password"
+                            placeholder="Re-enter Password"
                             title="Re-enter your password to verify changes"
                             value={password}
                             onInput={(e) => setPassword(e.target.value)}
@@ -204,7 +204,7 @@ const handlePhoneChange = (e) => {
                         <div className="label-div">New Email: </div>
                         <input
                         className='top-margin-s'
-                        type="text" 
+                        type="text"
                         placeholder="New Email"
                         value={newEmail}
                         onInput={(e) => setNewEmail(e.target.value)}/>
@@ -214,7 +214,7 @@ const handlePhoneChange = (e) => {
                         <div className="label-div">Re-enter Email: </div>
                         <input
                         className='top-margin-s'
-                        type="text" 
+                        type="text"
                         placeholder="Re-enter  Email"
                         value={conNewEmail}
                         onInput={(e) => setConNewEmail(e.target.value)}/>
@@ -250,44 +250,6 @@ const handlePhoneChange = (e) => {
                 </div>
                 </div>
                 </>
-            )
-
-        case 'birthday':
-                return(
-                    <>
-                        <div className='bold semi-medium-f anybody t-align-center'>
-                            Change Birthday
-                        </div>
-                        <hr></hr>
-                        <div className="detail-row semi-bold">
-                            <div className="label-div">Birthday: </div>
-                            <input
-                                className='top-margin-s'
-                                type="date"
-                            onChange={handleInputChange(setBirthday)}
-                                value={birthday || user.birthday} />
-                        </div>
-                        <div className="detail-row semi-bold">
-                            <div className="label-div">Password: </div>
-                            <input
-                                className='top-margin-s'
-                                type="password" placeholder="Re-enter Password" title="Re-enter your password to verify changes"/>
-                        </div>
-
-                    <div className="d-flex flex-direction-x flex-row-reverse gap3 top-margin justify-content-between">
-
-                    <div
-                    onClick={() => {handleUpdateClicks(); onClose();}}
-                    className="primary-btn-blue1 text-center"
-                    >
-                        Update
-                    </div>
-
-                    <div className="sub-button text-center d-flex gap3 align-items-center justify-content-center" onClick={onClose}>
-                        Cancel
-                    </div>
-                    </div>
-                    </>
             )
         case 'phone':
                 return(
@@ -330,44 +292,6 @@ const handlePhoneChange = (e) => {
                     </div>
                     </>
             )
-        case 'address':
-                return(
-                    <>
-                        <div className='bold semi-medium-f anybody t-align-center'>
-                            Change Address
-                        </div>
-                        <hr></hr>
-                        <div className="detail-row semi-bold">
-                            <div className="label-div">Address: </div>
-                            <input
-                                className='top-margin-s'
-                                type="text"
-                                onChange={handleInputChange(setAddress)}
-                                value={address || user.address} />
-                        </div>
-                        <div className="detail-row semi-bold">
-                            <div className="label-div">Password: </div>
-                            <input
-                                className='top-margin-s'
-                                type="password" placeholder="Re-enter Password" title="Re-enter your password to verify changes"/>
-                        </div>
-
-                    <div className="d-flex flex-direction-x flex-row-reverse gap3 top-margin justify-content-between">
-
-                    <div
-                    onClick={() => {handleUpdateClicks(); onClose();}}
-                    className="primary-btn-blue1 text-center"
-                    >
-                        Update
-                    </div>
-
-                    <div className="sub-button text-center d-flex gap3 align-items-center justify-content-center" onClick={onClose}>
-                        Cancel
-                    </div>
-                    </div>
-                    </>
-            )
-        
         case 'password':
                 return(
                     <>
