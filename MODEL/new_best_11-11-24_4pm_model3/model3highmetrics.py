@@ -132,8 +132,8 @@ class VetFeedbackAnalyzer:
             'tl': {'ang', 'mga', 'sa', 'na', 'ng', 'at', 'ay', 'ko', 'mo', 'niya', 'ito', 'po',
                    'para', 'siya', 'nila', 'namin', 'natin', 'kami', 'tayo', 'kayo', 'sila'}
         }
-    
-    
+
+
 
     def preprocess_text(self, text: str, lang: str) -> str:
         """Preprocess text by removing punctuation, numbers, and stopwords"""
@@ -146,9 +146,9 @@ class VetFeedbackAnalyzer:
         # Remove stopwords
         words = [word for word in words if word not in self.stopwords[lang]]
         return ' '.join(words)
-    
-    
-    
+
+
+
     def get_word_frequency(self, text: str, lang: str) -> int:
         """Calculate the frequency of repeated meaningful words"""
         processed_text = self.preprocess_text(text, lang)
@@ -156,9 +156,9 @@ class VetFeedbackAnalyzer:
         word_counts = Counter(words)
         # Sum the counts of words that appear more than once
         return sum(count for count in word_counts.values() if count > 1)
-    
-    
-    
+
+
+
     def _parse_model_path(self, model_path: str) -> dict:
         """Parse both old and new format model paths"""
         info = {}
@@ -175,9 +175,9 @@ class VetFeedbackAnalyzer:
                 info['epoch'] = int(model_path.split('_')[-1])
                 info['timestamp'] = None
         return info
-    
-    
-    
+
+
+
     def load(self, model_path: str):
         """Load a saved model with support for both formats"""
         try:
@@ -210,9 +210,9 @@ class VetFeedbackAnalyzer:
             print(f"Error loading model: {str(e)}")
             print("Falling back to base model...")
             self._load_base_model()
-    
-    
-    
+
+
+
     def _load_base_model(self):
         """Load the base BERT model"""
         self.model = BertForSequenceClassification.from_pretrained(
@@ -223,9 +223,9 @@ class VetFeedbackAnalyzer:
         self.is_base_model = True
         self.current_model_path = None
         # print("Base BERT model loaded")
-    
-    
-    
+
+
+
     def get_model_status(self) -> str:
         """Return current model status with detailed information"""
         if self.is_base_model:
@@ -237,9 +237,9 @@ class VetFeedbackAnalyzer:
         elif self.model_info['format'] == 'new':
             status += f" (Trained on {self.model_info['timestamp']}, Epoch {self.model_info['epoch']})"
         return status
-    
-    
-    
+
+
+
     def detect_language(self, text: str) -> str:
         """Detect if text is primarily English or Tagalog"""
         tagalog_markers = set(['ang', 'ng', 'mga', 'sa', 'na', 'at'])
@@ -248,9 +248,9 @@ class VetFeedbackAnalyzer:
             return 'en'
         tagalog_count = sum(1 for word in words if word in tagalog_markers)
         return 'tl' if tagalog_count / len(words) > 0.1 else 'en'
-    
-    
-    
+
+
+
     def identify_aspects(self, text: str, lang: str) -> List[str]:
         """Identify aspects mentioned in text"""
         text = text.lower()
@@ -259,9 +259,9 @@ class VetFeedbackAnalyzer:
             if any(keyword in text for keyword in keywords[lang]):
                 aspects.append(aspect)
         return aspects if aspects else ['general']
-    
-    
-    
+
+
+
     def analyze_sentiment(self, text: str) -> str:
         """Rule-based sentiment analysis with improved negation handling"""
         lang = self.detect_language(text)
@@ -317,8 +317,8 @@ class VetFeedbackAnalyzer:
                 return 'negative'
             return 'neutral'
 
-    
-    
+
+
     def train_batch(self, texts, labels):
         """Process a single training batch"""
         encoded = self.tokenizer(
@@ -344,92 +344,92 @@ class VetFeedbackAnalyzer:
         torch.cuda.empty_cache() if self.device.type == 'cuda' else None
 
         return loss.item()
-    
-    
-    
+
+
+
     #used
     def train(self, dataset_path: str, model_save_path: str, epochs=50):
         "Optimized training with improved efficiency and memory handling."
         print("starting training...")
         self._load_base_model()
         self.model.train()
-        
+
         # load dataset once and preprocess
         df = pd.read_csv(dataset_path)
         df.dropna(inplace=True)  # remove any NaN values in dataset
         class_counts = df['sentiment'].value_counts().to_dict()
         total_samples = sum(class_counts.values())
-        
+
         print("\ninitial class distribution:")
         for cls, count in class_counts.items():
             print(f"{cls}: {count} samples ({count/total_samples*100:.2f}%)")
-        
+
         # compute normalized class weights (capped to prevent instability)
         class_weights = {cls: max(min(total_samples / (3 * count), 10.0), 0.1) for cls, count in class_counts.items()}
         weight_mapping = {'negative': 0, 'positive': 1, 'neutral': 2}
         class_weight_tensor = torch.tensor([class_weights.get(k, 1.0) for k in ['negative', 'positive', 'neutral']], device=self.device)
-        
+
         # tokenize dataset upfront
         encoded_data = self.tokenizer(df['review'].tolist(), padding=True, truncation=True, max_length=128, return_tensors='pt')
         labels = torch.tensor([weight_mapping[label] for label in df['sentiment']]).to(self.device)
         dataset = TensorDataset(encoded_data['input_ids'], encoded_data['attention_mask'], labels)
         dataloader = DataLoader(dataset, batch_size=self.batch_size, shuffle=True)
-        
+
         # optimizer & scheduler
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=2e-5, weight_decay=0.01)
         scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=0, num_training_steps=len(dataloader) * epochs)
-        
+
         loss_fn = torch.nn.CrossEntropyLoss(weight=class_weight_tensor)
         best_metrics, best_epoch = None, None
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         base_save_path = f"{model_save_path}_{timestamp}"
-        
+
         for epoch in range(epochs):
             total_loss = 0
-            
+
             for input_ids, attention_mask, label_tensor in tqdm(dataloader, desc=f'epoch {epoch+1}/{epochs}'):
                 input_ids, attention_mask, label_tensor = input_ids.to(self.device), attention_mask.to(self.device), label_tensor.to(self.device)
-                
+
                 self.optimizer.zero_grad()
-                
+
                 outputs = self.model(input_ids, attention_mask=attention_mask)
                 loss = loss_fn(outputs.logits, label_tensor)
-                
+
                 if torch.isnan(loss):
                     print("warning: nan detected in loss, skipping batch")
                     continue
-                
+
                 # clip gradients before backward pass to prevent exploding gradients
                 torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
-                
+
                 loss.backward()
                 self.optimizer.step()
                 scheduler.step()
-                
+
                 total_loss += loss.item()
-                
+
             avg_loss = total_loss / len(dataloader)
             print(f'epoch {epoch+1} - average loss: {avg_loss:.4f}')
-            
+
             # save model per epoch
             epoch_save_path = f"{base_save_path}_epoch_{epoch+1}"
             os.makedirs(epoch_save_path, exist_ok=True)
             self.model.save_pretrained(epoch_save_path)
-            
+
             # evaluate model
             self.current_model_path = epoch_save_path
             self.is_base_model = False
             metrics = self.evaluate(dataset_path, quiet=True)
-            
+
             if best_metrics is None or metrics['f1_score'] > best_metrics['f1_score']:
                 best_metrics = metrics
                 best_epoch = epoch + 1
                 self.best_model_path = epoch_save_path
                 self.best_metrics = metrics
-            
+
             print(f"epoch {epoch+1} metrics:")
             self._print_metrics(metrics)
-            
+
         print("\ntraining completed!")
         print(f"best performing model was epoch {best_epoch}:")
         self._print_metrics(best_metrics)
@@ -437,8 +437,8 @@ class VetFeedbackAnalyzer:
 
 
 
-    
-    
+
+
     #used
     def load(self, model_path: str):
         """Load a saved model"""
@@ -455,9 +455,9 @@ class VetFeedbackAnalyzer:
             print(f"Error loading model: {str(e)}")
             print("Falling back to base model...")
             self._load_base_model()
-    
-    
-    
+
+
+
     def evaluate_batch(self, texts, labels):
         """Evaluate a single batch"""
         encoded = self.tokenizer(
@@ -478,9 +478,9 @@ class VetFeedbackAnalyzer:
         torch.cuda.empty_cache() if self.device.type == 'cuda' else None
 
         return predictions
-    
-    
-    
+
+
+
     def collect_aspect_statistics(self, dataset_path: str, aspect: str) -> Dict:
         """Collect statistics for a specific aspect from the dataset"""
         print(f"\nAnalyzing {aspect} reviews...")
@@ -552,9 +552,9 @@ class VetFeedbackAnalyzer:
         }
 
         return stats
-    
-    
-    
+
+
+
     def collect_all_aspect_statistics(self, dataset_path: str) -> Dict[str, Dict]:
         """Collect statistics for all aspects from the dataset"""
         # print("\nAnalyzing all aspects...")
@@ -641,9 +641,9 @@ class VetFeedbackAnalyzer:
             }
 
         return all_stats
-    
-    
-    
+
+
+
     def display_aspect_statistics(self, stats: Dict):
         """Display statistics for an aspect in a formatted way"""
         print(f"\nPositive Reviews: {stats['positive']['count']} ({stats['positive']['percentage']:.1f}%)")
@@ -662,9 +662,9 @@ class VetFeedbackAnalyzer:
             print(f"- {comment}")
 
         print(f"\nTotal Reviews: {stats['total']}")
-    
-    
-    
+
+
+
     def display_all_aspect_statistics(self, all_stats: Dict[str, Dict]):
         """Display statistics for all aspects in a formatted way"""
         for aspect, stats in all_stats.items():
@@ -672,9 +672,9 @@ class VetFeedbackAnalyzer:
             print("=" * 80)
             self.display_aspect_statistics(stats)
             print("=" * 80)
-    
-    
-    
+
+
+
     def _print_metrics(self, metrics):
         """Helper to print evaluation metrics"""
         print(f"Accuracy: {metrics['accuracy']:.4f}")
@@ -682,9 +682,9 @@ class VetFeedbackAnalyzer:
         print(f"Recall: {metrics['recall']:.4f}")
         print(f"F1-Score: {metrics['f1_score']:.4f}")
         print(f"Matthews Correlation: {metrics['matthews_correlation_coefficient']:.4f}")
-    
-    
-    
+
+
+
     def evaluate(self, dataset_path: str, quiet=False):
         """Evaluate model performance"""
         if not quiet:
@@ -723,9 +723,9 @@ class VetFeedbackAnalyzer:
             self._print_metrics(metrics)
 
         return metrics
-    
-    
-    
+
+
+
     def test(self, feedback: str):
         """Test model on single feedback"""
         # print(self.get_model_status())
@@ -758,9 +758,9 @@ class VetFeedbackAnalyzer:
         }
 
         return result
-    
-    
-    
+
+
+
     def balance_dataset(self, input_path: str, output_path: str):
         """Balance dataset by augmenting minority classes"""
         print("Starting dataset balancing...")
@@ -869,7 +869,7 @@ def list_available_models(base_path: str) -> List[Dict]:
                             'path': full_path,
                             'name': dir_name
                         }
-                        
+
                         if '_20' in dir_name:  # New format
                             parts = dir_name.split('_')
                             model_info['format'] = 'new'
@@ -879,11 +879,11 @@ def list_available_models(base_path: str) -> List[Dict]:
                             model_info['format'] = 'old'
                             model_info['epoch'] = int(dir_name.split('_')[-1])
                             model_info['timestamp'] = None
-                        
+
                         available_models.append(model_info)
     except Exception as e:
         print(f"Error listing models: {str(e)}")
-    
+
     return sorted(available_models, key=lambda x: (x['format'] != 'old', x['epoch']))
 
 

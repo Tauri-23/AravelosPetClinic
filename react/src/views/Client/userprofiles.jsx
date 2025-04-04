@@ -7,13 +7,11 @@
     import { useStateContext } from '../../contexts/ContextProvider';
     import { fetchAllPetsWhereClient } from '../../services/PetServices';
     import { fetchAllAppointmentsWherePetandStatus } from "../../services/AppointmentServices";
-    import EditPetModal1 from '../../components/Modals/editPetModal1';
-    import { formatDate, formatDateTime } from "../../assets/js/utils";
-    import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-    import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
+    import { formatDateTime } from "../../assets/js/utils";
     import * as Icon from 'react-bootstrap-icons';
     import { Button,Table} from 'antd';
     import { useOutletContext } from 'react-router-dom';
+
 
 const userprofiles = () => {
     const { showModal } = useModal();

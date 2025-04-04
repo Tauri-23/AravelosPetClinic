@@ -1,5 +1,5 @@
 import { useState } from "react";
-import * as Icon from "react-bootstrap-icons"; 
+import * as Icon from "react-bootstrap-icons";
 import "../../assets/css/addPetModal1.css";
 import axiosClient from "../../axios-client";
 import { Select } from "antd";
@@ -15,11 +15,9 @@ const EditPetModal1 = ({ pet, setPets, onClose }) => {
         gender: pet.gender,
         petPic: null,
     });
-
     const handleInputChange = (e) => {
         setEditPetData({ ...editPetData, [e.target.name]: e.target.name == "petPic" ? e.target.files[0] : e.target.value });
     };
-
     const handleSave = () => {
 
         const {petPic} = editPetData;
@@ -47,8 +45,40 @@ const EditPetModal1 = ({ pet, setPets, onClose }) => {
             .catch(error => console.error(error));
     };
 
+    useEffect(() => {
+        if (!editPetData.type) return;
+
+        const fetchBreeds = async () => {
+            try {
+                let response;
+                if (editPetData.type === "Dog") {
+                    response = await fetchAllDogBreeds();
+                } else if (editPetData.type === "Cat") {
+                    response = await fetchAllCatBreeds();
+                }
+
+                // Map the API response to create breed options for the Select component
+                const breedOptions = response.map((breed) => ({
+                    label: editPetData.type === "Dog" ? breed.dog_breed : breed.cat_breed, // Use dog_breed or cat_breed as label
+                    value: breed.id, // Use the breed's id as value
+                }));
+
+                setBreeds(breedOptions);
+                setEditPetData((prevState) => ({
+                    ...prevState,
+                    breed: breedOptions.length > 0 ? breedOptions[0].value : "", // Set default breed
+                }));
+            } catch (error) {
+                console.error("Error fetching breeds:", error);
+            }
+        };
+
+        fetchBreeds();
+    }, [editPetData.type]);
+
     return (
-        <div className="modal2">
+        <div className={`modal2`}>
+        {/* Box of modal */}
         <div className="modal-box4">
             <h2>Edit Pet Information</h2>
             <div>
