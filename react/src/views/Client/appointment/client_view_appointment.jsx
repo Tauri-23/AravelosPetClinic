@@ -185,31 +185,8 @@ export default function ClientViewAppointment() {
                                     <p>{appointment.medical_history.respiratory_rate}</p>
                                 </div>
                                 <div className="w-100">
-                                    <h5>Pulse</h5>
-                                    <p>{appointment.medical_history.pulse}</p>
-                                </div>
-                                <div className="w-100">
                                     <h5>Temperature (Celcius)</h5>
                                     <p>{appointment.medical_history.temperature}</p>
-                                </div>
-                            </div>
-
-                            <div className="d-flex gap1 mar-bottom-2">
-                                <div className="w-100">
-                                    <h5>Diet</h5>
-                                    <p>{appointment.medical_history.diet || "N/A"}</p>
-                                </div>
-                                <div className="w-100">
-                                    <h5>Allergies</h5>
-                                    <p>{appointment.medical_history.allergies || "N/A"}</p>
-                                </div>
-                                <div className="w-100">
-                                    <h5>Previous Surgery</h5>
-                                    <p>{appointment.medical_history.previous_surgery || "N/A"}</p>
-                                </div>
-                                <div className="w-100">
-                                    <h5>Complaints / Requests</h5>
-                                    <p>{appointment.medical_history.complaints_or_requests || "N/A"}</p>
                                 </div>
                             </div>
 
@@ -229,13 +206,9 @@ export default function ClientViewAppointment() {
                                     <h5>Procedures done</h5>
                                     <p>{appointment.medical_history.procedure_done || "N/A"}</p>
                                 </div>
-                                <div className="w-100">
-                                    <h5>Next Appointment</h5>
-                                    <p>{appointment.medical_history.next_appointment_date_time ? formatDateTime(appointment.medical_history.next_appointment_date_time) : "N/A"}</p>
-                                </div>
                             </div>
 
-                            <h3 className="mar-bottom-1">Physical Exam Results: </h3>
+                            {/* <h3 className="mar-bottom-1">Physical Exam Results: </h3>
 
                             <div className="d-flex flex-wrap gap2 mar-bottom-1">
                                 {Object.entries(appointment.medical_history.physical_exams).map((exam, index) => (
@@ -246,25 +219,25 @@ export default function ClientViewAppointment() {
                                         </div>
                                     )
                                 ))}
-                            </div>
+                            </div> */}
 
-                            <h3 className="mar-bottom-1">Laboratory Exam Results: </h3>
+                            {/* <h3 className="mar-bottom-1">Laboratory Exam Results: </h3>
 
                             <div className="d-flex flex-wrap gap2 mar-bottom-1">
                                 {Object.entries(appointment.medical_history.laboratory_exams)
-                                .filter(([key, value]) => value === 1) // Only keep exams/tests with a value of 1
+                                .filter(([key, value]) => value === 1)
                                 .map(([key, value]) => {
-                                const resultKey = `${key}_result`; // Construct the result key
+                                const resultKey = `${key}_result`;
                                 const result = appointment.medical_history.laboratory_exams[resultKey];
 
                                 return (
                                     <div key={key} className="exam-box">
-                                    <h5>{key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}</h5> {/* Format key name */}
+                                    <h5>{key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}</h5>
                                     <p>{result || "No result available"}</p>
                                     </div>
                                 );
                                 })}
-                            </div>
+                            </div> */}
 
                             <h3 className="mar-bottom-1">Diagnosis: </h3>
 
@@ -284,7 +257,7 @@ export default function ClientViewAppointment() {
                             </div>
                             <div className="d-flex gap1 mar-bottom-2">
                                 <div className="w-100">
-                                    <h5>Vaccine Given</h5>
+                                    <h5>Medication Given</h5>
                                     <p>{appointment.medical_history.diagnosis.vaccine_given}</p>
                                 </div>
                                 <div className="w-100">

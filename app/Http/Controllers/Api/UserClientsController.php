@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Contracts\IGenerateFilenameService;
 use App\Http\Controllers\Controller;
 use App\Models\user_clients;
 use DB;
@@ -10,6 +11,15 @@ use Illuminate\Support\Facades\Hash;
 
 class UserClientsController extends Controller
 {
+    protected $generateFilename;
+
+
+    public function __construct(IGenerateFilenameService $generateFilename)
+    {
+        $this->generateFilename = $generateFilename;
+    }
+
+    
     // GET
     public function GetAllClientsNotDeleted()
     {
@@ -91,47 +101,77 @@ class UserClientsController extends Controller
 
     public function UpdateClientProfile(Request $request)
     {
-        $client = user_clients::find($request->clientId);
-
-        if(!$client)
+        try
         {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Client not found'
-            ]);
-        }
+            DB::beginTransaction();
 
-        if(!(Hash::check($request->password, $client->password)))
-        {
-            return response()->json([
-                'status' => 401,
-                'message' => 'Invalid password'
-            ]);
-        }
+            $client = user_clients::find($request->clientId);
 
-        switch($request->editType)
-        {
-            case "name":
-                $client->fname = $request->fname;
-                $client->mname = $request->mname ?? null;
-                $client->lname = $request->lname;
-                break;
-            case "gender":
-                $client->gender = $request->gender;
-                break;
-            default:
+            if(!$client)
+            {
                 return response()->json([
-                    'status' => 500,
-                    'message' => 'Invalid edit type'
+                    'status' => 404,
+                    'message' => 'Client not found'
                 ]);
-        }
+            }
 
-        $client->save();
-        return response()->json([
-            'status' => 200,
-            'message' => 'Profile updated',
-            'client' => $client
-        ]);
+            if(!(Hash::check($request->password, $client->password)))
+            {
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Invalid password'
+                ]);
+            }
+
+            switch($request->editType)
+            {
+                case "name":
+                    $client->fname = $request->fname;
+                    $client->mname = $request->mname ?? null;
+                    $client->lname = $request->lname;
+                    break;
+                case "gender":
+                    $client->gender = $request->gender;
+                    break;
+                case "pfp":
+                    $photo = $request->file("newPFP");
+                    $targetDirectory = base_path("react/public/assets/media/pfp");
+                    $newFilename = $this->generateFilename->generate($photo, $targetDirectory);
+
+                    $photo->move($targetDirectory, $newFilename);
+
+                    $client->picture = $newFilename;
+                    break;
+                case "phone":
+                    $client->phone = $request->newPhone;
+                    break;
+                case "password":
+                    $client->password = bcrypt($request->newPassword);
+                    break;
+                default:
+                    return response()->json([
+                        'status' => 500,
+                        'message' => 'Invalid edit type (Controller)'
+                    ]);
+            }
+
+            $client->save();
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => 'Profile updated',
+                'client' => $client
+            ]);
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+
+            return response()->json([
+                "status" => 500,
+                "message" => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function ChangeClientPassword(Request $request)

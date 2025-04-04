@@ -6,6 +6,7 @@ use App\Contracts\IGenerateFilenameService;
 use App\Contracts\IGenerateIdService;
 use App\Http\Controllers\Controller;
 use App\Models\pets;
+use DB;
 use Illuminate\Http\Request;
 
 class PetsController extends Controller
@@ -26,13 +27,22 @@ class PetsController extends Controller
 
         try
         {
-            $photo = $request->file('pic');
-            $targetDirectory = base_path("react/public/assets/media/pets");
-            $newFilename = $this->generateFilename->generate($photo, $targetDirectory);
-
-            $photo->move($targetDirectory, $newFilename);
-
+            DB::beginTransaction();
             $pet = new pets();
+
+
+            if($request->pic)
+            {
+                $photo = $request->file('pic');
+                $targetDirectory = base_path("react/public/assets/media/pets");
+                $newFilename = $this->generateFilename->generate($photo, $targetDirectory);
+
+                $photo->move($targetDirectory, $newFilename);
+
+                $pet->picture = $newFilename;
+            }
+
+
             $pet->id = $petId;
             $pet->client = $request->client;
             $pet->name = $request->petName;
@@ -40,8 +50,10 @@ class PetsController extends Controller
             $pet->gender = $request->petGender;
             $pet->dob = $request->petDOB;
             $pet->breed = $request->petBreed;
-            $pet->picture = $newFilename;
+            
             $pet->save();
+
+            DB::commit();
 
             return response()->json([
                 'status' => 200,
@@ -51,13 +63,59 @@ class PetsController extends Controller
         }
         catch(\Exception $ex)
         {
+            DB::rollBack();
             return response()->json([
                 'status' => 500,
-                'message' =>'Failed to upload file: ' . $ex->getMessage()
+                'message' => $ex->getMessage()
             ], 500);
         }
 
 
+    }
+
+    public function UpdatePet(Request $request)
+    {
+        try
+        {
+            DB::beginTransaction();
+            $petData = json_decode($request->input('petData'), true); // true = associative array
+
+            $pet = pets::find($petData["id"]);
+            $pet->name = $petData["name"];
+            $pet->type = $petData["type"];
+            $pet->breed = $petData["breed"];
+            $pet->gender = $petData["gender"];
+
+            if($request->petPic)
+            {
+                $photo = $request->file("petPic");
+                $targetDirectory = base_path("react/public/assets/media/pets");
+                $newFilename = $this->generateFilename->generate($photo, $targetDirectory);
+
+                $photo->move($targetDirectory, $newFilename);
+
+                $pet->picture = $newFilename;
+            }
+
+            $pet->save();
+
+            DB::commit();
+
+            return response()->json([
+                "status" => 200,
+                "message" => "success",
+                "pet" => $pet
+            ]);
+
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            return response()->json([
+                "status" => 500,
+                "message" => $e->getMessage()
+            ], 500);
+        }
     }
 
 

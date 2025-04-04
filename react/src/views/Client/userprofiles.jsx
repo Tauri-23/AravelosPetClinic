@@ -47,8 +47,10 @@ const userprofiles = () => {
 
     }, []);
 
+
+
     /**
-     * Handlers
+     * PET Handlers
      */
     const handlePetClick = (pet) => {
         setSelectedPet(pet);
@@ -60,8 +62,9 @@ const userprofiles = () => {
         .catch((error) => console.error(error));
         console.log(appts)
     };
+
     const handleEditPetClick = (pet) =>{
-        showModal('EditPetModal1', { pet });
+        showModal('EditPetModal1', { pet, setPets });
     };
 
     const handleAddPetPost = (petName, petType, petGender, petDOB, petBreed, petPic) => {
@@ -72,7 +75,11 @@ const userprofiles = () => {
         formData.append('petGender', petGender);
         formData.append('petDOB', petDOB);
         formData.append('petBreed', petBreed);
-        formData.append('pic', petPic);
+
+        if(petPic) {
+            formData.append('pic', petPic);
+        }
+        
 
         axiosClient.post('/add-pet', formData)
         .then(({ data }) => {
@@ -88,86 +95,20 @@ const userprofiles = () => {
         .catch(error => console.error(error));
     };
 
+    const handleAddPetClick = () => {
+        showModal('AddPetModal1', { handleAddPetPost });
+    };
+
+
+
+    /**
+     * User Handlers
+     */
     const handleEditUserClick = (detailValue) => {
         setIsEditing(true); // Toggle editing state
         setEditData(user); // Set initial edit data to user object
         showModal('EditUserModal1', {user, setUser, detail:detailValue}); // Show the EditUserModal
     };
-
-    const handleAddPetClick = () => {
-        showModal('AddPetModal1', { handleAddPetPost });
-    };
-
-    /**
-     * @param {string} mode - (allergy | medication | disease)
-     */
-    const handleAddPetMedicalHistory = (mode) => {
-        switch(mode) {
-            // Pet Allergies
-            case "allergy":
-                showModal("AddPetAllergiesModal", {
-                    handleAddPetAllergy: (allergy) => {
-                        const formData = new FormData();
-                        formData.append('petId', selectedPet.id);
-                        formData.append('client', user.id);
-                        formData.append('allergy', allergy);
-
-
-                        axiosClient.post("/add-pet-allergies", formData)
-                        .then(({data}) => {
-                            console.log(data.pets);
-                            if(data.status === 200) {
-                                setPets(data.pets);
-                                setSelectedPet(data.pets.filter(x => x.id == selectedPet.id)[0]);
-                            }
-                        }).catch(e => console.error(e));
-                    }
-                });
-                break;
-            case "medication":
-                showModal("AddPetMedicationsModal", {
-                    handleAddPetMedication: (medication) => {
-                        const formData = new FormData();
-                        formData.append('petId', selectedPet.id);
-                        formData.append('client', user.id);
-                        formData.append('medication', medication);
-
-
-                        axiosClient.post("/add-pet-medications", formData)
-                        .then(({data}) => {
-                            console.log(data.pets);
-                            if(data.status === 200) {
-                                setPets(data.pets);
-                                setSelectedPet(data.pets.filter(x => x.id == selectedPet.id)[0]);
-                            }
-                        }).catch(e => console.error(e));
-                    }
-                });
-                break;
-            case "disease":
-                showModal("AddPetDiseasesModal", {
-                    handleAddPetDisease: (disease) => {
-                        const formData = new FormData();
-                        formData.append('petId', selectedPet.id);
-                        formData.append('client', user.id);
-                        formData.append('disease', disease);
-
-
-                        axiosClient.post("/add-pet-diseases", formData)
-                        .then(({data}) => {
-                            console.log(data.pets);
-                            if(data.status === 200) {
-                                setPets(data.pets);
-                                setSelectedPet(data.pets.filter(x => x.id == selectedPet.id)[0]);
-                            }
-                        }).catch(e => console.error(e));
-                    }
-                });
-                break;
-            default:
-                return;
-        }
-    }
 
     const handleVerifyPhone = () => {
         const formData = new FormData();
@@ -199,6 +140,11 @@ const userprofiles = () => {
         }).catch(error => console.error(error));
     }
 
+
+
+    /**
+     * Setup Columns
+     */
     const historyColumns =[
         {
             title: "Appointment Type",
@@ -222,28 +168,22 @@ const userprofiles = () => {
      * Render
      */
     return (
-        <div className="page inter">
-            <div className="prof gen-margin d-flex ">
+        <div className="content1 d-flex gap1">
                 <div className='prof small-form user-profile'>
+
                     <div className="profile-header bottom-padding-s">
                         <div className="profilepic" onClick={()=>handleEditUserClick("pfp")}>
                         {newProfilePicture || user.profilePicture ? (
                             <img src={newProfilePicture || user.profilePicture} alt="Profile" />
                             ) : (
-                            <FontAwesomeIcon icon={faUserCircle} className="profilepic"/>
+                                <img src={`/assets/media/pfp/${user.picture}`} alt="profile picture" />
                             )}
                         </div>
                         <div className="user-name semi-medium-f bold anybody">
                             {user.fname} {user.mname} {user.lname}
-                            {/* <p>Email: {user.email || "n/a"}</p>
-                            <p>Birthday: {user.birthday || "n/a"}</p>
-                            <p>Address: {user.address || "n/a"}</p>
-                            <p>Phone: {user.phone || "n/a"}</p>
-                            <button onClick={() => handleEditUserClick(user)} className="primary-btn-blue1">Update</button> */}
                         </div>
-
-
                     </div>
+
                     <div className="left-margin top-margin">
                         <div className='user-details'>
                             <div className='detail-row semi-bold'>
@@ -291,7 +231,7 @@ const userprofiles = () => {
                                 type="password"
                                 value="********"
                                 readOnly />
-                                <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("phone")}/>
+                                <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("password")}/>
                             </div>
 
 
@@ -332,7 +272,11 @@ const userprofiles = () => {
                                 className="pet-profile"
                                 >
                                 <div className="position-relative inline-block">
-                                    <img onClick={() => handlePetClick(pet)} src={`/assets/media/pets/${pet.picture}`} alt={pet.name} className="pet-picture rounded-corners" />
+                                    <img 
+                                    onClick={() => handlePetClick(pet)} 
+                                    src={`/assets/media/pets/${pet.picture || "petDefault.png"}`} 
+                                    alt={pet.name} 
+                                    className="pet-picture rounded-corners" />
                                     <Icon.PencilFill size={18} className="peteditbtn shadow position-absolute p-1 rounded full text-white cursor-pointer"
                                     onClick={(e)=>{
                                         e.stopPropagation();
@@ -365,8 +309,6 @@ const userprofiles = () => {
                     </div>
 
                 </div>
-
-            </div>
         </div>
     );
 };

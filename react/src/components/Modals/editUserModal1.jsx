@@ -6,10 +6,10 @@ import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { useModal } from "../../contexts/ModalContext.jsx";
 import axiosClient from '../../axios-client.js';
 import { notify } from '../../assets/js/utils.jsx';
+import { Input } from 'antd';
 
 const EditUserModal = ({ user, setUser, detail, onClose }) => {
 // Inside your component
-const {showModal} = useModal();
 const [fname, setFname] = useState(user.fname);
 const [mname, setMname] = useState(user.mname || '');
 const [lname, setLname] = useState(user.lname);
@@ -23,6 +23,8 @@ const [birthday, setBirthday] = useState(user.birthday || '');
 const [phone, setPhone] = useState(user.phone || '');
 const [address, setAddress] = useState(user.address || '');
 const [password, setPassword] = useState("");
+const [newPass, setNewPass] = useState("");
+const [conPass, setConPass] = useState("");
 
 const [newProfilePicture, setNewProfilePicture] = useState(null); // For user's profile picture
 
@@ -43,7 +45,8 @@ const handlePhoneChange = (e) => {
 //     showModal('ConfirmActionModal1', {handlePost: handleUpdateInfo});
 //   };
   
-  const handleUpdateInfo = (editType) => {
+const handleUpdateInfo = (editType) => {
+    console.log(editType);
     const formData = new FormData();
 
     switch(editType) {
@@ -55,7 +58,21 @@ const handlePhoneChange = (e) => {
         case "gender":
             formData.append('gender', gender);
             break;
-        case "":
+        case "pfp":
+            formData.append("newPFP", newProfilePicture);
+            break;
+        case "phone":
+            formData.append("newPhone", phone);
+            break;
+        case "password":
+            console.log("newPass", newPass);
+            console.log("conPass", conPass);
+            if(conPass != newPass) {
+                
+                notify("error", "Passwords doesn't match", "top-center", 3000);
+                return;
+            }
+            formData.append("newPassword", newPass);
             break;
         default:
             notify('error', 'Invalid edit type', 'top-center', 3000);
@@ -290,45 +307,101 @@ const handlePhoneChange = (e) => {
                     </>
             )
         case 'phone':
-                return(
-                    <>
-                        <div className='bold semi-medium-f anybody t-align-center'>
-                            Change Contact Number
-                        </div>
-                        <hr></hr>
-                        <div className="detail-row semi-bold">
-                            <div className="label-div">Contact No.: </div>
-                            <input
-                                className='top-margin-s'
-                                type="tel"
-                                pattern="09\d{9}"
-                                placeholder='09XXXXXXXXX'
-                                title="Contact number must start with 09 and have 11 digits."
-                                onChange={handlePhoneChange}
-                                value={phone || user.phone}
+            return(
+                <>
+                    <div className='bold semi-medium-f anybody t-align-center'>
+                        Change Contact Number
+                    </div>
+                    <hr/>
+                    <div className="detail-row semi-bold">
+                        <div className="label-div">Contact No.: </div>
+                        <input
+                            className='top-margin-s'
+                            type="tel"
+                            pattern="09\d{9}"
+                            placeholder='09XXXXXXXXX'
+                            title="Contact number must start with 09 and have 11 digits."
+                            onChange={handlePhoneChange}
+                            value={phone || user.phone}
+                        />
+                    </div>
+                    <div className="detail-row semi-bold">
+                        <label htmlFor="pass-phone">Password</label>
+                        <Input.Password
+                            size='large'
+                            id='pass-phone'
+                            placeholder="Re-enter Password" 
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             />
-                        </div>
-                        <div className="detail-row semi-bold">
-                            <div className="label-div">Password: </div>
-                            <input
-                                className='top-margin-s'
-                                type="password" placeholder="Re-enter Password" title="Re-enter your password to verify changes"/>
-                        </div>
+                    </div>
 
+                <div className="d-flex flex-direction-x flex-row-reverse gap3 top-margin justify-content-between">
+
+                <div
+                onClick={() => {handleUpdateInfo("phone"); onClose();}}
+                className="primary-btn-blue1 text-center"
+                >
+                    Update
+                </div>
+
+                <div className="sub-button text-center d-flex gap3 align-items-center justify-content-center" onClick={onClose}>
+                    Cancel
+                </div>
+                </div>
+                </>
+            )
+        case 'password':
+            return(
+                <>
+                    <div className='bold semi-medium-f anybody t-align-center'>
+                        Change Contact Number
+                    </div>
+                    <hr/>
+                    <div className="">
+                        <label htmlFor="change-pass-new">New Password</label> <br/>
+                        <Input.Password
+                            size='large'
+                            id='change-pass-new'
+                            placeholder="Re-enter Password" 
+                            value={newPass}
+                            onChange={(e) => setNewPass(e.target.value)}
+                            />
+                    </div>
+                    <div className="">
+                        <label htmlFor="change-pass-new">Confirm Password</label> <br/>
+                        <Input.Password
+                            size='large'
+                            id='change-pass-new'
+                            placeholder="Re-enter Password" 
+                            value={conPass}
+                            onChange={(e) => setConPass(e.target.value)}
+                            />
+                    </div>
+                    <div className="">
+                        <label htmlFor="pass-change">Old Password</label> <br/>
+                        <Input.Password
+                            size='large'
+                            id='pass-change'
+                            placeholder="Re-enter Password" 
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            />
+                    </div>
+    
                     <div className="d-flex flex-direction-x flex-row-reverse gap3 top-margin justify-content-between">
-
-                    <div
-                    onClick={() => {handleUpdateClicks(); onClose();}}
-                    className="primary-btn-blue1 text-center"
-                    >
-                        Update
+                        <div
+                        onClick={() => {handleUpdateInfo("password"); onClose();}}
+                        className="primary-btn-blue1 text-center"
+                        >
+                            Update
+                        </div>
+            
+                        <div className="sub-button text-center d-flex gap3 align-items-center justify-content-center" onClick={onClose}>
+                            Cancel
+                        </div>
                     </div>
-
-                    <div className="sub-button text-center d-flex gap3 align-items-center justify-content-center" onClick={onClose}>
-                        Cancel
-                    </div>
-                    </div>
-                    </>
+                </>
             )
         case 'address':
                 return(
@@ -367,87 +440,55 @@ const handlePhoneChange = (e) => {
                     </div>
                     </>
             )
-        
-        case 'password':
-                return(
-                    <>
-                        <div className='bold semi-medium-f anybody t-align-center'>
-                            Change Password
-                        </div>
-                        <hr></hr>
-                        <div className="detail-row semi-bold">
-                            <div className="label-div align-self-end">Current Password: </div>
-                            <input
-                                className='top-margin-s'
-                                type="password" placeholder="Current Password"/>
-                        </div>
-                        <div className="detail-row semi-bold">
-                            <div className="label-div right-padding-ss align-self-end">New Password: </div>
-                            <input
-                                className='top-margin-s'
-                                type="password" placeholder="New Password"/>
-                        </div>
-                        <div className="detail-row semi-bold">
-                            <div className="label-div align-self-end">Re-enter Password: </div>
-                            <input
-                                className='top-margin-s'
-                                type="password" placeholder="Re-enter Password" title="Re-enter your password to verify changes"/>
-                        </div>
-
-                    <div className="d-flex flex-direction-x flex-row-reverse gap3 top-margin justify-content-between">
-
-                    <div
-                    onClick={() => {handleUpdateClicks(); onClose();}}
-                    className="primary-btn-blue1 text-center"
-                    >
-                        Update
-                    </div>
-
-                    <div className="sub-button text-center d-flex gap3 align-items-center justify-content-center" onClick={onClose}>
-                        Cancel
-                    </div>
-                    </div>
-                    </>
-            )
         case 'pfp':
-                return(
-                    <>
-                        <div className='bold semi-medium-f anybody t-align-center'>
-                            Change Profile Picture
+            return(
+                <>
+                    <div className='bold semi-medium-f anybody t-align-center'>
+                        Change Profile Picture
+                    </div>
+                    <hr></hr>
+                    <div>
+                        <div className='d-flex flex-row top-margin-s'>
+                            <div className='currentPicCont right-margin left-margin-s'>
+
+                                {newProfilePicture !== null ?
+                                (<img src={URL.createObjectURL(newProfilePicture)} alt="Profile" />) :
+                                (<img src={`/assets/media/pfp/${user.picture}`} alt="profile picture" />)}
+
+                            </div>
+                            <div className='d-flex flex-column inputs right-margin-s  justify-content-center'>
+                                <div className="detail-row semi-bold d-flex flex-column">
+                                    <div className="label-div bottom-margin-s">Upload Image: </div>
+                                    <input type="file" onInput={(e) => setNewProfilePicture(e.target.files[0])} accept="image/*"></input>
+                                </div>
+                            </div>
                         </div>
-                        <hr></hr>
                         <div>
-                            <div className='d-flex flex-row top-margin-s'>
-                                <div className='currentPicCont right-margin left-margin-s'>
+                            <label htmlFor='pass-pfp'>Password: </label><br />
+                            <Input.Password
+                            size='large'
+                            id='pass-pfp'
+                            placeholder="Re-enter Password" 
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
 
-                                    {newProfilePicture || user.profilePicture ?
-                                    (<img src={newProfilePicture || user.profilePicture} alt="Profile" />) :
-                                    (<FontAwesomeIcon icon={faUserCircle} className="user-pic"/>)}
+                        <div className="d-flex flex-direction-x flex-row-reverse gap3 top-margin justify-content-between">
 
-                                </div>
-                                <div className='d-flex flex-column inputs right-margin-s  justify-content-center'>
-                                    <div className="detail-row semi-bold d-flex flex-column">
-                                        <div className="label-div bottom-margin-s">Upload Image: </div>
-                                        <input type="file" accept="image/*"></input>
-                                    </div>
-                                </div>
+                            <div
+                            onClick={() => {handleUpdateInfo("pfp"); onClose();}}
+                            className="primary-btn-blue1 text-center">
+                                Update
                             </div>
 
-                            <div className="d-flex flex-direction-x flex-row-reverse gap3 top-margin justify-content-between">
-
-                                <div
-                                onClick={() => {handleUpdateClicks(); onClose();}}
-                                className="primary-btn-blue1 text-center">
-                                    Update
-                                </div>
-
-                                <div className="sub-button text-center d-flex gap3 align-items-center justify-content-center"
-                                onClick={onClose}>
-                                    Cancel
-                                </div>
+                            <div className="sub-button text-center d-flex gap3 align-items-center justify-content-center"
+                            onClick={onClose}>
+                                Cancel
                             </div>
                         </div>
-                    </>
+                    </div>
+                </>
             )
 
 

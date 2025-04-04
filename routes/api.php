@@ -138,6 +138,7 @@ Route::get('/retrieve-pets-where-client/{clientId}', [PetsController::class,'Get
 Route::get('/retrieve-pet-info-where-id/{petId}', [PetsController::class,'GetPetInfoWhereId']);
 
 Route::post('/add-pet', [PetsController::class,'CreatePet']);
+Route::post('/update-pet', [PetsController::class,'UpdatePet']);
 
 
 
