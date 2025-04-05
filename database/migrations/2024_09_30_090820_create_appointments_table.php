@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('client', 6)->nullable();
             $table->string('pet', 6)->nullable();
             $table->unsignedBigInteger('service')->nullable();
+            $table->unsignedBigInteger("service_type")->nullable();
             $table->dateTime('date_time');
 
             $table->dateTime('approved_at')->nullable();
@@ -49,6 +50,12 @@ return new class extends Migration
             $table->foreign('medical_history')
             ->references('id')
             ->on('medical_histories')
+            ->nullOnDelete()
+            ->cascadeOnUpdate();
+
+            $table->foreign('service_type')
+            ->references('id')
+            ->on('clinic_service_types')
             ->nullOnDelete()
             ->cascadeOnUpdate();
         });

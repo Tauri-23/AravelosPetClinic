@@ -11,12 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('clinic_services', function (Blueprint $table) {
+        Schema::create('clinic_service_types', function (Blueprint $table) {
             $table->id();
-            $table->string("service");
-            $table->boolean("no_types")->default(false);
-            $table->boolean("custom_types")->default(false);
+            $table->unsignedBigInteger("service")->nullable();
+            $table->string("service_type");
             $table->timestamps();
+
+            $table->foreign("service")
+            ->references("id")
+            ->on("clinic_services")
+            ->cascadeOnDelete()
+            ->cascadeOnUpdate();
         });
     }
 
@@ -25,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clinic_services');
+        Schema::dropIfExists('clinic_service_types');
     }
 };

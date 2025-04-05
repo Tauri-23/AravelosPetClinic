@@ -575,7 +575,7 @@ export default function MedicalHistoryForm({appointmentId}) {
                         </div>
                     </div>
 
-                    <div className="mar-bottom-1">
+                    {/* <div className="mar-bottom-1">
                         <p>Next appointment time</p>
                         <div className="d-flex flex-wrap gap3">
                             {timeOptions.map(time => (
@@ -588,7 +588,7 @@ export default function MedicalHistoryForm({appointmentId}) {
                                 </Button>
                             ))}
                         </div>
-                    </div>
+                    </div> */}
                 </>
             )}
 
@@ -656,7 +656,7 @@ export default function MedicalHistoryForm({appointmentId}) {
                                     {lab.title}
                                 </Checkbox><br/>
 
-                                {lab.isChecked && (
+                                {lab.isChecked && !["Parvo Test", "Heartworm Test", "Distemper test"].some(test => lab.title.includes(test)) && (
                                     <>
                                         <label htmlFor={index}>Result: </label>
                                         <Input 
@@ -665,6 +665,19 @@ export default function MedicalHistoryForm({appointmentId}) {
                                         value={lab.resultValue} 
                                         onChange={lab.setValue}
                                         placeholder="result"/>
+                                    </>
+                                )}
+                                
+                                {lab.isChecked && ["Parvo Test", "Heartworm Test", "Distemper test"].some(test => lab.title.includes(test)) && (
+                                    <>
+                                        <label htmlFor={index}>Result: </label><br/>
+                                        <Radio.Group
+                                        value={lab.resultValue}
+                                        options={[
+                                            {label: "Positive", value: "Positive"},
+                                            {label: "Negative", value: "Negative"},
+                                        ]}
+                                        onChange={lab.setValue}/>
                                     </>
                                 )}
                             </div>

@@ -66,6 +66,16 @@ export const fetchAllAppointmentsWherePetandStatus = async(petId, status) => {
 }
 
 
+export const fetchAllAppointmentsWhereStatusMonthAndYear = async(status, month, year) => {
+    try {
+        const response = await axiosClient.get(`/get-all-appointments-where-status-month-and-year/${status}/${month}/${year}`);
+        return response.data;
+    } catch(error) {
+        console.error(error)
+        throw error;
+    }
+}
+
 
 /**
  * 

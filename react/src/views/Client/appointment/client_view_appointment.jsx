@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { fetchAppointmentDetails } from "../../../services/AppointmentServices";
+import { fetchAllAppointmentsWhereStatusMonthAndYear, fetchAppointmentDetails } from "../../../services/AppointmentServices";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import "../appointment/css/client_appointments.css";
 
@@ -10,12 +10,14 @@ import { useModal } from "../../../contexts/ModalContext";
 import axiosClient from "../../../axios-client";
 
 export default function ClientViewAppointment() {
+    const now = new Date();
     const navigate = useNavigate();
     const {showModal} = useModal();
     const {appointmentId} = useParams();
     const {setActiveNavLink, setPendingAppointments, setApprovedAppointments, setCanceledAppointments} = useOutletContext();
 
     const [appointment, setAppointment] = useState(null);
+    const [cancelledAptThisMonth, setCancelledAptThisMonth] = useState(null);
 
 
 
@@ -25,11 +27,12 @@ export default function ClientViewAppointment() {
     useEffect(() => {
         setActiveNavLink("Appointments");
         const getAll = async() => {
-            const [appointmentDb] = await Promise.all([
+            const [appointmentDb, cancelledAppointmentsThisMonth] = await Promise.all([
                 fetchAppointmentDetails(appointmentId),
+                fetchAllAppointmentsWhereStatusMonthAndYear("cancelled", now.getMonth() + 1, now.getFullYear())
             ]);
-            console.log(appointmentDb);
             setAppointment(appointmentDb);
+            setCancelledAptThisMonth(cancelledAppointmentsThisMonth.length);
         }
         getAll();
     }, []);
@@ -57,10 +60,9 @@ export default function ClientViewAppointment() {
                     .then(({ data }) => {
                         if (data.status === 200) {
                             notify('success', data.message, 'top-center', 3000);
-                            navigate('/ClientIndex/Cancelled');
-                        } else {
-                            notify('error', data.message, 'top-center', 3000);
+                            setAppointment(data.appointment);
                         }
+                        notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
                     }).catch(error => {
                         console.error(error);
                         notify('error', data.message, 'top-center', 3000);
@@ -78,14 +80,21 @@ export default function ClientViewAppointment() {
      */
     return(
         <div className="content1">
-            {appointment
+            {(appointment && cancelledAptThisMonth)
             ? (
                 <>
                     <h2 className="mar-bottom-1">{appointment.status} Appointment</h2>
 
                     {(appointment.status !== "Completed" && appointment.status !== "Approved" && appointment.status !== "Cancelled") && (
-                        <div className="d-flex gap3 justify-content-end w-100 mar-bottom-1">
-                            <button className='primary-btn-red1' onClick={(e) => handleCancel(appointment.id)}>
+                        <div className="d-flex align-items-center gap3 justify-content-end w-100 mar-bottom-1">
+                            {cancelledAptThisMonth > 2 && (
+                                <small>Maximum of cancelled appointment per month is 3</small>
+                            )}
+
+                            <button 
+                            disabled={cancelledAptThisMonth > 2} 
+                            className={`primary-btn-red1 ${cancelledAptThisMonth > 2 ? "disabled" : ""}`} 
+                            onClick={(e) => handleCancel(appointment.id)}>
                                 Cancel Appointment
                             </button>
                         </div>

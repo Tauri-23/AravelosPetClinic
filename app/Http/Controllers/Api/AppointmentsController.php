@@ -41,6 +41,7 @@ class AppointmentsController extends Controller
             $appointment->client = $request->client;
             $appointment->pet = $request->pet;
             $appointment->service = $request->service;
+            $appointment->service_type = $request->serviceType;
             $appointment->date_time = $request->dateTime;
             $appointment->note = $request->note;
             $appointment->status = $request->status;
@@ -68,7 +69,7 @@ class AppointmentsController extends Controller
         try 
         {
             DB::beginTransaction();
-            $appointment = appointments::find($request->appointmentId);
+            $appointment = appointments::with(["pet", "client", "feedback", "service", "assigned_staffs", "assigned_items", "medical_history"])->find($request->appointmentId);
             
             if (!$appointment) {
                 return response()->json([
@@ -113,7 +114,8 @@ class AppointmentsController extends Controller
             
             return response()->json([
                 'status' => 200,
-                'message' => 'Appointment cancelled successfully.'
+                'message' => 'Appointment cancelled successfully.',
+                'appointment' => $appointment
             ]);
         }
         catch(\Exception $e)
@@ -293,6 +295,15 @@ class AppointmentsController extends Controller
         ->where('status', $status)
         ->with(["service", "pet", "feedback", "assigned_staffs"])
         ->orderBy("date_time", "desc")
+        ->get());
+    }
+
+    public function GetAllAppointmentsWhereStatusMonthAndYear($status, $month, $year)
+    {
+        return response()->json(appointments::with(["pet", "client", "feedback", "service", "assigned_staffs", "assigned_items", "medical_history"])
+        ->where("status", $status)
+        ->whereMonth("created_at", $month)
+        ->whereYear("created_at", $year)
         ->get());
     }
 }

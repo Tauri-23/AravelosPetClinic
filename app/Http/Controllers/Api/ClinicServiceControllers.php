@@ -11,6 +11,6 @@ class ClinicServiceControllers extends Controller
     // GET
     public function GetAllClinicServices()
     {
-        return response()->json(clinic_services::all());
+        return response()->json(clinic_services::with("service_types")->get());
     }
 }

@@ -30,10 +30,10 @@ export default function BookAppointment() {
     // selected
     const [selectedPet, setSelectedPet] = useState("");
     const [selectedService, setSelectedService] = useState("");
+    const [selectedServiceType, setSelectedServiceType] = useState("");
     const [note, setNote] = useState("");
 
     const [selectedDate, setSelectedDate] = useState("");
-    const [selectedTime, setSelectedTime] = useState("");
 
     const [step, setStep] = useState(0);
 
@@ -69,10 +69,13 @@ export default function BookAppointment() {
         showModal('ConfirmActionModal1', {
             handlePost: () => {
                 const formData = new FormData();
-                formData.append("dateTime", `${selectedDate} ${selectedTime}`);
+                formData.append("dateTime", `${selectedDate}`);
                 formData.append("pet", selectedPet);
                 formData.append('client', user.id);
                 formData.append("service", selectedService);
+                if(selectedServiceType !== "") {
+                    formData.append("serviceType", selectedServiceType);
+                }
                 formData.append("status", "Pending");
                 formData.append("note", note);
 
@@ -94,9 +97,10 @@ export default function BookAppointment() {
     const isButtonDisabled = () => {
         switch(step) {
             case 0:
-                return selectedPet == "" || selectedService == "";
+                return selectedPet == "" || selectedService == "" || 
+                (!clinicServices.filter(x => x.id === selectedService)[0].no_types && selectedServiceType == "");
             default:
-                return isEmptyOrSpaces(selectedDate) || isEmptyOrSpaces(selectedTime);
+                return isEmptyOrSpaces(selectedDate);
         }
     }
 
@@ -153,9 +157,9 @@ export default function BookAppointment() {
                                         {/* Select a Service Type */}
                                         <div className="d-flex flex-direction-y gap4 mar-bottom-3">
 
-                                            <label htmlFor="serviceType" className="choose semi-bold">Choose Service</label>
+                                            <label htmlFor="service" className="choose semi-bold">Choose Service</label>
                                             <Select
-                                            id="serviceType"
+                                            id="service"
                                             size="large"
                                             value={selectedService}
                                             options={[
@@ -164,8 +168,29 @@ export default function BookAppointment() {
                                                     ({label: service.service, value: service.id})
                                                 )
                                             ]}
-                                            onChange={(e) => setSelectedService(e)}
+                                            onChange={(e) => {
+                                                setSelectedService(e);
+                                                setSelectedServiceType("");
+                                            }}
                                             />
+
+                                            {(selectedService !== "" && !clinicServices.filter(x => x.id === selectedService)[0].no_types) && (
+                                                <>
+                                                    <label htmlFor="serviceType" className="choose semi-bold">Choose Service Type</label>
+                                                    <Select
+                                                    id="serviceType"
+                                                    size="large"
+                                                    value={selectedServiceType}
+                                                    options={[
+                                                        {label: "Select a service type", value: ""},
+                                                        ...clinicServices.filter(x => x.id === selectedService)[0].service_types?.map(service =>
+                                                            ({label: service.service_type, value: service.id})
+                                                        )
+                                                    ]}
+                                                    onChange={(e) => setSelectedServiceType(e)}
+                                                    />
+                                                </>
+                                            )}
 
                                         </div>
 
@@ -202,7 +227,7 @@ export default function BookAppointment() {
                                             />
                                         </div>
 
-                                        <div>
+                                        {/* <div>
                                             <label htmlFor="time">Select Date</label>
                                             <div className="d-flex gap3 flex-wrap">
                                                 {timeOptions.map(time => (
@@ -214,7 +239,7 @@ export default function BookAppointment() {
                                                     </Button>
                                                 ))}
                                             </div>
-                                        </div>
+                                        </div> */}
 
 
 

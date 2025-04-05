@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { formatDateTime } from "../../../assets/js/utils";
+import { formatDate, formatDateTime } from "../../../assets/js/utils";
 import { Table } from "antd";
 
 export default function ClientAppointmentsCancelled() {
@@ -36,7 +36,7 @@ export default function ClientAppointmentsCancelled() {
         },
         {
             title: "Appointment Date",
-            render: (_, row) => formatDateTime(row.date_time)
+            render: (_, row) => formatDate(row.date_time)
         },
         {
             title: "Date Cancelled",
