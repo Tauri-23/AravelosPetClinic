@@ -6,3 +6,12 @@
     margin: 0 0 0 var(--admin-sidenav-width);
     width: calc(100% - var(--admin-sidenav-width));
 }
+
+
+
+.container1 {
+    padding: 30px;
+    background: white;
+    filter: drop-shadow(0 0 1px var(--grey1));
+    border-radius: 10px
+}

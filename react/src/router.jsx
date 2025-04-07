@@ -37,6 +37,7 @@ import ClientAppointmentsApproved from "./views/Client/appointment/client_appoin
 import ClientAppointmentsCompleted from "./views/Client/appointment/client_appointments_completed";
 import ClientAppointmentsCancelled from "./views/Client/appointment/client_appointments_cancelled";
 import ClientViewAppointment from "./views/Client/appointment/client_view_appointment";
+import AdminCalendarIndex from "./views/Admin/Calendar/admin_calendar_index";
 
 const router = createBrowserRouter([
     /*
@@ -194,7 +195,7 @@ const router = createBrowserRouter([
              */
             {
                 path: "ClinicCalendar",
-                element: <ClinicCalendar />
+                element: <AdminCalendarIndex />
             },
 
 

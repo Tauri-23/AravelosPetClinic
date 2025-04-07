@@ -234,24 +234,28 @@ const userprofiles = () => {
 
 
                             {/*  */}
-                            <div className='d-flex w-100 align-items-center gap1 mar-top-1'>
-                                <div>Phone: {user.phone}</div>
-                                <Button
-                                disabled={user.phone_verified}
-                                onClick={handleVerifyPhone}
-                                type='primary'
-                                >
-                                    {user.phone_verified ? "Verified" : 'Verify Phone'}
-                                </Button>
-                            </div>
-                            <div className='d-flex w-100 align-items-center gap1 mar-top-3'>
-                                <div>email: {user.email}</div>
-                                <Button
-                                type='primary'
-                                >
-                                    Verify Email
-                                </Button>
-                            </div>
+                            {!user.phone_verified && (
+                                <div className='d-flex w-100 align-items-center gap1 mar-top-1'>
+                                    <div>Phone: {user.phone}</div>
+                                    <Button
+                                    disabled={user.phone_verified}
+                                    onClick={handleVerifyPhone}
+                                    type='primary'
+                                    >
+                                        {user.phone_verified ? "Verified" : 'Verify Phone'}
+                                    </Button>
+                                </div>
+                            )}
+                            {!user.email_verified && (
+                                <div className='d-flex w-100 align-items-center gap1 mar-top-3'>
+                                    <div>email: {user.email}</div>
+                                    <Button
+                                    type='primary'
+                                    >
+                                        Verify Email
+                                    </Button>
+                                </div>
+                            )}
 
                         </div>
 

@@ -4,16 +4,18 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import "../Appointments/css/admin_appointments.css";
 
 import {Spin} from "antd";
-import { formatDate, formatDateTime, getAge } from "../../../assets/js/utils";
+import { formatDate, formatDateTime, getAge, isEmptyOrSpaces, notify } from "../../../assets/js/utils";
 import { fetchAllStaffs } from "../../../services/StaffServices";
 import { fetchAllInventoryItems } from "../../../services/InventoryServices";
 import React from "react";
 import InventoryBox from "../../../components/inventory_box";
 import axiosClient from "../../../axios-client";
 import MedicalHistoryForm from "./components/medical_history_form";
+import { useModal } from "../../../contexts/ModalContext";
 
 export default function AdminViewAppointment() {
     const navigate = useNavigate();
+    const {showModal} = useModal();
     const {appointmentId} = useParams();
     const {setActiveNavLink} = useOutletContext();
 
@@ -27,6 +29,7 @@ export default function AdminViewAppointment() {
 
     // FOR MARK AS COMPLETE
     const [isMarkingComplete, setMarkingComplete] = useState(false);
+    const [isMarkDoneDisabled, setMarkDoneDisabled] = useState(true);
 
 
 
@@ -142,6 +145,65 @@ export default function AdminViewAppointment() {
         });
     }
 
+    const handleCancel = (recordId) =>{
+        const handleFunction = "handleCancelPost";
+
+        if (isEmptyOrSpaces(String(recordId))) {
+            console.error("No appointment selected for cancellation.");
+            return;
+        }
+
+        showModal('ConfirmActionModal1',  {
+            handlePost: (recordId, recordReason) => {
+                const formData = new FormData();
+                formData.append('appointmentId', recordId);
+                formData.append('reason', recordReason || 'No reason provided.');
+
+                axiosClient.post(`/cancel-appointment`, formData)
+                    .then(({ data }) => {
+                        if (data.status === 200) {
+                            navigate('/AdminIndex/Appointments/Cancelled');
+                        }
+                        notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
+                    }).catch(error => {
+                        console.error(error);
+                        notify('error', data.message, 'top-center', 3000);
+                    });
+            }, 
+            recordId, 
+            handleFunction
+        });
+    }
+
+
+
+    /**
+     * Cancell Button checker
+     */
+    useEffect(() => {
+        if (appointment) {
+            const now = new Date();
+            const appointmentDate = new Date(appointment.date_time);
+    
+            // Strip time from both dates to compare only the dates
+            const nowDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const appointmentDateOnly = new Date(
+                appointmentDate.getFullYear(),
+                appointmentDate.getMonth(),
+                appointmentDate.getDate()
+            );
+    
+            const diff = appointmentDateOnly.getTime() - nowDateOnly.getTime();
+            const diffInDays = diff / (1000 * 60 * 60 * 24); // convert ms to days
+    
+            if (diffInDays > 0) {
+                setMarkDoneDisabled(true);
+            } else {
+                setMarkDoneDisabled(false);
+            }
+        }
+    }, [appointment]);
+
 
 
     /**
@@ -157,7 +219,7 @@ export default function AdminViewAppointment() {
                     {(appointment.status !== "Completed" && appointment.status !== "Cancelled") && (
                         <div className="d-flex gap3 justify-content-end w-100 mar-bottom-1">
                             {!isMarkingComplete && (
-                                <button className='primary-btn-red1' onClick={(e) => handleCancel(record.id,record.reason)}>
+                                <button className='primary-btn-red1' onClick={(e) => handleCancel(appointment.id)}>
                                     Cancel Appointment
                                 </button>
                             )}
@@ -175,7 +237,8 @@ export default function AdminViewAppointment() {
 
                             {(appointment.status === "Approved" && !isMarkingComplete) && (
                                 <button 
-                                className={`primary-btn-blue1`}
+                                disabled={isMarkDoneDisabled}
+                                className={`primary-btn-blue1 ${isMarkDoneDisabled ? "disabled" : ""}`}
                                 onClick={() => setMarkingComplete(true)}
                                 >
                                     Mark as Complete
@@ -464,7 +527,7 @@ export default function AdminViewAppointment() {
                                 </div>
                             </div>
 
-                            <div className="d-flex gap1 mar-bottom-1">
+                            <div className="d-flex gap1 mar-bottom-2">
                                 <div className="w-100">
                                     <h5>Procedures done</h5>
                                     <p>{appointment.medical_history.procedure_done || "N/A"}</p>
@@ -472,6 +535,13 @@ export default function AdminViewAppointment() {
                                 <div className="w-100">
                                     <h5>Next Appointment</h5>
                                     <p>{appointment.medical_history.next_appointment_date_time ? formatDateTime(appointment.medical_history.next_appointment_date_time) : "N/A"}</p>
+                                </div>
+                            </div>
+
+                            <div className="mar-bottom-1">
+                                <div className="w-100">
+                                    <h5>Veterenarian's Note</h5>
+                                    <p>{appointment.medical_history.note || "N/A"}</p>
                                 </div>
                             </div>
 

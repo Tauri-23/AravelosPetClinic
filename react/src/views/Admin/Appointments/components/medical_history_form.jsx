@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { formatTime, isEmptyOrSpaces, notify } from "../../../../assets/js/utils";
 import axiosClient from "../../../../axios-client";
 import { useNavigate } from "react-router-dom";
+import TextArea from "antd/es/input/TextArea";
 
 export default function MedicalHistoryForm({appointmentId}) {
     const navigate = useNavigate();
@@ -24,6 +25,7 @@ export default function MedicalHistoryForm({appointmentId}) {
     const [procedure, setProcedure] = useState("");
     const [selectedNextAptDate, setSelectedNextAptDate] = useState(null);
     const [selectedNextAptTime, setSelectedNextAptTime] = useState("");
+    const [note, setNote] = useState("");
 
     /**
      * Physical Exam
@@ -381,7 +383,8 @@ export default function MedicalHistoryForm({appointmentId}) {
         formData.append("medByOwner", isEmptyOrSpaces(medByOwner) ? "" : medByOwner);
         formData.append("medByOtherVet", isEmptyOrSpaces(medByOtherVet) ? "" : medByOtherVet);
         formData.append("procedure", isEmptyOrSpaces(procedure) ? "" : procedure);
-        formData.append("selectedNextAptDateTime", selectedNextAptDate !== null && selectedNextAptTime !== "" ? `${appointmentDate.getFullYear()}-${appointmentDate.getMonth() + 1}-${appointmentDate.getDate()} ${selectedNextAptTime}` : "");
+        formData.append("selectedNextAptDate", selectedNextAptDate !== null ? `${appointmentDate.getFullYear()}-${appointmentDate.getMonth() + 1}-${appointmentDate.getDate()}` : "");
+        formData.append("note", note);
         
         formData.append("appointmentId", appointmentId);
 
@@ -572,6 +575,18 @@ export default function MedicalHistoryForm({appointmentId}) {
                             value={selectedNextAptDate}
                             onChange={(e) => setSelectedNextAptDate(e)}
                             />
+                        </div>
+                    </div>
+
+                    <div className="d-flex gap1 mar-bottom-2">
+                        <div className="d-flex flex-direction-y gap4 w-100">
+                            <label htmlFor="note">Note (optional)</label>
+                            <TextArea
+                            id="note"
+                            className="w-100"
+                            size="large"
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}/>
                         </div>
                     </div>
 

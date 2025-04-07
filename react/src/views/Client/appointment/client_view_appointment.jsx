@@ -11,13 +11,13 @@ import axiosClient from "../../../axios-client";
 
 export default function ClientViewAppointment() {
     const now = new Date();
-    const navigate = useNavigate();
     const {showModal} = useModal();
     const {appointmentId} = useParams();
     const {setActiveNavLink, setPendingAppointments, setApprovedAppointments, setCanceledAppointments} = useOutletContext();
 
     const [appointment, setAppointment] = useState(null);
     const [cancelledAptThisMonth, setCancelledAptThisMonth] = useState(null);
+    const [isCancellable, setIsCancellable] = useState(false);
 
 
 
@@ -36,6 +36,30 @@ export default function ClientViewAppointment() {
         }
         getAll();
     }, []);
+
+
+
+    /**
+     * Cancell Button checker
+     */
+    useEffect(() => {
+        if (appointment) {
+            const appointmentDate = new Date(appointment.date_time);
+    
+            // Strip time from both dates by setting hours to 0
+            const nowDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const appointmentDateOnly = new Date(appointmentDate.getFullYear(), appointmentDate.getMonth(), appointmentDate.getDate());
+    
+            const diff = appointmentDateOnly.getTime() - nowDateOnly.getTime();
+            const diffInDays = diff / (1000 * 60 * 60 * 24); // convert ms to days
+    
+            if (diffInDays > 1) {
+                setIsCancellable(false);
+            } else {
+                setIsCancellable(true);
+            }
+        }
+    }, [appointment]);
 
 
 
@@ -59,7 +83,6 @@ export default function ClientViewAppointment() {
                 axiosClient.post(`/cancel-appointment`, formData)
                     .then(({ data }) => {
                         if (data.status === 200) {
-                            notify('success', data.message, 'top-center', 3000);
                             setAppointment(data.appointment);
                         }
                         notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
@@ -80,7 +103,7 @@ export default function ClientViewAppointment() {
      */
     return(
         <div className="content1">
-            {(appointment && cancelledAptThisMonth)
+            {(appointment !== null && cancelledAptThisMonth !== null)
             ? (
                 <>
                     <h2 className="mar-bottom-1">{appointment.status} Appointment</h2>
@@ -92,8 +115,8 @@ export default function ClientViewAppointment() {
                             )}
 
                             <button 
-                            disabled={cancelledAptThisMonth > 2} 
-                            className={`primary-btn-red1 ${cancelledAptThisMonth > 2 ? "disabled" : ""}`} 
+                            disabled={cancelledAptThisMonth > 2 || isCancellable} 
+                            className={`primary-btn-red1 ${cancelledAptThisMonth > 2 || isCancellable ? "disabled" : ""}`} 
                             onClick={(e) => handleCancel(appointment.id)}>
                                 Cancel Appointment
                             </button>
@@ -126,7 +149,7 @@ export default function ClientViewAppointment() {
                             </div>
                             <div className="d-flex align-items-center">
                                 <h5 className="fw-bold" style={{width: 120}}>Schedule: </h5>
-                                <h5>{formatDateTime(appointment.date_time)}</h5>
+                                <h5>{formatDate(appointment.date_time)}</h5>
                             </div>
                             
                         </div>

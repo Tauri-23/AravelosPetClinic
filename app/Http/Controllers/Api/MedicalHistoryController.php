@@ -108,10 +108,11 @@ class MedicalHistoryController extends Controller
                 'medication_by_owner' => $request->medByOwner != "" ? $request->medByOwner: null,
                 'medication_by_other_vets' => $request->medByOtherVet != "" ? $request->medByOtherVet: null,
                 'procedure_done' => $request->procedure != "" ? $request->procedure: null,
-                'next_appointment_date_time' => $request->selectedNextAptDateTime != "" ? $request->selectedNextAptDateTime: null,
+                'next_appointment_date' => $request->selectedNextAptDate != "" ? $request->selectedNextAptDate: null,
                 'physical_exams' => $physicalExam->id,
                 'laboratory_exams' => $labExam->id,
                 'diagnosis' => $diagnosis->id,
+                'note' => $request->note
             ]);
 
             // UPDATE THE APPOINTMENT

@@ -285,7 +285,7 @@ class AppointmentsController extends Controller
     public function GetAllAppointmentsWhereStatus($status)
     {
         return response()->json(appointments::where('status', $status)
-        ->with(["service", "pet", "feedback", "assigned_staffs"])
+        ->with(["service", "pet", "client", "feedback", "assigned_staffs"])
         ->get());
     }
     

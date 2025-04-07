@@ -20,10 +20,11 @@ class medical_histories extends Model
         'medication_by_owner',
         'medication_by_other_vets',
         'procedure_done',
-        'next_appointment_date_time',
+        'next_appointment_date',
         'physical_exams',
         'laboratory_exams',
         'diagnosis',
+        'note'
     ];
 
     public function physical_exams()

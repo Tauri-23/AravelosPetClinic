@@ -63,7 +63,7 @@ function ClinicCalendar() {
         <div className="content1 compressed">
             {appointments
             ? (
-                <div className="d-flex inter">
+                <div className="d-flex gap1">
                     <AdminCalendar
                         CustomToolbar={CustomToolbar}
                         onSelectEvent={onSelectEvent} // Pass the custom toolbar here

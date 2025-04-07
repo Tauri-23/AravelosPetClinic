@@ -25,7 +25,8 @@ return new class extends Migration
             $table->text("medication_by_owner")->nullable();
             $table->text("medication_by_other_vets")->nullable();
             $table->text("procedure_done")->nullable();
-            $table->dateTime("next_appointment_date_time")->nullable();
+            $table->date("next_appointment_date")->nullable();
+            $table->text("note")->nullable();
 
             $table->unsignedBigInteger("physical_exams")->nullable();
             $table->unsignedBigInteger("laboratory_exams")->nullable();
