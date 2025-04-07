@@ -63,6 +63,8 @@ class MedicalHistoryController extends Controller
                 'vaginal_smear_result' => $request->vaginalSmear ? $request->vaginalSmearResult : null,
                 'xray' => $request->xray,
                 'xray_result' => $request->xray ? $request->xrayResult : null,
+                'eye_strain' => $request->eyeStrain,
+                'eye_strain_result' => $request->eyeStrain ? $request->eyeStrainResult : null,
                 'other_test' => $request->otherTest,
                 'other_test_result' => $request->otherTestResult,
             ]);

@@ -82,6 +82,9 @@ export default function MedicalHistoryForm({appointmentId}) {
     const [vaginalSmear, setVaginalSmear] = useState(false);
     const [vaginalSmearResult, setVaginalSmearResult] = useState("");
 
+    const [eyeStrain, setEyeStrain] = useState(false);
+    const [eyeStrainResult, setEyeStrainResult] = useState("");
+
     const [xray, setXray] = useState(false);
     const [xrayResult, setXrayResult] = useState("");
 
@@ -267,6 +270,13 @@ export default function MedicalHistoryForm({appointmentId}) {
             setValue: (e) => setXrayResult(e.target.value)
         },
         {
+            title: "Eye Strain",
+            isChecked: eyeStrain,
+            resultValue: eyeStrainResult,
+            setChecked: setEyeStrain,
+            setValue: (e) => setEyeStrainResult(e.target.value)
+        },
+        {
             title: "Other test",
             testValue: otherTest,
             resultValue: otherTestResult,
@@ -345,6 +355,8 @@ export default function MedicalHistoryForm({appointmentId}) {
         formData.append("urineExamResult", urineExamResult);
         formData.append("vaginalSmear", vaginalSmear ? 1 : 0);
         formData.append("vaginalSmearResult", vaginalSmearResult);
+        formData.append("eyeStrain", eyeStrain ? 1 : 0);
+        formData.append("eyeStrainResult", eyeStrainResult);
         formData.append("xray", xray ? 1 : 0);
         formData.append("xrayResult", xrayResult);
         formData.append("otherTest", otherTest);

@@ -50,6 +50,9 @@ return new class extends Migration
             $table->boolean("xray")->default(false);
             $table->string("xray_result")->nullable();
 
+            $table->boolean("eye_strain")->default(false);
+            $table->string("eye_strain_result")->nullable();
+
 
             $table->string("other_test")->nullable();
             $table->string("other_test_result")->nullable();

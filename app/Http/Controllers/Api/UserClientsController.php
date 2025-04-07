@@ -199,4 +199,41 @@ class UserClientsController extends Controller
             ]);
         }
     }
+
+    public function EditClientLabel(Request $request)
+    {
+        try
+        {
+            DB::beginTransaction();
+
+            $client = user_clients::with("pets")->find($request->clientId);
+
+            if(!$client)
+            {
+                return response()->json([
+                    "status" => 404,
+                    "message" => "Client doesn't exist"
+                ]);
+            }
+
+            $client->label = $request->label;
+            $client->save();
+
+            DB::commit();
+
+            return response()->json([
+                "status" => 200,
+                "message" => "Success",
+                "client" => $client
+            ]);
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            return response()->json([
+                "status" => 500,
+                "message" => $e->getMessage()
+            ], 500);
+        }
+    }
 }

@@ -35,7 +35,7 @@ class FeedbacksController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => 'Feedback posted',
-                'appointment' => appointments::with(['pet', 'feedback'])->find($request->appointment)
+                'appointment' => appointments::with(["pet", "client", "feedback", "service", "assigned_staffs", "assigned_items", "medical_history"])->find($request->appointment)
             ]);
         }
         catch(\Exception $e)

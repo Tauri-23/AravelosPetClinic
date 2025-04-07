@@ -26,6 +26,7 @@ return new class extends Migration
             $table->boolean("email_verified")->default(false);
             $table->boolean('phone_verified')->default(false);
             $table->string('status')->default('active');
+            $table->string("label")->nullable();
             $table->timestamps();
         });
     }

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('status')->default('active');
             $table->date('dob')->nullable();
             $table->longText('picture');
+            $table->string("label")->nullable();
             $table->timestamps();
 
             $table->foreign('client')

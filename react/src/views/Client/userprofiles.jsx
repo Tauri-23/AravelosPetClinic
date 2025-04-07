@@ -10,10 +10,11 @@
     import { formatDateTime } from "../../assets/js/utils";
     import * as Icon from 'react-bootstrap-icons';
     import { Button,Table} from 'antd';
-    import { useOutletContext } from 'react-router-dom';
+    import { useNavigate, useOutletContext } from 'react-router-dom';
 
 
 const userprofiles = () => {
+    const navigate = useNavigate();
     const { showModal } = useModal();
     const {setActiveNavLink} = useOutletContext();
     const { user, setUser } = useStateContext();
@@ -305,7 +306,7 @@ const userprofiles = () => {
                         pagination={{pageSize:2,showQuickJumper: true }}
                         rowClassName="smaller-row"
                         onRow={(record) => ({
-                            //onClick: () => navigate(`/AdminIndex/ViewAppointment/${record.id}`)
+                            onClick: () => navigate(`/ClientIndex/ViewAppointment/${record.id}`)
                         })}
                         />
                     </div>

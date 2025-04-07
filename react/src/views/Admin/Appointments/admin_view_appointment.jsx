@@ -284,6 +284,10 @@ export default function AdminViewAppointment() {
                                 <h5 className="fw-bold" style={{width: 120}}>Schedule: </h5>
                                 <h5>{formatDateTime(appointment.date_time)}</h5>
                             </div>
+                            <div className="d-flex align-items-center">
+                                <h5 className="fw-bold" style={{width: 120}}>Pet Label: </h5>
+                                <h5>{appointment.pet.label || "N/A"}</h5>
+                            </div>
                             
                         </div>
                     </div>

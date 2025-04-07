@@ -45,6 +45,10 @@ export default function AdminManageProfilesClients() {
             dataIndex: "gender",
         },
         {
+            title: "Label",
+            render: (_, value) => value.label || "N/A"
+        },
+        {
             title: "Status",
             dataIndex: "status",
         },

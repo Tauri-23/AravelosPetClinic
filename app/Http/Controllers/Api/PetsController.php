@@ -121,6 +121,43 @@ class PetsController extends Controller
         }
     }
 
+    public function EditPetLabel(Request $request)
+    {
+        try
+        {
+            DB::beginTransaction();
+
+            $pet = pets::with("client")->find($request->petId);
+
+            if(!$pet)
+            {
+                return response()->json([
+                    "status" => 404,
+                    "message" => "Pet doesn't exist"
+                ]);
+            }
+
+            $pet->label = $request->label;
+            $pet->save();
+
+            DB::commit();
+
+            return response()->json([
+                "status" => 200,
+                "message" => "Success",
+                "pet" => $pet
+            ]);
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            return response()->json([
+                "status" => 500,
+                "message" => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
 
     // GET

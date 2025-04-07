@@ -1,23 +1,31 @@
 import { useEffect, useState } from "react"
 import { fetchAllAppointmentsWhereStatusMonthAndYear, fetchAppointmentDetails } from "../../../services/AppointmentServices";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import "../appointment/css/client_appointments.css";
 
-import {Spin} from "antd";
-import { formatDate, formatDateTime, getAge, isEmptyOrSpaces, notify } from "../../../assets/js/utils";
+import {Button, Spin} from "antd";
+import { formatDate, getAge, isEmptyOrSpaces, notify } from "../../../assets/js/utils";
 import React from "react";
 import { useModal } from "../../../contexts/ModalContext";
 import axiosClient from "../../../axios-client";
+import TextArea from "antd/es/input/TextArea";
+import { useStateContext } from "../../../contexts/ContextProvider";
 
 export default function ClientViewAppointment() {
     const now = new Date();
+    const {user} = useStateContext();
     const {showModal} = useModal();
     const {appointmentId} = useParams();
-    const {setActiveNavLink, setPendingAppointments, setApprovedAppointments, setCanceledAppointments} = useOutletContext();
+    const {setActiveNavLink} = useOutletContext();
 
     const [appointment, setAppointment] = useState(null);
     const [cancelledAptThisMonth, setCancelledAptThisMonth] = useState(null);
+
+    const [feedbackIn, setFeedbackIn] = useState("");
+
+
     const [isCancellable, setIsCancellable] = useState(false);
+    const [isPostingFeedback, setPostingFeedback] = useState(false);
 
 
 
@@ -40,7 +48,7 @@ export default function ClientViewAppointment() {
 
 
     /**
-     * Cancell Button checker
+     * Cancel Button checker
      */
     useEffect(() => {
         if (appointment) {
@@ -93,6 +101,25 @@ export default function ClientViewAppointment() {
             }, 
             recordId, 
             handleFunction
+        });
+    }
+
+    const handleSubmitFeedback = () => {
+        const formData = new FormData();
+        formData.append("client", user.id);
+        formData.append("appointment", appointment.id);
+        formData.append("feedback", feedbackIn);
+
+        axiosClient.post("/post-feedback", formData)
+        .then(({data}) => {
+            if(data.status === 200) {
+                setAppointment(data.appointment);
+                setPostingFeedback(false);
+            }
+            notify(data.status === 200 ? "success" : "error", data.message, "top-center", 3000);
+        }).catch(error => {
+            notify("error", "Server Error", "top-center", 3000);
+            console.error(error);
         });
     }
 
@@ -155,6 +182,47 @@ export default function ClientViewAppointment() {
                         </div>
                     </div>
 
+                    {/* FEEDBACK */}
+                    {appointment.status === "Completed" && (
+                        <div className="appointment-cont1 mar-bottom-1">
+                            <h3 className="mar-bottom-1">Feedback</h3>
+
+                            {!isPostingFeedback 
+                            ? (<div className="mar-bottom-3">{appointment.feedback?.content || "Not given yet"}</div>)
+                            : (
+                                <TextArea
+                                className="mar-bottom-3"
+                                rows={4}
+                                value={feedbackIn}
+                                onChange={(e) => setFeedbackIn(e.target.value)}
+                                />
+                            )}
+                            
+                            
+
+                            {!appointment.feedback && (
+                                <div className="d-flex gap4">
+                                    <Button
+                                    type={isPostingFeedback ? "default" : "primary"}
+                                    size="large"
+                                    onClick={() => setPostingFeedback(prev => !prev) }>
+                                        {isPostingFeedback ? "Cancel" : "Post a Feedback"}
+                                    </Button>
+
+                                    {isPostingFeedback && (
+                                        <Button
+                                        disabled={isEmptyOrSpaces(feedbackIn)}
+                                        type="primary"
+                                        size="large"
+                                        onClick={handleSubmitFeedback}>
+                                            Submit
+                                        </Button>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                     {(appointment.status === "Cancelled") && (
                         <div className="appointment-cont1 w-100 mar-bottom-1">
                             <h4 className="mar-bottom-1">Reason</h4>
@@ -204,7 +272,7 @@ export default function ClientViewAppointment() {
 
                     {/* FOR COMPLETED */}
                     {appointment.status === "Completed" && appointment.service.service !== "Grooming" && (
-                        <div className="appointment-cont1 w-100">
+                        <div className="appointment-cont1 w-100 mar-bottom-1">
                             <h3 className="mar-bottom-1">Medical History</h3>
 
                             <div className="d-flex gap1 mar-bottom-2">
@@ -233,10 +301,17 @@ export default function ClientViewAppointment() {
                                 </div>
                             </div>
 
-                            <div className="d-flex gap1 mar-bottom-1">
+                            <div className="d-flex gap1 mar-bottom-2">
                                 <div className="w-100">
                                     <h5>Procedures done</h5>
                                     <p>{appointment.medical_history.procedure_done || "N/A"}</p>
+                                </div>
+                            </div>
+
+                            <div className="mar-bottom-1">
+                                <div className="w-100">
+                                    <h5>Veterenarian's Note</h5>
+                                    <p>{appointment.medical_history.note || "N/A"}</p>
                                 </div>
                             </div>
 

@@ -137,10 +137,12 @@ Route::post('/create-med-history', [MedicalHistoryController::class, 'CreateMedi
 */
 Route::get('/retrieve-pets-where-client/{clientId}', [PetsController::class,'GetPetsWhereClient']);
 Route::get('/retrieve-pet-info-where-id/{petId}', [PetsController::class,'GetPetInfoWhereId']);
-Route::post('/add-pet', [PetsController::class,'CreatePet']);
-Route::post('/update-pet', [PetsController::class,'UpdatePet']);
 Route::get('/get-all-dog-breeds', [PetsController::class,'GetAllDogBreeds']);
 Route::get('/get-all-cat-breeds', [PetsController::class,'GetAllCatBreeds']);
+
+Route::post('/add-pet', [PetsController::class,'CreatePet']);
+Route::post('/update-pet', [PetsController::class,'UpdatePet']);
+Route::post('/edit-pet-label', [PetsController::class,'EditPetLabel']);
 
 
 
@@ -158,6 +160,7 @@ Route::post('/suspend-unsuspend-client', [UserClientsController::class, 'Suspend
 Route::post('/del-client', [UserClientsController::class, 'DeleteClient']);
 Route::post('/update-client-profile', [UserClientsController::class, 'UpdateClientProfile']);
 Route::post('/update-client-password', [UserClientsController::class, 'ChangeClientPassword']);
+Route::post('/edit-client-label', [UserClientsController::class, 'EditClientLabel']);
 
 
 

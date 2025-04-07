@@ -33,6 +33,8 @@ class medical_history_laboratory_exam extends Model
         'vaginal_smear_result',
         'xray',
         'xray_result',
+        'eye_strain',
+        'eye_strain_result',
         'other_test',
         'other_test_result',
     ];
