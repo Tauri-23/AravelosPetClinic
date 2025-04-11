@@ -11,6 +11,8 @@ use App\Models\user_clients;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 class EmailOTPsController extends Controller
 {
@@ -38,7 +40,8 @@ class EmailOTPsController extends Controller
             {
                 return response()->json([
                     "status" => 404,
-                    "message" => "Email address is not associated to any account."
+                    "message" => "Email address is not associated to any account.",
+                    "email" => $request->email
                 ]);
             }
 
@@ -57,12 +60,21 @@ class EmailOTPsController extends Controller
 
             DB::commit();
 
-            $this->sendEmail->send(new ClientForgotPassOTP($otp), $client->email);
-
-            return response()->json([
-                "status" => 200,
-                "message" => "success"
-            ]);
+            // $this->sendEmail->send(new ClientForgotPassOTP($otp), $client->email);
+            try {
+                Mail::to($client->email)->send(new ClientForgotPassOTP($otp));
+            
+                return response()->json([
+                    "status" => 200,
+                    "message" => "success"
+                ]);
+            } catch (TransportExceptionInterface $e) {
+                return response()->json([
+                    "status" => 500,
+                    "message" => "Failed to send email.",
+                    "error" => $e->getMessage()
+                ]);
+            }
         }
         catch(\Exception $e)
         {
@@ -72,8 +84,6 @@ class EmailOTPsController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
-
-        
     }
 
     

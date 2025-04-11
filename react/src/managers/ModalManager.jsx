@@ -131,6 +131,8 @@ const ModalManager = () => {
              */
             case 'VerifyPhoneModal':
                 return <VerifyPhoneModal {...modalState.props} onClose={hideModal}/>
+            case 'VerifyEmailModal':
+                return <VerifyEmailModal {...modalState.props} onClose={hideModal}/>
             
             
             

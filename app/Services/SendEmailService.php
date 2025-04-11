@@ -8,6 +8,16 @@ class SendEmailService implements ISendEmailService
 {
     public function send($mailObject, $email)
     {
-        Mail::to($email)->queue($mailObject);
+        try
+        {
+            Mail::to($email)->queue($mailObject);
+        }
+        catch(\Exception $e)
+        {
+            return response()->json([
+                "status" => 500,
+                "message" => $e->getMessage()
+            ], 500);
+        }
     }
 }

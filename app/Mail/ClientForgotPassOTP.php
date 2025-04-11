@@ -27,9 +27,8 @@ class ClientForgotPassOTP extends Mailable
      */
     public function build()
     {
-        return $this->from('pembopayapp@gmail.com', 'Aravelos Animal Clinic')
+        return $this->view('EmailSend.ClientForgotPassOTP')
         ->subject('Arevalos Animal Clinic Change Password.')
-        ->view('EmailSend.ClientForgotPassOTP')
         ->with([
             'otp' => $this->otp
         ]);
