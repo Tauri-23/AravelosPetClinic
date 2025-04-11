@@ -15,18 +15,30 @@ return new class extends Migration
             $table->string('id', 6)->primary();
             $table->string('client', 6)->nullable();
             $table->string('name');
-            $table->string('type');
-            $table->string('breed');
+            $table->unsignedBigInteger('type')->nullable();
+            $table->unsignedBigInteger('breed')->nullable();
             $table->string('gender');
             $table->string('status')->default('active');
             $table->date('dob')->nullable();
-            $table->longText('picture');
+            $table->longText('picture')->default("defaultPetPic.jpg");
             $table->string("label")->nullable();
             $table->timestamps();
 
             $table->foreign('client')
             ->references('id')
             ->on('user_clients')
+            ->nullOnDelete()
+            ->cascadeOnUpdate();
+            
+            $table->foreign('type')
+            ->references('id')
+            ->on('pet_types')
+            ->nullOnDelete()
+            ->cascadeOnUpdate();
+
+            $table->foreign('breed')
+            ->references('id')
+            ->on('pet_breeds')
             ->nullOnDelete()
             ->cascadeOnUpdate();
         });

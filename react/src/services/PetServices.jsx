@@ -20,18 +20,11 @@ export const fetchPetInfoWhereId = async(petId) => {
         throw error;
     }
 }
-export const fetchAllDogBreeds = async() => {
+
+
+export const fetchAllPetTypesWithBreeds = async() => {
     try {
-        const response = await axiosClient.get(`/get-all-dog-breeds`);
-        return response.data;
-    } catch(error) {
-        console.error(error)
-        throw error;
-    }
-}
-export const fetchAllCatBreeds = async() => {
-    try {
-        const response = await axiosClient.get(`/get-all-cat-breeds`);
+        const response = await axiosClient.get(`/get-all-pet-types-with-breeds`);
         return response.data;
     } catch(error) {
         console.error(error)

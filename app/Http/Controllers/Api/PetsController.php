@@ -6,11 +6,11 @@ use App\Contracts\IGenerateFilenameService;
 use App\Contracts\IGenerateIdService;
 use App\Http\Controllers\Controller;
 use App\Models\pets;
-use DB;
 use App\Models\dog_breeds;
 use App\Models\cat_breeds;
-
+use App\Models\pet_types;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PetsController extends Controller
 {
@@ -26,11 +26,14 @@ class PetsController extends Controller
     // POST
     public function CreatePet(Request $request)
     {
-        $petId = $this->generateId->generate(pets::class, 6);
+        
 
         try
         {
             DB::beginTransaction();
+            
+            $petIn = json_decode($request->input("petIn"), true);
+            $petId = $this->generateId->generate(pets::class, 6);
             $pet = new pets();
 
 
@@ -47,12 +50,12 @@ class PetsController extends Controller
 
 
             $pet->id = $petId;
-            $pet->client = $request->client;
-            $pet->name = $request->petName;
-            $pet->type = $request->petType;
-            $pet->gender = $request->petGender;
-            $pet->dob = $request->petDOB;
-            $pet->breed = $request->petBreed;
+            $pet->client = $petIn["client"];
+            $pet->name = $petIn["name"];
+            $pet->type = $petIn["type"];
+            $pet->gender = $petIn["gender"];
+            $pet->dob = $petIn["dob"];
+            $pet->breed = $petIn["breed"];
             
             $pet->save();
 
@@ -82,6 +85,10 @@ class PetsController extends Controller
         {
             DB::beginTransaction();
             $petData = json_decode($request->input('petData'), true); // true = associative array
+
+            // return response()->json([
+            //     "message" => $petData
+            // ], 500);
 
             $pet = pets::find($petData["id"]);
             $pet->name = $petData["name"];
@@ -165,18 +172,12 @@ class PetsController extends Controller
     {
         return response()->json(pets::where('client', $clientId)->get());
     }
+
     public function GetPetInfoWhereId($petId)
     {
         return response()->json(pets::with("client")->find($petId));
     }
-    public function GetAllDogBreeds()
-    {
-        return response()->json(dog_breeds::all());
-    }
-    public function GetAllCatBreeds()
-    {
-        return response()->json(cat_breeds::all());
-    }
+
     public function UpdatePetProfile(Request $request)
     {
         $pet = pets::find($request->petId);
@@ -241,6 +242,11 @@ class PetsController extends Controller
                 'message' => 'Failed to update pet profile: ' . $ex->getMessage()
             ], 500);
         }
+    }
+
+    public function GetAllPetTypesWithBreeds()
+    {
+        return response()->json(pet_types::with("pet_breeds")->get());
     }
 
 }

@@ -5,11 +5,11 @@
     import axiosClient from '../../axios-client';
     import { notify } from '../../assets/js/utils';
     import { useStateContext } from '../../contexts/ContextProvider';
-    import { fetchAllPetsWhereClient } from '../../services/PetServices';
+    import { fetchAllPetsWhereClient, fetchAllPetTypesWithBreeds } from '../../services/PetServices';
     import { fetchAllAppointmentsWherePetandStatus } from "../../services/AppointmentServices";
     import { formatDateTime } from "../../assets/js/utils";
     import * as Icon from 'react-bootstrap-icons';
-    import { Button,Table} from 'antd';
+    import { Button,Spin,Table} from 'antd';
     import { useNavigate, useOutletContext } from 'react-router-dom';
 
 
@@ -25,6 +25,8 @@ const userprofiles = () => {
     const [pets, setPets] = useState(null);
     const [history, setHistory] = useState(null);
 
+    const [petTypes, setPetTypes] = useState(null);
+
 
     /**
      * Onmount
@@ -34,9 +36,12 @@ const userprofiles = () => {
 
         const getAllPets = async () => {
             try {
-                const data = await fetchAllPetsWhereClient(user.id);
-                console.log(data);
-                setPets(data);
+                const [petsDb, petTypesDb] = await Promise.all([
+                    fetchAllPetsWhereClient(user.id),
+                    fetchAllPetTypesWithBreeds()
+                ])
+                setPetTypes(petTypesDb)
+                setPets(petsDb);
             } catch (error) {
                 console.error(error);
             }
@@ -63,17 +68,12 @@ const userprofiles = () => {
     };
 
     const handleEditPetClick = (pet) =>{
-        showModal('EditPetModal1', { pet, setPets });
+        showModal('EditPetModal1', { pet, setPets, petTypes });
     };
 
-    const handleAddPetPost = (petName, petType, petGender, petDOB, petBreed, petPic) => {
+    const handleAddPetPost = (data, petPic) => {
         const formData = new FormData();
-        formData.append('client', user.id);
-        formData.append('petName', petName);
-        formData.append('petType', petType);
-        formData.append('petGender', petGender);
-        formData.append('petDOB', petDOB);
-        formData.append('petBreed', petBreed);
+        formData.append("petIn", JSON.stringify(data));
 
         if(petPic) {
             formData.append('pic', petPic);
@@ -95,7 +95,7 @@ const userprofiles = () => {
     };
 
     const handleAddPetClick = () => {
-        showModal('AddPetModal1', { handleAddPetPost });
+        showModal('AddPetModal1', { petTypes, handleAddPetPost });
     };
 
 
@@ -168,150 +168,160 @@ const userprofiles = () => {
      */
     return (
         <div className="content1 d-flex gap1">
-                <div className='prof small-form user-profile'>
 
-                    <div className="profile-header bottom-padding-s">
-                        <div className="profilepic" onClick={()=>handleEditUserClick("pfp")}>
-                        {newProfilePicture || user.profilePicture ? (
-                            <img src={newProfilePicture || user.profilePicture} alt="Profile" />
-                            ) : (
-                                <img src={`/assets/media/pfp/${user.picture}`} alt="profile picture" />
-                            )}
+            {pets && petTypes
+            ? (
+                <>
+                    {/* PROFILE */}
+                    <div className='prof small-form user-profile'>
+
+                        <div className="profile-header bottom-padding-s">
+                            <div className="profilepic" onClick={()=>handleEditUserClick("pfp")}>
+                            {newProfilePicture || user.profilePicture ? (
+                                <img src={newProfilePicture || user.profilePicture} alt="Profile" />
+                                ) : (
+                                    <img src={`/assets/media/pfp/${user.picture}`} alt="profile picture" />
+                                )}
+                            </div>
+                            <div className="user-name semi-medium-f bold anybody">
+                                {user.fname} {user.mname} {user.lname}
+                            </div>
                         </div>
-                        <div className="user-name semi-medium-f bold anybody">
-                            {user.fname} {user.mname} {user.lname}
-                        </div>
-                    </div>
 
-                    <div className="left-margin top-margin">
-                        <div className='user-details'>
-                            <div className='detail-row semi-bold'>
-                            <div className="label-div">Name: </div>
-                            <input
-                            className="left-margin ud detail-cont"
-                            type="text"
-                            value={`${user.fname || ''} ${user.mname || ''} ${user.lname || ''}`.trim() || 'n/a'} readOnly />
-                            <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("name")}/>
-
-                            </div>
-                            <div className='detail-row semi-bold'>
-                            <div className="label-div">Gender: </div>
-                            <input
-                            className="left-margin ud detail-cont"
-                            type="text"
-                            value={user.gender || 'n/a'} readOnly />
-                            <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("gender")}/>
-
-                            </div>
-                            <div className='detail-row semi-bold'>
-                            <div className="label-div">Email: </div>
-                            <input
-                            className="left-margin ud detail-cont"
-                            type="text"
-                            value={user.email || 'n/a'} readOnly />
-                            <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("email")}/>
-
-                            </div>
-                            <div className='detail-row semi-bold'>
-                            <div className="label-div">Phone: </div>
-                            <input
-                            className="left-margin ud detail-cont"
-                            type="text"
-                            value={user.phone || 'n/a'} readOnly />
-                            <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("phone")}/>
-
-                            </div>
-                            {/* <div className="primary-btn-blue1">Change Password</div> */}
-                            {/* <u>Change Password</u> */}
-                            <div className='detail-row semi-bold'>
-                                <div className="label-div">Password: </div>
+                        <div className="left-margin top-margin">
+                            <div className='user-details'>
+                                <div className='detail-row semi-bold'>
+                                <div className="label-div">Name: </div>
                                 <input
                                 className="left-margin ud detail-cont"
-                                type="password"
-                                value="********"
-                                readOnly />
-                                <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("password")}/>
+                                type="text"
+                                value={`${user.fname || ''} ${user.mname || ''} ${user.lname || ''}`.trim() || 'n/a'} readOnly />
+                                <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("name")}/>
+
+                                </div>
+                                <div className='detail-row semi-bold'>
+                                <div className="label-div">Gender: </div>
+                                <input
+                                className="left-margin ud detail-cont"
+                                type="text"
+                                value={user.gender || 'n/a'} readOnly />
+                                <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("gender")}/>
+
+                                </div>
+                                <div className='detail-row semi-bold'>
+                                <div className="label-div">Email: </div>
+                                <input
+                                className="left-margin ud detail-cont"
+                                type="text"
+                                value={user.email || 'n/a'} readOnly />
+                                <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("email")}/>
+
+                                </div>
+                                <div className='detail-row semi-bold'>
+                                <div className="label-div">Phone: </div>
+                                <input
+                                className="left-margin ud detail-cont"
+                                type="text"
+                                value={user.phone || 'n/a'} readOnly />
+                                <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("phone")}/>
+
+                                </div>
+                                {/* <div className="primary-btn-blue1">Change Password</div> */}
+                                {/* <u>Change Password</u> */}
+                                <div className='detail-row semi-bold'>
+                                    <div className="label-div">Password: </div>
+                                    <input
+                                    className="left-margin ud detail-cont"
+                                    type="password"
+                                    value="********"
+                                    readOnly />
+                                    <Icon.PencilFill className="left-margin-s pointer" onClick={()=>handleEditUserClick("password")}/>
+                                </div>
+
+
+                                {/*  */}
+                                {!user.phone_verified && (
+                                    <div className='d-flex w-100 align-items-center gap1 mar-top-1'>
+                                        <div>Phone: {user.phone}</div>
+                                        <Button
+                                        disabled={user.phone_verified}
+                                        onClick={handleVerifyPhone}
+                                        type='primary'
+                                        >
+                                            {user.phone_verified ? "Verified" : 'Verify Phone'}
+                                        </Button>
+                                    </div>
+                                )}
+                                {!user.email_verified && (
+                                    <div className='d-flex w-100 align-items-center gap1 mar-top-3'>
+                                        <div>email: {user.email}</div>
+                                        <Button
+                                        type='primary'
+                                        >
+                                            Verify Email
+                                        </Button>
+                                    </div>
+                                )}
+
                             </div>
 
+                        </div>
+                    </div>
 
-                            {/*  */}
-                            {!user.phone_verified && (
-                                <div className='d-flex w-100 align-items-center gap1 mar-top-1'>
-                                    <div>Phone: {user.phone}</div>
-                                    <Button
-                                    disabled={user.phone_verified}
-                                    onClick={handleVerifyPhone}
-                                    type='primary'
-                                    >
-                                        {user.phone_verified ? "Verified" : 'Verify Phone'}
-                                    </Button>
-                                </div>
-                            )}
-                            {!user.email_verified && (
-                                <div className='d-flex w-100 align-items-center gap1 mar-top-3'>
-                                    <div>email: {user.email}</div>
-                                    <Button
-                                    type='primary'
-                                    >
-                                        Verify Email
-                                    </Button>
-                                </div>
-                            )}
 
+
+                    {/* PET PROFILE */}
+                    <div className='prof small-form user-pets'>
+                        <div className="prof header bold anybody semi-medium-f">Pet Profiles</div>
+                        <div className="pet-profiles">
+                            {pets?.length > 0 && pets.map((pet) => (
+                                <div
+                                    key={pet.id}
+                                    className="pet-profile"
+                                    >
+                                    <div className="position-relative inline-block">
+                                        <img 
+                                        onClick={() => handlePetClick(pet)} 
+                                        src={`/assets/media/pets/${pet.picture || "petDefault.png"}`} 
+                                        alt={pet.name} 
+                                        className="pet-picture rounded-corners" />
+                                        <Icon.PencilFill size={18} className="peteditbtn shadow position-absolute p-1 rounded full text-white cursor-pointer"
+                                        onClick={(e)=>{
+                                            e.stopPropagation();
+                                            handleEditPetClick(pet)}
+                                        }>
+                                        </Icon.PencilFill>
+                                    </div>
+                                    <p>{pet.name}</p>
+                                </div>
+                            ))}
+                            {/* Add New Pet button */}
+                            <div className="pet-profile add-pet rounded-corners" onClick={handleAddPetClick}>
+                                <div className="add-icon ">+</div>
+                            </div>
+                        </div>
+                        <div className="prof header bold anybody semi-medium-f">
+                            {selectedPet ? `${selectedPet.name}'s History` : "History"}
+                        </div>
+                        <div className ="pet-history">
+                            <Table
+                            columns={historyColumns}
+                            dataSource={history?.map((item) => ({...item, key: item.id}))}
+                            bordered
+                            pagination={{pageSize:2,showQuickJumper: true }}
+                            rowClassName="smaller-row"
+                            onRow={(record) => ({
+                                onClick: () => navigate(`/ClientIndex/ViewAppointment/${record.id}`)
+                            })}
+                            />
                         </div>
 
                     </div>
-                </div>
-
-
-
-                {/* PET PROFILE */}
-                <div className='prof small-form user-pets'>
-                    <div className="prof header bold anybody semi-medium-f">Pet Profiles</div>
-                    <div className="pet-profiles">
-                        {pets?.length > 0 && pets.map((pet) => (
-                            <div
-                                key={pet.id}
-                                className="pet-profile"
-                                >
-                                <div className="position-relative inline-block">
-                                    <img 
-                                    onClick={() => handlePetClick(pet)} 
-                                    src={`/assets/media/pets/${pet.picture || "petDefault.png"}`} 
-                                    alt={pet.name} 
-                                    className="pet-picture rounded-corners" />
-                                    <Icon.PencilFill size={18} className="peteditbtn shadow position-absolute p-1 rounded full text-white cursor-pointer"
-                                    onClick={(e)=>{
-                                        e.stopPropagation();
-                                        handleEditPetClick(pet)}
-                                    }>
-                                    </Icon.PencilFill>
-                                </div>
-                                <p>{pet.name}</p>
-                            </div>
-                        ))}
-                        {/* Add New Pet button */}
-                        <div className="pet-profile add-pet rounded-corners" onClick={handleAddPetClick}>
-                            <div className="add-icon ">+</div>
-                        </div>
-                    </div>
-                    <div className="prof header bold anybody semi-medium-f">
-                        {selectedPet ? `${selectedPet.name}'s History` : "History"}
-                    </div>
-                    <div className ="pet-history">
-                        <Table
-                        columns={historyColumns}
-                        dataSource={history?.map((item) => ({...item, key: item.id}))}
-                        bordered
-                        pagination={{pageSize:2,showQuickJumper: true }}
-                        rowClassName="smaller-row"
-                        onRow={(record) => ({
-                            onClick: () => navigate(`/ClientIndex/ViewAppointment/${record.id}`)
-                        })}
-                        />
-                    </div>
-
-                </div>
+                </>
+            )
+            : (
+                <Spin size='large'/>
+            )}
         </div>
     );
 };

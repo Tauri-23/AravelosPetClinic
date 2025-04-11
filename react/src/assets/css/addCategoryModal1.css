@@ -32,8 +32,5 @@
     flex: 1; /* Flex to take equal space */
     margin-right: 10px; /* Space between buttons */
   }
-  .modal1.closed {
-    display: none;
-  }
   
 

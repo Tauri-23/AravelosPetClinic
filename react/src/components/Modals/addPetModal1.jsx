@@ -1,136 +1,125 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "../../assets/css/addPetModal1.css";
-import { Select } from "antd";
-import { fetchAllDogBreeds } from '../../services/PetServices';
-import { fetchAllCatBreeds } from '../../services/PetServices';
+import { Button, Input, Select } from "antd";
+import { useStateContext } from "../../contexts/ContextProvider";
+
+
+export default function AddPetModal1({ handleAddPetPost, petTypes, onClose }) {
+    const {user} = useStateContext();
+    const [petIn, setPetIn] = useState({
+        client: user.id,
+        name: "",
+        type: "",
+        breed: "",
+        gender: "",
+        dob: ""
+    })
+    const [petPic, setPetPic] = useState(null);
+
+
+    /**
+     * Handlers
+     */
+    const handleInputChange = (e) => {
+        setPetIn({...petIn, [e.target.name]: e.target.value});
+    }
 
 
 
-//import DatePicker from "react-date-picker";
-//import "react-datepicker/dist/react-datepicker.css";
-
-export default function AddPetModal1({ handleAddPetPost, onClose }) {
-    const [petName, setPetName] = useState("");
-    const [petType, setPetType] = useState("Dog");
-    const [petBreed, setPetBreed] = useState("");
-    const [petGender, setPetGender] = useState("Male");
-    const [petDOB, setPetDOB] = useState(null); // Initialize with null to avoid default date
-    const [petPic, setPetPic] = useState("");
-    const [breeds, setBreeds] = useState([]);
-    const genderOptions = [
-        { id: "Male", label: "Male" },
-        { id: "Female", label: "Female" },
-    ];
-
-    const handleDateChange = (date) => {
-        setPetDOB(date);
-    };
-
-    useEffect(() => {
-        if (!petType) return;
-
-        const fetchBreeds = async () => {
-            try {
-                let response;
-                if (petType === "Dog") {
-                    response = await fetchAllDogBreeds();
-                } else if (petType === "Cat") {
-                    response = await fetchAllCatBreeds();
-                }
-
-                // Map the API response to create breed options for the Select component
-                const breedOptions = response.map((breed) => ({
-                    label: petType === "Dog" ? breed.dog_breed : breed.cat_breed, // Use dog_breed or cat_breed as label
-                    value: breed.id, // Use the breed's id as value
-                }));
-
-                setBreeds(breedOptions); // Update the state with the breed options
-                setPetBreed(""); // Reset breed selection when pet type changes
-            } catch (error) {
-                console.error("Error fetching breeds:", error);
-            }
-        };
-
-        fetchBreeds();
-    }, [petType]);
+    /**
+     * Render
+     */
     return (
-        <div className={`modal2`}>
-        {/* Box of modal */}
-        <div className="modal-box4">
-            <h2>Add New Pet</h2>
-            <input
-            className="pet-info-row"
-            type="text"
-            name="petName"
-            placeholder="Pet Name"
-            value={petName}
-            onChange={(e) => setPetName(e.target.value)}
-            />
+        <div className="modal1">
+            <div className="modal-box3">
+                <h2>Add New Pet</h2>
 
-            <Select
-                value={petType}
+                <Input
+                name="name"
+                size="large"
                 className="mar-bottom-3"
-                style={{width: "100%"}}
+                value={petIn.name}
+                onChange={handleInputChange}
+                placeholder="e.g. Browney"/>
+
+                <Select
+                    name="type"
+                    value={petIn.type}
+                    className="mar-bottom-3 w-100"
+                    options={[
+                        {label: "Select Breed", value: ""},
+                        ...petTypes.map((item) => ({label: item.type, value: item.id}))
+                    ]}
+                    size="large"
+                    showSearch
+                    filterOption={(input, option) =>
+                        option.label.toLowerCase().includes(input.toLowerCase())
+                    }
+                    onChange={(e) => handleInputChange({target: {name: "type", value: e}})}
+                />
+
+                {petIn.type !== "" && (
+                    <Select
+                    name="breed"
+                    value={petIn.breed}
+                    className="mar-bottom-3 w-100"
+                    options={[
+                        {label: "Select Breed", value: ""},
+                        ...petTypes.filter(x => x.id === petIn.type)[0].pet_breeds.map((item) => ({label: item.breed, value: item.id}))
+                    ]}
+                    size="large"
+                    showSearch
+                    filterOption={(input, option) =>
+                        option.label.toLowerCase().includes(input.toLowerCase())
+                    }
+                    onChange={(e) => handleInputChange({target: {name: "breed", value: e}})}
+                    disabled={petIn.type === ""} // Disable until petType is selected
+                    />
+                )}
+
+                <Select
+                name="gender"
+                value={petIn.gender}
+                className="mar-bottom-3 w-100"
                 options={[
-                    {label: "Cat", value: "Cat"},
-                    {label: "Dog", value: "Dog"}
+                    {label: "Select Gender", value: ""},
+                    {label: "Male", value: "Male"},
+                    {label: "Female", value: "Female"}
                 ]}
                 size="large"
-                showSearch
-                filterOption={(input, option) =>
-                    option.label.toLowerCase().includes(input.toLowerCase())
-                }
-                onChange={(e) => setPetType(e)}
-            />
+                onChange={(e) => handleInputChange({target: {name: "gender", value: e}})}
+                />
 
-            <Select
-                value={petBreed}
-                className="mar-bottom-3"
-                style={{ width: "100%" }}
-                options={breeds}
-                size="large"
-                showSearch
-                filterOption={(input, option) =>
-                    option.label.toLowerCase().includes(input.toLowerCase())
-                }
-                onChange={(value) => setPetBreed(value)}
-                disabled={!petType} // Disable until petType is selected
-            />
+                <input type="date" name="dob" className="w-100 mar-bottom-3" onChange={handleInputChange}/>
 
-            <div className="pet-info-row">
-            <select id="viewType" value={petGender} onChange={(e) => setPetGender(e.target.value)}>
-                {genderOptions.map((gender) => (
-                <option key={gender.id} value={gender.id}>
-                    {gender.label}
-                </option>
-                ))}
-            </select>
+                <input
+                className="w-100 mar-bottom-1"
+                type="file"
+                name="picture"
+                placeholder="Pet Picture"
+                onChange={(e) => setPetPic(e.target.files[0])}
+                />
 
-            <input type="date" onChange={(e) => setPetDOB(e.target.value)}/>
+                <div className="d-flex align-items-center gap3 justify-content-end">
+
+                    <Button
+                    size="large"
+                    type="primary"
+                    onClick={() => {
+                        handleAddPetPost(petIn, petPic);
+                        onClose();
+                    }}
+                    className="primary-btn-blue1"
+                    >
+                        Add Pet
+                    </Button>
+                    <Button 
+                    size="large"
+                    onClick={onClose}>
+                        Close
+                    </Button>
+                </div>
             </div>
-            <input
-            className="pet-info-row"
-            type="file"
-            name="petPic"
-            placeholder="Pet Picture"
-            onChange={(e) => setPetPic(e.target.files[0])}
-            />
-            <div className="pet-info-row">
-            <button
-            onClick={() => {
-                const breedName = breeds.find(breed => breed.value === petBreed)?.label;
-                handleAddPetPost(petName, petType, petGender, petDOB, breedName, petPic);
-                onClose();
-            }}
-            className="primary-btn-blue1"
-            >
-            Add Pet
-            </button>
-            <button onClick={onClose} className="sub-button">
-            Close
-            </button>
-            </div>
-        </div>
         </div>
     );
 }

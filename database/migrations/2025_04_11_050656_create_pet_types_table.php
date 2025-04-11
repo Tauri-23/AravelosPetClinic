@@ -11,17 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pet_breeds', function (Blueprint $table) {
+        Schema::create('pet_types', function (Blueprint $table) {
             $table->id();
-            $table->string("breed");
-            $table->unsignedBigInteger("pet_type");
+            $table->string("type");
             $table->timestamps();
-
-            $table->foreign("pet_type")
-            ->references("id")
-            ->on("pet_types")
-            ->cascadeOnDelete()
-            ->cascadeOnUpdate();
         });
     }
 
@@ -30,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pet_breeds');
+        Schema::dropIfExists('pet_types');
     }
 };
