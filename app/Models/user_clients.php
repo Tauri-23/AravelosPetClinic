@@ -12,6 +12,6 @@ class user_clients extends Model
 
     public function pets()
     {
-        return $this->hasMany(pets::class, "client", "id");
+        return $this->hasMany(pets::class, "client", "id")->with(["type", "breed"]);
     }
 }

@@ -274,7 +274,7 @@ export default function AdminViewAppointment() {
                             </div>
                             <div className="d-flex align-items-center">
                                 <h5 className="fw-bold" style={{width: 120}}>Breed: </h5>
-                                <h5>{appointment.pet.breed}</h5>
+                                <h5>{appointment.pet.breed.breed}</h5>
                             </div>
                             <div className="d-flex align-items-center">
                                 <h5 className="fw-bold" style={{width: 120}}>Birthdate: </h5>

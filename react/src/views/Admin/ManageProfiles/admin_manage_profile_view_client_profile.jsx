@@ -165,7 +165,7 @@ export default function AdminManageProfileViewClientProfile() {
                                 </div>
 
                                 <h5 className="fw-bold">{pet.name}</h5>
-                                <small>{pet.breed}</small>
+                                <small>{pet.breed.breed}</small>
                             </div>
                         ))}
                     </div>

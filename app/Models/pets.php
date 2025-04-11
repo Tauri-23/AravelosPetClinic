@@ -13,4 +13,14 @@ class pets extends Model
     {
         return $this->belongsTo(user_clients::class, "client", "id");
     }
+
+    public function type()
+    {
+        return $this->belongsTo(pet_types::class, "type", "id");
+    }
+    
+    public function breed()
+    {
+        return $this->belongsTo(pet_breeds::class, "breed", "id");
+    }
 }

@@ -17,7 +17,7 @@ class appointments extends Model
 
     public function pet()
     {
-        return $this->belongsTo(pets::class, 'pet', 'id');
+        return $this->belongsTo(pets::class, 'pet', 'id')->with(["type", "breed"]);
     }
 
     public function client()

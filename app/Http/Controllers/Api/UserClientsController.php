@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Contracts\IGenerateFilenameService;
 use App\Http\Controllers\Controller;
 use App\Models\user_clients;
-use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserClientsController extends Controller

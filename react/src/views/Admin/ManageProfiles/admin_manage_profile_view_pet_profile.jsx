@@ -115,7 +115,7 @@ export default function AdminManageProfileViewPetProfile() {
 
                                 <div className="d-flex gap3 align-items-center mar-bottom-4">
                                     <MdPets/>
-                                    <small>{pet.type} ({pet.breed})</small>
+                                    <small>{pet.type.type} ({pet.breed.breed})</small>
                                 </div>
                                 <div className="d-flex gap3 align-items-center mar-bottom-4">
                                     <BsGenderAmbiguous/>
