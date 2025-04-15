@@ -19,4 +19,9 @@ yarn-error.log
 /.idea
 /.vscode
 /MODEL/new_best_01022025_epoch_7
-/venv/Lib/site-packages/torch
+/venv/Lib/*
+/venv/Scripts/*
+/venv/share/*
+/vet_clinic_feedback_model
+/vet_clinic_feedback_tokenizer
+/checkpoints

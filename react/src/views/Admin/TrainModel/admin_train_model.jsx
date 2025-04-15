@@ -99,7 +99,7 @@ export default function AdminTrainModel() {
                 </div>
             )}
 
-            <div className="content1">
+            <div className="content1 compressed">
                 <h1>Train Model</h1>
 
                 {!isModelOpen && (
