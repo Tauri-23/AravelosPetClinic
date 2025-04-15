@@ -114,7 +114,7 @@ class PetsController extends Controller
             return response()->json([
                 "status" => 200,
                 "message" => "success",
-                "pet" => $pet
+                "pet" => pets::with(["type", "breed"])->find($petData["id"])
             ]);
 
         }

@@ -7,11 +7,14 @@ import { notify } from "../../assets/js/utils";
 
 
 const EditPetModal1 = ({ pet, setPets, petTypes, onClose }) => {
+
+    useEffect(() => {console.log(pet)}, [])
+
     const [editPetData, setEditPetData] = useState({
         id: pet.id,
         name: pet.name,
-        type: pet.type,
-        breed: pet.breed,
+        type: pet.type.id,
+        breed: pet.breed.id,
         gender: pet.gender,
         petPic: null,
     });
@@ -29,6 +32,7 @@ const EditPetModal1 = ({ pet, setPets, petTypes, onClose }) => {
         console.log(editPetData);
         const {petPic} = editPetData;
         const formData = new FormData();
+        
         formData.append("petData", JSON.stringify(editPetData));
         if(petPic) {
             formData.append("petPic", petPic);
@@ -60,10 +64,13 @@ const EditPetModal1 = ({ pet, setPets, petTypes, onClose }) => {
         <div className="modal-box3">
             <h2>Edit Pet Information</h2>
             <div>
+                {/* Name */}
                 <div className="input-group">
                     <label htmlFor="name">Name:</label>
                     <input type="text" id="name" name="name" value={editPetData.name} onChange={handleInputChange} />
                 </div>
+
+                {/* Type */}
                 <div className="input-group">
                     <label htmlFor="type">Type:</label>
                     <Select
@@ -82,6 +89,8 @@ const EditPetModal1 = ({ pet, setPets, petTypes, onClose }) => {
                     onChange={(e) => handleInputChange({target: {name: "type", value: e}})}
                     />
                 </div>
+
+                {/* Breed */}
                 {editPetData.type && (
                     <div className="input-group">
                         <label htmlFor="breed">Breed:</label>
@@ -103,6 +112,7 @@ const EditPetModal1 = ({ pet, setPets, petTypes, onClose }) => {
                     </div>
                 )}
 
+                {/* Gender */}
                 <div className="input-group">
                     <label htmlFor="gender">Gender:</label>
                     <Select
