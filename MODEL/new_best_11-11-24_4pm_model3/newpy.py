@@ -1004,7 +1004,7 @@ def test_model_with_dataset(model, tokenizer, excel_file_path):
             'Negative Recall': stats['negative']['correct'] / stats['negative']['total'] if stats['negative']['total'] > 0 else 0
         }
         summary_data.append(row)
-    
+    l
     pd.DataFrame(summary_data).to_excel(writer, sheet_name='Summary', index=False)
     
     # Create sheets for each aspect with example feedbacks
@@ -1330,7 +1330,7 @@ def main():
                 print("Loading pre-trained model...")
                 
                 # List available model checkpoints
-                checkpoint_dir = "checkpoints"
+                checkpoint_dir = "../../checkpoints"
                 if os.path.exists(checkpoint_dir):
                     checkpoints = [d for d in os.listdir(checkpoint_dir) if d.startswith("model_epoch_")]
                     
@@ -1377,7 +1377,7 @@ def main():
                     continue
                         
                 # Load the selected model
-                model = BertForSequenceClassification.from_pretrained(model_path)
+                model = BertForSequenceClassification.from_pretrained(model_path, from_safetensors=True)
                 tokenizer = BertTokenizer.from_pretrained(tokenizer_path)
                 print(f"Model loaded successfully from {model_path}!")
             except Exception as e:

@@ -213,8 +213,10 @@ Route::get('/get-statistics-from-model', [SentimentAnalysisController::class, 'G
 Route::get('/get-metrics-from-model', [SentimentAnalysisController::class, 'GetModelMetrics']);
 Route::get('/get-sentiments-from-db', [SentimentAnalysisController::class, 'GetSentimentsFromDB']);
 Route::get('/test-model', [SentimentAnalysisController::class, 'TestModel']);
+Route::get('/read-excel', [SentimentAnalysisController::class, 'ReadResultExcelFile']);
 
 Route::post('/update-sentiment-statistics-table', [SentimentAnalysisController::class, 'UpdateSentimentStatisticsTable']);
+Route::get('/test-sentiment-statistics-table', [SentimentAnalysisController::class, 'TestSentimentAnalysisFromDatabase']);
 
 
 

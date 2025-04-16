@@ -7,6 +7,8 @@ use App\Models\feedbacks;
 use App\Models\sentiment_analysis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class SentimentAnalysisController extends Controller
 {
@@ -257,6 +259,183 @@ class SentimentAnalysisController extends Controller
             return response()->json([
                 'status' => 500,
                 'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function TestSentimentAnalysisFromDatabase(Request $request)
+    {
+        // Fetch feedbacks that haven't been processed
+        $sentiments = feedbacks::where("status", "not-processed")->get();
+        $filteredSentiments = [];
+
+        foreach($sentiments as $sentiment)
+        {
+            $filteredSentiments[] = $sentiment->content;
+        }
+        
+        // Split the feedbacks into batches
+        $batchSize = 100;
+        $chunks = array_chunk($filteredSentiments, $batchSize);
+        $toReturn = [];
+
+        foreach ($chunks as $chunk) {
+            // Send the batch to FastAPI for sentiment analysis
+            $response = Http::timeout(120)->post("http://82.25.105.148:8010/analyze", [
+                'feedbacks' => $chunk
+            ]);
+
+            // Check if the request was successful
+            if ($response->failed()) {
+                // Log the failure and continue processing other batches (if desired)
+                \Log::error("Failed to fetch forecast data for chunk: ", [
+                    'response' => $response->body()
+                ]);
+
+                // Optional: continue with the next chunk or return early
+                continue; // or you could `return response()->json([...])` for an immediate failure
+            }
+
+            // Append only the response data you need (e.g., the analysis result)
+            $toReturn[] = $response->json(); // Store the JSON result from the response
+        }
+
+        // Return the collected results
+        return response()->json($toReturn);
+    }
+
+
+    public function ReadResultExcelFile()
+    {
+        DB::beginTransaction();
+        try
+        {
+            sentiment_analysis::truncate();
+            $filePath = base_path('vet_clinic_feedback_report.xlsx');
+
+            $spreadsheet = IOFactory::load($filePath);
+            $sheet = $spreadsheet->getActiveSheet();
+            // $data = $sheet->toArray();
+            $dataNo1stIndex = array_slice($sheet->toArray(), 1);
+
+            $pricingFeedbacks = [];
+            $vetCareFeedbacks = [];
+            $customerServiceFeedbacks = [];
+            $hygieneFeedbacks = [];
+            $waitingTimeFeedbacks = [];
+            $bookingExperienceFeedbacks = [];
+
+            for($i = 0; $i < count($dataNo1stIndex); $i++)
+            {
+                if($dataNo1stIndex[$i][5] == "TRUE")
+                {
+                    $pricingFeedbacks[] = [
+                        "category" => "Pricing",
+                        "feedback" => $dataNo1stIndex[$i][0],
+                        "sentiment" => $dataNo1stIndex[$i][3]
+                    ];
+                }
+                
+                if($dataNo1stIndex[$i][8] == "TRUE")
+                {
+                    $vetCareFeedbacks[] = [
+                        "category" => "Vet Care",
+                        "feedback" => $dataNo1stIndex[$i][0],
+                        "sentiment" => $dataNo1stIndex[$i][6]
+                    ];
+                }
+
+                if($dataNo1stIndex[$i][11] == "TRUE")
+                {
+                    $customerServiceFeedbacks[] = [
+                        "category" => "Customer Service",
+                        "feedback" => $dataNo1stIndex[$i][0],
+                        "sentiment" => $dataNo1stIndex[$i][9]
+                    ];
+                }
+
+                if($dataNo1stIndex[$i][14] == "TRUE")
+                {
+                    $hygieneFeedbacks[] = [
+                        "category" => "Hygiene",
+                        "feedback" => $dataNo1stIndex[$i][0],
+                        "sentiment" => $dataNo1stIndex[$i][12]
+                    ];
+                }
+
+                if($dataNo1stIndex[$i][17] == "TRUE")
+                {
+                    $waitingTimeFeedbacks[] = [
+                        "category" => "Waiting Time",
+                        "feedback" => $dataNo1stIndex[$i][0],
+                        "sentiment" => $dataNo1stIndex[$i][15]
+                    ];
+                }
+
+                if($dataNo1stIndex[$i][20] == "TRUE")
+                {
+                    $bookingExperienceFeedbacks[] = [
+                        "category" => "Booking Experience",
+                        "feedback" => $dataNo1stIndex[$i][0],
+                        "sentiment" => $dataNo1stIndex[$i][18]
+                    ];
+                }
+            }
+
+            $toInsertDatabase = [$pricingFeedbacks, $vetCareFeedbacks, $customerServiceFeedbacks, $hygieneFeedbacks, $waitingTimeFeedbacks, $bookingExperienceFeedbacks];
+            $categories = ["Pricing", "Vet Care", "Customer Service", "hygiene", "Waiting Time", "Booking Experience"];
+
+            for($i = 0; $i < count($categories); $i++)
+            {
+                $sentimentTable = new sentiment_analysis();
+                $positiveReviews = array_values(array_map(function ($feedback) {
+                    return $feedback['feedback'];
+                }, array_filter($toInsertDatabase[$i], function ($feedback) {
+                    return strtolower(trim($feedback['sentiment'])) === 'positive';
+                })));
+                $neutralReviews = array_values(array_map(function ($feedback) {
+                    return $feedback['feedback'];
+                }, array_filter($toInsertDatabase[$i], function ($feedback) {
+                    return strtolower(trim($feedback['sentiment'])) === 'neutral';
+                })));
+                $negativeReviews = array_values(array_map(function ($feedback) {
+                    return $feedback['feedback'];
+                }, array_filter($toInsertDatabase[$i], function ($feedback) {
+                    return strtolower(trim($feedback['sentiment'])) === 'negative';
+                })));
+
+                $positiveCount = count($positiveReviews);
+                $neutralCount = count($neutralReviews);
+                $negativeCount = count($negativeReviews);
+                $total = $positiveCount + $neutralCount + $negativeCount;
+
+                //return response()->json($negativeFeedbacks);
+                $sentimentTable->aspect = $categories[$i];
+                $sentimentTable->positive_percent =  $total > 0 ? round(($positiveCount / $total) * 100, 2) : 0;
+                $sentimentTable->neutral_percent =  $total > 0 ? round(($neutralCount / $total) * 100, 2) : 0;
+                $sentimentTable->negative_percent =  $total > 0 ? round(($negativeCount / $total) * 100, 2) : 0;
+                $sentimentTable->positive_count = $positiveCount;
+                $sentimentTable->neutral_count = $neutralCount;
+                $sentimentTable->negative_count = $negativeCount;
+                $sentimentTable->positive_comments = json_encode($positiveReviews);
+                $sentimentTable->neutral_comments = json_encode($neutralReviews);
+                $sentimentTable->negative_comments = json_encode($negativeReviews);
+                $sentimentTable->save();
+            }
+            
+            DB::commit();
+
+            return response()->json([
+                "status" => 200,
+                "message" => "Success"
+            ]);
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            return response()->json([
+                "status" => 500,
+                "message" => $e->getMessage()
             ], 500);
         }
     }
