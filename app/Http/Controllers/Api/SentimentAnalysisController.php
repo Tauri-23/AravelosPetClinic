@@ -220,88 +220,171 @@ class SentimentAnalysisController extends Controller
     {
         try
         {
-            // DB::beginTransaction();
-            // Delete all rows
-            sentiment_analysis::truncate();
+            DB::beginTransaction();
 
-            $index = 0;
-            foreach ($request->aspects as $aspect) {
-                $sentimentRecord = new sentiment_analysis();
+            // Fetch feedbacks that haven't been processed
+            $sentiments = feedbacks::where("status", "not-processed")->get();
+            $filteredSentiments = [];
+            
+            $newPricingFeedbacks = [];
+            $newVetCareFeedbacks = [];
+            $newCustomerServiceFeedbacks = [];
+            $newHygieneFeedbacks = [];
+            $newWaitingTimeServiceFeedbacks = [];
+            $newBookingExperienceFeedbacks = [];
 
-                $sentimentRecord->aspect = $aspect; // Format aspect name
-
-                $sentimentRecord->positive_count = $request->positive_count[$index];
-                $sentimentRecord->positive_percent = $request->positive_percent[$index];
-                $sentimentRecord->positive_comments = $request->positive_comments[$index]; // Convert to String the datatypes of this column in LONGTEXT
-
-                $sentimentRecord->neutral_count = $request->neutral_count[$index];
-                $sentimentRecord->neutral_percent = $request->neutral_percent[$index];
-                $sentimentRecord->neutral_comments = $request->neutral_comments[$index]; // Convert to String the datatypes of this column in LONGTEXT
-
-                $sentimentRecord->negative_count = $request->negative_count[$index];
-                $sentimentRecord->negative_percent = $request->negative_percent[$index];
-                $sentimentRecord->negative_comments = $request->negative_comments[$index]; // Convert to String the datatypes of this column in LONGTEXT
-
-                $sentimentRecord->save();
-                $index++;
+            if(count($sentiments) < 1)
+            {
+                return response([
+                    "status" => 200,
+                    "message" => "There are currently no unprocessed feedbacks"
+                ]);
             }
 
-            // DB::commit();
+            foreach($sentiments as $sentiment)
+            {
+                $filteredSentiments[] = $sentiment->content;
+            }
+
+            $response = Http::timeout(120)->post("http://82.25.105.148:8010/analyze", [
+                'feedbacks' => $filteredSentiments
+            ]);
+            $results = $response->json();
+
+
+            foreach($results as $result)
+            {
+                if($result["analysis"]["pricing"]["mentioned"])
+                {
+                    $newPricingFeedbacks[] = [
+                        "sentiment" => $result["analysis"]["pricing"]["sentiment"],
+                        "feedback" => $result["feedback"],
+                    ];
+                }
+
+                if($result["analysis"]["veterinary_service"]["mentioned"])
+                {
+                    $newVetCareFeedbacks[] = [
+                        "sentiment" => $result["analysis"]["veterinary_service"]["sentiment"],
+                        "feedback" => $result["feedback"],
+                    ];
+                }
+                
+                if($result["analysis"]["customer_service"]["mentioned"])
+                {
+                    $newCustomerServiceFeedbacks[] = [
+                        "sentiment" => $result["analysis"]["customer_service"]["sentiment"],
+                        "feedback" => $result["feedback"],
+                    ];
+                }
+
+                if($result["analysis"]["hygiene"]["mentioned"])
+                {
+                    $newHygieneFeedbacks[] = [
+                        "sentiment" => $result["analysis"]["hygiene"]["sentiment"],
+                        "feedback" => $result["feedback"],
+                    ];
+                }
+
+                if($result["analysis"]["waiting_time"]["mentioned"])
+                {
+                    $newWaitingTimeServiceFeedbacks[] = [
+                        "sentiment" => $result["analysis"]["waiting_time"]["sentiment"],
+                        "feedback" => $result["feedback"],
+                    ];
+                }
+
+                if($result["analysis"]["booking_experience"]["mentioned"])
+                {
+                    $newBookingExperienceFeedbacks[] = [
+                        "sentiment" => $result["analysis"]["booking_experience"]["sentiment"],
+                        "feedback" => $result["feedback"],
+                    ];
+                }
+            }
+
+            $categories = ["Pricing", "Vet Care", "Customer Service", "hygiene", "Waiting Time", "Booking Experience"];
+            $resultsToPutInDB = [$newPricingFeedbacks, $newVetCareFeedbacks, $newCustomerServiceFeedbacks, $newHygieneFeedbacks, $newWaitingTimeServiceFeedbacks, $newBookingExperienceFeedbacks];
+
+            for($i=0; $i<count($categories); $i++)
+            {
+                if(count($resultsToPutInDB[$i]))
+                {
+                    $existingSentiment = sentiment_analysis::where("aspect", $categories[$i])->first();
+
+                    // Decode existing comments or default to empty array
+                    $existingPos = json_decode($existingSentiment->positive_comments ?? '[]', true);
+                    $existingNeu = json_decode($existingSentiment->neutral_comments ?? '[]', true);
+                    $existingNeg = json_decode($existingSentiment->negative_comments ?? '[]', true);
+
+                    // Get new categorized comments
+                    $newPos = array_values(array_map(function ($feedback) {
+                        return $feedback['feedback'];
+                    }, array_filter($resultsToPutInDB[$i], function ($feedback) {
+                        return strtolower(trim($feedback['sentiment'])) === 'positive';
+                    })));
+
+                    $newNeu = array_values(array_map(function ($feedback) {
+                        return $feedback['feedback'];
+                    }, array_filter($resultsToPutInDB[$i], function ($feedback) {
+                        return strtolower(trim($feedback['sentiment'])) === 'neutral';
+                    })));
+
+                    $newNeg = array_values(array_map(function ($feedback) {
+                        return $feedback['feedback'];
+                    }, array_filter($resultsToPutInDB[$i], function ($feedback) {
+                        return strtolower(trim($feedback['sentiment'])) === 'negative';
+                    })));
+
+                    // Append new feedbacks to the old ones
+                    $updatedPos = array_merge($existingPos, $newPos);
+                    $updatedNeu = array_merge($existingNeu, $newNeu);
+                    $updatedNeg = array_merge($existingNeg, $newNeg);
+                    
+
+                    $positiveCount = count($updatedPos);
+                    $neutralCount = count($updatedNeu);
+                    $negativeCount = count($updatedNeg);
+                    $total = $positiveCount + $neutralCount + $negativeCount;
+
+                    $existingSentiment->aspect = $categories[$i];
+                    $existingSentiment->positive_percent =  $total > 0 ? round(($positiveCount / $total) * 100, 2) : 0;
+                    $existingSentiment->neutral_percent =  $total > 0 ? round(($neutralCount / $total) * 100, 2) : 0;
+                    $existingSentiment->negative_percent =  $total > 0 ? round(($negativeCount / $total) * 100, 2) : 0;
+                    $existingSentiment->positive_count = $positiveCount;
+                    $existingSentiment->neutral_count = $neutralCount;
+                    $existingSentiment->negative_count = $negativeCount;
+                    $existingSentiment->positive_comments = json_encode($updatedPos);
+                    $existingSentiment->neutral_comments = json_encode($updatedNeu);
+                    $existingSentiment->negative_comments = json_encode($updatedNeg);
+                    $existingSentiment->save();
+                }
+            }
+
+            /**
+             * Mark the sentiments as processed
+             */
+            foreach($sentiments as $sentiment)
+            {
+                $sentiment->status = "processed";
+                $sentiment->save();
+            }
+
+            DB::commit();
 
             return response()->json([
-                'status' => 200,
-                'message'=> 'Success',
+                "status" => 200,
+                "message" => "Success"
             ]);
         }
-        catch (\Exception $e)
+        catch(\Exception $e)
         {
-            // DB::rollBack();
+            DB::rollBack();
             return response()->json([
-                'status' => 500,
-                'message' => $e->getMessage(),
+                "status" => 500,
+                "message" => $e->getMessage()
             ], 500);
         }
-    }
-
-    public function TestSentimentAnalysisFromDatabase(Request $request)
-    {
-        // Fetch feedbacks that haven't been processed
-        $sentiments = feedbacks::where("status", "not-processed")->get();
-        $filteredSentiments = [];
-
-        foreach($sentiments as $sentiment)
-        {
-            $filteredSentiments[] = $sentiment->content;
-        }
-        
-        // Split the feedbacks into batches
-        $batchSize = 100;
-        $chunks = array_chunk($filteredSentiments, $batchSize);
-        $toReturn = [];
-
-        foreach ($chunks as $chunk) {
-            // Send the batch to FastAPI for sentiment analysis
-            $response = Http::timeout(120)->post("http://82.25.105.148:8010/analyze", [
-                'feedbacks' => $chunk
-            ]);
-
-            // Check if the request was successful
-            if ($response->failed()) {
-                // Log the failure and continue processing other batches (if desired)
-                \Log::error("Failed to fetch forecast data for chunk: ", [
-                    'response' => $response->body()
-                ]);
-
-                // Optional: continue with the next chunk or return early
-                continue; // or you could `return response()->json([...])` for an immediate failure
-            }
-
-            // Append only the response data you need (e.g., the analysis result)
-            $toReturn[] = $response->json(); // Store the JSON result from the response
-        }
-
-        // Return the collected results
-        return response()->json($toReturn);
     }
 
 

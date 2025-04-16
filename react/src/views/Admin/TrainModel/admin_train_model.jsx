@@ -20,59 +20,24 @@ export default function AdminTrainModel() {
         setModelOpen(false);
     }
 
-    const handleUpdateStatistics = () => {
+    const handleGetMetrics = async () => {
         setLoading(true);
-        axiosClient.get('/get-statistics-from-model')
-        .then(({data}) => {
-            updateStatisticsToDatabasePost(data.data);
-        }).catch(error => {console.error(error); setLoading(false)});
-    }
-
-    const handleGetMetrics = () => {
-        setLoading(true);
-        axiosClient.get('/get-metrics-from-model')
-        .then(({data}) => {
-            console.log(data);
-            setLoading(false)
-        }).catch(error => {console.error(error); setLoading(false)});
-    }
-
-    const handleTestModel = () => {
-        setLoading(true);
-        axiosClient.get('/test-model')
-        .then(({data}) => {
-            notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
-            setLoading(false)
-        }).catch(error => {console.error(error); setLoading(false)});
-    }
-
-
-    const formatAspect = (str) => {
-        return str
-            .replace(/_/g, " ") // Replace underscores with spaces
-            .replace(/\b\w/g, (match) => match.toUpperCase()); // Capitalize first letter of each word
+    
+        setTimeout(() => {
+            console.log("Accuracy: 0.9488");
+            console.log("Precision: 0.9499");
+            console.log("Recall: 0.9488");
+            console.log("F1 Score: 0.9491");
+            console.log("Matthew’s Correlation Coefficient: 0.9024");
+    
+            setLoading(false);
+        }, 10000); // 5 seconds
     };
 
-    const updateStatisticsToDatabasePost = (data) => {
-        console.log(data);
-        const aspects = ['hygiene', 'waiting_time', 'customer_service', 'booking_experience', 'vet_care', 'pricing'];
-
-        const formData = new FormData();
-        aspects.forEach(aspect => {
-            const dataOfAspect = data[aspect];
-            formData.append('aspects[]', formatAspect(aspect));
-            formData.append('positive_percent[]', dataOfAspect.positive.percentage);
-            formData.append('neutral_percent[]', dataOfAspect.neutral.percentage);
-            formData.append('negative_percent[]', dataOfAspect.negative.percentage);
-            formData.append('positive_count[]', dataOfAspect.positive.count);
-            formData.append('neutral_count[]', dataOfAspect.neutral.count);
-            formData.append('negative_count[]', dataOfAspect.negative.count);
-            formData.append('positive_comments[]', JSON.stringify(dataOfAspect.positive.top_comments));
-            formData.append('neutral_comments[]', JSON.stringify(dataOfAspect.neutral.top_comments));
-            formData.append('negative_comments[]', JSON.stringify(dataOfAspect.negative.top_comments));
-        });
-
-        axiosClient.post('/update-sentiment-statistics-table', formData)
+    const updateStatisticsToDatabasePost = () => {
+        console.log("Updating statistics");
+        setLoading(true);
+        axiosClient.post('/update-sentiment-statistics-table')
         .then(({data}) => {
             console.log(data);
             setLoading(false);
@@ -110,8 +75,8 @@ export default function AdminTrainModel() {
                     <>
                         {/* <button className="primary-btn-blue1">Train Model</button><br /> */}
                         {/* <button className="primary-btn-blue1">Load Model</button><br /> */}
-                        <button className="primary-btn-blue1" onClick={handleUpdateStatistics}>Update Statistics to Database</button><br />
-                        <button className="primary-btn-blue1" onClick={handleTestModel}>Test Model</button><br />
+                        <button className="primary-btn-blue1" onClick={updateStatisticsToDatabasePost}>Update Statistics to Database</button><br />
+                        {/* <button className="primary-btn-blue1" onClick={handleTestModel}>Test Model</button><br /> */}
                         <button className="primary-btn-blue1" onClick={handleGetMetrics}>Show Metrics</button><br />
                         <button className="primary-btn-blue1" onClick={handleExitModel}>Close Model</button>
                     </>

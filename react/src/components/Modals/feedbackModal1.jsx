@@ -55,7 +55,7 @@ const feedbackModal1 = ({ data, onClose }) => {
                                     <div className="feedback-icon">
                                         <ThumbsUp size={16} />
                                     </div>
-                                    <p>{sentence[0]}</p>
+                                    <p>{sentence}</p>
                                 </div>
                             ))}
                             {data.neutral_comments.map((sentence, index) => (
@@ -66,7 +66,7 @@ const feedbackModal1 = ({ data, onClose }) => {
                                     <div className="feedback-icon">
                                         <Meh size={16} />
                                     </div>
-                                    <p>{sentence[0]}</p>
+                                    <p>{sentence}</p>
                                 </div>
                             ))}
                             {data.negative_comments.map((sentence, index) => (
@@ -77,7 +77,7 @@ const feedbackModal1 = ({ data, onClose }) => {
                                     <div className="feedback-icon">
                                         <ThumbsDown size={16} />
                                     </div>
-                                    <p>{sentence[0]}</p>
+                                    <p>{sentence}</p>
                                 </div>
                             ))}
                         </div>

@@ -216,7 +216,6 @@ Route::get('/test-model', [SentimentAnalysisController::class, 'TestModel']);
 Route::get('/read-excel', [SentimentAnalysisController::class, 'ReadResultExcelFile']);
 
 Route::post('/update-sentiment-statistics-table', [SentimentAnalysisController::class, 'UpdateSentimentStatisticsTable']);
-Route::get('/test-sentiment-statistics-table', [SentimentAnalysisController::class, 'TestSentimentAnalysisFromDatabase']);
 
 
 
