@@ -31,6 +31,8 @@ export default function AdminViewAppointment() {
     const [isMarkingComplete, setMarkingComplete] = useState(false);
     const [isMarkDoneDisabled, setMarkDoneDisabled] = useState(true);
 
+    const [isApproving, setIsApproving] = useState(false);
+
 
 
     /**
@@ -120,6 +122,7 @@ export default function AdminViewAppointment() {
     };
 
     const handleApproveAppointment = (appointmentId) => {
+        setIsApproving(true);
         const formData = new FormData();
         formData.append('appointmentId', appointmentId);
 
@@ -139,9 +142,13 @@ export default function AdminViewAppointment() {
             }
 
             notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
+            setIsApproving(false)
         }).catch(error => {
             console.error(error);
             notify('error', data.message, 'top-center', 3000);
+            setIsApproving(false);
+        }).finally(() => {
+            setIsApproving(false);
         });
     }
 
@@ -227,11 +234,11 @@ export default function AdminViewAppointment() {
 
                             {appointment.status === "Pending" && (
                                 <button 
-                                disabled={selectedStaffs.length < 1 || selectedItems.length < 1}
-                                className={`primary-btn-blue1 ${selectedStaffs.length < 1 || selectedItems.length < 1 ? "disabled" : ""}`}
+                                disabled={selectedStaffs.length < 1 || selectedItems.length < 1 || isApproving}
+                                className={`primary-btn-blue1 ${selectedStaffs.length < 1 || selectedItems.length < 1 || isApproving ? "disabled" : ""}`}
                                 onClick={() => handleApproveAppointment(appointment.id)}
                                 >
-                                    Approve Appointment
+                                    {isApproving ? "Approving..." : "Approve Appointment"}
                                 </button>
                             )}
 

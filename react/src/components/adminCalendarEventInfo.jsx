@@ -45,7 +45,7 @@ export default function AdminCalendarEventInfo({appointment}) {
             </div>
             <div className="deet d-flex anybody">
                 <div className="s-align-center label bold ">Breed:</div>
-                <div className="s-align-center date-cont">{appointment.pet.breed}</div>
+                <div className="s-align-center date-cont">{appointment.pet.breed.breed}</div>
             </div>
             <div className="deet d-flex anybody">
                 <div className="s-align-center label bold ">Weight:</div>

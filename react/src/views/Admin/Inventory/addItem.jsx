@@ -113,7 +113,7 @@ export default function AddItem() {
      * Render
      */
     return (
-        <div className='page'>
+        <div className='content1 compressed'>
             {categoryOptions
             ? (
                 <>
