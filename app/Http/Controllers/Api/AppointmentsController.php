@@ -38,8 +38,22 @@ class AppointmentsController extends Controller
             $appointmentId = $this->generateId->generate(appointments::class, 12);
             $appointment = new appointments();
             $appointment->id = $appointmentId;
-            $appointment->client = $request->client;
-            $appointment->pet = $request->pet;
+
+            if($request->client)
+            {
+                $appointment->client = $request->client;
+                $appointment->pet = $request->pet;
+            }
+            else 
+            {
+                $appointment->otc_client = $request->otcClient;
+                $appointment->otc_pet_name = $request->otcPetName;
+                $appointment->otc_pet_type = $request->otcPetType;
+                $appointment->otc_pet_breed = $request->otcPetBreed;
+                $appointment->type = "OTC";
+            }
+
+            
             $appointment->service = $request->service;
             $appointment->service_type = $request->serviceType;
             $appointment->date_time = $request->dateTime;

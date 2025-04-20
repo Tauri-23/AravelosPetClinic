@@ -15,6 +15,12 @@ return new class extends Migration
             $table->string('id', 12)->primary();
             $table->string('client', 6)->nullable();
             $table->string('pet', 6)->nullable();
+
+            $table->string("otc_client")->nullable();
+            $table->string("otc_pet_name")->nullable();
+            $table->unsignedBigInteger("otc_pet_type")->nullable();
+            $table->unsignedBigInteger("otc_pet_breed")->nullable();
+
             $table->unsignedBigInteger('service')->nullable();
             $table->unsignedBigInteger("service_type")->nullable();
             $table->dateTime('date_time');
@@ -25,6 +31,7 @@ return new class extends Migration
             $table->text('reason')->nullable();
             $table->longText('note')->nullable();
             $table->string('status');
+            $table->enum("type", ["Online", "OTC"]);
             $table->unsignedBigInteger("medical_history")->nullable();
             
             $table->timestamps();
@@ -56,6 +63,18 @@ return new class extends Migration
             $table->foreign('service_type')
             ->references('id')
             ->on('clinic_service_types')
+            ->nullOnDelete()
+            ->cascadeOnUpdate();
+
+            $table->foreign('otc_pet_type')
+            ->references('id')
+            ->on('pet_types')
+            ->nullOnDelete()
+            ->cascadeOnUpdate();
+
+            $table->foreign('otc_pet_breed')
+            ->references('id')
+            ->on('pet_breeds')
             ->nullOnDelete()
             ->cascadeOnUpdate();
         });

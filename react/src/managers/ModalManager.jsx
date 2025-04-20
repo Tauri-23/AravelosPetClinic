@@ -29,6 +29,7 @@ import AddAdminModal from "../views/Admin/ManageProfiles/components/AddAdminModa
 import AdminViewMiniProfileModal from "../views/Admin/ManageProfiles/components/AdminViewMiniProfileModal.jsx";
 import EditInventoryModal1 from "../components/Modals/editInventoryModal1.jsx";
 import DeleteInventoryItemModal1 from "../components/Modals/del_inventory_item_modal1.jsx";
+import AdminBookAppointmentModal from "../components/Modals/adminBookAppointmentModal.jsx";
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -121,6 +122,17 @@ const ModalManager = () => {
                 return <AddAdminModal {...modalState.props} onClose={hideModal}/>;
             case 'AdminViewMiniProfileModal':
                 return <AdminViewMiniProfileModal {...modalState.props} onClose={hideModal}/>;
+
+
+
+
+            
+            /**
+             * ADMIN BOOK APT
+             */
+            case 'AdminBookAppointmentModal':
+                return <AdminBookAppointmentModal {...modalState.props} onClose={hideModal}/>;
+             
 
 
 
