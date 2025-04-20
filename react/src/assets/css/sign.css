@@ -82,7 +82,9 @@
         margin: 8px 0;
         width: 100%;
     } */
-
+    .sign-panel{
+        gap:10px;
+    }
     .container {
         background-color: #fff;
         border-radius: 10px;
@@ -92,7 +94,7 @@
         overflow: hidden;
         width: 768px;
         max-width: 100%;
-        min-height: 480px;
+        min-height: 530px;
     }
 
     .form-container {
@@ -146,7 +148,7 @@
         height: 100%;
         overflow: hidden;
         transition: transform 0.6s ease-in-out;
-        z-index: 100;
+        z-index: 19;
     }
 
     .container.right-panel-active .overlay-container{

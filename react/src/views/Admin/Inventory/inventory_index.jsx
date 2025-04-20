@@ -233,18 +233,17 @@ export default function AdminInventoryIndex() {
         });
     };
 
-    
+
 
     /**
      * Render
      */
     return (
         <div className="content1 compressed">
-            <div className="inventory-tracking gen-margin">
+            <div className="inventory-tracking">
                 <h1 className="anybody">Inventory Tracking</h1>
 
                 <div className="d-flex-inventory">
-                    <div className="d-flex inv small-form">
 
                         {/* Sidebar with Categories */}
                         <div className="sidebar">
@@ -291,7 +290,7 @@ export default function AdminInventoryIndex() {
 
                         {/* Right Side with Search and Inventory Display */}
                         <div className="right-side">
-                            
+
                             {/* Navbar with Search and Action Buttons */}
                             <div className="top-nav">
                                 <input
@@ -330,7 +329,6 @@ export default function AdminInventoryIndex() {
                                 </div>
                             </div>
                         </div>
-                    </div>
                     {/* Transaction History Section */}
                     <div className="transaction-history">
                         <h3

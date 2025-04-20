@@ -22,8 +22,8 @@ const CalendarCustom = ({ appointments, setSelectedAppointments, width }) => {
             <div>
                 {listData.map(item => (
                     <div key={item.id}>
-                        <small style={{ fontSize: 18 }} className='fw-bold'>{item.pet.name}</small><br />
-                        <small>{item.service.service} - {item.id}</small>
+                        <small style={{ fontSize: 18 }} className='fw-bold'>{item.service.service}</small><br />
+                        <small>{item.pet.name}</small>
                     </div>
                 ))}
             </div>

@@ -78,7 +78,7 @@ const userprofiles = () => {
         if(petPic) {
             formData.append('pic', petPic);
         }
-        
+
 
         axiosClient.post('/add-pet', formData)
         .then(({ data }) => {
@@ -244,6 +244,7 @@ const userprofiles = () => {
                                     <div className='d-flex w-100 align-items-center gap1 mar-top-1'>
                                         <div>Phone: {user.phone}</div>
                                         <Button
+                                        className="primary-btn-blue1 verify-btn"
                                         disabled={user.phone_verified}
                                         onClick={handleVerifyPhone}
                                         type='primary'
@@ -280,10 +281,10 @@ const userprofiles = () => {
                                     className="pet-profile"
                                     >
                                     <div className="position-relative inline-block">
-                                        <img 
-                                        onClick={() => handlePetClick(pet)} 
-                                        src={`/assets/media/pets/${pet.picture || "petDefault.png"}`} 
-                                        alt={pet.name} 
+                                        <img
+                                        onClick={() => handlePetClick(pet)}
+                                        src={`/assets/media/pets/${pet.picture || "petDefault.png"}`}
+                                        alt={pet.name}
                                         className="pet-picture rounded-corners" />
                                         <Icon.PencilFill size={18} className="peteditbtn shadow position-absolute p-1 rounded full text-white cursor-pointer"
                                         onClick={(e)=>{

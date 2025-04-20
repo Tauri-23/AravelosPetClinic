@@ -25,3 +25,13 @@ yarn-error.log
 /vet_clinic_feedback_model
 /vet_clinic_feedback_tokenizer
 /checkpoints
+_20250223_120339_epoch_20.zip
+_20250223_120339_epoch_20/config.json
+_20250223_120339_epoch_20/pytorch_model.bin
+MODEL/new_best_11-11-24_4pm_model3/trylang.py
+MODEL/new_best_epoch_15/config.json
+MODEL/new_best_epoch_7/config.json
+MODEL/new_best_epoch_15/pytorch_model.bin
+MYSQL DATABASE/3-20-2025.sql
+MODEL/new_best_epoch_7/pytorch_model.bin
+MYSQL DATABASE/LATEST 3-20-2025.sql

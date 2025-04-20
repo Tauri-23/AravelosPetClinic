@@ -32,12 +32,12 @@ const EditPetModal1 = ({ pet, setPets, petTypes, onClose }) => {
         console.log(editPetData);
         const {petPic} = editPetData;
         const formData = new FormData();
-        
+
         formData.append("petData", JSON.stringify(editPetData));
         if(petPic) {
             formData.append("petPic", petPic);
         }
-        
+
 
         axiosClient.post(`/update-pet`, formData)
             .then(({ data }) => {
@@ -116,7 +116,7 @@ const EditPetModal1 = ({ pet, setPets, petTypes, onClose }) => {
                 <div className="input-group">
                     <label htmlFor="gender">Gender:</label>
                     <Select
-                    id="gender" 
+                    id="gender"
                     name="gender"
                     size="large"
                     className="w-100"
@@ -125,7 +125,7 @@ const EditPetModal1 = ({ pet, setPets, petTypes, onClose }) => {
                         {label: "Male", value: "Male"},
                         {label: "Female", value: "Female"}
                     ]}
-                    value={editPetData.gender} 
+                    value={editPetData.gender}
                     onChange={(e) => handleInputChange({target: {name: "gender", value: e}})}
                     />
                 </div>
@@ -134,11 +134,12 @@ const EditPetModal1 = ({ pet, setPets, petTypes, onClose }) => {
                     <label htmlFor="Picture">Pet Picture:</label>
                     <input type="file" id="petPic" name="petPic" value={editPetData.pic} onChange={handleInputChange} />
                 </div>
-
-                <button type="submit" onClick={handleSave} className="save-button">Save</button>
-                <button onClick={onClose} className="cancel-button">Cancel</button>
+                <div className="btn-row justify-content-between">
+                    <button type="submit" onClick={handleSave} className="primary-btn-blue1">Save</button>
+                    <button onClick={onClose} className="sub-button">Cancel</button>
+                </div>
             </div>
-           
+
         </div>
         </div>
     );

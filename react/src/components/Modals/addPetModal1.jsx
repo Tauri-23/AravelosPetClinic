@@ -100,7 +100,7 @@ export default function AddPetModal1({ handleAddPetPost, petTypes, onClose }) {
                 onChange={(e) => setPetPic(e.target.files[0])}
                 />
 
-                <div className="d-flex align-items-center gap3 justify-content-end">
+                <div className="d-flex justify-content-between align-items-center gap3 justify-content-end">
 
                     <Button
                     size="large"
@@ -113,7 +113,8 @@ export default function AddPetModal1({ handleAddPetPost, petTypes, onClose }) {
                     >
                         Add Pet
                     </Button>
-                    <Button 
+                    <Button
+                    className="sub-button"
                     size="large"
                     onClick={onClose}>
                         Close

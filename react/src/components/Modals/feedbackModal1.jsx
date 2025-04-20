@@ -28,11 +28,11 @@ const feedbackModal1 = ({ data, onClose }) => {
 
     return (
         <div className="modal-overlay">
-            <div className="feedback modal-content">
-                <div className="modal-header">
+            <div className="feedback modal-cont">
                     <button className="close-button mobile-close" onClick={onClose}>
                         <X size={24} />
                     </button>
+                <div className="modal-header">
                     <div className="modal-title-container">
                         <div className="modal-title">
                             <MessageSquare className="modal-icon" />

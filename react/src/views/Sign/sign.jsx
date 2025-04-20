@@ -93,7 +93,7 @@ export default function Sign() {
 
         {/* SignUpContainer */}
         <div className={`form-container sign-up-container ${isSignUp ? 'active' : ''}`}>
-            <form onSubmit={handleSignupPost}>
+            <form onSubmit={handleSignupPost}className="sign-panel">
             <h1 style={{ marginBottom: '20px' }}>Sign Up</h1>
             <input ref={fnameRef} type="text" placeholder="First Name"  required/>
             <input ref={mnameRef} type="text" placeholder="Middle Name (Optional)"/>

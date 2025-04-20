@@ -52,7 +52,7 @@ gap:2vw;
   margin-right: 2vw;
 }
 .user-profile .primary-btn-blue1{
-    padding: 5px 10px;
+    padding: 15px 10px;
     font-size: 1vw;
     align-self: center;
 }
@@ -122,7 +122,9 @@ gap:2vw;
   padding: 10px;
   text-align: center;
 }
-
+.input-pw{
+    margin-left:35px;
+}
 /* Add pet button styling (you can keep this section from your original CSS) */
 
 .pet-profile.add-pet {

@@ -37,12 +37,12 @@ export default function AdminCalendarIndex() {
         <div className="content1 compressed">
             <h1 className="fw-bold mar-bottom-1">Calendar</h1>
 
-            
+
             <div className="d-flex gap1">
-                <CalendarCustom width={"calc(100% - 600px)"} setSelectedAppointments={setSelectedAppointments} appointments={appointments || []}/>
+                <CalendarCustom width={"calc(100% - 450px)"} setSelectedAppointments={setSelectedAppointments} appointments={appointments || []}/>
 
                 <div className="container1"
-                style={{width: 600, height: 800, overflowY: "auto"}}>
+                style={{width: 450, height: 600, overflowY: "auto"}}>
                     {selectedAppointments.length < 1
                     ? (
                         <>No Appointments</>

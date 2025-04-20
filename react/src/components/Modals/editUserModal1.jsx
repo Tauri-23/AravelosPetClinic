@@ -67,7 +67,7 @@ const handlePhoneChange = (e) => {
             console.log("newPass", newPass);
             console.log("conPass", conPass);
             if(conPass != newPass) {
-                
+
                 notify("error", "Passwords doesn't match", "top-center", 3000);
                 return;
             }
@@ -287,11 +287,12 @@ const handlePhoneChange = (e) => {
                         />
                     </div>
                     <div className="detail-row semi-bold">
-                        <label htmlFor="pass-phone">Password</label>
+                        <label htmlFor="pass-phone">Password: </label>
                         <Input.Password
                             size='large'
                             id='pass-phone'
-                            placeholder="Re-enter Password" 
+                            className="input-pw"
+                            placeholder="Re-enter Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             />
@@ -316,40 +317,40 @@ const handlePhoneChange = (e) => {
             return(
                 <>
                     <div className='bold semi-medium-f anybody t-align-center'>
-                        Change Contact Number
+                        Change Password
                     </div>
                     <hr/>
                     <div className="">
-                        <label htmlFor="change-pass-new">New Password</label> <br/>
+                        <label htmlFor="change-pass-new">New Password:</label> <br/>
                         <Input.Password
                             size='large'
                             id='change-pass-new'
-                            placeholder="Re-enter Password" 
+                            placeholder="Re-enter Password"
                             value={newPass}
                             onChange={(e) => setNewPass(e.target.value)}
                             />
                     </div>
                     <div className="">
-                        <label htmlFor="change-pass-new">Confirm Password</label> <br/>
+                        <label htmlFor="change-pass-new">Confirm Password:</label> <br/>
                         <Input.Password
                             size='large'
                             id='change-pass-new'
-                            placeholder="Re-enter Password" 
+                            placeholder="Re-enter Password"
                             value={conPass}
                             onChange={(e) => setConPass(e.target.value)}
                             />
                     </div>
                     <div className="">
-                        <label htmlFor="pass-change">Old Password</label> <br/>
+                        <label htmlFor="pass-change">Old Password:</label> <br/>
                         <Input.Password
                             size='large'
                             id='pass-change'
-                            placeholder="Re-enter Password" 
+                            placeholder="Re-enter Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             />
                     </div>
-    
+
                     <div className="d-flex flex-direction-x flex-row-reverse gap3 top-margin justify-content-between">
                         <div
                         onClick={() => {handleUpdateInfo("password"); onClose();}}
@@ -357,49 +358,12 @@ const handlePhoneChange = (e) => {
                         >
                             Update
                         </div>
-            
+
                         <div className="sub-button text-center d-flex gap3 align-items-center justify-content-center" onClick={onClose}>
                             Cancel
                         </div>
                     </div>
                 </>
-            )
-        case 'address':
-                return(
-                    <>
-                        <div className='bold semi-medium-f anybody t-align-center'>
-                            Change Address
-                        </div>
-                        <hr></hr>
-                        <div className="detail-row semi-bold">
-                            <div className="label-div">Address: </div>
-                            <input
-                                className='top-margin-s'
-                                type="text"
-                                onChange={handleInputChange(setAddress)}
-                                value={address || user.address} />
-                        </div>
-                        <div className="detail-row semi-bold">
-                            <div className="label-div">Password: </div>
-                            <input
-                                className='top-margin-s'
-                                type="password" placeholder="Re-enter Password" title="Re-enter your password to verify changes"/>
-                        </div>
-
-                    <div className="d-flex flex-direction-x flex-row-reverse gap3 top-margin justify-content-between">
-
-                    <div
-                    onClick={() => {handleUpdateClicks(); onClose();}}
-                    className="primary-btn-blue1 text-center"
-                    >
-                        Update
-                    </div>
-
-                    <div className="sub-button text-center d-flex gap3 align-items-center justify-content-center" onClick={onClose}>
-                        Cancel
-                    </div>
-                    </div>
-                    </>
             )
         case 'pfp':
             return(
@@ -429,7 +393,7 @@ const handlePhoneChange = (e) => {
                             <Input.Password
                             size='large'
                             id='pass-pfp'
-                            placeholder="Re-enter Password" 
+                            placeholder="Re-enter Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             />

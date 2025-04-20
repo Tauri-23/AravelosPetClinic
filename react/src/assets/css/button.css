@@ -1,5 +1,5 @@
-.primary-btn-blue1, .primary-btn-red1, 
-.secondary-btn-blue1 {
+.primary-btn-blue1, .primary-btn-red1,
+.secondary-btn-blue1, .sub-button {
     font-family: Inter;
     border-radius: 10px;
     border: 2px white solid;
@@ -39,11 +39,10 @@
 .sub-button{ /*for cancel btns example: no/back/cancel*/
     font-family: Inter;
     font-weight: 700;
-    border-radius: 20px;
+    border-radius: 10px;
     border: 2px white solid;
     background-color: #a3a3a3;
     color:white;
-    padding: 10px 20px;
     cursor: pointer;
     transition: background-color 0.3s; /* Smooth transition */
 }
