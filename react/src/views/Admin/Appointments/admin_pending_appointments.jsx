@@ -33,7 +33,11 @@ export default function AdminPendingAppointments() {
             render: (_, row) => row.pet.name
         },
         {
-            title: "Appointment Type",
+            title: "Appointment Method",
+            render: (_, row) => row.type
+        },
+        {
+            title: "Appointment Service",
             render: (_, row) => row.service.service
         },
         {

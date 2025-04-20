@@ -265,36 +265,47 @@ export default function AdminViewAppointment() {
 
                     {/* APPOINTMENT INFORMATION */}
                     <div className="appointment-cont1 d-flex gap1 mar-bottom-1">
-                        <div className="appointment-pet-pfp">
-                            <img src={`/assets/media/pets/${appointment.pet.picture}`} alt="pet profile pic" />
-                        </div>
+                        {appointment.type === "Online" && (
+                            <div className="appointment-pet-pfp">
+                                <img src={`/assets/media/pets/${appointment.pet.picture}`} alt="pet profile pic" />
+                            </div>
+                        )}
 
                         <div>
-                            <h3>{appointment.pet.name}</h3>
+                            <h3>{appointment.type === "Online" ? appointment.pet.name : appointment.otc_pet_name}</h3>
                             <div className="d-flex align-items-center">
                                 <h5 className="fw-bold" style={{width: 120}}>Service: </h5>
                                 <h5>{appointment.service.service}</h5>
                             </div>
-                            <div className="d-flex align-items-center">
-                                <h5 className="fw-bold" style={{width: 120}}>Gender: </h5>
-                                <h5>{appointment.pet.gender}</h5>
-                            </div>
+                            
+                            {appointment.type === "Online" && (
+                                <div className="d-flex align-items-center">
+                                    <h5 className="fw-bold" style={{width: 120}}>Gender: </h5>
+                                    <h5>{appointment.pet.gender}</h5>
+                                </div>
+                            )}
+
                             <div className="d-flex align-items-center">
                                 <h5 className="fw-bold" style={{width: 120}}>Breed: </h5>
-                                <h5>{appointment.pet.breed.breed}</h5>
+                                <h5>{appointment.type === "Online" ? appointment.pet.breed.breed : appointment.otc_pet_breed.breed}</h5>
                             </div>
-                            <div className="d-flex align-items-center">
-                                <h5 className="fw-bold" style={{width: 120}}>Birthdate: </h5>
-                                <h5>{formatDate(appointment.pet.dob)} ({getAge(appointment.pet.dob)} y/o)</h5>
-                            </div>
-                            <div className="d-flex align-items-center">
-                                <h5 className="fw-bold" style={{width: 120}}>Schedule: </h5>
-                                <h5>{formatDateTime(appointment.date_time)}</h5>
-                            </div>
-                            <div className="d-flex align-items-center">
-                                <h5 className="fw-bold" style={{width: 120}}>Pet Label: </h5>
-                                <h5>{appointment.pet.label || "N/A"}</h5>
-                            </div>
+                            
+                            {appointment.type === "Online" && (
+                                <>
+                                    <div className="d-flex align-items-center">
+                                        <h5 className="fw-bold" style={{width: 120}}>Birthdate: </h5>
+                                        <h5>{formatDate(appointment.pet.dob)} ({getAge(appointment.pet.dob)} y/o)</h5>
+                                    </div>
+                                    <div className="d-flex align-items-center">
+                                        <h5 className="fw-bold" style={{width: 120}}>Schedule: </h5>
+                                        <h5>{formatDateTime(appointment.date_time)}</h5>
+                                    </div>
+                                    <div className="d-flex align-items-center">
+                                        <h5 className="fw-bold" style={{width: 120}}>Pet Label: </h5>
+                                        <h5>{appointment.pet.label || "N/A"}</h5>
+                                    </div>
+                                </>
+                            )}
                             
                         </div>
                     </div>

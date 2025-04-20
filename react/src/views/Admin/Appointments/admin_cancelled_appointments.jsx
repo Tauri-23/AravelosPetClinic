@@ -30,10 +30,14 @@ export default function AdminCancelledAppointments() {
         },
         {
             title: "Pet Name",
-            render: (_, row) => row.pet.name
+            render: (_, row) => row.type == "Online" ? row?.pet?.name : row.otc_pet_name
         },
         {
-            title: "Appointment Type",
+            title: "Appointment Method",
+            render: (_, row) => row.type
+        },
+        {
+            title: "Appointment Service",
             render: (_, row) => row.service.service
         },
         {

@@ -39,20 +39,9 @@ class AppointmentsController extends Controller
             $appointment = new appointments();
             $appointment->id = $appointmentId;
 
-            if($request->client)
-            {
-                $appointment->client = $request->client;
-                $appointment->pet = $request->pet;
-            }
-            else 
-            {
-                $appointment->otc_client = $request->otcClient;
-                $appointment->otc_pet_name = $request->otcPetName;
-                $appointment->otc_pet_type = $request->otcPetType;
-                $appointment->otc_pet_breed = $request->otcPetBreed;
-                $appointment->type = "OTC";
-            }
-
+            $appointment->client = $request->client;
+            $appointment->pet = $request->pet;
+            $appointment->type = "Online";
             
             $appointment->service = $request->service;
             $appointment->service_type = $request->serviceType;
@@ -74,6 +63,99 @@ class AppointmentsController extends Controller
             return response()->json([
                 'status' => 500,
                 'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function createAppointmentOTC(Request $request)
+    {
+        try
+        {
+            DB::beginTransaction();
+
+            $bookedApt = json_decode($request->input("otcApt"));
+            $appointmentId = $this->generateId->generate(appointments::class, 12);
+            $appointment = new appointments();
+
+            $appointment->id = $appointmentId;
+
+            $appointment->otc_client = $bookedApt->otcClient;
+            $appointment->otc_pet_name = $bookedApt->otcPetName;
+            $appointment->otc_pet_type = $bookedApt->otcPetType;
+            $appointment->otc_pet_breed = $bookedApt->otcPetBreed;
+            
+            $appointment->service = $bookedApt->service;
+            $appointment->service_type = $bookedApt->service === 1 ? null : $bookedApt->serviceType;
+            $appointment->date_time = $bookedApt->date;
+            $appointment->type = "OTC";
+            $appointment->status = "Approved";
+            $appointment->approved_at = now();
+            $appointment->save();
+
+            // Assign Staffs
+            foreach($request->staffs as $staff)
+            {
+                $appointmentStaff = new appointment_assigned_staffs();
+                $appointmentStaff->staff = $staff;
+                $appointmentStaff->appointment = $appointmentId;
+                $appointmentStaff->save();
+            }
+
+            // Loop Through Selected Items from requests
+            foreach($request->items as $item) 
+            {
+                $decodedItem = json_decode($item);
+
+                $inventoryItems = inventory_items::where('inventory', $decodedItem->id)
+                ->orderBy('expiration_date', 'asc')
+                ->take($decodedItem->qty)
+                ->get();
+
+                // Move Inventory Items to Inventory Items Used
+                foreach($inventoryItems as $item)
+                {
+                    $inventoryItemsUsed = new inventory_items_used();
+                    $inventoryItemsUsed->id = $item->id;
+                    $inventoryItemsUsed->inventory = $item->inventory;
+                    $inventoryItemsUsed->expiration_date = $item->expiration_date;
+                    $inventoryItemsUsed->created_at = $item->created_at;
+                    $inventoryItemsUsed->updated_at = $item->updated_at;
+                    $inventoryItemsUsed->save();
+                    
+
+                    $appointmentItem = new appointment_assigned_items();
+                    $appointmentItem->item = (int)$item->id;
+                    $appointmentItem->appointment = $appointmentId;
+                    $appointmentItem->save();
+
+                    // Then Delete the item from the Inventory Items
+                    $item->delete();
+                }
+                
+                // Decrement the Inventory
+                $inventory = inventory::find((int)$decodedItem->id);
+                $inventory->qty -= (int)$decodedItem->qty;
+                $inventory->save();
+
+                // put in transaction history
+                $invHist = new InventoryHistoryController();
+                $invHist->AddInventoryHistory($inventory->name, "-", $decodedItem->qty, "Patient Care");
+            }
+
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => 'Appointment approved successfully.',
+            ]);       
+
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+
+            return response()->json([
+                "status" => 500,
+                "message" => $e->getMessage()
             ], 500);
         }
     }
@@ -295,7 +377,7 @@ class AppointmentsController extends Controller
 
     public function getAppointmentWhereId($appointmentId)
     {
-        return response()->json(appointments::with(["service", 'pet', 'client', 'feedback', 'assigned_staffs', 'assigned_items', 'medical_history'])
+        return response()->json(appointments::with(["service", 'pet', "otc_pet_breed", 'client', 'feedback', 'assigned_staffs', 'assigned_items', 'medical_history'])
         ->find($appointmentId));
     }
 

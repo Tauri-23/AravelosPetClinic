@@ -124,21 +124,6 @@ const userprofiles = () => {
         }).catch(error => console.error(error));
     }
 
-    const handleVerifyEmail = () => {
-        const formData = new FormData();
-        formData.append('client', user.id);
-        formData.append('for', 'email verification');
-
-        axiosClient.post('/client-send-sms-otp', formData)
-        .then(({data}) => {
-            console.log(data.smsStatus);
-            if(data.status === 200) {
-                showModal('VerifyPhoneModal');
-            }
-            notify(data.status === 200 ? "success" : "error", data.message, "top-center", 3000);
-        }).catch(error => console.error(error));
-    }
-
 
 
     /**

@@ -23,7 +23,7 @@ const CalendarCustom = ({ appointments, setSelectedAppointments, width }) => {
                 {listData.map(item => (
                     <div key={item.id}>
                         <small style={{ fontSize: 18 }} className='fw-bold'>{item.service.service}</small><br />
-                        <small>{item.pet.name}</small>
+                        <small>{item.type === "Online" ? item.pet.name : item.otc_pet_name}</small>
                     </div>
                 ))}
             </div>

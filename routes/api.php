@@ -113,6 +113,7 @@ Route::post('/add-appointment', [AppointmentsController::class,'createAppointmen
 Route::post('/cancel-appointment', [AppointmentsController::class,'cancelAppointment']);
 Route::post('/m-complete-appointment', [AppointmentsController::class,'completeAppointment']);
 Route::post('/approve-appointment', [AppointmentsController::class,'approveAppointment']);
+Route::post('/create-otc-appointment', [AppointmentsController::class,'createAppointmentOTC']);
 
 
 

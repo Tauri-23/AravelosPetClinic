@@ -38,6 +38,7 @@ import ClientAppointmentsCompleted from "./views/Client/appointment/client_appoi
 import ClientAppointmentsCancelled from "./views/Client/appointment/client_appointments_cancelled";
 import ClientViewAppointment from "./views/Client/appointment/client_view_appointment";
 import AdminCalendarIndex from "./views/Admin/Calendar/admin_calendar_index";
+import AdminBookAppointment from "./views/Admin/Appointments/admin_book_appointments";
 
 const router = createBrowserRouter([
     /*
@@ -187,6 +188,10 @@ const router = createBrowserRouter([
             {
                 path: "ViewAppointment/:appointmentId",
                 element: <AdminViewAppointment/>
+            },
+            {
+                path: "BookAppointment",
+                element: <AdminBookAppointment/>
             },
 
 
