@@ -349,6 +349,9 @@ export default function AdminInventoryIndex() {
                                             className="transaction-item"
                                         >
                                             <span className="inter">
+                                                {transaction.purpose}
+                                            </span>
+                                            <span className="inter">
                                                 {" "}
                                                 {transaction.operator}{transaction.qty}{" "}
                                             </span>

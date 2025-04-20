@@ -27,6 +27,8 @@ import AddPetDiseasesModal from "../components/Modals/addPetDiseasesModal.jsx";
 import VerifyPhoneModal from "../components/Modals/verifyPhoneModal.jsx";
 import AddAdminModal from "../views/Admin/ManageProfiles/components/AddAdminModal.jsx";
 import AdminViewMiniProfileModal from "../views/Admin/ManageProfiles/components/AdminViewMiniProfileModal.jsx";
+import EditInventoryModal1 from "../components/Modals/editInventoryModal1.jsx";
+import DeleteInventoryItemModal1 from "../components/Modals/del_inventory_item_modal1.jsx";
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -93,8 +95,20 @@ const ModalManager = () => {
             case 'AdminShowAppointment':
                 return <AdminShowAppointment {...modalState.props} onClose={hideModal}/>;
 
+
+
+
+
+            
+            /**
+             * ADMIN MANAGE INVENTORIES
+             */
             case 'AddInventoryItemsModal1':
                 return <AddInventoryItemsModal1 {...modalState.props} onClose={hideModal}/>;
+            case 'EditInventoryModal1':
+                return <EditInventoryModal1 {...modalState.props} onClose={hideModal}/>;
+            case 'DeleteInventoryItemModal1':
+                return <DeleteInventoryItemModal1 {...modalState.props} onClose={hideModal}/>;
 
 
 

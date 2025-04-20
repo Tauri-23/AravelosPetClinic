@@ -52,28 +52,52 @@ export default function AdminViewInventory() {
     }
 
     const handleDeleteInventoryItemsClick = (inventoryItemId) => {
-        showModal("GeneralConfirmationModal", {
-            title: "Delete Item", 
-            text: "Item will be permanently deleted.",
-            positiveBtnText: "Delete",
-            handlePositiveBtnClick: () => {
+        showModal("DeleteInventoryItemModal1", {
+            handleDelItem: (purpose) => {
                 const formData = new FormData();
                 formData.append('itemId', inventoryItemId);
                 formData.append('inventoryId', inventory.id);
+                formData.append('purpose', purpose);
 
                 axiosClient.post("/del-inventory-item", formData)
                 .then(({data}) => {
                     if(data.status === 200) {
                         setInventory(data.inventory);
-                        // setInventory((prev) => ({
-                        //     ...prev,
-                        //     inventory_items: prev.inventory_items.filter((item) => item.id !== inventoryItemId),
-                        // }));
                     }                
                     notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
                 }).catch(error => console.error(error));
             },
         });
+    }
+
+    const handleEditMedicineClick = () => {
+        showModal("EditInventoryModal1", {
+            inventory,
+            handleEditMedPost: (editMedicine) => {
+                const formData = new FormData();
+                formData.append("id", editMedicine.id);
+                formData.append("newName", editMedicine.name);
+                formData.append("newDesc", editMedicine.desc);
+                formData.append("hasMeasurement", editMedicine.hasMeasurement);
+                formData.append("measurementVal", editMedicine.measurementVal);
+                formData.append("measurementUnit", editMedicine.measurementUnit);
+
+                if(editMedicine.pic) {
+                    formData.append("newPic", editMedicine.pic);
+                }
+
+                axiosClient.post("/edit-inventory", formData)
+                .then(({data}) => {
+                    if(data.status === 200) {
+                        setInventory(data.inventory);
+                    }
+                    notify(data.status === 200 ? "success" : "error", data.message, "top-center", 3000);
+                }).catch(error => {
+                    console.error(error);
+                    notify("error", "Server Error", "top-center", 3000);
+                })
+            }
+        })
     }
 
 
@@ -99,8 +123,13 @@ export default function AdminViewInventory() {
                             <p>{inventory.desc}</p>
                         </div>
                         <div className="view-inventory-btns">
-                            <div className="primary-btn-blue1">Edit</div>
-                            <div className="primary-btn-red1 disabled">Delete</div>
+                            <button 
+                            className="primary-btn-blue1" 
+                            onClick={handleEditMedicineClick}
+                            >
+                                Edit
+                            </button>
+                            <button className="primary-btn-red1 disabled">Delete</button>
                         </div>
                     </div>
 
@@ -131,8 +160,8 @@ export default function AdminViewInventory() {
                                     <td>{formatDate(item.expiration_date)}</td>
                                     <td>{formatDate(item.created_at)}</td>
                                     <td className="d-flex">
-                                        <button className="primary-btn-blue1">Edit</button>
-                                        <button className="primary-btn-red1" onClick={() => handleDeleteInventoryItemsClick(item.id)}>Delete</button>
+                                        {/* <button className="primary-btn-blue1">Edit</button> */}
+                                        <button className="primary-btn-red1" onClick={() => handleDeleteInventoryItemsClick(item.id)}>Issue</button>
                                     </td>
                                 </tr>
                             ))}

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("item_name");
             $table->string("operator");
             $table->string("qty");
+            $table->enum("purpose", ['Patient Care','Cancelled Patient Care','Dispensed to Client','Internal Use','Disposed','Damaged/Lost','Inventory Added']);
             $table->timestamps();
         });
     }

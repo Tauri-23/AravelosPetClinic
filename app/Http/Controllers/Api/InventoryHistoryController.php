@@ -20,7 +20,7 @@ class InventoryHistoryController extends Controller
 
 
     // POST
-    public function AddInventoryHistory($itemName, $operator, $qty)
+    public function AddInventoryHistory($itemName, $operator, $qty, $purpose)
     {
         try
         {
@@ -29,6 +29,7 @@ class InventoryHistoryController extends Controller
             $history->item_name = $itemName;
             $history->operator = $operator;
             $history->qty = $qty;
+            $history->purpose = $purpose;
 
             $history->save();
             DB::commit();

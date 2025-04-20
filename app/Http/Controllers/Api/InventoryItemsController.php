@@ -40,7 +40,7 @@ class InventoryItemsController extends Controller
             $inventory->save();
 
             $addInventoryHistory = new InventoryHistoryController();
-            $addInventoryHistory->AddInventoryHistory($inventory->name, "+", (int) $request->qty);   
+            $addInventoryHistory->AddInventoryHistory($inventory->name, "+", (int) $request->qty, "Inventory Added");   
 
             DB::commit();
 
@@ -78,7 +78,7 @@ class InventoryItemsController extends Controller
             $inventory = inventory::find($request->inventoryId);
 
             $addInventoryHistory = new InventoryHistoryController();
-            $addInventoryHistory->AddInventoryHistory($inventory->name, "-", 1);
+            $addInventoryHistory->AddInventoryHistory($inventory->name, "-", 1, $request->purpose);
 
             $inventory->qty--;
             $inventory->save();

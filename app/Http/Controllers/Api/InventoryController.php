@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Contracts\IGenerateFilenameService;
 use App\Http\Controllers\Controller;
 use App\Models\inventory;
+use DB;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
@@ -15,6 +16,8 @@ class InventoryController extends Controller
     {
        $this->generateFilename = $generateFilename;
     }
+
+
 
     // POST
     public function createInventory(Request $request)
@@ -57,28 +60,57 @@ class InventoryController extends Controller
         }
         
     }
-    public function editInventoryItem(Request $request)
-    {
-        $inventoryItem = inventory::find($request->id);
 
-        if(!$inventoryItem)
+    public function editInventory(Request $request)
+    {
+        try
         {
+            DB::beginTransaction();
+
+            $inventoryItem = inventory::find($request->id);
+
+            if(!$inventoryItem)
+            {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Item not found'
+                ]);
+            }
+
+            $inventoryItem->name = $request->newName;
+            $inventoryItem->desc = $request->newDesc;
+            
+            $inventoryItem->measurement_value = $request->hasMeasurement === "false" ? null : $request->measurementVal;
+            $inventoryItem->measurement_unit = $request->hasMeasurement === "false" ? null : $request->measurementUnit;
+
+            if($request->newPic) {
+                $photo = $request->file('newPic');
+                $targetDirectory = base_path("react/public/assets/media/items");
+                $newFilename = $this->generateFilename->generate($photo, $targetDirectory);
+    
+                $photo->move($targetDirectory, $newFilename);
+
+                $inventoryItem->picture = $newFilename;
+            }
+
+            $inventoryItem->save();
+
+            DB::commit();
+
             return response()->json([
-                'status' => 404,
-                'message' => 'Item not found'
+                'status' => 200,
+                'message' => 'Item edited',
+                'inventory' => inventory::with("inventory_items")->find($request->id)
             ]);
         }
-
-        $inventoryItem->name = $request->name;
-        $inventoryItem->qty = $request->qty;
-        $inventoryItem->desc = $request->desc;
-        $inventoryItem->save();
-
-        return response()->json([
-            'status' => 200,
-            'message' => 'Item edited',
-            'inventoryItems' => inventory::all()
-        ]);
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            return response()->json([
+                "status" => 500,
+                "message" => $e->getMessage()
+            ], 500);
+        }
     }
 
 

@@ -106,6 +106,10 @@ class AppointmentsController extends Controller
                 $inventory->qty ++;
                 $inventory->save();
 
+                // put to inventory histories
+                $invHist = new InventoryHistoryController();
+                $invHist->AddInventoryHistory($inventory->name, "+", 1, "Cancelled Patient Care");
+
                 // Delete the inventory_items_used
                 $itemInventory->delete();
             }
@@ -223,11 +227,15 @@ class AppointmentsController extends Controller
                 $inventory = inventory::find((int)$decodedItem->id);
                 $inventory->qty -= (int)$decodedItem->qty;
                 $inventory->save();
+
+                // put in transaction history
+                $invHist = new InventoryHistoryController();
+                $invHist->AddInventoryHistory($inventory->name, "-", $decodedItem->qty, "Patient Care");
             }
 
             // SEND SMS
             $formattedDateTime = Carbon::parse($appointment->date_time)->format('M d, Y \a\t h:i A');
-            $smsMessage = "Your appointment for $appointment->service on $formattedDateTime has been approved.";
+            $smsMessage = "Your appointment for" . $appointment->service()->first()->service . "on $formattedDateTime has been approved.";
             $smsStatus = $this->sendSms->sendSMS("+63" . substr($appointment->client()->first()->phone, 1), $smsMessage);
 
             DB::commit();
