@@ -61,8 +61,8 @@ class MedicalHistoryController extends Controller
                 'ultrasoundFiles',
                 'urineExamFiles',
                 'vaginalSmearFiles',
-                'eyeStrainFiles',
                 'xrayFiles',
+                'eyeStrainFiles',
                 'otherTestFiles',
             ];
             $savedFiles = [];
@@ -146,11 +146,11 @@ class MedicalHistoryController extends Controller
 
                 'xray' => $request->xray,
                 'xray_result' => $request->xray ? $request->xrayResult : null,
-                'xray_files' => $request->xray ? json_encode($savedFiles["eyeStrainFiles"]) : null,
+                'xray_files' => $request->xray ? json_encode($savedFiles["xrayFiles"]) : null,
 
                 'eye_strain' => $request->eyeStrain,
                 'eye_strain_result' => $request->eyeStrain ? $request->eyeStrainResult : null,
-                'eye_strain_files' => $request->eyeStrain ? json_encode($savedFiles["xrayFiles"]) : null,
+                'eye_strain_files' => $request->eyeStrain ? json_encode($savedFiles["eyeStrainFiles"]) : null,
 
                 'other_test' => $request->otherTest,
                 'other_test_result' => $request->otherTestResult,
