@@ -16,46 +16,60 @@ return new class extends Migration
 
             $table->boolean("blood_exam")->default(false);
             $table->string("blood_exam_result")->nullable();
+            $table->longText("blood_exam_files")->nullable();
 
             $table->boolean("distemper_test")->default(false);
             $table->string("distemper_test_result")->nullable();
+            $table->longText("distemper_test_files")->nullable();
 
             $table->boolean("ear_swabbing")->default(false);
             $table->string("ear_swabbing_result")->nullable();
+            $table->longText("ear_swabbing_files")->nullable();
 
             $table->boolean("ehrlichia_test")->default(false);
             $table->string("ehrlichia_test_result")->nullable();
+            $table->longText("ehrlichia_test_files")->nullable();
 
             $table->boolean("heartworm_test")->default(false);
             $table->string("heartworm_test_result")->nullable();
+            $table->longText("heartworm_test_files")->nullable();
 
             $table->boolean("parvo_test")->default(false);
             $table->string("parvo_test_result")->nullable();
+            $table->longText("parvo_test_files")->nullable();
 
             $table->boolean("skin_scraping")->default(false);
             $table->string("skin_scraping_result")->nullable();
+            $table->longText("skin_scraping_files")->nullable();
 
             $table->boolean("stool_exam")->default(false);
             $table->string("stool_exam_result")->nullable();
+            $table->longText("stool_exam_files")->nullable();
 
             $table->boolean("ultrasound")->default(false);
             $table->string("ultrasound_result")->nullable();
+            $table->longText("ultrasound_files")->nullable();
 
             $table->boolean("urine_exam")->default(false);
             $table->string("urine_exam_result")->nullable();
+            $table->longText("urine_exam_files")->nullable();
 
             $table->boolean("vaginal_smear")->default(false);
             $table->string("vaginal_smear_result")->nullable();
+            $table->longText("vaginal_smear_files")->nullable();
 
             $table->boolean("xray")->default(false);
             $table->string("xray_result")->nullable();
+            $table->longText("xray_files")->nullable();
 
             $table->boolean("eye_strain")->default(false);
             $table->string("eye_strain_result")->nullable();
+            $table->longText("eye_strain_files")->nullable();
 
 
             $table->string("other_test")->nullable();
             $table->string("other_test_result")->nullable();
+            $table->longText("other_test_files")->nullable();
 
             $table->timestamps();
         });

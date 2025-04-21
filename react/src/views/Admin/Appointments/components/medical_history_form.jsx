@@ -4,8 +4,11 @@ import { formatTime, isEmptyOrSpaces, notify } from "../../../../assets/js/utils
 import axiosClient from "../../../../axios-client";
 import { useNavigate } from "react-router-dom";
 import TextArea from "antd/es/input/TextArea";
+import MedicalHistoryFormFileBox from "./medical_history_form_file_box";
+import { useModal } from "../../../../contexts/ModalContext";
 
 export default function MedicalHistoryForm({appointmentId}) {
+    const {showModal} = useModal();
     const navigate = useNavigate();
     const timeOptions = ["08:00:00", "09:00:00", "10:00:00", "11:00:00", "13:00:00", "14:00:00", "15:00:00", "16:00:00"];
 
@@ -51,45 +54,59 @@ export default function MedicalHistoryForm({appointmentId}) {
      */
     const [bloodExam, setBloodExam] = useState(false);
     const [bloodExamResult, setBloodExamResult] = useState("");
+    const [bloodExamFiles, setBloodExamFiles] = useState([]);
 
     const [distemperTest, setDistemperTest] = useState(false);
     const [distemperTestResult, setDistemperTestResult] = useState("");
+    const [distemperTestFiles, setDistemperTestFiles] = useState([]);
 
     const [earSwabbing, setEarSwabbing] = useState(false);
     const [earSwabbingResult, setEarSwabbingResult] = useState("");
+    const [earSwabbingFiles, setEarSwabbingFiles] = useState([]);
 
     const [ehrlichiaTest, setEhrlichiaTest] = useState(false);
     const [ehrlichiaTestResult, setEhrlichiaTestResult] = useState("");
+    const [ehrlichiaTestFiles, setEhrlichiaTestFiles] = useState([]);
 
     const [heartwormTest, setHeartwormTest] = useState(false);
     const [heartwormTestResult, setHeartwormTestResult] = useState("");
+    const [heartwormTestFiles, setHeartwormTestFiles] = useState([]);
 
     const [parvoTest, setParvoTest] = useState(false);
     const [parvoTestResult, setParvoTestResult] = useState("");
+    const [parvoTestFiles, setParvoTestFiles] = useState([]);
 
     const [skinScraping, setSkinScraping] = useState(false);
     const [skinScrapingResult, setSkinScrapingResult] = useState("");
+    const [skinScrapingFiles, setSkinScrapingFiles] = useState([]);
 
     const [stoolExam, setStoolExam] = useState(false);
     const [stoolExamResult, setStoolExamResult] = useState("");
+    const [stoolExamFiles, setStoolExamFiles] = useState([]);
 
     const [ultrasound, setUltrasound] = useState(false);
     const [ultrasoundResult, setUltrasoundResult] = useState("");
+    const [ultrasoundFiles, setUltrasoundFiles] = useState([]);
 
     const [urineExam, setUrineExam] = useState(false);
     const [urineExamResult, setUrineExamResult] = useState("");
+    const [urineExamFiles, setUrineExamFiles] = useState([]);
 
     const [vaginalSmear, setVaginalSmear] = useState(false);
     const [vaginalSmearResult, setVaginalSmearResult] = useState("");
+    const [vaginalSmearFiles, setVaginalSmearFiles] = useState([]);
 
     const [eyeStrain, setEyeStrain] = useState(false);
     const [eyeStrainResult, setEyeStrainResult] = useState("");
+    const [eyeStrainFiles, setEyeStrainFiles] = useState([]);
 
     const [xray, setXray] = useState(false);
     const [xrayResult, setXrayResult] = useState("");
+    const [xrayFiles, setXrayFiles] = useState([]);
 
     const [otherTest, setOtherTest] = useState("");
     const [otherTestResult, setOtherTestResult] = useState("");
+    const [otherTestFiles, setOtherTestFiles] = useState([]);
 
     /**
      * Diagnosis
@@ -189,101 +206,144 @@ export default function MedicalHistoryForm({appointmentId}) {
             title: "Blood Exam",
             isChecked: bloodExam,
             resultValue: bloodExamResult,
+            files: bloodExamFiles,
             setChecked: setBloodExam,
-            setValue: (e) => setBloodExamResult(e.target.value)
+            setValue: (e) => setBloodExamResult(e.target.value),
+            addFile: (file, desc) => setBloodExamFiles(prev => [...prev, { file, desc }]),
+            removeFile: (index) => setBloodExamFiles(prev => prev.filter((_, i) => i !== index))
         },
         {
             title: "Distemper test",
             isChecked: distemperTest,
             resultValue: distemperTestResult,
+            files: distemperTestFiles,
             setChecked: setDistemperTest,
-            setValue: (e) => setDistemperTestResult(e.target.value)
+            setValue: (e) => setDistemperTestResult(e.target.value),
+            addFile: (file, desc) => setDistemperTestFiles(prev => [...prev, { file, desc }]),
+            removeFile: (index) => setDistemperTestFiles(prev => prev.filter((_, i) => i !== index))
         },
         {
             title: "Ear Swabbing",
             isChecked: earSwabbing,
             resultValue: earSwabbingResult,
+            files: earSwabbingFiles,
             setChecked: setEarSwabbing,
-            setValue: (e) => setEarSwabbingResult(e.target.value)
+            setValue: (e) => setEarSwabbingResult(e.target.value),
+            addFile: (file, desc) => setEarSwabbingFiles(prev => [...prev, { file, desc }]),
+            removeFile: (index) => setEarSwabbingFiles(prev => prev.filter((_, i) => i !== index))
         },
         {
             title: "Ehrlichia Test",
             isChecked: ehrlichiaTest,
             resultValue: ehrlichiaTestResult,
+            files: ehrlichiaTestFiles,
             setChecked: setEhrlichiaTest,
-            setValue: (e) => setEhrlichiaTestResult(e.target.value)
+            setValue: (e) => setEhrlichiaTestResult(e.target.value),
+            addFile: (file, desc) => setEhrlichiaTestFiles(prev => [...prev, { file, desc }]),
+            removeFile: (index) => setEhrlichiaTestFiles(prev => prev.filter((_, i) => i !== index))
         },
         {
             title: "Heartworm Test",
             isChecked: heartwormTest,
             resultValue: heartwormTestResult,
+            files: heartwormTestFiles,
             setChecked: setHeartwormTest,
-            setValue: (e) => setHeartwormTestResult(e.target.value)
+            setValue: (e) => setHeartwormTestResult(e.target.value),
+            addFile: (file, desc) => setHeartwormTestFiles(prev => [...prev, { file, desc }]),
+            removeFile: (index) => setHeartwormTestFiles(prev => prev.filter((_, i) => i !== index))
         },
         {
             title: "Parvo Test",
             isChecked: parvoTest,
             resultValue: parvoTestResult,
+            files: parvoTestFiles,
             setChecked: setParvoTest,
-            setValue: (e) => setParvoTestResult(e.target.value)
+            setValue: (e) => setParvoTestResult(e.target.value),
+            addFile: (file, desc) => setParvoTestFiles(prev => [...prev, { file, desc }]),
+            removeFile: (index) => setParvoTestFiles(prev => prev.filter((_, i) => i !== index))
         },
         {
             title: "Skin Scraping",
             isChecked: skinScraping,
             resultValue: skinScrapingResult,
+            files: skinScrapingFiles,
             setChecked: setSkinScraping,
-            setValue: (e) => setSkinScrapingResult(e.target.value)
+            setValue: (e) => setSkinScrapingResult(e.target.value),
+            addFile: (file, desc) => setSkinScrapingFiles(prev => [...prev, { file, desc }]),
+            removeFile: (index) => setSkinScrapingFiles(prev => prev.filter((_, i) => i !== index))
         },
         {
             title: "Stool Exam",
             isChecked: stoolExam,
             resultValue: stoolExamResult,
+            files: stoolExamFiles,
             setChecked: setStoolExam,
-            setValue: (e) => setStoolExamResult(e.target.value)
+            setValue: (e) => setStoolExamResult(e.target.value),
+            addFile: (file, desc) => setStoolExamFiles(prev => [...prev, { file, desc }]),
+            removeFile: (index) => setStoolExamFiles(prev => prev.filter((_, i) => i !== index))
         },
         {
             title: "Ultrasound",
             isChecked: ultrasound,
             resultValue: ultrasoundResult,
+            files: ultrasoundFiles,
             setChecked: setUltrasound,
-            setValue: (e) => setUltrasoundResult(e.target.value)
+            setValue: (e) => setUltrasoundResult(e.target.value),
+            addFile: (file, desc) => setUltrasoundFiles(prev => [...prev, { file, desc }]),
+            removeFile: (index) => setUltrasoundFiles(prev => prev.filter((_, i) => i !== index))
         },
         {
             title: "Urine Exam",
             isChecked: urineExam,
             resultValue: urineExamResult,
+            files: urineExamFiles,
             setChecked: setUrineExam,
-            setValue: (e) => setUrineExamResult(e.target.value)
+            setValue: (e) => setUrineExamResult(e.target.value),
+            addFile: (file, desc) => setUrineExamFiles(prev => [...prev, { file, desc }]),
+            removeFile: (index) => setUrineExamFiles(prev => prev.filter((_, i) => i !== index))
         },
         {
             title: "Vaginal Smear",
             isChecked: vaginalSmear,
             resultValue: vaginalSmearResult,
+            files: vaginalSmearFiles,
             setChecked: setVaginalSmear,
-            setValue: (e) => setVaginalSmearResult(e.target.value)
+            setValue: (e) => setVaginalSmearResult(e.target.value),
+            addFile: (file, desc) => setVaginalSmearFiles(prev => [...prev, { file, desc }]),
+            removeFile: (index) => setVaginalSmearFiles(prev => prev.filter((_, i) => i !== index))
         },
         {
             title: "X-ray",
             isChecked: xray,
             resultValue: xrayResult,
+            files: xrayFiles,
             setChecked: setXray,
-            setValue: (e) => setXrayResult(e.target.value)
+            setValue: (e) => setXrayResult(e.target.value),
+            addFile: (file, desc) => setXrayFiles(prev => [...prev, { file, desc }]),
+            removeFile: (index) => setXrayFiles(prev => prev.filter((_, i) => i !== index))
         },
         {
             title: "Eye Strain",
             isChecked: eyeStrain,
             resultValue: eyeStrainResult,
+            files: eyeStrainFiles,
             setChecked: setEyeStrain,
-            setValue: (e) => setEyeStrainResult(e.target.value)
+            setValue: (e) => setEyeStrainResult(e.target.value),
+            addFile: (file, desc) => setEyeStrainFiles(prev => [...prev, { file, desc }]),
+            removeFile: (index) => setEyeStrainFiles(prev => prev.filter((_, i) => i !== index))
         },
         {
             title: "Other test",
             testValue: otherTest,
             resultValue: otherTestResult,
+            files: otherTestFiles,
             setTestValue: (e) => setOtherTest(e.target.value),
-            setValue: (e) => setOtherTestResult(e.target.value)
-        },
-    ]
+            setValue: (e) => setOtherTestResult(e.target.value),
+            addFile: (file, desc) => setOtherTestFiles(prev => [...prev, { file, desc }]),
+            removeFile: (index) => setOtherTestFiles(prev => prev.filter((_, i) => i !== index))
+        }
+    ];
+    
 
 
 
@@ -335,32 +395,103 @@ export default function MedicalHistoryForm({appointmentId}) {
 
         formData.append("bloodExam", bloodExam ? 1 : 0);
         formData.append("bloodExamResult", bloodExamResult);
+        bloodExamFiles.forEach((item, index) => {
+            formData.append(`bloodExamFiles[${index}][file]`, item.file);
+            formData.append(`bloodExamFiles[${index}][desc]`, item.desc);
+        });
+
         formData.append("distemperTest", distemperTest ? 1 : 0);
         formData.append("distemperTestResult", distemperTestResult);
+        distemperTestFiles.forEach((item, index) => {
+            formData.append(`distemperTestFiles[${index}][file]`, item.file);
+            formData.append(`distemperTestFiles[${index}][desc]`, item.desc);
+        });
+
         formData.append("earSwabbing", earSwabbing ? 1 : 0);
         formData.append("earSwabbingResult", earSwabbingResult);
+        earSwabbingFiles.forEach((item, index) => {
+            formData.append(`earSwabbingFiles[${index}][file]`, item.file);
+            formData.append(`earSwabbingFiles[${index}][desc]`, item.desc);
+        });
+
         formData.append("ehrlichiaTest", ehrlichiaTest ? 1 : 0);
         formData.append("ehrlichiaTestResult", ehrlichiaTestResult);
+        ehrlichiaTestFiles.forEach((item, index) => {
+            formData.append(`ehrlichiaTestFiles[${index}][file]`, item.file);
+            formData.append(`ehrlichiaTestFiles[${index}][desc]`, item.desc);
+        });
+
         formData.append("heartwormTest", heartwormTest ? 1 : 0);
         formData.append("heartwormTestResult", heartwormTestResult);
+        heartwormTestFiles.forEach((item, index) => {
+            formData.append(`heartwormTestFiles[${index}][file]`, item.file);
+            formData.append(`heartwormTestFiles[${index}][desc]`, item.desc);
+        });
+
         formData.append("parvoTest", parvoTest ? 1 : 0);
         formData.append("parvoTestResult", parvoTestResult);
+        parvoTestFiles.forEach((item, index) => {
+            formData.append(`parvoTestFiles[${index}][file]`, item.file);
+            formData.append(`parvoTestFiles[${index}][desc]`, item.desc);
+        });
+
         formData.append("skinScraping", skinScraping ? 1 : 0);
         formData.append("skinScrapingResult", skinScrapingResult);
+        skinScrapingFiles.forEach((item, index) => {
+            formData.append(`skinScrapingFiles[${index}][file]`, item.file);
+            formData.append(`skinScrapingFiles[${index}][desc]`, item.desc);
+        });
+
         formData.append("stoolExam", stoolExam ? 1 : 0);
         formData.append("stoolExamResult", stoolExamResult);
+        stoolExamFiles.forEach((item, index) => {
+            formData.append(`stoolExamFiles[${index}][file]`, item.file);
+            formData.append(`stoolExamFiles[${index}][desc]`, item.desc);
+        });
+
         formData.append("ultrasound", ultrasound ? 1 : 0);
         formData.append("ultrasoundResult", ultrasoundResult);
+        ultrasoundFiles.forEach((item, index) => {
+            formData.append(`ultrasoundFiles[${index}][file]`, item.file);
+            formData.append(`ultrasoundFiles[${index}][desc]`, item.desc);
+        });
+
         formData.append("urineExam", urineExam ? 1 : 0);
         formData.append("urineExamResult", urineExamResult);
+        urineExamFiles.forEach((item, index) => {
+            formData.append(`urineExamFiles[${index}][file]`, item.file);
+            formData.append(`urineExamFiles[${index}][desc]`, item.desc);
+        });
+
         formData.append("vaginalSmear", vaginalSmear ? 1 : 0);
         formData.append("vaginalSmearResult", vaginalSmearResult);
+        vaginalSmearFiles.forEach((item, index) => {
+            formData.append(`vaginalSmearFiles[${index}][file]`, item.file);
+            formData.append(`vaginalSmearFiles[${index}][desc]`, item.desc);
+        });
+
         formData.append("eyeStrain", eyeStrain ? 1 : 0);
         formData.append("eyeStrainResult", eyeStrainResult);
+        eyeStrainFiles.forEach((item, index) => {
+            formData.append(`eyeStrainFiles[${index}][file]`, item.file);
+            formData.append(`eyeStrainFiles[${index}][desc]`, item.desc);
+        });
+
         formData.append("xray", xray ? 1 : 0);
         formData.append("xrayResult", xrayResult);
+        xrayFiles.forEach((item, index) => {
+            formData.append(`xrayFiles[${index}][file]`, item.file);
+            formData.append(`xrayFiles[${index}][desc]`, item.desc);
+        });
+
         formData.append("otherTest", otherTest);
         formData.append("otherTestResult", otherTestResult);
+        otherTestFiles.forEach((item, index) => {
+            formData.append(`otherTestFiles[${index}][file]`, item.file);
+            formData.append(`otherTestFiles[${index}][desc]`, item.desc);
+        });
+
+
 
         formData.append("genCon", genCon);
         formData.append("genAttitude", genAttitude);
@@ -408,6 +539,17 @@ export default function MedicalHistoryForm({appointmentId}) {
             }
         }).catch(error => console.error(error));
     }
+    const handleAddRemoveFile = (title, mode, fileIndex) => {
+        if(mode === "add") {
+            showModal("MedHistAddFileModal", {
+                handleAdd: (file, desc) => {
+                    LabExamFields.find(x => x.title === title)?.addFile(file, desc);
+                }
+            });
+        } else {
+            LabExamFields.find(x => x.title === title)?.removeFile(fileIndex);
+        }
+    };
 
 
 
@@ -691,7 +833,8 @@ export default function MedicalHistoryForm({appointmentId}) {
                                         size="large"
                                         value={lab.resultValue} 
                                         onChange={lab.setValue}
-                                        placeholder="result"/>
+                                        placeholder="result"
+                                        className="mar-bottom-3"/>
                                     </>
                                 )}
                                 
@@ -706,6 +849,25 @@ export default function MedicalHistoryForm({appointmentId}) {
                                         ]}
                                         onChange={lab.setValue}/>
                                     </>
+                                )}
+
+                                {lab.isChecked && (
+                                    <div>
+                                        <h5>Photos</h5>
+                                        <div className="d-flex gap1 align-items-center">
+                                            
+                                            {lab.files?.map((file, index) => (
+                                                <MedicalHistoryFormFileBox 
+                                                file={file.file} 
+                                                desc={file.desc}
+                                                handleAddRemoveFile={() => handleAddRemoveFile(lab.title, "remove", index)}/>
+                                            ))
+                                            }
+                                            {lab.files.length < 5 && (
+                                                <Button type="primary" size="large" onClick={() => handleAddRemoveFile(lab.title, "add")}>Add Photo</Button>
+                                            )}
+                                        </div>
+                                    </div>
                                 )}
                             </div>
                         )

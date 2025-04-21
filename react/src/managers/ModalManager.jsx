@@ -30,6 +30,7 @@ import AdminViewMiniProfileModal from "../views/Admin/ManageProfiles/components/
 import EditInventoryModal1 from "../components/Modals/editInventoryModal1.jsx";
 import DeleteInventoryItemModal1 from "../components/Modals/del_inventory_item_modal1.jsx";
 import AdminBookAppointmentModal from "../components/Modals/adminBookAppointmentModal.jsx";
+import MedHistAddFileModal from "../views/Admin/Appointments/components/med_hist_add_file_modal.jsx";
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -95,6 +96,16 @@ const ModalManager = () => {
                 
             case 'AdminShowAppointment':
                 return <AdminShowAppointment {...modalState.props} onClose={hideModal}/>;
+
+
+
+
+            
+            /**
+             * ADMIN MEDICAL HISTORY
+             */
+            case 'MedHistAddFileModal':
+                return <MedHistAddFileModal {...modalState.props} onClose={hideModal}/>;
 
 
 

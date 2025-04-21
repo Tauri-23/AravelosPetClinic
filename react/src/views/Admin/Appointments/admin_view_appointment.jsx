@@ -12,6 +12,7 @@ import InventoryBox from "../../../components/inventory_box";
 import axiosClient from "../../../axios-client";
 import MedicalHistoryForm from "./components/medical_history_form";
 import { useModal } from "../../../contexts/ModalContext";
+import MedicalHistoryFileBoxRead from "./components/medical_history_file_box_read";
 
 export default function AdminViewAppointment() {
     const navigate = useNavigate();
@@ -582,19 +583,29 @@ export default function AdminViewAppointment() {
 
                             <h3 className="mar-bottom-1">Laboratory Exam Results: </h3>
 
-                            <div className="d-flex flex-wrap gap2 mar-bottom-1">
+                            <div className="d-flex flex-direction-y gap2 mar-bottom-1">
                                 {Object.entries(appointment.medical_history.laboratory_exams)
-                                .filter(([key, value]) => value === 1) // Only keep exams/tests with a value of 1
-                                .map(([key, value]) => {
-                                const resultKey = `${key}_result`; // Construct the result key
-                                const result = appointment.medical_history.laboratory_exams[resultKey];
+                                    .filter(([key, value]) => value === 1) // Only keep exams/tests with a value of 1
+                                    .map(([key, value]) => {
+                                    const resultKey = `${key}_result`; // Construct the result key
+                                    const filesKey = `${key}_files`;
+                                    
+                                    const result = appointment.medical_history.laboratory_exams[resultKey];
+                                    const files = JSON.parse(appointment.medical_history.laboratory_exams[filesKey]);
+                                    console.log(files);
 
-                                return (
-                                    <div key={key} className="exam-box">
-                                    <h5>{key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}</h5> {/* Format key name */}
-                                    <p>{result || "No result available"}</p>
-                                    </div>
-                                );
+                                    return (
+                                        <div key={key} className="exam-box">
+                                            <h5>{key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}</h5> {/* Format key name */}
+                                            <p>{result || "No result available"}</p>
+                                            
+                                            <div className="d-flex gap3">
+                                                {files.map(file => (
+                                                    <MedicalHistoryFileBoxRead file={file.file} desc={file.desc}/>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
                                 })}
                             </div>
 

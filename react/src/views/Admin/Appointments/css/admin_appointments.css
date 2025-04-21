@@ -48,3 +48,34 @@
     height: 100%;
     width: 100%;
 }
+
+.med-hist-form-file-box {
+    width: 150px;
+    height: 180px;
+    padding: 5px;
+    border-radius: 10px;
+    background: white;
+    filter: drop-shadow(0 0 1px var(--grey1));
+    overflow: hidden;
+}
+.med-hist-form-file-box-pic {
+    width: 100%;
+    aspect-ratio: 1/1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--grey1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+.med-hist-form-file-box-pic img {
+    position: absolute;
+    height: 100%;
+}
+.med-hist-form-file-box-desc {
+    white-space: nowrap; 
+    width: calc(150px - 20px); 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
