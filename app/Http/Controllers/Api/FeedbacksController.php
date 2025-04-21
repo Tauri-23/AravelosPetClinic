@@ -28,12 +28,17 @@ class FeedbacksController extends Controller
             $feedbacks->client = $request->client;
             $feedbacks->appointment = $request->appointment;
             $feedbacks->content = $request->feedback;
+            $feedbacks->status = "processed";
+
+            $sentimentController = new SentimentAnalysisController();
+            $result = $sentimentController->UpdateSentimentStatisticsTable2($request->feedback);
 
             $feedbacks->save();
 
             DB::commit();
             return response()->json([
                 'status' => 200,
+                '$result' => $result,
                 'message' => 'Feedback posted',
                 'appointment' => appointments::with(["pet", "client", "feedback", "service", "assigned_staffs", "assigned_items", "medical_history"])->find($request->appointment)
             ]);

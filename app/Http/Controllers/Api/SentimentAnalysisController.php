@@ -387,6 +387,150 @@ class SentimentAnalysisController extends Controller
         }
     }
 
+    public function UpdateSentimentStatisticsTable2($feedbackIn)
+    {
+        try
+        {
+            DB::beginTransaction();
+            
+            $newPricingFeedbacks = [];
+            $newVetCareFeedbacks = [];
+            $newCustomerServiceFeedbacks = [];
+            $newHygieneFeedbacks = [];
+            $newWaitingTimeServiceFeedbacks = [];
+            $newBookingExperienceFeedbacks = [];
+
+            $response = Http::timeout(seconds: 120)->post("http://82.25.105.148:8010/analyze", [
+                'feedbacks' => [$feedbackIn]
+            ]);
+            $results = $response->json();
+
+
+            foreach($results as $result)
+            {
+                if($result["analysis"]["pricing"]["mentioned"])
+                {
+                    $newPricingFeedbacks[] = [
+                        "sentiment" => $result["analysis"]["pricing"]["sentiment"],
+                        "feedback" => $result["feedback"],
+                    ];
+                }
+
+                if($result["analysis"]["veterinary_service"]["mentioned"])
+                {
+                    $newVetCareFeedbacks[] = [
+                        "sentiment" => $result["analysis"]["veterinary_service"]["sentiment"],
+                        "feedback" => $result["feedback"],
+                    ];
+                }
+                
+                if($result["analysis"]["customer_service"]["mentioned"])
+                {
+                    $newCustomerServiceFeedbacks[] = [
+                        "sentiment" => $result["analysis"]["customer_service"]["sentiment"],
+                        "feedback" => $result["feedback"],
+                    ];
+                }
+
+                if($result["analysis"]["hygiene"]["mentioned"])
+                {
+                    $newHygieneFeedbacks[] = [
+                        "sentiment" => $result["analysis"]["hygiene"]["sentiment"],
+                        "feedback" => $result["feedback"],
+                    ];
+                }
+
+                if($result["analysis"]["waiting_time"]["mentioned"])
+                {
+                    $newWaitingTimeServiceFeedbacks[] = [
+                        "sentiment" => $result["analysis"]["waiting_time"]["sentiment"],
+                        "feedback" => $result["feedback"],
+                    ];
+                }
+
+                if($result["analysis"]["booking_experience"]["mentioned"])
+                {
+                    $newBookingExperienceFeedbacks[] = [
+                        "sentiment" => $result["analysis"]["booking_experience"]["sentiment"],
+                        "feedback" => $result["feedback"],
+                    ];
+                }
+            }
+
+            $categories = ["Pricing", "Vet Care", "Customer Service", "hygiene", "Waiting Time", "Booking Experience"];
+            $resultsToPutInDB = [$newPricingFeedbacks, $newVetCareFeedbacks, $newCustomerServiceFeedbacks, $newHygieneFeedbacks, $newWaitingTimeServiceFeedbacks, $newBookingExperienceFeedbacks];
+
+            for($i=0; $i<count($categories); $i++)
+            {
+                if(count($resultsToPutInDB[$i]))
+                {
+                    $existingSentiment = sentiment_analysis::where("aspect", $categories[$i])->first();
+
+                    // Decode existing comments or default to empty array
+                    $existingPos = json_decode($existingSentiment->positive_comments ?? '[]', true);
+                    $existingNeu = json_decode($existingSentiment->neutral_comments ?? '[]', true);
+                    $existingNeg = json_decode($existingSentiment->negative_comments ?? '[]', true);
+
+                    // Get new categorized comments
+                    $newPos = array_values(array_map(function ($feedback) {
+                        return $feedback['feedback'];
+                    }, array_filter($resultsToPutInDB[$i], function ($feedback) {
+                        return strtolower(trim($feedback['sentiment'])) === 'positive';
+                    })));
+
+                    $newNeu = array_values(array_map(function ($feedback) {
+                        return $feedback['feedback'];
+                    }, array_filter($resultsToPutInDB[$i], function ($feedback) {
+                        return strtolower(trim($feedback['sentiment'])) === 'neutral';
+                    })));
+
+                    $newNeg = array_values(array_map(function ($feedback) {
+                        return $feedback['feedback'];
+                    }, array_filter($resultsToPutInDB[$i], function ($feedback) {
+                        return strtolower(trim($feedback['sentiment'])) === 'negative';
+                    })));
+
+                    // Append new feedbacks to the old ones
+                    $updatedPos = array_merge($existingPos, $newPos);
+                    $updatedNeu = array_merge($existingNeu, $newNeu);
+                    $updatedNeg = array_merge($existingNeg, $newNeg);
+                    
+
+                    $positiveCount = count($updatedPos);
+                    $neutralCount = count($updatedNeu);
+                    $negativeCount = count($updatedNeg);
+                    $total = $positiveCount + $neutralCount + $negativeCount;
+
+                    $existingSentiment->aspect = $categories[$i];
+                    $existingSentiment->positive_percent =  $total > 0 ? round(($positiveCount / $total) * 100, 2) : 0;
+                    $existingSentiment->neutral_percent =  $total > 0 ? round(($neutralCount / $total) * 100, 2) : 0;
+                    $existingSentiment->negative_percent =  $total > 0 ? round(($negativeCount / $total) * 100, 2) : 0;
+                    $existingSentiment->positive_count = $positiveCount;
+                    $existingSentiment->neutral_count = $neutralCount;
+                    $existingSentiment->negative_count = $negativeCount;
+                    $existingSentiment->positive_comments = json_encode($updatedPos);
+                    $existingSentiment->neutral_comments = json_encode($updatedNeu);
+                    $existingSentiment->negative_comments = json_encode($updatedNeg);
+                    $existingSentiment->save();
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                "success" => true
+            ]);
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            return response()->json([
+                "status" => 500,
+                "message" => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
     public function ReadResultExcelFile()
     {

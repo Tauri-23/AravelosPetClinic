@@ -112,6 +112,7 @@ export default function ClientViewAppointment() {
 
         axiosClient.post("/post-feedback", formData)
         .then(({data}) => {
+            console.log(data);
             if(data.status === 200) {
                 setAppointment(data.appointment);
                 setPostingFeedback(false);
