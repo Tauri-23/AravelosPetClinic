@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\feedbacks;
 use App\Models\sentiment_analysis;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -259,6 +260,7 @@ class SentimentAnalysisController extends Controller
                     $newPricingFeedbacks[] = [
                         "sentiment" => $result["analysis"]["pricing"]["sentiment"],
                         "feedback" => $result["feedback"],
+                        "created_at" => Carbon::now()
                     ];
                 }
 
@@ -267,6 +269,7 @@ class SentimentAnalysisController extends Controller
                     $newVetCareFeedbacks[] = [
                         "sentiment" => $result["analysis"]["veterinary_service"]["sentiment"],
                         "feedback" => $result["feedback"],
+                        "created_at" => Carbon::now()
                     ];
                 }
                 
@@ -275,6 +278,7 @@ class SentimentAnalysisController extends Controller
                     $newCustomerServiceFeedbacks[] = [
                         "sentiment" => $result["analysis"]["customer_service"]["sentiment"],
                         "feedback" => $result["feedback"],
+                        "created_at" => Carbon::now()
                     ];
                 }
 
@@ -283,6 +287,7 @@ class SentimentAnalysisController extends Controller
                     $newHygieneFeedbacks[] = [
                         "sentiment" => $result["analysis"]["hygiene"]["sentiment"],
                         "feedback" => $result["feedback"],
+                        "created_at" => Carbon::now()
                     ];
                 }
 
@@ -291,6 +296,7 @@ class SentimentAnalysisController extends Controller
                     $newWaitingTimeServiceFeedbacks[] = [
                         "sentiment" => $result["analysis"]["waiting_time"]["sentiment"],
                         "feedback" => $result["feedback"],
+                        "created_at" => Carbon::now()
                     ];
                 }
 
@@ -299,6 +305,7 @@ class SentimentAnalysisController extends Controller
                     $newBookingExperienceFeedbacks[] = [
                         "sentiment" => $result["analysis"]["booking_experience"]["sentiment"],
                         "feedback" => $result["feedback"],
+                        "created_at" => Carbon::now()
                     ];
                 }
             }
@@ -319,19 +326,19 @@ class SentimentAnalysisController extends Controller
 
                     // Get new categorized comments
                     $newPos = array_values(array_map(function ($feedback) {
-                        return $feedback['feedback'];
+                        return ["feedback" => $feedback['feedback'], "created_at" => $feedback['created_at']];
                     }, array_filter($resultsToPutInDB[$i], function ($feedback) {
                         return strtolower(trim($feedback['sentiment'])) === 'positive';
                     })));
 
                     $newNeu = array_values(array_map(function ($feedback) {
-                        return $feedback['feedback'];
+                        return ["feedback" => $feedback['feedback'], "created_at" => $feedback['created_at']];
                     }, array_filter($resultsToPutInDB[$i], function ($feedback) {
                         return strtolower(trim($feedback['sentiment'])) === 'neutral';
                     })));
 
                     $newNeg = array_values(array_map(function ($feedback) {
-                        return $feedback['feedback'];
+                        return ["feedback" => $feedback['feedback'], "created_at" => $feedback['created_at']];
                     }, array_filter($resultsToPutInDB[$i], function ($feedback) {
                         return strtolower(trim($feedback['sentiment'])) === 'negative';
                     })));
@@ -387,7 +394,7 @@ class SentimentAnalysisController extends Controller
         }
     }
 
-    public function UpdateSentimentStatisticsTable2($feedbackIn)
+    public function UpdateSentimentStatisticsTable2($feedbackIn, $createdAt)
     {
         try
         {
@@ -413,6 +420,7 @@ class SentimentAnalysisController extends Controller
                     $newPricingFeedbacks[] = [
                         "sentiment" => $result["analysis"]["pricing"]["sentiment"],
                         "feedback" => $result["feedback"],
+                        "created_at" => $createdAt
                     ];
                 }
 
@@ -421,6 +429,7 @@ class SentimentAnalysisController extends Controller
                     $newVetCareFeedbacks[] = [
                         "sentiment" => $result["analysis"]["veterinary_service"]["sentiment"],
                         "feedback" => $result["feedback"],
+                        "created_at" => $createdAt
                     ];
                 }
                 
@@ -429,6 +438,7 @@ class SentimentAnalysisController extends Controller
                     $newCustomerServiceFeedbacks[] = [
                         "sentiment" => $result["analysis"]["customer_service"]["sentiment"],
                         "feedback" => $result["feedback"],
+                        "created_at" => $createdAt
                     ];
                 }
 
@@ -437,6 +447,7 @@ class SentimentAnalysisController extends Controller
                     $newHygieneFeedbacks[] = [
                         "sentiment" => $result["analysis"]["hygiene"]["sentiment"],
                         "feedback" => $result["feedback"],
+                        "created_at" => $createdAt
                     ];
                 }
 
@@ -445,6 +456,7 @@ class SentimentAnalysisController extends Controller
                     $newWaitingTimeServiceFeedbacks[] = [
                         "sentiment" => $result["analysis"]["waiting_time"]["sentiment"],
                         "feedback" => $result["feedback"],
+                        "created_at" => $createdAt
                     ];
                 }
 
@@ -453,6 +465,7 @@ class SentimentAnalysisController extends Controller
                     $newBookingExperienceFeedbacks[] = [
                         "sentiment" => $result["analysis"]["booking_experience"]["sentiment"],
                         "feedback" => $result["feedback"],
+                        "created_at" => $createdAt
                     ];
                 }
             }
@@ -473,19 +486,19 @@ class SentimentAnalysisController extends Controller
 
                     // Get new categorized comments
                     $newPos = array_values(array_map(function ($feedback) {
-                        return $feedback['feedback'];
+                        return ["feedback" => $feedback['feedback'], "created_at" => $feedback['created_at']];
                     }, array_filter($resultsToPutInDB[$i], function ($feedback) {
                         return strtolower(trim($feedback['sentiment'])) === 'positive';
                     })));
 
                     $newNeu = array_values(array_map(function ($feedback) {
-                        return $feedback['feedback'];
+                        return ["feedback" => $feedback['feedback'], "created_at" => $feedback['created_at']];
                     }, array_filter($resultsToPutInDB[$i], function ($feedback) {
                         return strtolower(trim($feedback['sentiment'])) === 'neutral';
                     })));
 
                     $newNeg = array_values(array_map(function ($feedback) {
-                        return $feedback['feedback'];
+                        return ["feedback" => $feedback['feedback'], "created_at" => $feedback['created_at']];
                     }, array_filter($resultsToPutInDB[$i], function ($feedback) {
                         return strtolower(trim($feedback['sentiment'])) === 'negative';
                     })));
@@ -559,7 +572,8 @@ class SentimentAnalysisController extends Controller
                     $pricingFeedbacks[] = [
                         "category" => "Pricing",
                         "feedback" => $dataNo1stIndex[$i][0],
-                        "sentiment" => $dataNo1stIndex[$i][3]
+                        "sentiment" => $dataNo1stIndex[$i][3],
+                        "created_at" => $dataNo1stIndex[$i][21]
                     ];
                 }
                 
@@ -568,7 +582,8 @@ class SentimentAnalysisController extends Controller
                     $vetCareFeedbacks[] = [
                         "category" => "Vet Care",
                         "feedback" => $dataNo1stIndex[$i][0],
-                        "sentiment" => $dataNo1stIndex[$i][6]
+                        "sentiment" => $dataNo1stIndex[$i][6],
+                        "created_at" => $dataNo1stIndex[$i][21]
                     ];
                 }
 
@@ -577,7 +592,8 @@ class SentimentAnalysisController extends Controller
                     $customerServiceFeedbacks[] = [
                         "category" => "Customer Service",
                         "feedback" => $dataNo1stIndex[$i][0],
-                        "sentiment" => $dataNo1stIndex[$i][9]
+                        "sentiment" => $dataNo1stIndex[$i][9],
+                        "created_at" => $dataNo1stIndex[$i][21]
                     ];
                 }
 
@@ -586,7 +602,8 @@ class SentimentAnalysisController extends Controller
                     $hygieneFeedbacks[] = [
                         "category" => "Hygiene",
                         "feedback" => $dataNo1stIndex[$i][0],
-                        "sentiment" => $dataNo1stIndex[$i][12]
+                        "sentiment" => $dataNo1stIndex[$i][12],
+                        "created_at" => $dataNo1stIndex[$i][21]
                     ];
                 }
 
@@ -595,7 +612,8 @@ class SentimentAnalysisController extends Controller
                     $waitingTimeFeedbacks[] = [
                         "category" => "Waiting Time",
                         "feedback" => $dataNo1stIndex[$i][0],
-                        "sentiment" => $dataNo1stIndex[$i][15]
+                        "sentiment" => $dataNo1stIndex[$i][15],
+                        "created_at" => $dataNo1stIndex[$i][21]
                     ];
                 }
 
@@ -604,7 +622,8 @@ class SentimentAnalysisController extends Controller
                     $bookingExperienceFeedbacks[] = [
                         "category" => "Booking Experience",
                         "feedback" => $dataNo1stIndex[$i][0],
-                        "sentiment" => $dataNo1stIndex[$i][18]
+                        "sentiment" => $dataNo1stIndex[$i][18],
+                        "created_at" => $dataNo1stIndex[$i][21]
                     ];
                 }
             }
@@ -616,17 +635,17 @@ class SentimentAnalysisController extends Controller
             {
                 $sentimentTable = new sentiment_analysis();
                 $positiveReviews = array_values(array_map(function ($feedback) {
-                    return $feedback['feedback'];
+                    return ["feedback" => $feedback['feedback'], "created_at" => $feedback['created_at']];
                 }, array_filter($toInsertDatabase[$i], function ($feedback) {
                     return strtolower(trim($feedback['sentiment'])) === 'positive';
                 })));
                 $neutralReviews = array_values(array_map(function ($feedback) {
-                    return $feedback['feedback'];
+                    return ["feedback" => $feedback['feedback'], "created_at" => $feedback['created_at']];
                 }, array_filter($toInsertDatabase[$i], function ($feedback) {
                     return strtolower(trim($feedback['sentiment'])) === 'neutral';
                 })));
                 $negativeReviews = array_values(array_map(function ($feedback) {
-                    return $feedback['feedback'];
+                    return ["feedback" => $feedback['feedback'], "created_at" => $feedback['created_at']];
                 }, array_filter($toInsertDatabase[$i], function ($feedback) {
                     return strtolower(trim($feedback['sentiment'])) === 'negative';
                 })));

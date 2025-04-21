@@ -22,6 +22,7 @@ export default function ClientViewAppointment() {
     const [cancelledAptThisMonth, setCancelledAptThisMonth] = useState(null);
 
     const [feedbackIn, setFeedbackIn] = useState("");
+    const [submittingFeedback, setSubmittingFeedback] = useState(false);
 
 
     const [isCancellable, setIsCancellable] = useState(false);
@@ -105,6 +106,7 @@ export default function ClientViewAppointment() {
     }
 
     const handleSubmitFeedback = () => {
+        setSubmittingFeedback(true);
         const formData = new FormData();
         formData.append("client", user.id);
         formData.append("appointment", appointment.id);
@@ -112,15 +114,18 @@ export default function ClientViewAppointment() {
 
         axiosClient.post("/post-feedback", formData)
         .then(({data}) => {
-            console.log(data);
             if(data.status === 200) {
                 setAppointment(data.appointment);
                 setPostingFeedback(false);
             }
+            setSubmittingFeedback(false);
             notify(data.status === 200 ? "success" : "error", data.message, "top-center", 3000);
         }).catch(error => {
+            setSubmittingFeedback(false);
             notify("error", "Server Error", "top-center", 3000);
             console.error(error);
+        }).finally(() => {
+            setSubmittingFeedback(false);
         });
     }
 
@@ -212,11 +217,11 @@ export default function ClientViewAppointment() {
 
                                     {isPostingFeedback && (
                                         <Button
-                                        disabled={isEmptyOrSpaces(feedbackIn)}
+                                        disabled={isEmptyOrSpaces(feedbackIn) || submittingFeedback}
                                         type="primary"
                                         size="large"
                                         onClick={handleSubmitFeedback}>
-                                            Submit
+                                            {submittingFeedback ? "Submitting..." : "Submit"}
                                         </Button>
                                     )}
                                 </div>

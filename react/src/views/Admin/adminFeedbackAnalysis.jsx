@@ -5,12 +5,16 @@ import FeedbackModal from '../../components/Modals/feedbackModal1';
 import "../../assets/css/FeedbackChart.css";
 import { fetchAllSentiments } from '../../services/SentimentAnalysisService';
 import { useOutletContext } from 'react-router-dom';
+import {DatePicker} from "antd";
 
 export default function adminFeedbackAnalysis() {
+    const {RangePicker} = DatePicker;
     const {setActiveNavLink} = useOutletContext();
     const [modalData, setModalData] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     const [feedbacks, setFeedbacks] = useState(null);
+    const [filteredFeedbacks, setFilteredFeedbacks] = useState(null);
 
 
 
@@ -25,6 +29,7 @@ export default function adminFeedbackAnalysis() {
                 const data = await fetchAllSentiments();
                 console.log(data);
                 setFeedbacks(data);
+                setFilteredFeedbacks(data);
             } catch (error) {
                 console.error(error);
             }
@@ -33,13 +38,57 @@ export default function adminFeedbackAnalysis() {
         getAll();
     }, []);
 
+    const chartData = filteredFeedbacks?.map((item) => {
+        const positiveCount = item.positive_comments.length;
+        const neutralCount = item.neutral_comments.length;
+        const negativeCount = item.negative_comments.length;
+        const total = positiveCount + neutralCount + negativeCount || 1; // Prevent division by zero
+    
+        return {
+            ...item,
+            positive_percent: Math.round((positiveCount / total) * 100),
+            neutral_percent: Math.round((neutralCount / total) * 100),
+            negative_percent: Math.round((negativeCount / total) * 100),
+        };
+    });
 
 
     /**
      * Hanlders
      */
+    const handleDateRangeChange = (e) => {
+        if (!e) {
+            setFilteredFeedbacks(feedbacks); // show all feedbacks if no date selected
+            return;
+        }
+    
+        const startDate = e[0].startOf("month").toDate();
+        const endDate = e[1].endOf("month").toDate();
+    
+        const filteredResult = filteredFeedbacks.map(feedback => {
+            const filterByDate = (comments) => comments.filter(comment => {
+                const commentDate = new Date(comment.created_at);
+                return commentDate >= startDate && commentDate <= endDate;
+            });
+    
+            return {
+                ...feedback,
+                positive_comments: filterByDate(feedback.positive_comments),
+                negative_comments: filterByDate(feedback.negative_comments),
+                neutral_comments: filterByDate(feedback.neutral_comments),
+                positive_count: filterByDate(feedback.positive_comments).length,
+                negative_count: filterByDate(feedback.negative_comments).length,
+                neutral_count: filterByDate(feedback.neutral_comments).length,
+            };
+        });
+    
+        setFilteredFeedbacks(filteredResult);
+    };
+    
+
     const handleBarClick = (data, feedbackType) => {
         const aspectData = feedbacks.find(item => item.aspect === data.aspect);
+
         setModalData({
             aspect: data.aspect,
             feedbackType,
@@ -89,53 +138,67 @@ export default function adminFeedbackAnalysis() {
      */
     return (
         <div className="content1 compressed">
-            {feedbacks
+            {feedbacks && filteredFeedbacks
             ? (
                 <>
                     <div className="dashboard-header">
                         <h2>Veterinary Clinic Feedback Analysis</h2>
-                        <p className="dashboard-subtitle">Click on bars to view detailed comments</p>
+
+                        <RangePicker
+                        picker="month"
+                        onChange={handleDateRangeChange}/>
                     </div>
 
                     <div className="stats-container">
-                        {feedbacks.map((item) => (
-                            <div key={item.aspect} className="stat-card">
-                                <h3>{item.aspect}</h3>
-                                <div className="percentage-bar">
-                                    <div
-                                        className="positive-bar"
-                                        style={{ width: `${item.positive_percent}%` }}
-                                    />
+                        {filteredFeedbacks.map((item) => {
+                            const positiveCount = item.positive_comments.length;
+                            const neutralCount = item.neutral_comments.length;
+                            const negativeCount = item.negative_comments.length;
+                            const total = positiveCount + neutralCount + negativeCount || 1;
 
-                                    <div
-                                        className="neutral-bar"
-                                        style={{ width: `${item.neutral_percent}%` }}
-                                    />
+                            const posiPercent = Math.round((positiveCount / total) * 100);
+                            const neutralPercent = Math.round((neutralCount / total) * 100);
+                            const negaPercent = Math.round((negativeCount / total) * 100);
 
-                                    <div
-                                        className="neutral-bar"
-                                        style={{ width: `${item.negative_percent}%` }}
-                                    />
+                            return (
+                                <div key={item.aspect} className="stat-card">
+                                    <h3>{item.aspect}</h3>
+                                    <div className="percentage-bar">
+                                        <div
+                                            className="positive-bar"
+                                            style={{ width: `${posiPercent}%` }}
+                                        />
+
+                                        <div
+                                            className="neutral-bar"
+                                            style={{ width: `${neutralPercent}%` }}
+                                        />
+
+                                        <div
+                                            className="negative-bar"
+                                            style={{ width: `${negaPercent}%` }}
+                                        />
+                                    </div>
+                                    <div className="stat-details">
+                                        <span className="positive-text">
+                                            {posiPercent}% Positive
+                                        </span>
+                                        <span className="neutral-text">
+                                            {neutralPercent}% Neutral
+                                        </span>
+                                        <span className="negative-text">
+                                            {negaPercent}% Negative
+                                        </span>
+                                    </div>
                                 </div>
-                                <div className="stat-details">
-                                    <span className="positive-text">
-                                        {item.positive_percent.toFixed(1)}% Positive
-                                    </span>
-                                    <span className="neutral-text">
-                                        {item.neutral_percent.toFixed(1)}% Neutral
-                                    </span>
-                                    <span className="negative-text">
-                                        {item.negative_percent.toFixed(1)}% Negative
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
+                            )
+                        })}
                     </div>
 
                     <div className="chart-container">
                         <ResponsiveContainer width="100%" height={400}>
                             <BarChart
-                                data={feedbacks}
+                                data={chartData}
                                 margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                                 barGap={0}
                             >

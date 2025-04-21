@@ -29,11 +29,10 @@ class FeedbacksController extends Controller
             $feedbacks->appointment = $request->appointment;
             $feedbacks->content = $request->feedback;
             $feedbacks->status = "processed";
+            $feedbacks->save();
 
             $sentimentController = new SentimentAnalysisController();
-            $result = $sentimentController->UpdateSentimentStatisticsTable2($request->feedback);
-
-            $feedbacks->save();
+            $result = $sentimentController->UpdateSentimentStatisticsTable2($request->feedback, $feedbacks->created_at);
 
             DB::commit();
             return response()->json([
