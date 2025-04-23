@@ -19,6 +19,7 @@ export default function AdminViewAppointment() {
     const {id} = useParams();
     const navigate = useNavigate();
     const {showModal} = useModal();
+    const [scheduleAppt, setScheduleModalOpen] = useState(false);
     const {appointmentId} = useParams();
     const {setActiveNavLink} = useOutletContext();
 
@@ -42,7 +43,7 @@ export default function AdminViewAppointment() {
     const [measurementRequired, setMeasurementRequired] = useState(false);
     const [customMeasurementRequired, setCustomMeasurementRequired] = useState(false);
 
-
+    const [activePetIndex, setActivePetIndex]=useState(0);
     useEffect(() => {
         axiosClient.get(`/get-appt-where-id/${id}`)
           .then(({ data }) => {
@@ -262,8 +263,8 @@ export default function AdminViewAppointment() {
 
                             {appointment.status === "Pending" && (
                                 <button
-                                disabled={selectedStaffs.length < 1 || selectedItems.length < 1 || isApproving}
-                                className={`primary-btn-blue1 ${selectedStaffs.length < 1 || selectedItems.length < 1 || isApproving ? "disabled" : ""}`}
+                                disabled={selectedStaffs.length < 1 || isApproving}
+                                className={`primary-btn-blue1 ${selectedStaffs.length < 1 || isApproving ? "disabled" : ""}`}
                                 onClick={() => handleApproveAppointment(appointment.id)}
                                 >
                                     {isApproving ? "Approving..." : "Approve Appointment"}
@@ -338,58 +339,51 @@ export default function AdminViewAppointment() {
                         </div>
                     </div> */}
 
-                    {appointment.appointment_pets?.map((aptPet) => (
-                    <div key={aptPet.id} className="appointment-cont1 d-flex gap1 mar-bottom-1">
-                        <div className="appointment-pet-pfp">
-                        <img src={`/assets/media/pets/${aptPet.pet?.picture || 'defaultPetPic.jpg'}`} alt="pet profile pic" />
-                        </div>
 
-                        <div>
-                        <h3>{aptPet.pet?.name || "Unnamed Pet"}</h3>
-
-                        {/* Services for this pet */}
-                        {aptPet.appointment_pet_services?.map((serviceEntry, idx) => (
-                            <div key={idx} className="mar-bottom-1">
-                            <div className="d-flex align-items-center">
-                                <h5 className="fw-bold" style={{width: 120}}>Service:</h5>
-                                <h5>{serviceEntry.service?.service || "N/A"}</h5>
-                            </div>
-                            <div className="d-flex align-items-center">
-                                <h5 className="fw-bold" style={{width: 120}}>Service Type:</h5>
-                                <h5>{serviceEntry.service_type?.service_type || "N/A"}</h5>
-                            </div>
-                            </div>
+                    {/* PET TABS BUTTON */}
+                    <div className="d-flex mar-bottom-1">
+                        {appointment.appointment_pets?.map((aptPet, index) => (
+                            <button
+                            key={aptPet.id}type={activePetIndex === index ? "primary-btn-blue1" : "sub-button"}
+                            onClick={() => setActivePetIndex(index)}
+                            className={`pet-tab-btn mar-end-2 ${activePetIndex === index ? "primary-btn-blue1" : "sub-button"}`}
+                            >
+                            {aptPet.pet?.name || `Pet ${index + 1}`}
+                            </button>
                         ))}
-
-                        {/* Other pet info */}
-                        <div className="d-flex align-items-center">
-                            <h5 className="fw-bold" style={{width: 120}}>Gender:</h5>
-                            <h5>{aptPet.pet?.gender || "Unknown"}</h5>
-                        </div>
-
-                        <div className="d-flex align-items-center">
-                            <h5 className="fw-bold" style={{width: 120}}>Breed:</h5>
-                            <h5>{aptPet.pet?.breed?.breed || "Unknown"}</h5>
-                        </div>
-
-                        <div className="d-flex align-items-center">
-                            <h5 className="fw-bold" style={{width: 120}}>Birthdate:</h5>
-                            <h5>
-                            {aptPet.pet?.dob ? `${formatDate(aptPet.pet.dob)} (${getAge(aptPet.pet.dob)} y/o)` : "N/A"}
-                            </h5>
-                        </div>
-
-                        <div className="d-flex align-items-center">
-                            <h5 className="fw-bold" style={{width: 120}}>Schedule:</h5>
-                            <h5>
-                            {appointment.date_time
-                                ? formatDateTime(appointment.date_time)
-                                : "To Be Announced"}
-                            </h5>
-                        </div>
-                        </div>
                     </div>
-                    ))}
+
+                    {appointment.appointment_pets?.[activePetIndex] && (
+                        <div key={appointment.appointment_pets[activePetIndex].id} className="appointment-cont1 d-flex gap1 mar-bottom-1">
+                            <div className="appointment-pet-pfp">
+                                <img src={`/assets/media/pets/${appointment.appointment_pets[activePetIndex].pet?.picture || 'defaultPetPic.jpg'}`}alt="pet profile pic"/>
+                            </div>
+
+                            <div>
+                            <h3>{appointment.appointment_pets[activePetIndex].pet?.name || "Unnamed Pet"}</h3>
+
+                            {/* Services */}
+
+                            <h5 className="fw-bold" style={{ width: 130 }}>Service/s:</h5>
+                            {appointment.appointment_pets[activePetIndex].appointment_pet_services?.map((serviceEntry, idx) => (
+                                <div key={idx}>
+                                <div className="d-flex align-items-center" style={{marginLeft:110}}>
+                                    <h5>— {serviceEntry.service?.service || "N/A"} ({serviceEntry.service_type?.service_type || "N/A"})</h5>
+                                </div>
+                                </div>
+                            ))}
+
+                            {/* More details... */}
+                            <div className="d-flex align-items-center">
+                                <h5 className="fw-bold" style={{ width: 130 }}>Breed:</h5>
+                                <h5>{appointment.appointment_pets[activePetIndex].pet?.breed?.breed}</h5>
+                            </div>
+                            {/* ...additional fields */}
+                            </div>
+                        </div>
+                        )}
+
+
 
 
                     {/* FOR PENDING APPOINTMENTS */}
@@ -399,7 +393,7 @@ export default function AdminViewAppointment() {
                             <div className="w-100">
 
                                 {/* Assign Staffs */}
-                                <div className="appointment-cont1 w-100 mar-bottom-1">
+                                <div className="appointment-cont1 w-100 mar-bottom-1"style={{height:400}}>
                                     <h4>Assign Staff</h4>
                                     <hr className="mar-y-3"/>
 
@@ -433,12 +427,12 @@ export default function AdminViewAppointment() {
                                 </div>
 
                                 {/* Assign Items */}
-                                <div className="appointment-cont1 w-100">
+                                {/* <div className="appointment-cont1 w-100">
                                     <h4>Assign Items</h4>
-                                    <hr className="mar-y-3"/>
+                                    <hr className="mar-y-3"/> */}
 
                                     {/* STAFFS */}
-                                    <div
+                                    {/* <div
                                     className="d-flex flex-wrap gap3"
                                     style={{
                                         padding: 5,
@@ -460,7 +454,7 @@ export default function AdminViewAppointment() {
                                         )
                                         : (<Spin size="large"/>)}
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
 
                             {dosageModalOpen && setItemForDosage &&(
@@ -626,7 +620,7 @@ export default function AdminViewAppointment() {
                                 </div>
 
                                 {/* Assigned Items */}
-                                <div
+                                {/* <div
                                 className="appointment-cont1 w-100"
                                 style={{
                                     height: 400,
@@ -655,7 +649,7 @@ export default function AdminViewAppointment() {
                                             </div>
                                         ))
                                     )}
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     )}
