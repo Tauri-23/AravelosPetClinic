@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 23, 2025 at 07:54 AM
+-- Generation Time: Apr 23, 2025 at 07:58 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -248,15 +248,6 @@ CREATE TABLE `feedbacks` (
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `feedbacks`
---
-
-INSERT INTO `feedbacks` (`id`, `client`, `appointment`, `content`, `status`, `created_at`, `updated_at`) VALUES
-(6, '936822', NULL, 'very clean and excellent service', 'processed', '2025-04-07 06:11:28', '2025-04-16 07:35:57'),
-(2772, '936822', NULL, 'Clinic is very clean and the staffs are accomodating', 'processed', '2025-04-16 08:27:27', '2025-04-20 23:48:27'),
-(2776, '936822', '586903765515', 'Mabait ang mga staffs', 'processed', '2025-04-21 09:13:31', '2025-04-21 09:13:31');
 
 -- --------------------------------------------------------
 
