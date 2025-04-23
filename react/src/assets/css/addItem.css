@@ -20,7 +20,9 @@
     justify-content: center;
     align-items: center;
 }
-
+.weight-label {
+    width:20px;
+}
 .placeholder {
     color: #aaa;
 }
@@ -94,6 +96,31 @@ textarea {
 }
 
 .measurement-inputs select {
+    width: 100px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.measure-weight {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.measure-weight input[type="checkbox"] {
+    width:30px;
+}
+.measure-weight input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.weight-width{
+    width:80px;
+}
+.measure-weight select {
     width: 100px;
     padding: 5px;
     border: 1px solid #ccc;

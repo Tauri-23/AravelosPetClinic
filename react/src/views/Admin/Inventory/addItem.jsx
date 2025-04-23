@@ -6,6 +6,7 @@ import { notify } from '../../../assets/js/utils.jsx';
 import Dropdown2 from '../../../components/dropdowns2.jsx';
 import { useNavigate } from 'react-router-dom';
 import AddItemConfirmationModal1 from '../../../components/Modals/addItemConfirmationModal1';
+import * as Icon from "react-bootstrap-icons";
 
 export default function AddItem() {
     const navigate = useNavigate();
@@ -19,12 +20,13 @@ export default function AddItem() {
     const [itemImagePrev, setItemImagePrev] = useState(null);
     const [itemImage, setItemImage] = useState(null);
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-    
+
     // Measurement feature states
     const [measurementRequired, setMeasurementRequired] = useState(false);
+    const [customMeasurementRequired, setCustomMeasurementRequired] = useState(false);
     const [measurementValue, setMeasurementValue] = useState("");
     const [measurementUnit, setMeasurementUnit] = useState("");
-    
+
 
 
     /**
@@ -108,7 +110,7 @@ export default function AddItem() {
     };
 
 
-    
+
     /**
      * Render
      */
@@ -190,7 +192,7 @@ export default function AddItem() {
                                         Measurement:
                                     </label>
                                     {measurementRequired && (
-                                        <div className="measurement-inputs">
+                                        <div className="measurement-inputs" >
                                             <input
                                                 type="number"
                                                 placeholder="Value"
@@ -210,7 +212,117 @@ export default function AddItem() {
                                         </div>
                                     )}
                                 </div>
-                            
+
+                                {/*Measurements per Weight*/}
+                                {measurementRequired && (
+                                    <div className="measure-weight flex-column align-items-start">
+                                        <label className='mar-top-2'>Dosage Settings  <Icon.InfoCircle className="mar-start-3" title="Left: standard values, Right: custom values"/></label>
+                                        <label>
+                                            Use custom measurements?
+                                            <input type="checkbox"
+                                                checked={customMeasurementRequired}
+                                                onChange={() => setCustomMeasurementRequired(!customMeasurementRequired)}
+                                             />
+                                        </label>
+
+                                        {measurementRequired && (
+                                            <div>
+                                                <div className="d-flex flex-column gap3">
+                                                    <div className="d-flex align-items-center"><label className="weight-label mar-end-3">XS</label>
+                                                        <input
+                                                            type="number"
+                                                            placeholder="Value"
+                                                            className="weight-width"
+                                                            readOnly
+                                                        />
+                                                        {customMeasurementRequired &&(
+                                                            <div className='mar-start-3'>
+                                                                :
+                                                                <input
+                                                                    type="number"
+                                                                    placeholder="Value"
+                                                                    className="weight-width mar-start-3"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="d-flex align-items-center"><label className="weight-label mar-end-3">S</label>
+                                                        <input
+                                                            type="number"
+                                                            placeholder="Value"
+                                                            className="weight-width"
+                                                            readOnly
+                                                        />
+                                                        {customMeasurementRequired &&(
+                                                            <div className='mar-start-3'>
+                                                                :
+                                                                <input
+                                                                    type="number"
+                                                                    placeholder="Value"
+                                                                    className="weight-width mar-start-3"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="d-flex align-items-center"><label className="weight-label mar-end-3">M</label>
+                                                        <input
+                                                            type="number"
+                                                            placeholder="Value"
+                                                            className="weight-width"
+                                                            readOnly
+                                                        />
+                                                        {customMeasurementRequired &&(
+                                                            <div className='mar-start-3'>
+                                                                :
+                                                                <input
+                                                                    type="number"
+                                                                    placeholder="Value"
+                                                                    className="weight-width mar-start-3"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="d-flex align-items-center"><label className="weight-label mar-end-3">L</label>
+                                                        <input
+                                                            type="number"
+                                                            placeholder="Value"
+                                                            className="weight-width"
+                                                            readOnly
+                                                        />
+                                                        {customMeasurementRequired &&(
+                                                            <div className='mar-start-3'>
+                                                                :
+                                                                <input
+                                                                    type="number"
+                                                                    placeholder="Value"
+                                                                    className="weight-width mar-start-3"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="d-flex align-items-center"><label className="weight-label mar-end-3">XL</label>
+                                                        <input
+                                                            type="number"
+                                                            placeholder="Value"
+                                                            className="weight-width"
+                                                            readOnly
+                                                        />
+                                                        {customMeasurementRequired &&(
+                                                            <div className='mar-start-3'>
+                                                                :
+                                                                <input
+                                                                    type="number"
+                                                                    placeholder="Value"
+                                                                    className="weight-width mar-start-3"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                                 {/* Button Group */}
                                 <div className="button-group">
                                     <button type="button" onClick={handleShowModal} className="primary-btn-blue1">
