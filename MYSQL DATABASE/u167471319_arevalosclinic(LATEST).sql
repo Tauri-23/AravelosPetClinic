@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 23, 2025 at 08:14 AM
+-- Generation Time: Apr 23, 2025 at 12:15 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -55,25 +55,25 @@ INSERT INTO `admin_roles` (`id`, `role`, `created_at`, `updated_at`) VALUES
 CREATE TABLE `appointments` (
   `id` varchar(12) NOT NULL,
   `client` varchar(6) DEFAULT NULL,
-  `pet` varchar(6) DEFAULT NULL,
-  `otc_client` varchar(255) DEFAULT NULL,
-  `otc_pet_name` varchar(255) DEFAULT NULL,
-  `otc_pet_type` bigint(20) UNSIGNED DEFAULT NULL,
-  `otc_pet_breed` bigint(20) UNSIGNED DEFAULT NULL,
-  `service` bigint(20) UNSIGNED DEFAULT NULL,
-  `service_type` bigint(20) UNSIGNED DEFAULT NULL,
-  `date_time` datetime NOT NULL,
+  `appointment_date` date DEFAULT NULL,
+  `appointment_time` time DEFAULT NULL,
   `approved_at` datetime DEFAULT NULL,
   `rejected_at` datetime DEFAULT NULL,
   `cancelled_at` datetime DEFAULT NULL,
   `reason` text DEFAULT NULL,
   `note` longtext DEFAULT NULL,
-  `status` varchar(255) NOT NULL,
+  `status` enum('Pending',' Approved','Completed','Cancelled') NOT NULL,
   `type` enum('Online','OTC') NOT NULL,
-  `medical_history` bigint(20) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `appointments`
+--
+
+INSERT INTO `appointments` (`id`, `client`, `appointment_date`, `appointment_time`, `approved_at`, `rejected_at`, `cancelled_at`, `reason`, `note`, `status`, `type`, `created_at`, `updated_at`) VALUES
+('456985299219', '936822', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 'Online', '2025-04-23 01:40:31', '2025-04-23 01:40:31');
 
 -- --------------------------------------------------------
 
@@ -102,6 +102,53 @@ CREATE TABLE `appointment_assigned_staffs` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `appointment_pets`
+--
+
+CREATE TABLE `appointment_pets` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `pet` varchar(6) DEFAULT NULL,
+  `appointment` varchar(12) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `appointment_pets`
+--
+
+INSERT INTO `appointment_pets` (`id`, `pet`, `appointment`, `created_at`, `updated_at`) VALUES
+(1, '387381', '456985299219', '2025-04-23 01:40:31', '2025-04-23 01:40:31'),
+(2, '379017', '456985299219', '2025-04-23 01:40:31', '2025-04-23 01:40:31');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `appointment_pets_services`
+--
+
+CREATE TABLE `appointment_pets_services` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `appointment_pet` bigint(20) UNSIGNED DEFAULT NULL,
+  `service` bigint(20) UNSIGNED DEFAULT NULL,
+  `service_type` bigint(20) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `appointment_pets_services`
+--
+
+INSERT INTO `appointment_pets_services` (`id`, `appointment_pet`, `service`, `service_type`, `created_at`, `updated_at`) VALUES
+(1, 1, 3, 3, '2025-04-23 01:40:31', '2025-04-23 01:40:31'),
+(2, 1, 3, 4, '2025-04-23 01:40:31', '2025-04-23 01:40:31'),
+(3, 2, 5, 10, '2025-04-23 01:40:31', '2025-04-23 01:40:31'),
+(4, 2, 3, 2, '2025-04-23 01:40:31', '2025-04-23 01:40:31');
 
 -- --------------------------------------------------------
 
@@ -607,10 +654,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (66, '2025_03_23_143405_create_pet_breeds_table', 44),
 (68, '2024_10_01_032309_create_pets_table', 45),
 (69, '2025_02_24_140148_create_inventory_histories_table', 46),
-(70, '2024_09_30_090820_create_appointments_table', 47),
 (72, '2025_03_28_100940_create_medical_history_laboratory_exams_table', 48),
 (74, '2024_12_14_151231_create_inventory_items_table', 50),
-(77, '2024_09_29_140328_create_inventories_table', 51);
+(77, '2024_09_29_140328_create_inventories_table', 51),
+(78, '2024_09_30_090820_create_appointments_table', 52),
+(79, '2025_04_23_091208_create_appointment_pets_table', 53),
+(80, '2025_04_23_091502_create_appointment_pets_services_table', 54);
 
 -- --------------------------------------------------------
 
@@ -679,7 +728,7 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (129, 'App\\Models\\user_clients', 179411, 'main', '77560570a3d3a33952fe17047c86486521c60a085bc5eff578ceda6c7e464311', '[\"*\"]', '2025-04-11 07:52:52', NULL, '2025-04-11 07:47:44', '2025-04-11 07:52:52'),
 (146, 'App\\Models\\user_clients', 18533, 'main', '5f48423ad610b2706f1d5ab02b3d56ecb897dbd58ee5ddfbf892bfb3ada0183d', '[\"*\"]', '2025-04-15 06:35:12', NULL, '2025-04-15 06:35:12', '2025-04-15 06:35:12'),
 (147, 'App\\Models\\user_clients', 887421, 'main', 'b4b202cc0d02f89d28372ec46dd0e1dfd0dcbda17ffaf227285107e941732af9', '[\"*\"]', '2025-04-15 15:48:13', NULL, '2025-04-15 15:02:29', '2025-04-15 15:48:13'),
-(180, 'App\\Models\\user_admins', 111111, 'main', '324fea642a943ba4e0793b5cef468eb613c03dfe567259d1e41c9362f520faa8', '[\"*\"]', '2025-04-22 22:00:32', NULL, '2025-04-22 22:00:30', '2025-04-22 22:00:32');
+(181, 'App\\Models\\user_clients', 936822, 'main', 'eae6807f265c1531862b6afb85d414f8924f21a64ecb72bd839604d9b95aa318', '[\"*\"]', '2025-04-23 02:08:52', NULL, '2025-04-22 22:16:50', '2025-04-23 02:08:52');
 
 -- --------------------------------------------------------
 
@@ -714,8 +763,6 @@ INSERT INTO `pets` (`id`, `client`, `name`, `type`, `breed`, `gender`, `status`,
 ('379017', '936822', 'Heart', 1, 172, 'Female', 'active', '2022-12-10', 'defaultPetPic.jpg', NULL, '2025-04-10 23:00:21', '2025-04-10 23:00:21'),
 ('387381', '936822', 'Lucky', 1, 247, 'Male', 'active', '2021-12-09', 'defaultPetPic.jpg', NULL, '2025-04-10 22:44:58', '2025-04-10 23:07:35'),
 ('477569', '936822', 'Chuchay', 2, 247, 'Female', 'active', '2002-09-29', 'qiMjuOOlVyOQnQ3aVUC95X08.jpg', NULL, '2025-04-11 07:54:13', '2025-04-16 18:12:08'),
-('583385', '18533', '', 1, 6, 'Male', 'active', '2025-04-15', 'defaultPetPic.jpg', NULL, '2025-04-15 06:25:58', '2025-04-15 06:25:58'),
-('848559', '936822', 'asdasdad', 1, 1, 'Male', 'active', '2020-04-17', 'defaultPetPic.jpg', NULL, '2025-04-16 18:12:52', '2025-04-16 18:12:52'),
 ('962448', '18533', 'Tester', 1, 83, '', 'active', '2025-04-02', 'defaultPetPic.jpg', NULL, '2025-04-15 06:26:46', '2025-04-15 06:26:46');
 
 -- --------------------------------------------------------
@@ -1339,13 +1386,7 @@ ALTER TABLE `admin_roles`
 --
 ALTER TABLE `appointments`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `appointments_client_foreign` (`client`),
-  ADD KEY `appointments_pet_foreign` (`pet`),
-  ADD KEY `appointments_service_foreign` (`service`),
-  ADD KEY `appointments_medical_history_foreign` (`medical_history`),
-  ADD KEY `appointments_service_type_foreign` (`service_type`),
-  ADD KEY `appointments_otc_pet_type_foreign` (`otc_pet_type`),
-  ADD KEY `appointments_otc_pet_breed_foreign` (`otc_pet_breed`);
+  ADD KEY `appointments_client_foreign` (`client`);
 
 --
 -- Indexes for table `appointment_assigned_items`
@@ -1362,6 +1403,23 @@ ALTER TABLE `appointment_assigned_staffs`
   ADD PRIMARY KEY (`id`),
   ADD KEY `appointment_assigned_staffs_appointment_foreign` (`appointment`),
   ADD KEY `appointment_assigned_staffs_staff_foreign` (`staff`);
+
+--
+-- Indexes for table `appointment_pets`
+--
+ALTER TABLE `appointment_pets`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `appointment_pets_pet_foreign` (`pet`),
+  ADD KEY `appointment_pets_appointment_foreign` (`appointment`);
+
+--
+-- Indexes for table `appointment_pets_services`
+--
+ALTER TABLE `appointment_pets_services`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `appointment_pets_services_appointment_pet_foreign` (`appointment_pet`),
+  ADD KEY `appointment_pets_services_service_foreign` (`service`),
+  ADD KEY `appointment_pets_services_service_type_foreign` (`service_type`);
 
 --
 -- Indexes for table `cache`
@@ -1592,6 +1650,18 @@ ALTER TABLE `appointment_assigned_staffs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `appointment_pets`
+--
+ALTER TABLE `appointment_pets`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `appointment_pets_services`
+--
+ALTER TABLE `appointment_pets_services`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `clinic_services`
 --
 ALTER TABLE `clinic_services`
@@ -1673,13 +1743,13 @@ ALTER TABLE `medical_history_physical_exams`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=181;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=182;
 
 --
 -- AUTO_INCREMENT for table `pet_breeds`
@@ -1719,13 +1789,7 @@ ALTER TABLE `users`
 -- Constraints for table `appointments`
 --
 ALTER TABLE `appointments`
-  ADD CONSTRAINT `appointments_client_foreign` FOREIGN KEY (`client`) REFERENCES `user_clients` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `appointments_medical_history_foreign` FOREIGN KEY (`medical_history`) REFERENCES `medical_histories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `appointments_otc_pet_breed_foreign` FOREIGN KEY (`otc_pet_breed`) REFERENCES `pet_breeds` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `appointments_otc_pet_type_foreign` FOREIGN KEY (`otc_pet_type`) REFERENCES `pet_types` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `appointments_pet_foreign` FOREIGN KEY (`pet`) REFERENCES `pets` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `appointments_service_foreign` FOREIGN KEY (`service`) REFERENCES `clinic_services` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `appointments_service_type_foreign` FOREIGN KEY (`service_type`) REFERENCES `clinic_service_types` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `appointments_client_foreign` FOREIGN KEY (`client`) REFERENCES `user_clients` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `appointment_assigned_items`
@@ -1740,6 +1804,21 @@ ALTER TABLE `appointment_assigned_items`
 ALTER TABLE `appointment_assigned_staffs`
   ADD CONSTRAINT `appointment_assigned_staffs_appointment_foreign` FOREIGN KEY (`appointment`) REFERENCES `appointments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `appointment_assigned_staffs_staff_foreign` FOREIGN KEY (`staff`) REFERENCES `user_admins` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `appointment_pets`
+--
+ALTER TABLE `appointment_pets`
+  ADD CONSTRAINT `appointment_pets_appointment_foreign` FOREIGN KEY (`appointment`) REFERENCES `appointments` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `appointment_pets_pet_foreign` FOREIGN KEY (`pet`) REFERENCES `pets` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `appointment_pets_services`
+--
+ALTER TABLE `appointment_pets_services`
+  ADD CONSTRAINT `appointment_pets_services_appointment_pet_foreign` FOREIGN KEY (`appointment_pet`) REFERENCES `appointment_pets` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `appointment_pets_services_service_foreign` FOREIGN KEY (`service`) REFERENCES `clinic_services` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `appointment_pets_services_service_type_foreign` FOREIGN KEY (`service_type`) REFERENCES `clinic_service_types` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `clinic_service_types`
