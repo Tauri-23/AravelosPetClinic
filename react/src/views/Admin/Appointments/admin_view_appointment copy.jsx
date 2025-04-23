@@ -16,7 +16,6 @@ import MedicalHistoryFileBoxRead from "./components/medical_history_file_box_rea
 
 
 export default function AdminViewAppointment() {
-    const {id} = useParams();
     const navigate = useNavigate();
     const {showModal} = useModal();
     const {appointmentId} = useParams();
@@ -42,18 +41,6 @@ export default function AdminViewAppointment() {
     const [measurementRequired, setMeasurementRequired] = useState(false);
     const [customMeasurementRequired, setCustomMeasurementRequired] = useState(false);
 
-
-    useEffect(() => {
-        axiosClient.get(`/get-appt-where-id/${id}`)
-          .then(({ data }) => {
-            setAppointment(data.appointment); // or whatever structure you return
-            setLoading(false);
-          })
-          .catch(err => {
-            console.error(err);
-            setLoading(false);
-          });
-      }, [id]);
     /**
      * Onmount
      */
@@ -292,37 +279,37 @@ export default function AdminViewAppointment() {
                     )}
 
                     {/* APPOINTMENT INFORMATION */}
-                    {/* <div className="appointment-cont1 d-flex gap1 mar-bottom-1">
+                    <div className="appointment-cont1 d-flex gap1 mar-bottom-1">
                         {appointment.type === "Online" && (
                             <div className="appointment-pet-pfp">
-                                <img src={`/assets/media/pets/${appointment.appointment_pets.picture}`} alt="pet profile pic" />
+                                <img src={`/assets/media/pets/${appointment.pet.picture}`} alt="pet profile pic" />
                             </div>
                         )}
 
                         <div>
-                            <h3>{appointment.type === "Online" ? appointment.appointment_pets.name : appointment.otc_pet_name}</h3>
+                            <h3>{appointment.type === "Online" ? appointment.pet.name : appointment.otc_pet_name}</h3>
                             <div className="d-flex align-items-center">
                                 <h5 className="fw-bold" style={{width: 120}}>Service: </h5>
-                                <h5>[display services]</h5>
+                                <h5>{appointment.service.service}</h5>
                             </div>
 
                             {appointment.type === "Online" && (
                                 <div className="d-flex align-items-center">
                                     <h5 className="fw-bold" style={{width: 120}}>Gender: </h5>
-                                    <h5>{appointment.appointment_pets.gender}</h5>
+                                    <h5>{appointment.pet.gender}</h5>
                                 </div>
                             )}
 
                             <div className="d-flex align-items-center">
                                 <h5 className="fw-bold" style={{width: 120}}>Breed: </h5>
-                                <h5>{appointment.type === "Online" ? appointment.appointment_pets[0].pet.breed.breed : appointment.otc_pet_breed.breed}</h5>
+                                <h5>{appointment.type === "Online" ? appointment.pet.breed.breed : appointment.otc_pet_breed.breed}</h5>
                             </div>
 
                             {appointment.type === "Online" && (
                                 <>
                                     <div className="d-flex align-items-center">
                                         <h5 className="fw-bold" style={{width: 120}}>Birthdate: </h5>
-                                        <h5>{formatDate(appointment.appointment_pets.dob)} ({getAge(appointment.appointment_pets.dob)} y/o)</h5>
+                                        <h5>{formatDate(appointment.pet.dob)} ({getAge(appointment.pet.dob)} y/o)</h5>
                                     </div>
                                     <div className="d-flex align-items-center">
                                         <h5 className="fw-bold" style={{width: 120}}>Schedule: </h5>
@@ -330,67 +317,13 @@ export default function AdminViewAppointment() {
                                     </div>
                                     <div className="d-flex align-items-center">
                                         <h5 className="fw-bold" style={{width: 120}}>Pet Label: </h5>
-                                        <h5>{appointment.appointment_pets.label || "N/A"}</h5>
+                                        <h5>{appointment.pet.label || "N/A"}</h5>
                                     </div>
                                 </>
                             )}
 
                         </div>
-                    </div> */}
-
-                    {appointment.appointment_pets?.map((aptPet) => (
-                    <div key={aptPet.id} className="appointment-cont1 d-flex gap1 mar-bottom-1">
-                        <div className="appointment-pet-pfp">
-                        <img src={`/assets/media/pets/${aptPet.pet?.picture || 'defaultPetPic.jpg'}`} alt="pet profile pic" />
-                        </div>
-
-                        <div>
-                        <h3>{aptPet.pet?.name || "Unnamed Pet"}</h3>
-
-                        {/* Services for this pet */}
-                        {aptPet.appointment_pet_services?.map((serviceEntry, idx) => (
-                            <div key={idx} className="mar-bottom-1">
-                            <div className="d-flex align-items-center">
-                                <h5 className="fw-bold" style={{width: 120}}>Service:</h5>
-                                <h5>{serviceEntry.service?.service || "N/A"}</h5>
-                            </div>
-                            <div className="d-flex align-items-center">
-                                <h5 className="fw-bold" style={{width: 120}}>Service Type:</h5>
-                                <h5>{serviceEntry.service_type?.service_type || "N/A"}</h5>
-                            </div>
-                            </div>
-                        ))}
-
-                        {/* Other pet info */}
-                        <div className="d-flex align-items-center">
-                            <h5 className="fw-bold" style={{width: 120}}>Gender:</h5>
-                            <h5>{aptPet.pet?.gender || "Unknown"}</h5>
-                        </div>
-
-                        <div className="d-flex align-items-center">
-                            <h5 className="fw-bold" style={{width: 120}}>Breed:</h5>
-                            <h5>{aptPet.pet?.breed?.breed || "Unknown"}</h5>
-                        </div>
-
-                        <div className="d-flex align-items-center">
-                            <h5 className="fw-bold" style={{width: 120}}>Birthdate:</h5>
-                            <h5>
-                            {aptPet.pet?.dob ? `${formatDate(aptPet.pet.dob)} (${getAge(aptPet.pet.dob)} y/o)` : "N/A"}
-                            </h5>
-                        </div>
-
-                        <div className="d-flex align-items-center">
-                            <h5 className="fw-bold" style={{width: 120}}>Schedule:</h5>
-                            <h5>
-                            {appointment.date_time
-                                ? formatDateTime(appointment.date_time)
-                                : "To Be Announced"}
-                            </h5>
-                        </div>
-                        </div>
                     </div>
-                    ))}
-
 
                     {/* FOR PENDING APPOINTMENTS */}
                     {appointment.status === "Pending" && (

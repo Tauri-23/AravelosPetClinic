@@ -54,14 +54,14 @@ export default function ClientViewAppointment() {
     useEffect(() => {
         if (appointment) {
             const appointmentDate = new Date(appointment.date_time);
-    
+
             // Strip time from both dates by setting hours to 0
             const nowDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             const appointmentDateOnly = new Date(appointmentDate.getFullYear(), appointmentDate.getMonth(), appointmentDate.getDate());
-    
+
             const diff = appointmentDateOnly.getTime() - nowDateOnly.getTime();
             const diffInDays = diff / (1000 * 60 * 60 * 24); // convert ms to days
-    
+
             if (diffInDays > 1) {
                 setIsCancellable(false);
             } else {
@@ -99,8 +99,8 @@ export default function ClientViewAppointment() {
                         console.error(error);
                         notify('error', data.message, 'top-center', 3000);
                     });
-            }, 
-            recordId, 
+            },
+            recordId,
             handleFunction
         });
     }
@@ -147,9 +147,9 @@ export default function ClientViewAppointment() {
                                 <small>Maximum of cancelled appointment per month is 3</small>
                             )}
 
-                            <button 
-                            disabled={cancelledAptThisMonth > 2 || isCancellable} 
-                            className={`primary-btn-red1 ${cancelledAptThisMonth > 2 || isCancellable ? "disabled" : ""}`} 
+                            <button
+                            disabled={cancelledAptThisMonth > 2 || isCancellable}
+                            className={`primary-btn-red1 ${cancelledAptThisMonth > 2 || isCancellable ? "disabled" : ""}`}
                             onClick={(e) => handleCancel(appointment.id)}>
                                 Cancel Appointment
                             </button>
@@ -176,14 +176,14 @@ export default function ClientViewAppointment() {
                                             <h5>{service.service_type.service_type}</h5>
                                         </div>
                                     </>
-                                    
+
                                 ))}
                                 <div className="d-flex align-items-center">
                                     <h5 className="fw-bold" style={{width: 120}}>Gender: </h5>
                                     <h5>{aptPet.pet.gender}</h5>
                                 </div>
-                                
-                                
+
+
                                 <div className="d-flex align-items-center">
                                     <h5 className="fw-bold" style={{width: 120}}>Breed: </h5>
                                     <h5>{aptPet.pet.breed.breed}</h5>
@@ -196,7 +196,7 @@ export default function ClientViewAppointment() {
                                     <h5 className="fw-bold" style={{width: 120}}>Schedule: </h5>
                                     <h5>{appointment.date ? `${formatDate(appointment.date)} at ${formatTime(appointment.time)}` : "TBA"}</h5>
                                 </div>
-                                
+
                             </div>
                         </div>
                     ))}
@@ -206,7 +206,7 @@ export default function ClientViewAppointment() {
                         <div className="appointment-cont1 mar-bottom-1">
                             <h3 className="mar-bottom-1">Feedback</h3>
 
-                            {!isPostingFeedback 
+                            {!isPostingFeedback
                             ? (<div className="mar-bottom-3">{appointment.feedback?.content || "Not given yet"}</div>)
                             : (
                                 <TextArea
@@ -216,8 +216,8 @@ export default function ClientViewAppointment() {
                                 onChange={(e) => setFeedbackIn(e.target.value)}
                                 />
                             )}
-                            
-                            
+
+
 
                             {!appointment.feedback && (
                                 <div className="d-flex gap4">
@@ -251,7 +251,7 @@ export default function ClientViewAppointment() {
 
                     {(appointment.status !== "Pending" && appointment.status !== "Cancelled" && appointment.assigned_staffs) && (
                         <>
-                            <div 
+                            <div
                             className="appointment-cont1 w-100 mar-bottom-1"
                             >
                                 <h4 className="mar-bottom-1">Assigned Staffs</h4>
@@ -270,7 +270,7 @@ export default function ClientViewAppointment() {
                                 ))}
                             </div>
 
-                            <div 
+                            <div
                             className="appointment-cont1 w-100 mar-bottom-1"
                             >
                                 <h4 className="mar-bottom-1">Assigned Items</h4>

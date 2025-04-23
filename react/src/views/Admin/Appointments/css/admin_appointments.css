@@ -74,8 +74,16 @@
     height: 100%;
 }
 .med-hist-form-file-box-desc {
-    white-space: nowrap; 
-    width: calc(150px - 20px); 
+    white-space: nowrap;
+    width: calc(150px - 20px);
     overflow: hidden;
-    text-overflow: ellipsis; 
+    text-overflow: ellipsis;
+}
+.dosage-modal{
+    width: 37vw;
+    padding: 25px;
+    border-radius: 10px;
+    background: white;
+    filter: drop-shadow(0 0 10px var(--black2));
+    position: relative;
 }

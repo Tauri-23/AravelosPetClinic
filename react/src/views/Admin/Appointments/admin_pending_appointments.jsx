@@ -29,21 +29,22 @@ export default function AdminPendingAppointments() {
             dataIndex: 'id',
         },
         {
-            title: "Pet Name",
-            render: (_, row) => row.pet.name
+            title: "Pets",
+            dataIndex: 'appointment_pets',
+            render: (pets) => pets.map(x => x.pet.name).join(', ')
         },
-        {
-            title: "Appointment Method",
-            render: (_, row) => row.type
-        },
-        {
-            title: "Appointment Service",
-            render: (_, row) => row.service.service
-        },
-        {
-            title: "Appointment Date",
-            render: (_, row) => formatDateTime(row.date_time)
-        },
+        // {
+        //     title: "Appointment Method",
+        //     render: (_, row) => row.type
+        // },
+        // {
+        //     title: "Appointment Service",
+        //     render: (_, row) => row.service.service
+        // },
+        // {
+        //     title: "Appointment Date",
+        //     render: (_, row) => formatDateTime(row.date_time)
+        // },
     ]
 
 
