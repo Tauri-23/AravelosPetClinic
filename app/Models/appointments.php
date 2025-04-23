@@ -15,29 +15,20 @@ class appointments extends Model
     ];
 
 
-    public function pet()
-    {
-        return $this->belongsTo(pets::class, 'pet', 'id')->with(["type", "breed"]);
-    }
-
-    public function otc_pet_breed()
-    {
-        return $this->belongsTo(pet_breeds::class, 'otc_pet_breed', 'id');
-    }
 
     public function client()
     {
         return $this->belongsTo(user_clients::class, 'client','id');
     }
 
+    public function appointment_pets()
+    {
+        return $this->hasMany(appointment_pets::class, "appointment", "id")->with(["appointment_pet_services", "pet"]);
+    }
+
     public function feedback()
     {
         return $this->belongsTo(feedbacks::class, 'id', 'appointment');
-    }
-
-    public function service()
-    {
-        return $this->belongsTo(clinic_services::class, 'service', 'id');
     }
 
     public function assigned_staffs()
@@ -50,8 +41,8 @@ class appointments extends Model
         return $this->hasMany(appointment_assigned_items::class, "appointment", "id")->with("inventory_items_used");
     }
 
-    public function medical_history()
-    {
-        return $this->belongsTo(medical_histories::class, "medical_history", "id")->with(["physical_exams", "laboratory_exams", "diagnosis"]);
-    }
+    // public function medical_history()
+    // {
+    //     return $this->belongsTo(medical_histories::class, "medical_history", "id")->with(["physical_exams", "laboratory_exams", "diagnosis"]);
+    // }
 }

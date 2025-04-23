@@ -7,6 +7,8 @@ use App\Contracts\ISMSService;
 use App\Http\Controllers\Controller;
 use App\Models\appointment_assigned_items;
 use App\Models\appointment_assigned_staffs;
+use App\Models\appointment_pets;
+use App\Models\appointment_pets_services;
 use App\Models\appointments;
 use App\Models\inventory;
 use App\Models\inventory_items;
@@ -35,20 +37,47 @@ class AppointmentsController extends Controller
         try
         {
             DB::beginTransaction();
+
+            $selectedPets = json_decode($request->input("selectedPets"));
+            $selectedServices = json_decode($request->input("selectedServices"));
+
+            /**
+             * First Add The Appointment
+             */
             $appointmentId = $this->generateId->generate(appointments::class, 12);
             $appointment = new appointments();
             $appointment->id = $appointmentId;
 
             $appointment->client = $request->client;
-            $appointment->pet = $request->pet;
             $appointment->type = "Online";
-            
-            $appointment->service = $request->service;
-            $appointment->service_type = $request->serviceType;
-            $appointment->date_time = $request->dateTime;
             $appointment->note = $request->note;
-            $appointment->status = $request->status;
+            $appointment->status = "Pending";
+
             $appointment->save();
+
+            /**
+             * Second Add The Appointment Pet
+             */
+            foreach($selectedPets as $index => $selectedPet )
+            {
+                $aptPet = new appointment_pets();
+                $aptPet->appointment = $appointmentId;
+                $aptPet->pet = $selectedPet->id;
+                $aptPet->save();
+
+                /**
+                 * Third Add The Services
+                 */
+                if (isset($selectedServices[$index])) {
+                    foreach ($selectedServices[$index] as $selectedService) {
+                        $aptPetSer = new appointment_pets_services();
+                        $aptPetSer->appointment_pet = $aptPet->id;
+                        $aptPetSer->service = $selectedService->serviceId;
+                        $aptPetSer->service_type = $selectedService->serviceTypeId ?? null;
+                        $aptPetSer->save();
+                    }
+                }
+            }
 
             DB::commit();
 
@@ -361,7 +390,7 @@ class AppointmentsController extends Controller
     public function getAllAppointmentWhereClient($clientId)
     {
         return response()->json(
-            appointments::where('client', $clientId)->with(['pet', 'feedback', 'service'])->get()
+            appointments::where('client', $clientId)->with(['feedback', 'appointment_pets'])->get()
         );
     }
     
@@ -370,14 +399,14 @@ class AppointmentsController extends Controller
         return response()->json(
             appointments::where('client', $clientId)
             ->where("status", $status)
-            ->with(["service", "pet", "feedback", "assigned_staffs"])
+            ->with(['feedback', 'appointment_pets'])
             ->get()
         );
     }
 
     public function getAppointmentWhereId($appointmentId)
     {
-        return response()->json(appointments::with(["service", 'pet', "otc_pet_breed", 'client', 'feedback', 'assigned_staffs', 'assigned_items', 'medical_history'])
+        return response()->json(appointments::with(['feedback', 'appointment_pets'])
         ->find($appointmentId));
     }
 

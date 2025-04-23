@@ -14,67 +14,23 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->string('id', 12)->primary();
             $table->string('client', 6)->nullable();
-            $table->string('pet', 6)->nullable();
 
-            $table->string("otc_client")->nullable();
-            $table->string("otc_pet_name")->nullable();
-            $table->unsignedBigInteger("otc_pet_type")->nullable();
-            $table->unsignedBigInteger("otc_pet_breed")->nullable();
-
-            $table->unsignedBigInteger('service')->nullable();
-            $table->unsignedBigInteger("service_type")->nullable();
-            $table->dateTime('date_time');
+            $table->date('appointment_date')->nullable();
+            $table->time('appointment_time')->nullable();
 
             $table->dateTime('approved_at')->nullable();
             $table->dateTime('rejected_at')->nullable();
             $table->dateTime('cancelled_at')->nullable();
             $table->text('reason')->nullable();
             $table->longText('note')->nullable();
-            $table->string('status');
+            $table->enum('status', ["Pending", "Approved", "Completed", "Cancelled"]);
             $table->enum("type", ["Online", "OTC"]);
-            $table->unsignedBigInteger("medical_history")->nullable();
             
             $table->timestamps();
 
             $table->foreign('client')
             ->references('id')
             ->on('user_clients')
-            ->nullOnDelete()
-            ->cascadeOnUpdate();
-
-            $table->foreign('pet')
-            ->references('id')
-            ->on('pets')
-            ->nullOnDelete()
-            ->cascadeOnUpdate();
-
-            $table->foreign('service')
-            ->references('id')
-            ->on('clinic_services')
-            ->nullOnDelete()
-            ->cascadeOnUpdate();
-
-            $table->foreign('medical_history')
-            ->references('id')
-            ->on('medical_histories')
-            ->nullOnDelete()
-            ->cascadeOnUpdate();
-
-            $table->foreign('service_type')
-            ->references('id')
-            ->on('clinic_service_types')
-            ->nullOnDelete()
-            ->cascadeOnUpdate();
-
-            $table->foreign('otc_pet_type')
-            ->references('id')
-            ->on('pet_types')
-            ->nullOnDelete()
-            ->cascadeOnUpdate();
-
-            $table->foreign('otc_pet_breed')
-            ->references('id')
-            ->on('pet_breeds')
             ->nullOnDelete()
             ->cascadeOnUpdate();
         });

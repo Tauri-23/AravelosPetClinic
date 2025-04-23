@@ -109,7 +109,7 @@ Route::get('/get-all-appointments-where-status/{status}', [AppointmentsControlle
 Route::get('/get-all-appointments-where-pet-and-status/{petId}/{status}', [AppointmentsController::class,'GetAllAppointmentsWherePetAndStatus']);
 Route::get('/get-all-appointments-where-status-month-and-year/{status}/{month}/{year}', [AppointmentsController::class,'GetAllAppointmentsWhereStatusMonthAndYear']);
 
-Route::post('/add-appointment', [AppointmentsController::class,'createAppointment']);
+Route::post('/book-appointment', [AppointmentsController::class,'createAppointment']);
 Route::post('/cancel-appointment', [AppointmentsController::class,'cancelAppointment']);
 Route::post('/m-complete-appointment', [AppointmentsController::class,'completeAppointment']);
 Route::post('/approve-appointment', [AppointmentsController::class,'approveAppointment']);

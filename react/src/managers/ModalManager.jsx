@@ -32,6 +32,8 @@ import DeleteInventoryItemModal1 from "../components/Modals/del_inventory_item_m
 import AdminBookAppointmentModal from "../components/Modals/adminBookAppointmentModal.jsx";
 import MedHistAddFileModal from "../views/Admin/Appointments/components/med_hist_add_file_modal.jsx";
 import ViewMedicalHistoryFileModal from "../components/Modals/viewMedicalHistoryFileModal.jsx";
+import ClientBookAptAddPet from "../views/Client/BookAppointment/components/clientBookAptAddPet.jsx";
+import ClientBookAptAddPetService from "../views/Client/BookAppointment/components/clientBookAptAddPetService.jsx";
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -146,6 +148,14 @@ const ModalManager = () => {
              */
             case 'AdminBookAppointmentModal':
                 return <AdminBookAppointmentModal {...modalState.props} onClose={hideModal}/>;
+
+
+
+
+            case "ClientBookAptAddPet":
+                return <ClientBookAptAddPet {...modalState.props} onClose={hideModal}/>;
+            case "ClientBookAptAddPetService":
+                return <ClientBookAptAddPetService {...modalState.props} onClose={hideModal}/>;
              
 
 

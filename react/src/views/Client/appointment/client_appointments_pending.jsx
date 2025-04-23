@@ -27,17 +27,10 @@ export default function ClientAppointmentsPending() {
             dataIndex: 'id',
         },
         {
-            title: "Pet Name",
-            render: (_, row) => row.pet.name
-        },
-        {
-            title: "Appointment Type",
-            render: (_, row) => row.service.service
-        },
-        {
-            title: "Appointment Date",
-            render: (_, row) => formatDate(row.date_time)
-        },
+            title: "Pets",
+            dataIndex: 'appointment_pets',
+            render: (pets) => pets.map(x => x.pet.name).join(', ')
+        }
     ]
 
 

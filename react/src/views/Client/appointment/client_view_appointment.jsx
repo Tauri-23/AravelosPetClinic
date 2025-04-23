@@ -4,7 +4,7 @@ import { useOutletContext, useParams } from "react-router-dom";
 import "../appointment/css/client_appointments.css";
 
 import {Button, Spin} from "antd";
-import { formatDate, getAge, isEmptyOrSpaces, notify } from "../../../assets/js/utils";
+import { formatDate, formatTime, getAge, isEmptyOrSpaces, notify } from "../../../assets/js/utils";
 import React from "react";
 import { useModal } from "../../../contexts/ModalContext";
 import axiosClient from "../../../axios-client";
@@ -157,36 +157,49 @@ export default function ClientViewAppointment() {
                     )}
 
                     {/* APPOINTMENT INFORMATION */}
-                    <div className="appointment-cont1 d-flex gap1 mar-bottom-1">
-                        <div className="appointment-pet-pfp">
-                            <img src={`/assets/media/pets/${appointment.pet.picture}`} alt="pet profile pic" />
-                        </div>
+                    {appointment.appointment_pets.map(aptPet => (
+                        <div className="appointment-cont1 d-flex gap1 mar-bottom-1">
+                            <div className="appointment-pet-pfp">
+                                <img src={`/assets/media/pets/${aptPet.pet.picture}`} alt="pet profile pic" />
+                            </div>
 
-                        <div>
-                            <h3>{appointment.pet.name}</h3>
-                            <div className="d-flex align-items-center">
-                                <h5 className="fw-bold" style={{width: 120}}>Service: </h5>
-                                <h5>{appointment.service.service}</h5>
+                            <div>
+                                <h3>{aptPet.pet.name}</h3>
+                                {aptPet.appointment_pet_services.map(service => (
+                                    <>
+                                        <div className="d-flex align-items-center">
+                                            <h5 className="fw-bold" style={{width: 120}}>Service: </h5>
+                                            <h5>{service.service.service}</h5>
+                                        </div>
+                                        <div className="d-flex align-items-center">
+                                            <h5 className="fw-bold" style={{width: 120}}>Service Type: </h5>
+                                            <h5>{service.service_type.service_type}</h5>
+                                        </div>
+                                    </>
+                                    
+                                ))}
+                                <div className="d-flex align-items-center">
+                                    <h5 className="fw-bold" style={{width: 120}}>Gender: </h5>
+                                    <h5>{aptPet.pet.gender}</h5>
+                                </div>
+                                
+                                
+                                <div className="d-flex align-items-center">
+                                    <h5 className="fw-bold" style={{width: 120}}>Breed: </h5>
+                                    <h5>{aptPet.pet.breed.breed}</h5>
+                                </div>
+                                <div className="d-flex align-items-center">
+                                    <h5 className="fw-bold" style={{width: 120}}>Birthdate: </h5>
+                                    <h5>{formatDate(aptPet.pet.dob)} ({getAge(aptPet.pet.dob)} y/o)</h5>
+                                </div>
+                                <div className="d-flex align-items-center">
+                                    <h5 className="fw-bold" style={{width: 120}}>Schedule: </h5>
+                                    <h5>{appointment.date ? `${formatDate(appointment.date)} at ${formatTime(appointment.time)}` : "TBA"}</h5>
+                                </div>
+                                
                             </div>
-                            <div className="d-flex align-items-center">
-                                <h5 className="fw-bold" style={{width: 120}}>Gender: </h5>
-                                <h5>{appointment.pet.gender}</h5>
-                            </div>
-                            <div className="d-flex align-items-center">
-                                <h5 className="fw-bold" style={{width: 120}}>Breed: </h5>
-                                <h5>{appointment.pet.breed.breed}</h5>
-                            </div>
-                            <div className="d-flex align-items-center">
-                                <h5 className="fw-bold" style={{width: 120}}>Birthdate: </h5>
-                                <h5>{formatDate(appointment.pet.dob)} ({getAge(appointment.pet.dob)} y/o)</h5>
-                            </div>
-                            <div className="d-flex align-items-center">
-                                <h5 className="fw-bold" style={{width: 120}}>Schedule: </h5>
-                                <h5>{formatDate(appointment.date_time)}</h5>
-                            </div>
-                            
                         </div>
-                    </div>
+                    ))}
 
                     {/* FEEDBACK */}
                     {appointment.status === "Completed" && (

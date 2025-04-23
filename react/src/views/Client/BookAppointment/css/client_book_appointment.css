@@ -1,0 +1,14 @@
+.client-book-apt-pet-box {
+    width: 100%;
+    padding: 5px;
+    border-radius: 10px;
+    background: white;
+    filter: drop-shadow(0 0 1px var(--grey1));
+}
+
+.client-book-apt-service-box {
+    padding: 5px;
+    border-radius: 10px;
+    border: 1px solid var(--grey1);
+    display: inline-block;
+}
