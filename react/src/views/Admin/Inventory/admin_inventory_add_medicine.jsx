@@ -10,7 +10,7 @@ export default function AdminInventoryAddMedicine() {
 
     const {setActiveNavLink} = useOutletContext();
 
-    const [medicineImage, setMedicineImage] = useState();
+    const [medicineImage, setMedicineImage] = useState(null);
     const [step, setStep] = useState(0);
     const [addingMed, setAddmingMed] = useState(false);
     const [addMedicineIn, setAddMedicineIn] = useState({
@@ -85,6 +85,7 @@ export default function AdminInventoryAddMedicine() {
 
         const formData = new FormData();
         formData.append("addMedicineIn", JSON.stringify(addMedicineIn));
+        formData.append("hasMedPic", medicineImage ? true : false);
         formData.append("medPic", medicineImage);
 
         axiosClient.post("/add-medicine", formData)

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('qty');
             $table->longText('desc');
-            $table->longText('picture');
+            $table->longText('picture')->nullable();
             $table->integer('measurement_value')->nullable();
             $table->string('measurement_unit')->nullable();
             $table->integer('dosage_value');

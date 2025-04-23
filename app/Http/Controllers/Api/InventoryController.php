@@ -40,15 +40,22 @@ class InventoryController extends Controller
             DB::beginTransaction();
             $addMedIn = json_decode($request->input("addMedicineIn"));
 
-            $photo = $request->file('medPic');
-            $targetDirectory = base_path("react/public/assets/media/medicines");
-            $newFilename = $this->generateFilename->generate($photo, $targetDirectory);
+            if($request->hasMedPic === "true")
+            {
+                $photo = $request->file('medPic');
+                $targetDirectory = base_path("react/public/assets/media/medicines");
+                $newFilename = $this->generateFilename->generate($photo, $targetDirectory);
+                
+                $photo->move($targetDirectory, $newFilename);
+            }
+
+            
 
             $inventory = new inventory();
             $inventory->name = $addMedIn->name;
             $inventory->qty = 0;
             $inventory->desc = $addMedIn->desc;
-            $inventory->picture = $newFilename;
+            $inventory->picture = $request->hasMedPic === "true" ? $newFilename : null;
             $inventory->measurement_value = $addMedIn->measurementValue;
             $inventory->measurement_unit = $addMedIn->measurementUnit;
             $inventory->dosage_value = $addMedIn->dosageValue;
@@ -62,7 +69,7 @@ class InventoryController extends Controller
 
             $inventory->save();
 
-            $photo->move($targetDirectory, $newFilename);
+            
 
             DB::commit();
 
