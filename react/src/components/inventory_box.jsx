@@ -5,7 +5,7 @@ export default function InventoryBox({ handleInventoryBoxClick, itemName, itemIm
     return (
         <div onClick={() => handleInventoryBoxClick(itemName, itemImage, itemQuantity, itemDescription)} className={`inventory-box ${itemQuantity < 1 ? 'disabled' : ''}`}>
             <div className="inventory-image">
-                <img src={`/assets/media/items/${itemImage}`} alt={itemName} className="inventory-image" />
+                <img src={`/assets/media/medicines/${itemImage}`} alt={itemName} className="inventory-image" />
             </div>
 
             <div className="item-details">

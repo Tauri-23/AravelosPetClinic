@@ -3,8 +3,8 @@ import { fetchAppointmentDetails } from "../../../services/AppointmentServices";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import "../Appointments/css/admin_appointments.css";
 import * as Icon from "react-bootstrap-icons";
-import {Button, Spin} from "antd";
-import { formatDate, formatDateTime, getAge, isEmptyOrSpaces, notify } from "../../../assets/js/utils";
+import {Button, DatePicker, Spin, TimePicker} from "antd";
+import { formatDate, formatDateTime, formatTime, getAge, isEmptyOrSpaces, notify } from "../../../assets/js/utils";
 import { fetchAllStaffs } from "../../../services/StaffServices";
 import { fetchAllInventoryItems } from "../../../services/InventoryServices";
 import React from "react";
@@ -19,13 +19,17 @@ export default function AdminViewAppointment() {
     const {id} = useParams();
     const navigate = useNavigate();
     const {showModal} = useModal();
-    const [scheduleAppt, setScheduleModalOpen] = useState(false);
     const {appointmentId} = useParams();
     const {setActiveNavLink} = useOutletContext();
 
     const [appointment, setAppointment] = useState(null);
 
+    // FOR PENDING TO APPROVE
+    const aptAvailTime = ["8:00:00", "9:00:00", "10:00:00", "11:00:00", "13:00:00", "14:00:00", "15:00:00"];
     const [staffs, setStaffs] = useState(null);
+    const [aptDate, setAptDate] = useState(null);
+    const [aptTime, setAptTime] = useState("");
+
     const [inventoryItems, setInventoryItems] = useState(null);
 
     const [selectedStaffs, setSelectedStaffs] = useState([]);
@@ -58,7 +62,6 @@ export default function AdminViewAppointment() {
                 fetchAllStaffs(),
                 fetchAllInventoryItems()
             ]);
-            console.log(appointmentDb);
             setAppointment(appointmentDb);
             setStaffs(staffsDb);
             setInventoryItems(inventoryItemsDb);
@@ -145,16 +148,20 @@ export default function AdminViewAppointment() {
 
     const handleApproveAppointment = (appointmentId) => {
         setIsApproving(true);
+        const aptDateConv = new Date(aptDate)
+
         const formData = new FormData();
         formData.append('appointmentId', appointmentId);
+        formData.append('appointmentDate', `${aptDateConv.getFullYear()}-${aptDateConv.getMonth() + 1}-${aptDateConv.getDate()}`);
+        formData.append('appointmentTime', aptTime);
 
         selectedStaffs.forEach(staff => {
             formData.append('staffs[]', staff.id);
         });
 
-        selectedItems.forEach(item => {
-            formData.append('items[]', JSON.stringify({id:parseInt(item.id), qty: item.selected_qty}));
-        })
+        // selectedItems.forEach(item => {
+        //     formData.append('items[]', JSON.stringify({id:parseInt(item.id), qty: item.selected_qty}));
+        // })
 
         axiosClient.post(`/approve-appointment`, formData)
         .then(({ data }) => {
@@ -256,13 +263,14 @@ export default function AdminViewAppointment() {
 
 
                             {appointment.status === "Pending" && (
-                                <button
-                                disabled={selectedStaffs.length < 1 || isApproving}
-                                className={`primary-btn-blue1 ${selectedStaffs.length < 1 || isApproving ? "disabled" : ""}`}
+                                <Button
+                                size="large"
+                                type="primary"
+                                disabled={selectedStaffs.length < 1 || aptDate === null || aptTime === "" || isApproving}
                                 onClick={() => handleApproveAppointment(appointment.id)}
                                 >
                                     {isApproving ? "Approving..." : "Approve Appointment"}
-                                </button>
+                                </Button>
                             )}
 
                             {(appointment.status === "Approved" && !isMarkingComplete) && (
@@ -329,84 +337,153 @@ export default function AdminViewAppointment() {
                         </div>
                     )}
 
+                    {/* APPOINTMENT ASSIGNED */}
+                    {(appointment.status !== "Pending" && appointment.status !== "Cancelled" && appointment.assigned_staffs && !isMarkingComplete) && (
+                        <>
+                            <div
+                            className="appointment-cont1 w-100 mar-bottom-1"
+                            >
+                                <h4 className="mar-bottom-1">Assigned Staffs</h4>
+                                {appointment.assigned_staffs.map(staff => (
+                                    <div key={staff.id} className='d-flex align-items-center w-100 justify-content-between mar-bottom-3' style={{marginBottom: "20px"}}>
+                                        <div className='d-flex align-items-center gap1'>
+                                            <div className="appointment-staff-card-pfp">
+                                                <img className='position-absolute h-100' src={`/assets/media/pfp/${staff.staff.picture}`} alt="pfp"/>
+                                            </div>
+                                            <div>
+                                                <div className="small-f fw-bold">{staff.staff.fname} {staff.staff.lname}</div>
+                                                <div className="semi-small-f">{staff.staff.role.role}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {appointment.status === "Completed" && (
+                                <div
+                                className="appointment-cont1 w-100 mar-bottom-1"
+                                >
+                                    <h4 className="mar-bottom-1">Assigned Items</h4>
+                                    {appointment.assigned_items.map(item => (
+                                        <div key={item.inventory_items_used.inventory.id} className='d-flex align-items-center gap1'>
+                                            <div className="appointment-staff-card-pfp">
+                                                <img className='position-absolute h-100' src={`/assets/media/items/${item.inventory_items_used.inventory.picture}`} alt="pfp"/>
+                                            </div>
+                                            <div>
+                                                <div className="small-f fw-bold">{item.inventory_items_used.inventory.name}</div>
+                                                <div className="semi-small-f">{item.inventory_items_used.inventory.selected_qty}</div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </>
+                    )}
+
 
 
 
                     {/* FOR PENDING APPOINTMENTS */}
                     {appointment.status === "Pending" && (
-                        <div className="d-flex gap1">
-                            {/* LEFT SIDE */}
-                            <div className="w-100">
-                                {/* Assign Staffs */}
-                                <div className="appointment-cont1 w-100 mar-bottom-1"style={{height:400}}>
-                                    <h4>Assign Staff</h4>
-                                    <hr className="mar-y-3"/>
+                        <>
+                            <div className="appointment-cont1 mar-bottom-1 d-flex flex-direction-y gap3">
+                                <div>
+                                    <label htmlFor="date">Date</label><br/>
+                                    <DatePicker
+                                    size="large"
+                                    onChange={setAptDate}
+                                    value={aptDate}
+                                    />
+                                </div>
 
-                                    {/* STAFFS */}
-                                    <div
-                                    className="d-flex flex-wrap gap3"
-                                    style={{
-                                        padding: 5,
-                                        maxHeight: 500,
-                                        overflowY: "auto"
-                                    }}>
-                                        {staffs
-                                        ? (
-                                            staffs.map(staff => (
-                                                <div
-                                                className="appointment-staff-card"
-                                                onClick={() => handleAssignStaff(staff)}
-                                                >
-                                                    <div className="appointment-staff-card-pfp">
-                                                        <img src={`/assets/media/pfp/${staff.picture}`} alt="staff pfp" />
-                                                    </div>
-                                                    <div>
-                                                        <h5>{staff.fname} {staff.lname}</h5>
-                                                        <small>{staff.role.role}</small>
-                                                    </div>
-                                                </div>
-                                            ))
-                                        )
-                                        : (<Spin size="large"/>)}
+                                <div>
+                                    <label htmlFor="time">Time</label><br/>
+                                    <div className="d-flex gap3">
+                                        {aptAvailTime.map((time, index) => (
+                                            <Button
+                                            type={time === aptTime ? "primary" : "default"}
+                                            onClick={() => setAptTime(time)}>
+                                                {formatTime(time)}
+                                            </Button>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
 
-                            {/* RIGHT SIDE */}
-                            <div className="w-100">
-                                {/* Assigned Staffs */}
-                                <div
-                                className="appointment-cont1 w-100 mar-bottom-1"
-                                style={{
-                                    height: 400,
-                                    overflowY: "auto"
-                                }}
-                                >
-                                    <h4>Assigned Staffs</h4>
-                                    <hr className="mar-y-3"></hr>
-                                    {selectedStaffs.length < 1
-                                    ? (
-                                        <>Assign a staff for this appointment</>
-                                    )
-                                    : (
-                                        selectedStaffs.map(selectedStaff => (
-                                            <div key={selectedStaff.id} className='d-flex align-items-center w-100 justify-content-between' style={{marginBottom: "20px",height:"70px"}}>
-                                                <div className='d-flex align-items-center gap1' style={{height:"inherit"}}>
-                                                    <div className="left circle staff-pic" style={{height:"inherit"}}>
-                                                        <img className='circle'style={{objectFit:"cover"}} src={`/assets/media/pfp/${selectedStaff.picture}`} alt="pfp"/>
+                            <div className="d-flex gap1">
+                                {/* LEFT SIDE */}
+                                <div className="w-100">
+                                    {/* Assign Staffs */}
+                                    <div className="appointment-cont1 w-100 mar-bottom-1"style={{height:400}}>
+                                        <h4>Assign Staff</h4>
+                                        <hr className="mar-y-3"/>
+
+                                        {/* STAFFS */}
+                                        <div
+                                        className="d-flex flex-wrap gap3"
+                                        style={{
+                                            padding: 5,
+                                            maxHeight: 500,
+                                            overflowY: "auto"
+                                        }}>
+                                            {staffs
+                                            ? (
+                                                staffs.map(staff => (
+                                                    <div
+                                                    className="appointment-staff-card"
+                                                    onClick={() => handleAssignStaff(staff)}
+                                                    >
+                                                        <div className="appointment-staff-card-pfp">
+                                                            <img src={`/assets/media/pfp/${staff.picture}`} alt="staff pfp" />
+                                                        </div>
+                                                        <div>
+                                                            <h5>{staff.fname} {staff.lname}</h5>
+                                                            <small>{staff.role.role}</small>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <div className="small-f fw-bold">{selectedStaff.fname} {selectedStaff.lname}</div>
-                                                        <div className="semi-small-f">{selectedStaff.role.role}</div>
+                                                ))
+                                            )
+                                            : (<Spin size="large"/>)}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* RIGHT SIDE */}
+                                <div className="w-100">
+                                    {/* Assigned Staffs */}
+                                    <div
+                                    className="appointment-cont1 w-100 mar-bottom-1"
+                                    style={{
+                                        height: 400,
+                                        overflowY: "auto"
+                                    }}
+                                    >
+                                        <h4>Assigned Staffs</h4>
+                                        <hr className="mar-y-3"></hr>
+                                        {selectedStaffs.length < 1
+                                        ? (
+                                            <>Assign a staff for this appointment</>
+                                        )
+                                        : (
+                                            selectedStaffs.map(selectedStaff => (
+                                                <div key={selectedStaff.id} className='d-flex align-items-center w-100 justify-content-between' style={{marginBottom: "20px",height:"70px"}}>
+                                                    <div className='d-flex align-items-center gap1' style={{height:"inherit"}}>
+                                                        <div className="left circle staff-pic" style={{height:"inherit"}}>
+                                                            <img className='circle'style={{objectFit:"cover"}} src={`/assets/media/pfp/${selectedStaff.picture}`} alt="pfp"/>
+                                                        </div>
+                                                        <div>
+                                                            <div className="small-f fw-bold">{selectedStaff.fname} {selectedStaff.lname}</div>
+                                                            <div className="semi-small-f">{selectedStaff.role.role}</div>
+                                                        </div>
                                                     </div>
+                                                    <button className='primary-btn-red1' onClick={() => handleAssignStaff(selectedStaff)}>Unassign</button>
                                                 </div>
-                                                <button className='primary-btn-red1' onClick={() => handleAssignStaff(selectedStaff)}>Unassign</button>
-                                            </div>
-                                        ))
-                                    )}
+                                            ))
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </>
                     )}
 
 
@@ -486,46 +563,6 @@ export default function AdminViewAppointment() {
                             <h4 className="mar-bottom-1">Reason</h4>
                             <p>{appointment.reason}</p>
                         </div>
-                    )}
-
-                    {(appointment.status !== "Pending" && appointment.status !== "Cancelled" && appointment.assigned_staffs && !isMarkingComplete) && (
-                        <>
-                            <div
-                            className="appointment-cont1 w-100 mar-bottom-1"
-                            >
-                                <h4 className="mar-bottom-1">Assigned Staffs</h4>
-                                {appointment.assigned_staffs.map(staff => (
-                                    <div key={staff.id} className='d-flex align-items-center w-100 justify-content-between mar-bottom-3' style={{marginBottom: "20px"}}>
-                                        <div className='d-flex align-items-center gap1'>
-                                            <div className="appointment-staff-card-pfp">
-                                                <img className='position-absolute h-100' src={`/assets/media/pfp/${staff.staff.picture}`} alt="pfp"/>
-                                            </div>
-                                            <div>
-                                                <div className="small-f fw-bold">{staff.staff.fname} {staff.staff.lname}</div>
-                                                <div className="semi-small-f">{staff.staff.role.role}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div
-                            className="appointment-cont1 w-100 mar-bottom-1"
-                            >
-                                <h4 className="mar-bottom-1">Assigned Items</h4>
-                                {appointment.assigned_items.map(item => (
-                                    <div key={item.inventory_items_used.inventory.id} className='d-flex align-items-center gap1'>
-                                        <div className="appointment-staff-card-pfp">
-                                            <img className='position-absolute h-100' src={`/assets/media/items/${item.inventory_items_used.inventory.picture}`} alt="pfp"/>
-                                        </div>
-                                        <div>
-                                            <div className="small-f fw-bold">{item.inventory_items_used.inventory.name}</div>
-                                            <div className="semi-small-f">{item.inventory_items_used.inventory.selected_qty}</div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </>
                     )}
 
                     {/* FOR COMPLETED */}
