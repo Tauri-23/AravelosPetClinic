@@ -486,78 +486,6 @@ export default function AdminViewAppointment() {
                         </>
                     )}
 
-
-                    {/* ASSIGN ITEMS FOR APPROVED APPOINTMENTS */}
-                    {appointment.status === "Approved" && (
-                        <div className="d-flex gap1">
-                            {/* Assign Items */}
-                            <div className="w-100">
-                                <div className="appointment-cont1 w-100">
-                                    <h4>Assign Items</h4>
-                                    <hr className="mar-y-3"/>
-
-                                    {/* STAFFS */}
-                                    <div
-                                    className="d-flex flex-wrap gap3"
-                                    style={{
-                                        padding: 5,
-                                        maxHeight: 500,
-                                        overflowY: "auto"
-                                    }}>
-                                        {inventoryItems
-                                        ? (
-                                            inventoryItems.map(item => (
-                                                <InventoryBox
-                                                    key={item.id}
-                                                    handleInventoryBoxClick={() => handleDosage(item)}
-                                                    itemName={item.name}
-                                                    itemImage={item.picture}
-                                                    itemQuantity={item.qty}
-                                                    itemDescription={item.desc}
-                                                />
-                                            ))
-                                        )
-                                        : (<Spin size="large"/>)}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="w-100">
-                                {/* Assigned Items */}
-                                <div
-                                className="appointment-cont1 w-100"
-                                style={{
-                                    height: 400,
-                                    overflowY: "auto"
-                                }}
-                                >
-                                    <h4>Assigned Items</h4>
-                                    <hr className="mar-y-3"></hr>
-                                    {selectedItems.length < 1
-                                    ? (
-                                        <>Assign items for this appointment</>
-                                    )
-                                    : (
-                                        selectedItems.map(selectedItem => (
-                                            <div key={selectedItem.id}className='d-flex align-items-center w-100 justify-content-between' style={{marginBottom: "20px",height:"70px"}}>
-                                                <div className='d-flex align-items-center gap1' style={{height:"inherit"}} onClick={handleDosage} >
-                                                    <div className="left circle staff-pic" style={{height:"inherit"}}>
-                                                        <img style={{aspectRatio:"1/1"}} src={`/assets/media/items/${selectedItem.picture}`} alt="pfp"/>
-                                                    </div>
-                                                    <div>
-                                                        <div className="small-f fw-bold">{selectedItem.name}</div>
-                                                        <div className="semi-small-f">{selectedItem.selected_qty}</div>
-                                                    </div>
-                                                </div>
-                                                <button className='primary-btn-red1' onClick={() => handleDeselectItem(selectedItem)}>Remove</button>
-                                            </div>
-                                        ))
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
                     {(appointment.status === "Cancelled") && (
                         <div className="appointment-cont1 w-100 mar-bottom-1">
                             <h4 className="mar-bottom-1">Reason</h4>
@@ -711,7 +639,13 @@ export default function AdminViewAppointment() {
                      * Mark as Complete Form
                      */}
                     {isMarkingComplete && (
-                        <MedicalHistoryForm appointmentId={appointment.id}/>
+                        <MedicalHistoryForm 
+                        appointmentId={appointment.id}
+                        inventoryItems={inventoryItems}
+                        handleDosage={handleDosage}
+                        selectedItems={selectedItems}
+                        handleDeselectItem={handleDeselectItem}
+                        />
                     )}
                 </>
             )

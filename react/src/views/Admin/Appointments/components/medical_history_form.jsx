@@ -6,8 +6,17 @@ import { useNavigate } from "react-router-dom";
 import TextArea from "antd/es/input/TextArea";
 import MedicalHistoryFormFileBox from "./medical_history_form_file_box";
 import { useModal } from "../../../../contexts/ModalContext";
+import InventoryBox from "../../../../components/inventory_box";
 
-export default function MedicalHistoryForm({appointmentId}) {
+export default function MedicalHistoryForm({
+    appointmentId,
+
+    // For Assigning medicine
+    inventoryItems,
+    handleDosage,
+    selectedItems,
+    handleDeselectItem
+}) {
     const {showModal} = useModal();
     const navigate = useNavigate();
     const timeOptions = ["08:00:00", "09:00:00", "10:00:00", "11:00:00", "13:00:00", "14:00:00", "15:00:00", "16:00:00"];
@@ -920,7 +929,7 @@ export default function MedicalHistoryForm({appointmentId}) {
                         </div>
                     </div>
 
-                    <div className="d-flex gap1 mar-bottom-2">
+                    <div className="d-flex gap1 mar-bottom-1">
                         <div className="d-flex flex-direction-y gap4 w-100">
                             <label htmlFor="vacGiven">Vaccine Given</label>
                             <Input
@@ -942,6 +951,74 @@ export default function MedicalHistoryForm({appointmentId}) {
                             value={prescribedMed}
                             onChange={(e) => {setPrescribedMed(e.target.value)}}
                             />
+                        </div>
+                    </div>
+
+                    <div className="d-flex gap1">
+                        {/* Assign Items */}
+                        <div className="w-100">
+                            <div className="appointment-cont1 w-100">
+                                <h4>Assign Items</h4>
+                                <hr className="mar-y-3"/>
+
+                                {/* STAFFS */}
+                                <div
+                                className="d-flex flex-wrap gap3"
+                                style={{
+                                    padding: 5,
+                                    maxHeight: 500,
+                                    overflowY: "auto"
+                                }}>
+                                    {inventoryItems
+                                    ? (
+                                        inventoryItems.map(item => (
+                                            <InventoryBox
+                                                key={item.id}
+                                                handleInventoryBoxClick={() => handleDosage(item)}
+                                                itemName={item.name}
+                                                itemImage={item.picture}
+                                                itemQuantity={item.qty}
+                                                itemDescription={item.desc}
+                                            />
+                                        ))
+                                    )
+                                    : (<Spin size="large"/>)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="w-100">
+                            {/* Assigned Items */}
+                            <div
+                            className="appointment-cont1 w-100"
+                            style={{
+                                height: 400,
+                                overflowY: "auto"
+                            }}
+                            >
+                                <h4>Assigned Items</h4>
+                                <hr className="mar-y-3"></hr>
+                                {selectedItems.length < 1
+                                ? (
+                                    <>Assign items for this appointment</>
+                                )
+                                : (
+                                    selectedItems.map(selectedItem => (
+                                        <div key={selectedItem.id}className='d-flex align-items-center w-100 justify-content-between' style={{marginBottom: "20px",height:"70px"}}>
+                                            <div className='d-flex align-items-center gap1' style={{height:"inherit"}} onClick={handleDosage} >
+                                                <div className="left circle staff-pic" style={{height:"inherit"}}>
+                                                    <img style={{aspectRatio:"1/1"}} src={`/assets/media/items/${selectedItem.picture}`} alt="pfp"/>
+                                                </div>
+                                                <div>
+                                                    <div className="small-f fw-bold">{selectedItem.name}</div>
+                                                    <div className="semi-small-f">{selectedItem.selected_qty}</div>
+                                                </div>
+                                            </div>
+                                            <button className='primary-btn-red1' onClick={() => handleDeselectItem(selectedItem)}>Remove</button>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
                         </div>
                     </div>
                 </>
