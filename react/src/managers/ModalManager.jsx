@@ -34,6 +34,7 @@ import MedHistAddFileModal from "../views/Admin/Appointments/components/med_hist
 import ViewMedicalHistoryFileModal from "../components/Modals/viewMedicalHistoryFileModal.jsx";
 import ClientBookAptAddPet from "../views/Client/BookAppointment/components/clientBookAptAddPet.jsx";
 import ClientBookAptAddPetService from "../views/Client/BookAppointment/components/clientBookAptAddPetService.jsx";
+import AdminDosageModal from "../components/Modals/adminDosageModal.jsx";
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -148,6 +149,8 @@ const ModalManager = () => {
              */
             case 'AdminBookAppointmentModal':
                 return <AdminBookAppointmentModal {...modalState.props} onClose={hideModal}/>;
+            case 'AdminDosageModal':
+                return <AdminDosageModal {...modalState.props} onClose={hideModal}/>;
 
 
 

@@ -42,12 +42,10 @@ export default function AdminViewAppointment() {
     const [isApproving, setIsApproving] = useState(false);
 
     //FOR DOSAGE SETTINGS
-    const [dosageModalOpen, setDosageModalOpen] = useState(false);
-    const [itemForDosage, setItemForDosage] = useState(null);
     const [measurementRequired, setMeasurementRequired] = useState(false);
     const [customMeasurementRequired, setCustomMeasurementRequired] = useState(false);
 
-    const [activePetIndex, setActivePetIndex]=useState(0);
+    const [activePetIndex, setActivePetIndex] = useState(0);
     
 
 
@@ -82,7 +80,7 @@ export default function AdminViewAppointment() {
         );
     }
 
-    const handleAssignItem = (item) => {
+    const handleAssignItem = (item, dosageDeductCustom, dosageDeductValue) => {
         if(item.qty < 1) {
             return;
         }
@@ -109,20 +107,26 @@ export default function AdminViewAppointment() {
                 return updatedItems;
             } else {
                 // Add new item with `selected_qty` set to 1
-                return [...prev, { ...item, selected_qty: 1 }];
+                return [...prev, { ...item, selected_qty: 1, dosageDeductCustom: dosageDeductCustom, dosageDeductValue: dosageDeductValue }];
             }
         });
     };
 
-    const handleDosage = (item) => {
+    const handleDosage = (item, weight) => {
         if(item.qty < 1) {
             return;
         }
-        setItemForDosage(item);
-        setDosageModalOpen(true);
-
-
+        showModal("AdminDosageModal", {
+            item, 
+            petWeight: weight,
+            handleAssignItem
+        });
     }
+
+    // Devbug
+    useEffect(() => {
+        console.log(selectedItems);
+    }, [selectedItems]);
 
     const handleDeselectItem = (item) => {
         setselectedItems(prev => {
@@ -295,17 +299,19 @@ export default function AdminViewAppointment() {
                     )}
 
                     {/* PET TABS BUTTON */}
-                    <div className="d-flex mar-bottom-1 gap3">
-                        {appointment.appointment_pets?.map((aptPet, index) => (
-                            <Button
-                            size="large"
-                            type={activePetIndex === index ? "primary" : "default"}
-                            onClick={() => setActivePetIndex(index)}
-                            >
-                                {aptPet.pet?.name || `Pet ${index + 1}`}
-                            </Button>
-                        ))}
-                    </div>
+                    {!isMarkingComplete && (
+                        <div className="d-flex mar-bottom-1 gap3">
+                            {appointment.appointment_pets?.map((aptPet, index) => (
+                                <Button
+                                size="large"
+                                type={activePetIndex === index ? "primary" : "default"}
+                                onClick={() => setActivePetIndex(index)}
+                                >
+                                    {aptPet.pet?.name || `Pet ${index + 1}`}
+                                </Button>
+                            ))}
+                        </div>
+                    )}
 
                     {appointment.appointment_pets?.[activePetIndex] && (
                         <div key={appointment.appointment_pets[activePetIndex].id} className="appointment-cont1 d-flex gap1 mar-bottom-1">
@@ -644,6 +650,7 @@ export default function AdminViewAppointment() {
                         inventoryItems={inventoryItems}
                         handleDosage={handleDosage}
                         selectedItems={selectedItems}
+                        activePet={appointment.appointment_pets?.[activePetIndex]}
                         handleDeselectItem={handleDeselectItem}
                         />
                     )}

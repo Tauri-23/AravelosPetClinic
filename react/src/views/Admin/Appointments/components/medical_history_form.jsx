@@ -11,6 +11,9 @@ import InventoryBox from "../../../../components/inventory_box";
 export default function MedicalHistoryForm({
     appointmentId,
 
+    // Active Pet
+    activePet,
+
     // For Assigning medicine
     inventoryItems,
     handleDosage,
@@ -361,6 +364,8 @@ export default function MedicalHistoryForm({
      */
     const isNextBtnDisabled = () => {
         switch(step) {
+            case 0:
+                return weight <= 0 || pulse <= 0 || respiratoryRate <= 0 || temp <= 0;
             case 1:
                 return genCon === "" || genAttitude === "" || hydration === "" ||
                 mucousMembrane === "" || headNeck === "" || eyes === "" ||
@@ -401,6 +406,8 @@ export default function MedicalHistoryForm({
     const handleMarkAsCompletePost = () => {
         const appointmentDate = new Date(selectedNextAptDate)
         const formData = new FormData();
+
+        formData.append("appointmentPet", activePet.id);
 
         formData.append("bloodExam", bloodExam ? 1 : 0);
         formData.append("bloodExamResult", bloodExamResult);
@@ -597,7 +604,7 @@ export default function MedicalHistoryForm({
                             size="large"
                             placeholder={"Weight in KG"}
                             value={weight}
-                            onChange={(e) => {setWeight(e)}}
+                            onChange={(e) => {setWeight(parseFloat(e))}}
                             />
                         </div>
 
@@ -974,7 +981,7 @@ export default function MedicalHistoryForm({
                                         inventoryItems.map(item => (
                                             <InventoryBox
                                                 key={item.id}
-                                                handleInventoryBoxClick={() => handleDosage(item)}
+                                                handleInventoryBoxClick={() => handleDosage(item, weight)}
                                                 itemName={item.name}
                                                 itemImage={item.picture}
                                                 itemQuantity={item.qty}

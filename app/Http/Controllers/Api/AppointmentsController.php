@@ -30,6 +30,65 @@ class AppointmentsController extends Controller
 
 
     /**
+     * GET
+     */
+    public function getAllAppointmentWhereClient($clientId)
+    {
+        return response()->json(
+            appointments::where('client', $clientId)->with(['feedback', "assigned_staffs", 'appointment_pets'])->get()
+        );
+    }
+    
+    public function GetAllAppointmentsWhereClientIdAndStatus($clientId, $status)
+    {
+        return response()->json(
+            appointments::where('client', $clientId)
+            ->where("status", $status)
+            ->with(['feedback', "assigned_staffs", 'appointment_pets'])
+            ->get()
+        );
+    }
+
+    public function getAppointmentWhereId($appointmentId)
+    {
+        return response()->json(appointments::with(['feedback', "assigned_staffs", 'appointment_pets'])
+        ->find($appointmentId));
+    }
+
+    public function getAllAppointments()
+    {
+        return response()->json(appointments::with(["assigned_staffs", "appointment_pets", 'feedback'])->get());
+    }
+    
+    public function GetAllAppointmentsWhereStatus($status)
+    {
+        return response()->json(appointments::where('status', $status)
+        ->with(["client", "feedback", "assigned_staffs", "appointment_pets"])
+        ->get());
+    }
+    
+    public function GetAllAppointmentsWherePetAndStatus($petId, $status)
+    {
+        return response()->json(appointments::where("pet", $petId)
+        ->where('status', $status)
+        ->with(["assigned_staffs", "feedback", "assigned_staffs", "appointment_pets"])
+        ->orderBy("appointment_date", "desc")
+        ->get());
+    }
+
+    public function GetAllAppointmentsWhereStatusMonthAndYear($status, $month, $year)
+    {
+        return response()->json(appointments::with(["client", "feedback", "assigned_staffs", "appointment_pets"])
+        ->where("status", $status)
+        ->whereMonth("created_at", $month)
+        ->whereYear("created_at", $year)
+        ->get());
+    }
+
+
+
+
+    /**
      * POST
      */
     public function createAppointment(Request $request)
@@ -381,65 +440,5 @@ class AppointmentsController extends Controller
                 'message'=> $e->getMessage()
             ], 500);
         }
-    }
-
-
-
-
-
-    /**
-     * GET
-     */
-    public function getAllAppointmentWhereClient($clientId)
-    {
-        return response()->json(
-            appointments::where('client', $clientId)->with(['feedback', "assigned_staffs", "assigned_items", 'appointment_pets'])->get()
-        );
-    }
-    
-    public function GetAllAppointmentsWhereClientIdAndStatus($clientId, $status)
-    {
-        return response()->json(
-            appointments::where('client', $clientId)
-            ->where("status", $status)
-            ->with(['feedback', "assigned_staffs", "assigned_items", 'appointment_pets'])
-            ->get()
-        );
-    }
-
-    public function getAppointmentWhereId($appointmentId)
-    {
-        return response()->json(appointments::with(['feedback', "assigned_staffs", "assigned_items", 'appointment_pets'])
-        ->find($appointmentId));
-    }
-
-    public function getAllAppointments()
-    {
-        return response()->json(appointments::with(["assigned_staffs", "assigned_items", "appointment_pets", 'feedback'])->get());
-    }
-    
-    public function GetAllAppointmentsWhereStatus($status)
-    {
-        return response()->json(appointments::where('status', $status)
-        ->with(["client", "feedback", "assigned_staffs", "assigned_items", "appointment_pets"])
-        ->get());
-    }
-    
-    public function GetAllAppointmentsWherePetAndStatus($petId, $status)
-    {
-        return response()->json(appointments::where("pet", $petId)
-        ->where('status', $status)
-        ->with(["assigned_staffs", "assigned_items", "feedback", "assigned_staffs", "appointment_pets"])
-        ->orderBy("appointment_date", "desc")
-        ->get());
-    }
-
-    public function GetAllAppointmentsWhereStatusMonthAndYear($status, $month, $year)
-    {
-        return response()->json(appointments::with(["client", "feedback", "assigned_staffs", "assigned_items", "appointment_pets"])
-        ->where("status", $status)
-        ->whereMonth("created_at", $month)
-        ->whereYear("created_at", $year)
-        ->get());
     }
 }

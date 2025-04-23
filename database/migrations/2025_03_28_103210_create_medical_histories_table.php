@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('medical_histories', function (Blueprint $table) {
             $table->id();
-
+            $table->unsignedBigInteger("appointment_pet")->nullable();
             $table->float("weight");
             $table->string("pulse");
             $table->string("respiratory_rate");
@@ -49,6 +49,12 @@ return new class extends Migration
             $table->foreign("diagnosis")
             ->references("id")
             ->on("medical_history_diagnoses")
+            ->nullOnDelete()
+            ->cascadeOnUpdate();
+            
+            $table->foreign("appointment_pet")
+            ->references("id")
+            ->on("appointment_pets")
             ->nullOnDelete()
             ->cascadeOnUpdate();
         });

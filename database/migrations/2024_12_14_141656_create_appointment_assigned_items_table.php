@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('appointment_assigned_items', function (Blueprint $table) {
             $table->id();
-            $table->string('appointment', 12)->nullable();
+            $table->unsignedBigInteger('appointment_pet')->nullable();
             $table->string('item', 12)->nullable();
             $table->timestamps();
 
-            $table->foreign('appointment')
+            $table->foreign('appointment_pet')
             ->references('id')
-            ->on('appointments')
+            ->on('appointment_pets')
             ->cascadeOnDelete()
             ->cascadeOnUpdate();
 

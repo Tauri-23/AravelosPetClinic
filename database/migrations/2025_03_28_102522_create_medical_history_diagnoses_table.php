@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum("prognosis", ["Favorable", "Unfavorable", "Guarded"])->nullable();
             $table->string("vaccine_given")->nullable();
             $table->string("prescribed_medication")->nullable();
+            $table->string("medication_given")->nullable();
 
             $table->timestamps();
         });
