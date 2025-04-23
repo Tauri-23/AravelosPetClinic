@@ -3,7 +3,7 @@ import { fetchAppointmentDetails } from "../../../services/AppointmentServices";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import "../Appointments/css/admin_appointments.css";
 import * as Icon from "react-bootstrap-icons";
-import {Spin} from "antd";
+import {Button, Spin} from "antd";
 import { formatDate, formatDateTime, getAge, isEmptyOrSpaces, notify } from "../../../assets/js/utils";
 import { fetchAllStaffs } from "../../../services/StaffServices";
 import { fetchAllInventoryItems } from "../../../services/InventoryServices";
@@ -44,17 +44,9 @@ export default function AdminViewAppointment() {
     const [customMeasurementRequired, setCustomMeasurementRequired] = useState(false);
 
     const [activePetIndex, setActivePetIndex]=useState(0);
-    useEffect(() => {
-        axiosClient.get(`/get-appt-where-id/${id}`)
-          .then(({ data }) => {
-            setAppointment(data.appointment); // or whatever structure you return
-            setLoading(false);
-          })
-          .catch(err => {
-            console.error(err);
-            setLoading(false);
-          });
-      }, [id]);
+    
+
+
     /**
      * Onmount
      */
@@ -118,6 +110,7 @@ export default function AdminViewAppointment() {
             }
         });
     };
+
     const handleDosage = (item) => {
         if(item.qty < 1) {
             return;
@@ -252,6 +245,7 @@ export default function AdminViewAppointment() {
                 <>
                     <h2 className="mar-bottom-1">{appointment.status} Appointment</h2>
 
+                    {/* Buttons */}
                     {(appointment.status !== "Completed" && appointment.status !== "Cancelled") && (
                         <div className="d-flex gap3 justify-content-end w-100 mar-bottom-1">
                             {!isMarkingComplete && (
@@ -292,64 +286,16 @@ export default function AdminViewAppointment() {
                         </div>
                     )}
 
-                    {/* APPOINTMENT INFORMATION */}
-                    {/* <div className="appointment-cont1 d-flex gap1 mar-bottom-1">
-                        {appointment.type === "Online" && (
-                            <div className="appointment-pet-pfp">
-                                <img src={`/assets/media/pets/${appointment.appointment_pets.picture}`} alt="pet profile pic" />
-                            </div>
-                        )}
-
-                        <div>
-                            <h3>{appointment.type === "Online" ? appointment.appointment_pets.name : appointment.otc_pet_name}</h3>
-                            <div className="d-flex align-items-center">
-                                <h5 className="fw-bold" style={{width: 120}}>Service: </h5>
-                                <h5>[display services]</h5>
-                            </div>
-
-                            {appointment.type === "Online" && (
-                                <div className="d-flex align-items-center">
-                                    <h5 className="fw-bold" style={{width: 120}}>Gender: </h5>
-                                    <h5>{appointment.appointment_pets.gender}</h5>
-                                </div>
-                            )}
-
-                            <div className="d-flex align-items-center">
-                                <h5 className="fw-bold" style={{width: 120}}>Breed: </h5>
-                                <h5>{appointment.type === "Online" ? appointment.appointment_pets[0].pet.breed.breed : appointment.otc_pet_breed.breed}</h5>
-                            </div>
-
-                            {appointment.type === "Online" && (
-                                <>
-                                    <div className="d-flex align-items-center">
-                                        <h5 className="fw-bold" style={{width: 120}}>Birthdate: </h5>
-                                        <h5>{formatDate(appointment.appointment_pets.dob)} ({getAge(appointment.appointment_pets.dob)} y/o)</h5>
-                                    </div>
-                                    <div className="d-flex align-items-center">
-                                        <h5 className="fw-bold" style={{width: 120}}>Schedule: </h5>
-                                        <h5>{formatDateTime(appointment.date_time)}</h5>
-                                    </div>
-                                    <div className="d-flex align-items-center">
-                                        <h5 className="fw-bold" style={{width: 120}}>Pet Label: </h5>
-                                        <h5>{appointment.appointment_pets.label || "N/A"}</h5>
-                                    </div>
-                                </>
-                            )}
-
-                        </div>
-                    </div> */}
-
-
                     {/* PET TABS BUTTON */}
-                    <div className="d-flex mar-bottom-1">
+                    <div className="d-flex mar-bottom-1 gap3">
                         {appointment.appointment_pets?.map((aptPet, index) => (
-                            <button
-                            key={aptPet.id}type={activePetIndex === index ? "primary-btn-blue1" : "sub-button"}
+                            <Button
+                            size="large"
+                            type={activePetIndex === index ? "primary" : "default"}
                             onClick={() => setActivePetIndex(index)}
-                            className={`pet-tab-btn mar-end-2 ${activePetIndex === index ? "primary-btn-blue1" : "sub-button"}`}
                             >
-                            {aptPet.pet?.name || `Pet ${index + 1}`}
-                            </button>
+                                {aptPet.pet?.name || `Pet ${index + 1}`}
+                            </Button>
                         ))}
                     </div>
 
@@ -381,7 +327,7 @@ export default function AdminViewAppointment() {
                             {/* ...additional fields */}
                             </div>
                         </div>
-                        )}
+                    )}
 
 
 
@@ -391,7 +337,6 @@ export default function AdminViewAppointment() {
                         <div className="d-flex gap1">
                             {/* LEFT SIDE */}
                             <div className="w-100">
-
                                 {/* Assign Staffs */}
                                 <div className="appointment-cont1 w-100 mar-bottom-1"style={{height:400}}>
                                     <h4>Assign Staff</h4>
@@ -425,166 +370,8 @@ export default function AdminViewAppointment() {
                                         : (<Spin size="large"/>)}
                                     </div>
                                 </div>
-
-                                {/* Assign Items */}
-                                {/* <div className="appointment-cont1 w-100">
-                                    <h4>Assign Items</h4>
-                                    <hr className="mar-y-3"/> */}
-
-                                    {/* STAFFS */}
-                                    {/* <div
-                                    className="d-flex flex-wrap gap3"
-                                    style={{
-                                        padding: 5,
-                                        maxHeight: 500,
-                                        overflowY: "auto"
-                                    }}>
-                                        {inventoryItems
-                                        ? (
-                                            inventoryItems.map(item => (
-                                                <InventoryBox
-                                                    key={item.id}
-                                                    handleInventoryBoxClick={() => handleDosage(item)}
-                                                    itemName={item.name}
-                                                    itemImage={item.picture}
-                                                    itemQuantity={item.qty}
-                                                    itemDescription={item.desc}
-                                                />
-                                            ))
-                                        )
-                                        : (<Spin size="large"/>)}
-                                    </div>
-                                </div> */}
                             </div>
 
-                            {dosageModalOpen && setItemForDosage &&(
-                                <div className="modal1">
-                                    <div className="dosage-modal">
-                                        <div className="header">
-                                            <div className="d-flex justify-content-between "><h4>Dosage Settings</h4><Icon.X className="pointer"onClick={() => setDosageModalOpen(false)}/></div>
-                                            <hr className="mar-y-3"></hr>
-                                        </div>
-                                        <div style={{overflowY:"scroll", margin:"10px",height:"400px"}}>
-                                            {/* {measurementRequired && ( */}
-                                                <div>
-                                                    <div>
-                                                        {/* "[]" get from db, "()" wala lang design lng*/}
-                                                        <h6 style={{lineHeight:"normal"}}><b>Pet Weight:</b> [weight] ([weight class xs, m, etc.])<br/>
-                                                        <b>Logged by:</b> [Customer/Clinic]<br/>
-                                                        <b>Last updated:</b> [date from customer/clinic's input]</h6>
-                                                    </div>
-                                                    <br/>
-                                                        <label>
-                                                            Use custom measurements for this appointment?
-                                                            <input type="checkbox"className="mar-start-3"
-                                                            style={{width:"min-content"}}
-                                                                checked={customMeasurementRequired}
-                                                                onChange={() => setCustomMeasurementRequired(!customMeasurementRequired)}
-                                                            />
-                                                        </label><br/>
-                                                    <small style={{color:"gray"}}>Display only the weight class na pasok si pet. Left side is custom measurement na inadd during add item if meron man. <br></br>Right side is for this appt lang.</small>
-                                                    <div className="d-flex flex-column gap3">
-                                                        <div className="d-flex align-items-center"><label className="weight-label mar-end-3">XS</label>
-                                                            <input
-                                                                type="number"
-                                                                placeholder="Value"
-                                                                className="weight-width"
-                                                                readOnly
-                                                            /> [unit]
-                                                            {customMeasurementRequired &&(
-                                                                <div className='mar-start-3'>
-                                                                    :
-                                                                    <input
-                                                                        type="number"
-                                                                        placeholder="Value"
-                                                                        className="weight-width mar-start-3"
-                                                                    /> [unit]
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        <div className="d-flex align-items-center"><label className="weight-label mar-end-3">S</label>
-                                                            <input
-                                                                type="number"
-                                                                placeholder="Value"
-                                                                className="weight-width"
-                                                                readOnly
-                                                            /> [unit]
-                                                            {customMeasurementRequired &&(
-                                                                <div className='mar-start-3'>
-                                                                    :
-                                                                    <input
-                                                                        type="number"
-                                                                        placeholder="Value"
-                                                                        className="weight-width mar-start-3"
-                                                                    /> [unit]
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        <div className="d-flex align-items-center"><label className="weight-label mar-end-3">M</label>
-                                                            <input
-                                                                type="number"
-                                                                placeholder="Value"
-                                                                className="weight-width"
-                                                                readOnly
-                                                            /> [unit]
-                                                            {customMeasurementRequired &&(
-                                                                <div className='mar-start-3'>
-                                                                    :
-                                                                    <input
-                                                                        type="number"
-                                                                        placeholder="Value"
-                                                                        className="weight-width mar-start-3"
-                                                                    /> [unit]
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        <div className="d-flex align-items-center"><label className="weight-label mar-end-3">L</label>
-                                                            <input
-                                                                type="number"
-                                                                placeholder="Value"
-                                                                className="weight-width"
-                                                                readOnly
-                                                            /> [unit]
-                                                            {customMeasurementRequired &&(
-                                                                <div className='mar-start-3'>
-                                                                    :
-                                                                    <input
-                                                                        type="number"
-                                                                        placeholder="Value"
-                                                                        className="weight-width mar-start-3"
-                                                                    /> [unit]
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        <div className="d-flex align-items-center"><label className="weight-label mar-end-3">XL</label>
-                                                            <input
-                                                                type="number"
-                                                                placeholder="Value"
-                                                                className="weight-width"
-                                                                readOnly
-                                                            /> [unit]
-                                                            {customMeasurementRequired &&(
-                                                                <div className='mar-start-3'>
-                                                                    :
-                                                                    <input
-                                                                        type="number"
-                                                                        placeholder="Value"
-                                                                        className="weight-width mar-start-3"
-                                                                    /> [unit]
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            {/* )} */}
-                                        </div>
-                                        <div className="d-flex justify-content-between">
-                                            <button className="sub-button" onClick={() => {setDosageModalOpen(false)}}>Cancel</button>
-                                            <button className="primary-btn-blue1" onClick={() => {setDosageModalOpen(false)}}>Proceed</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
                             {/* RIGHT SIDE */}
                             <div className="w-100">
                                 {/* Assigned Staffs */}
@@ -618,9 +405,49 @@ export default function AdminViewAppointment() {
                                         ))
                                     )}
                                 </div>
+                            </div>
+                        </div>
+                    )}
 
+
+                    {/* ASSIGN ITEMS FOR APPROVED APPOINTMENTS */}
+                    {appointment.status === "Approved" && (
+                        <div className="d-flex gap1">
+                            {/* Assign Items */}
+                            <div className="w-100">
+                                <div className="appointment-cont1 w-100">
+                                    <h4>Assign Items</h4>
+                                    <hr className="mar-y-3"/>
+
+                                    {/* STAFFS */}
+                                    <div
+                                    className="d-flex flex-wrap gap3"
+                                    style={{
+                                        padding: 5,
+                                        maxHeight: 500,
+                                        overflowY: "auto"
+                                    }}>
+                                        {inventoryItems
+                                        ? (
+                                            inventoryItems.map(item => (
+                                                <InventoryBox
+                                                    key={item.id}
+                                                    handleInventoryBoxClick={() => handleDosage(item)}
+                                                    itemName={item.name}
+                                                    itemImage={item.picture}
+                                                    itemQuantity={item.qty}
+                                                    itemDescription={item.desc}
+                                                />
+                                            ))
+                                        )
+                                        : (<Spin size="large"/>)}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="w-100">
                                 {/* Assigned Items */}
-                                {/* <div
+                                <div
                                 className="appointment-cont1 w-100"
                                 style={{
                                     height: 400,
@@ -649,7 +476,7 @@ export default function AdminViewAppointment() {
                                             </div>
                                         ))
                                     )}
-                                </div> */}
+                                </div>
                             </div>
                         </div>
                     )}

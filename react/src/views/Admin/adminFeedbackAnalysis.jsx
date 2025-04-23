@@ -48,7 +48,7 @@ export default function adminFeedbackAnalysis() {
             ...item,
             positive_percent: Math.round((positiveCount / total) * 100),
             neutral_percent: Math.round((neutralCount / total) * 100),
-            negative_percent: Math.round((negativeCount / total) * 100),
+            negative_percent: Math.round((negativeCount / total) * 100)
         };
     });
 
@@ -83,6 +83,36 @@ export default function adminFeedbackAnalysis() {
         });
     
         setFilteredFeedbacks(filteredResult);
+    };
+
+    const generateSummary = (aspectData) => {
+        return aspectData.map((item) => {
+            const positiveCount = item.positive_comments.length;
+            const neutralCount = item.neutral_comments.length;
+            const negativeCount = item.negative_comments.length;
+            const total = positiveCount + neutralCount + negativeCount || 1; // Prevent division by zero
+
+            const positive_percent = Math.round((positiveCount / total) * 100);
+            const neutral_percent = Math.round((neutralCount / total) * 100);
+            const negative_percent = Math.round((negativeCount / total) * 100);
+
+            const { aspect } = item;
+        
+            let sentiment = '';
+            if (positive_percent > 60) {
+                sentiment = 'is overwhelmingly positive';
+            } else if (negative_percent > 40) {
+                sentiment = 'is mostly negative';
+            } else if (neutral_percent > 40) {
+                sentiment = 'has mixed or neutral feedback';
+            } else if (positive_percent > 40) {
+                sentiment = 'has generally positive feedback';
+            } else {
+                sentiment = 'needs improvement based on user sentiment';
+            }
+      
+            return `<div>• ${aspect}: The feedback ${sentiment} (👍 ${positive_percent.toFixed(1)}%, 😐 ${neutral_percent.toFixed(1)}%, 👎 ${negative_percent.toFixed(1)}%).</div>`;
+        });
     };
     
 
@@ -230,6 +260,11 @@ export default function adminFeedbackAnalysis() {
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
+
+                    <div 
+                    className="chart-container"
+                    dangerouslySetInnerHTML={{__html: generateSummary(filteredFeedbacks).join("\n")}}
+                    />
 
                     {isModalOpen && (
                         <FeedbackModal
