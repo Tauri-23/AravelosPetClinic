@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 23, 2025 at 07:58 AM
+-- Generation Time: Apr 23, 2025 at 08:14 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -260,7 +260,7 @@ CREATE TABLE `inventories` (
   `name` varchar(255) NOT NULL,
   `qty` int(11) NOT NULL,
   `desc` longtext NOT NULL,
-  `picture` longtext NOT NULL,
+  `picture` longtext DEFAULT NULL,
   `measurement_value` int(11) DEFAULT NULL,
   `measurement_unit` varchar(255) DEFAULT NULL,
   `dosage_value` int(11) NOT NULL,
@@ -679,7 +679,7 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (129, 'App\\Models\\user_clients', 179411, 'main', '77560570a3d3a33952fe17047c86486521c60a085bc5eff578ceda6c7e464311', '[\"*\"]', '2025-04-11 07:52:52', NULL, '2025-04-11 07:47:44', '2025-04-11 07:52:52'),
 (146, 'App\\Models\\user_clients', 18533, 'main', '5f48423ad610b2706f1d5ab02b3d56ecb897dbd58ee5ddfbf892bfb3ada0183d', '[\"*\"]', '2025-04-15 06:35:12', NULL, '2025-04-15 06:35:12', '2025-04-15 06:35:12'),
 (147, 'App\\Models\\user_clients', 887421, 'main', 'b4b202cc0d02f89d28372ec46dd0e1dfd0dcbda17ffaf227285107e941732af9', '[\"*\"]', '2025-04-15 15:48:13', NULL, '2025-04-15 15:02:29', '2025-04-15 15:48:13'),
-(179, 'App\\Models\\user_clients', 936822, 'main', '5deb4c6d48929b630a26de510aee480c891672ac8b6a2826af95315922e80c2c', '[\"*\"]', '2025-04-22 21:52:40', NULL, '2025-04-22 21:52:40', '2025-04-22 21:52:40');
+(180, 'App\\Models\\user_admins', 111111, 'main', '324fea642a943ba4e0793b5cef468eb613c03dfe567259d1e41c9362f520faa8', '[\"*\"]', '2025-04-22 22:00:32', NULL, '2025-04-22 22:00:30', '2025-04-22 22:00:32');
 
 -- --------------------------------------------------------
 
@@ -1679,7 +1679,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=181;
 
 --
 -- AUTO_INCREMENT for table `pet_breeds`
