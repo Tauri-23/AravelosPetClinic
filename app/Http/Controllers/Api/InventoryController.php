@@ -19,43 +19,64 @@ class InventoryController extends Controller
 
 
 
+    // GET
+    public function GetAllInventory()
+    {
+        return response()->json(inventory::all());
+    }
+
+    public function GetFullInventoryWhereId($id)
+    {
+        return response()->json(inventory::with('inventory_items')->find($id));
+    }
+
+
+
     // POST
-    public function createInventory(Request $request)
+    public function createMedicine(Request $request)
     {
         try 
         {
-            $photo = $request->file('img');
-            $targetDirectory = base_path("react/public/assets/media/items");
+            DB::beginTransaction();
+            $addMedIn = json_decode($request->input("addMedicineIn"));
+
+            $photo = $request->file('medPic');
+            $targetDirectory = base_path("react/public/assets/media/medicines");
             $newFilename = $this->generateFilename->generate($photo, $targetDirectory);
 
-            $photo->move($targetDirectory, $newFilename);
-
             $inventory = new inventory();
-            $inventory->category = $request->category;
-            $inventory->name = $request->name;
+            $inventory->name = $addMedIn->name;
             $inventory->qty = 0;
-            $inventory->price = $request->price;
-            $inventory->desc = $request->desc;
+            $inventory->desc = $addMedIn->desc;
             $inventory->picture = $newFilename;
-
-            if($request->measurementValue && $request->measurementUnit) 
-            {
-                $inventory->measurement_value = $request->measurementValue;
-                $inventory->measurement_unit = $request->measurementUnit;
-            }
+            $inventory->measurement_value = $addMedIn->measurementValue;
+            $inventory->measurement_unit = $addMedIn->measurementUnit;
+            $inventory->dosage_value = $addMedIn->dosageValue;
+            $inventory->dosage_type = $addMedIn->dosageType;
+            $inventory->price = $addMedIn->price;
+            $inventory->toy_deduct = $addMedIn->toyDeduct;
+            $inventory->sm_deduct = $addMedIn->smDeduct;
+            $inventory->med_deduct = $addMedIn->medDeduct;
+            $inventory->lg_deduct = $addMedIn->lgDeduct;
+            $inventory->status = "active";
 
             $inventory->save();
 
+            $photo->move($targetDirectory, $newFilename);
+
+            DB::commit();
+
             return response()->json([
                 'status' => 200,
-                'message' =>'Item added.'
+                'message' =>'Medicine Added.'
             ]);
         } 
         catch(\Exception $ex)
         {
+            DB::rollBack();
             return response()->json([
                 'status' => 500,
-                'message' =>'Failed to upload file: ' . $ex->getMessage()
+                'message' => $ex->getMessage()
             ], 500);
         }
         
@@ -111,18 +132,5 @@ class InventoryController extends Controller
                 "message" => $e->getMessage()
             ], 500);
         }
-    }
-
-
-
-    // GET
-    public function GetAllInventory()
-    {
-        return response()->json(inventory::all());
-    }
-
-    public function GetFullInventoryWhereId($id)
-    {
-        return response()->json(inventory::with('inventory_items')->find($id));
     }
 }

@@ -11,7 +11,7 @@ import InventoryBox from "../../../components/inventory_box.jsx";
 import { useModal } from "../../../contexts/ModalContext.jsx";
 import { fetchAllInventoryHistory } from "../../../services/InventoryHistoryServices.jsx";
 
-export default function AdminInventoryIndex() {
+export default function AdminInventoryIndexOld() {
     const navigate = useNavigate();
 
     const { showModal } = useModal();

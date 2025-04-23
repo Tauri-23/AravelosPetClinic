@@ -45,13 +45,13 @@ Route::post('/login', [AuthController::class, 'login']);
 
 /*
 |----------------------------------------
-| Inventories
+| Inventories | Medicines
 |----------------------------------------
 */
 Route::get('/get-all-inventory', [InventoryController::class,'GetAllInventory']);
 Route::get('/get-full-inventory-where-id/{id}', [InventoryController::class,'GetFullInventoryWhereId']);
 
-Route::post('/add-inventory', [InventoryController::class,'createInventory']);
+Route::post('/add-medicine', [InventoryController::class,'createMedicine']);
 Route::post('/edit-inventory', [InventoryController::class,'editInventory']);
 
 

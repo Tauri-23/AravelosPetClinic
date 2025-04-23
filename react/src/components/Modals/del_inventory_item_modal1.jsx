@@ -3,7 +3,7 @@ import { useState } from "react";
 import * as Icon from "react-bootstrap-icons";
 
 export default function DeleteInventoryItemModal1({handleDelItem, onClose}) {
-    const purposeList = ['Patient Care','Dispensed to Client','Internal Use','Disposed','Damaged/Lost','Inventory Added'];
+    const purposeList = ['Patient Care','Dispensed to Client','Internal Use','Disposed','Damaged/Lost'];
     const [purpose, setPurpose] = useState("");
 
     return(

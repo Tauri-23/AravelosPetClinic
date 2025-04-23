@@ -32,8 +32,10 @@ class InventoryItemsController extends Controller
                 $inventoryItem = new inventory_items();
                 $inventoryItem->id = $this->generateId->generate(inventory_items::class, 12);
                 $inventoryItem->inventory = $request->inventoryId;
+                $inventoryItem->volume_value = $inventory->dosage_value;
+                $inventoryItem->volume_remain = $inventory->dosage_value;
                 $inventoryItem->expiration_date = $request->expirationDate;
-                $inventoryItem->save();
+                $inventoryItem->save();                
             }
 
             $inventory->qty += (int) $request->qty;

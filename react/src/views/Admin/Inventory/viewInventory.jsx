@@ -114,7 +114,7 @@ export default function AdminViewInventory() {
 
                     <div className="view-inventory-cont1" style={{marginBottom: "50px"}}>
                         <div className="view-inventory-cont1-pic">
-                            <img src={`/assets/media/items/${inventory.picture}`} alt="inventory Pic"/>
+                            <img src={`/assets/media/medicines/${inventory.picture}`} alt="inventory Pic"/>
                         </div>
                         <div className="view-inventory-cont1-info">
                             <h2>{inventory.name} {inventory.measurement_value}{inventory.measurement_unit}</h2>

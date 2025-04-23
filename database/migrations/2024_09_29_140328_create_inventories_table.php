@@ -13,21 +13,21 @@ return new class extends Migration
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("category")->nullable();
             $table->string('name');
             $table->integer('qty');
             $table->longText('desc');
             $table->longText('picture');
             $table->integer('measurement_value')->nullable();
             $table->string('measurement_unit')->nullable();
+            $table->integer('dosage_value');
+            $table->enum('dosage_type', ["ml", "pcs"]);
             $table->float('price')->default(0);
+            $table->float('toy_deduct')->nullable();
+            $table->float('sm_deduct')->nullable();
+            $table->float('med_deduct')->nullable();
+            $table->float('lg_deduct')->nullable();
+            $table->enum("status", ["active", "discontinued"]);
             $table->timestamps();
-
-            $table->foreign('category')
-            ->references('id')
-            ->on('inventory_categories')
-            ->nullOnDelete()
-            ->cascadeOnUpdate();
         });
     }
 

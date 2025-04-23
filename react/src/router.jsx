@@ -10,12 +10,8 @@ import AdminIndex from "./views/Admin";
 import Sign from "./views/Sign/sign";
 import ForgotPassword from "./views/Sign/forgot_password";
 import ClientuserProfile from "./views/Client/userprofiles";
-import AdminInventoryDefault from "./views/Admin/Inventory/inventory_default";
-import AdminInventoryIndex from "./views/Admin/Inventory/inventory_index";
 import AddItem from "./views/Admin/Inventory/addItem";
-import ClinicCalendar from "./views/Admin/Appointments/clinicCalendar";
 import BookAppointment from "./views/Client/BookAppointment/bookappointment";
-import MyAppointments from "./views/Client/appointment/myappointments";
 import AdminFeedback from "./views/Admin/adminFeedback";
 import AdminFeedbackAnalysis from "./views/Admin/adminFeedbackAnalysis";
 import AdminAppointmentDefault from "./views/Admin/Appointments/admin_appointment_default";
@@ -39,6 +35,10 @@ import ClientAppointmentsCancelled from "./views/Client/appointment/client_appoi
 import ClientViewAppointment from "./views/Client/appointment/client_view_appointment";
 import AdminCalendarIndex from "./views/Admin/Calendar/admin_calendar_index";
 import AdminBookAppointment from "./views/Admin/Appointments/admin_book_appointments";
+import AdminInventoryDefault from "./views/Admin/Inventory/admin_inventory_default";
+import AdminInventoryIndex from "./views/Admin/Inventory/admin_inventory_index";
+import AdminInventoryHistory from "./views/Admin/Inventory/admin_inventory_history";
+import AdminInventoryAddMedicine from "./views/Admin/Inventory/admin_inventory_add_medicine";
 
 const router = createBrowserRouter([
     /*
@@ -243,14 +243,18 @@ const router = createBrowserRouter([
                         element: <AdminInventoryIndex/>
                     },
                     {
-                        path: 'AddItem',
-                        element: <AddItem/>
-                    },
-                    {
-                        path: 'ViewInventory/:inventoryId',
-                        element: <AdminViewInventory/>
+                        path: "History",
+                        element: <AdminInventoryHistory/>
                     }
                 ]
+            },
+            {
+                path: 'AddMedicine',
+                element: <AdminInventoryAddMedicine/>
+            },
+            {
+                path: 'ViewInventory/:inventoryId',
+                element: <AdminViewInventory/>
             },
 
             
