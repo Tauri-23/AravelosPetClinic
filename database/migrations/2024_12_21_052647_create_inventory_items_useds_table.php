@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('inventory_items_useds', function (Blueprint $table) {
-            $table->string('id', 12)->primary();
+            $table->id();
+            $table->string('inventory_item_id');
             $table->unsignedBigInteger("inventory")->nullable();
             $table->date('expiration_date');
             $table->timestamps();

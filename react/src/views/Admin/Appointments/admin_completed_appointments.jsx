@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useModal } from "../../../contexts/ModalContext";
-import { formatDate, formatDateTime } from "../../../assets/js/utils";
+import { formatDate, formatDateTime, formatTime } from "../../../assets/js/utils";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Table } from "antd";
 
@@ -28,20 +28,17 @@ export default function AdminCompletedAppointments() {
             dataIndex: 'id',
         },
         {
-            title: "Pet Name",
-            render: (_, row) => row.type == "Online" ? row?.pet?.name : row.otc_pet_name
-        },
-        {
             title: "Appointment Method",
             render: (_, row) => row.type
         },
         {
-            title: "Appointment Service",
-            render: (_, row) => row.service.service
+            title: "Pets",
+            dataIndex: 'appointment_pets',
+            render: (pets) => pets.map(x => x.pet.name).join(', ')
         },
         {
             title: "Appointment Date",
-            render: (_, row) => formatDateTime(row.date_time)
+            render: (_, row) => `${formatDate(row.appointment_date)} at ${formatTime(row.appointment_time)}`
         },
         {
             title: "Date Completed",

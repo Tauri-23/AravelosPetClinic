@@ -23,7 +23,7 @@ class appointments extends Model
 
     public function appointment_pets()
     {
-        return $this->hasMany(appointment_pets::class, "appointment", "id")->with(["appointment_pet_services", "pet"]);
+        return $this->hasMany(appointment_pets::class, "appointment", "id")->with(["appointment_pet_services", "pet", "medical_history", "assigned_items"]);
     }
 
     public function feedback()

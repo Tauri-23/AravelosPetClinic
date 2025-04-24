@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('appointment_assigned_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('appointment_pet')->nullable();
-            $table->string('item', 12)->nullable();
+            $table->unsignedBigInteger('item')->nullable();
             $table->timestamps();
 
             $table->foreign('appointment_pet')

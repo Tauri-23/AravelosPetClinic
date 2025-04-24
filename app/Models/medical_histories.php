@@ -9,6 +9,7 @@ class medical_histories extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'appointment_pet',
         'weight',
         'pulse',
         'respiratory_rate',

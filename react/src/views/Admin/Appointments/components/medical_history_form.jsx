@@ -409,6 +409,10 @@ export default function MedicalHistoryForm({
 
         formData.append("appointmentPet", activePet.id);
 
+        selectedItems.forEach(item => {
+            formData.append('items[]', JSON.stringify({id:parseInt(item.id), qty: item.selected_qty, dosageDeductCustom: item.dosageDeductCustom, dosageDeductValue: item.dosageDeductCustom ? parseFloat(item.dosageDeductValue) : item.dosageDeductValue}));
+        })
+
         formData.append("bloodExam", bloodExam ? 1 : 0);
         formData.append("bloodExamResult", bloodExamResult);
         bloodExamFiles.forEach((item, index) => {
@@ -551,7 +555,13 @@ export default function MedicalHistoryForm({
         .then(({data}) => {
             notify(data.status === 200 ? "success" : "error", data.message, "top-center", 3000);
             if(data.status === 200) {
-                navigate("/AdminIndex/Appointments/Completed");
+                if(data.allPetsDone) {
+                    navigate("/AdminIndex/Appointments/Completed");
+                }
+                else {
+                    window.location.reload();
+                }
+                
             }
         }).catch(error => console.error(error));
     }

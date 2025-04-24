@@ -378,47 +378,6 @@ class AppointmentsController extends Controller
                 $appointmentStaff->save();
             }
 
-            // Loop Through Selected Items from requests
-            // foreach($request->items as $item) 
-            // {
-            //     $decodedItem = json_decode($item);
-
-            //     $inventoryItems = inventory_items::where('inventory', $decodedItem->id)
-            //     ->orderBy('expiration_date', 'asc')
-            //     ->take($decodedItem->qty)
-            //     ->get();
-
-            //     // Move Inventory Items to Inventory Items Used
-            //     foreach($inventoryItems as $item)
-            //     {
-            //         $inventoryItemsUsed = new inventory_items_used();
-            //         $inventoryItemsUsed->id = $item->id;
-            //         $inventoryItemsUsed->inventory = $item->inventory;
-            //         $inventoryItemsUsed->expiration_date = $item->expiration_date;
-            //         $inventoryItemsUsed->created_at = $item->created_at;
-            //         $inventoryItemsUsed->updated_at = $item->updated_at;
-            //         $inventoryItemsUsed->save();
-                    
-
-            //         $appointmentItem = new appointment_assigned_items();
-            //         $appointmentItem->item = (int)$item->id;
-            //         $appointmentItem->appointment = $request->appointmentId;
-            //         $appointmentItem->save();
-
-            //         // Then Delete the item from the Inventory Items
-            //         $item->delete();
-            //     }
-                
-            //     // Decrement the Inventory
-            //     $inventory = inventory::find((int)$decodedItem->id);
-            //     $inventory->qty -= (int)$decodedItem->qty;
-            //     $inventory->save();
-
-            //     // put in transaction history
-            //     $invHist = new InventoryHistoryController();
-            //     $invHist->AddInventoryHistory($inventory->name, "-", $decodedItem->qty, "Patient Care");
-            // }
-
             // SEND SMS
             $formattedDate = Carbon::parse($appointment->appointment_date)->format('M d, Y');
             $formattedTime = Carbon::parse($appointment->appointment_time)->format('h:i A');

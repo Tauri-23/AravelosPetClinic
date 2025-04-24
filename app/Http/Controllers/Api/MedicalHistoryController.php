@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Contracts\IGenerateFilenameService;
 use App\Http\Controllers\Controller;
+use App\Models\appointment_assigned_items;
 use App\Models\appointments;
+use App\Models\inventory;
+use App\Models\inventory_items;
+use App\Models\inventory_items_used;
 use App\Models\medical_histories;
 use App\Models\medical_history_diagnosis;
 use App\Models\medical_history_laboratory_exam;
@@ -30,6 +34,91 @@ class MedicalHistoryController extends Controller
         try
         {
             DB::beginTransaction();
+
+            // Loop Through Selected Items from requests
+            foreach($request->items as $item) 
+            {
+                $decodedItem = json_decode($item);
+
+                $inventoryItems = inventory_items::where('inventory', $decodedItem->id)
+                ->orderBy('expiration_date', 'asc')
+                ->with("inventory")
+                ->get();
+
+                $requiredDosage = $decodedItem->dosageDeductCustom
+                    ? $decodedItem->dosageDeductValue
+                    : match ($decodedItem->dosageDeductValue->label) {
+                        'toy'    => $inventoryItems[0]->inventory()->first()->toy_deduct,
+                        'small'  => $inventoryItems[0]->inventory()->first()->sm_deduct,
+                        'medium' => $inventoryItems[0]->inventory()->first()->med_deduct,
+                        'large'  => $inventoryItems[0]->inventory()->first()->lg_deduct,
+                        default  => 0,
+                    };
+
+                $remainingDosage = $requiredDosage;
+                $itemUsedByDosage = [];
+
+                foreach ($inventoryItems as $item) {
+                    if ($remainingDosage <= 0) break;
+
+                    $available = $item->volume_remain;
+
+                    if ($available >= $remainingDosage) {
+                        $item->volume_remain -= $remainingDosage;
+                        $item->save();
+
+                        $item->dosage_used = $remainingDosage;
+                        $item->dosage_type = $item->inventory()->first()->dosage_type;
+
+                        // return response()->json($item, 500);
+
+                        // Record the used item
+                        $itemUsedByDosage[] = $item;
+
+                        $remainingDosage = 0;
+                    } else {
+                        $item->volume_remain = 0;
+                        $item->save();
+
+                        $item->dosage_used = $remainingDosage;
+                        $itemUsedByDosage[] = $item;
+
+                        $remainingDosage -= $available;
+                    }
+                }
+
+
+                // Make a Copy of the Inventory Items Used
+                foreach($itemUsedByDosage as $item)
+                {
+                    $inventoryItemsUsed = new inventory_items_used();
+                    $inventoryItemsUsed->inventory_item_id = (string)$item->id;
+                    $inventoryItemsUsed->inventory = $item->inventory;
+                    $inventoryItemsUsed->expiration_date = $item->expiration_date;
+                    $inventoryItemsUsed->dosage_used = $item->dosage_used;
+                    $inventoryItemsUsed->dosage_type = $item->dosage_type;
+                    $inventoryItemsUsed->created_at = $item->created_at;
+                    $inventoryItemsUsed->updated_at = $item->updated_at;
+                    $inventoryItemsUsed->save();
+
+                    $appointmentItem = new appointment_assigned_items();
+                    $appointmentItem->item = (int)$inventoryItemsUsed->id;
+                    $appointmentItem->appointment_pet = $request->appointmentPet;
+                    $appointmentItem->save();
+
+                    // Decrement the Inventory if the usedMedicine is 0 dosage
+                    if($item->volume_remain <= 0)
+                    {
+                        $inventory = inventory::find((int)$decodedItem->id);
+                        $inventory->qty -= 1;
+                        $inventory->save();
+
+                        // put in transaction history
+                        $invHist = new InventoryHistoryController();
+                        $invHist->AddInventoryHistory($inventory->name, "-", 1, "Patient Care");
+                    }
+                }
+            }
 
             $physicalExam = medical_history_physical_exam::create([
                 'general_condition' => $request->genCon,
@@ -92,11 +181,6 @@ class MedicalHistoryController extends Controller
                     }
                 }
             }
-
-            // return response()->json([
-            //     "status" => 500,
-            //     "message" => $savedFiles,
-            // ], 500);
             
 
             $labExam = medical_history_laboratory_exam::create([
@@ -166,7 +250,8 @@ class MedicalHistoryController extends Controller
                 'prescribed_medication' => $request->prescribedMed,
             ]);
 
-            $medHistory = medical_histories::create([
+            medical_histories::create([
+                'appointment_pet' => $request->appointmentPet,
                 'weight' => $request->weight,
                 'pulse' => $request->pulse,
                 'respiratory_rate' => $request->respiratoryRate,
@@ -187,18 +272,28 @@ class MedicalHistoryController extends Controller
 
             // UPDATE THE APPOINTMENT
             $appointment = appointments::find($request->appointmentId);
+            $allHaveMedicalHistory = $appointment->appointment_pets()
+            ->get()
+            ->every(function ($appointmentPet) {
+                return count($appointmentPet->medical_history) > 0;
+            });
+            
             if (!$appointment) {
                 throw new \Exception("Appointment not found.");
             }
-            $appointment->update([
-                'status' => 'Completed',
-                'medical_history' => $medHistory->id,
-            ]);
+            if($allHaveMedicalHistory)
+            {
+                $appointment->update([
+                    'status' => 'Completed'
+                ]);
+            }
+            
 
             DB::commit();
             return response()->json([
                 "status" => 200,
-                "message" => "Success"
+                "message" => "Success",
+                "allPetsDone" => $allHaveMedicalHistory
             ]);
         }
         catch(\Exception $e)

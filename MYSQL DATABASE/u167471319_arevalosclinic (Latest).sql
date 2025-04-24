@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 23, 2025 at 12:15 PM
+-- Generation Time: Apr 24, 2025 at 04:52 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -62,7 +62,7 @@ CREATE TABLE `appointments` (
   `cancelled_at` datetime DEFAULT NULL,
   `reason` text DEFAULT NULL,
   `note` longtext DEFAULT NULL,
-  `status` enum('Pending',' Approved','Completed','Cancelled') NOT NULL,
+  `status` enum('Pending','Approved','Completed','Cancelled') NOT NULL,
   `type` enum('Online','OTC') NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -73,7 +73,7 @@ CREATE TABLE `appointments` (
 --
 
 INSERT INTO `appointments` (`id`, `client`, `appointment_date`, `appointment_time`, `approved_at`, `rejected_at`, `cancelled_at`, `reason`, `note`, `status`, `type`, `created_at`, `updated_at`) VALUES
-('456985299219', '936822', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 'Online', '2025-04-23 01:40:31', '2025-04-23 01:40:31');
+('456985299219', '936822', '2025-04-24', '09:00:00', '2025-04-23 14:55:10', NULL, NULL, NULL, NULL, 'Completed', 'Online', '2025-04-23 01:40:31', '2025-04-23 18:49:55');
 
 -- --------------------------------------------------------
 
@@ -83,11 +83,19 @@ INSERT INTO `appointments` (`id`, `client`, `appointment_date`, `appointment_tim
 
 CREATE TABLE `appointment_assigned_items` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `appointment` varchar(12) DEFAULT NULL,
-  `item` varchar(12) DEFAULT NULL,
+  `appointment_pet` bigint(20) UNSIGNED DEFAULT NULL,
+  `item` bigint(20) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `appointment_assigned_items`
+--
+
+INSERT INTO `appointment_assigned_items` (`id`, `appointment_pet`, `item`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '2025-04-23 18:36:50', '2025-04-23 18:36:50'),
+(2, 2, 2, '2025-04-23 18:49:55', '2025-04-23 18:49:55');
 
 -- --------------------------------------------------------
 
@@ -102,6 +110,14 @@ CREATE TABLE `appointment_assigned_staffs` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `appointment_assigned_staffs`
+--
+
+INSERT INTO `appointment_assigned_staffs` (`id`, `appointment`, `staff`, `created_at`, `updated_at`) VALUES
+(1, '456985299219', '907459', '2025-04-23 06:55:10', '2025-04-23 06:55:10'),
+(2, '456985299219', '186775', '2025-04-23 06:55:10', '2025-04-23 06:55:10');
 
 -- --------------------------------------------------------
 
@@ -366,14 +382,6 @@ CREATE TABLE `inventory_histories` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `inventory_histories`
---
-
-INSERT INTO `inventory_histories` (`id`, `item_name`, `operator`, `qty`, `purpose`, `created_at`, `updated_at`) VALUES
-(1, 'Sample Medicine 1', '+', '5', 'Inventory Added', '2025-04-22 21:48:31', '2025-04-22 21:48:31'),
-(2, 'Sample Medicine 1', '+', '5', 'Inventory Added', '2025-04-22 21:51:28', '2025-04-22 21:51:28');
-
 -- --------------------------------------------------------
 
 --
@@ -395,7 +403,7 @@ CREATE TABLE `inventory_items` (
 --
 
 INSERT INTO `inventory_items` (`id`, `inventory`, `volume_value`, `volume_remain`, `expiration_date`, `created_at`, `updated_at`) VALUES
-('261411041183', 1, 100, 100, '2027-04-30', '2025-04-22 21:48:31', '2025-04-22 21:48:31'),
+('261411041183', 1, 100, 50, '2027-04-30', '2025-04-22 21:48:31', '2025-04-23 18:49:55'),
 ('410367544638', 1, 100, 100, '2028-04-30', '2025-04-22 21:51:28', '2025-04-22 21:51:28'),
 ('486115920626', 1, 100, 100, '2027-04-30', '2025-04-22 21:48:31', '2025-04-22 21:48:31'),
 ('522666647496', 1, 100, 100, '2028-04-30', '2025-04-22 21:51:28', '2025-04-22 21:51:28'),
@@ -413,12 +421,23 @@ INSERT INTO `inventory_items` (`id`, `inventory`, `volume_value`, `volume_remain
 --
 
 CREATE TABLE `inventory_items_useds` (
-  `id` varchar(12) NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `inventory_item_id` varchar(255) DEFAULT NULL,
   `inventory` bigint(20) UNSIGNED DEFAULT NULL,
+  `dosage_used` float DEFAULT NULL,
+  `dosage_type` enum('ml','pcs') DEFAULT NULL,
   `expiration_date` date NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `inventory_items_useds`
+--
+
+INSERT INTO `inventory_items_useds` (`id`, `inventory_item_id`, `inventory`, `dosage_used`, `dosage_type`, `expiration_date`, `created_at`, `updated_at`) VALUES
+(1, '261411041183', 1, 5, 'ml', '2027-04-30', '2025-04-22 21:48:31', '2025-04-23 18:36:50'),
+(2, '261411041183', 1, 5, 'ml', '2027-04-30', '2025-04-22 21:48:31', '2025-04-23 18:49:55');
 
 -- --------------------------------------------------------
 
@@ -463,6 +482,7 @@ CREATE TABLE `job_batches` (
 
 CREATE TABLE `medical_histories` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `appointment_pet` bigint(20) UNSIGNED DEFAULT NULL,
   `weight` double NOT NULL,
   `pulse` varchar(255) NOT NULL,
   `respiratory_rate` varchar(255) NOT NULL,
@@ -487,9 +507,9 @@ CREATE TABLE `medical_histories` (
 -- Dumping data for table `medical_histories`
 --
 
-INSERT INTO `medical_histories` (`id`, `weight`, `pulse`, `respiratory_rate`, `temperature`, `diet`, `allergies`, `previous_surgery`, `complaints_or_requests`, `medication_by_owner`, `medication_by_other_vets`, `procedure_done`, `next_appointment_date`, `note`, `physical_exams`, `laboratory_exams`, `diagnosis`, `created_at`, `updated_at`) VALUES
-(7, 0, '0', '0', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 28, 2, 10, '2025-04-20 19:33:18', '2025-04-20 19:33:18'),
-(8, 8, '70', '30', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 34, 3, 11, '2025-04-20 23:35:28', '2025-04-20 23:35:28');
+INSERT INTO `medical_histories` (`id`, `appointment_pet`, `weight`, `pulse`, `respiratory_rate`, `temperature`, `diet`, `allergies`, `previous_surgery`, `complaints_or_requests`, `medication_by_owner`, `medication_by_other_vets`, `procedure_done`, `next_appointment_date`, `note`, `physical_exams`, `laboratory_exams`, `diagnosis`, `created_at`, `updated_at`) VALUES
+(1, 1, 4, '60', '30', 30, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, 1, '2025-04-23 18:36:50', '2025-04-23 18:36:50'),
+(2, 2, 8, '70', '30', 30, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 2, 2, '2025-04-23 18:49:55', '2025-04-23 18:49:55');
 
 -- --------------------------------------------------------
 
@@ -504,6 +524,7 @@ CREATE TABLE `medical_history_diagnoses` (
   `prognosis` enum('Favorable','Unfavorable','Guarded') DEFAULT NULL,
   `vaccine_given` varchar(255) DEFAULT NULL,
   `prescribed_medication` varchar(255) DEFAULT NULL,
+  `medication_given` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -512,9 +533,9 @@ CREATE TABLE `medical_history_diagnoses` (
 -- Dumping data for table `medical_history_diagnoses`
 --
 
-INSERT INTO `medical_history_diagnoses` (`id`, `tentative_diagnosis`, `final_diagnosis`, `prognosis`, `vaccine_given`, `prescribed_medication`, `created_at`, `updated_at`) VALUES
-(10, 'asd', 'asd', 'Guarded', 'asd', 'asd', '2025-04-20 19:33:18', '2025-04-20 19:33:18'),
-(11, 'aa', 'aa', 'Guarded', 'aaa', 'aaa', '2025-04-20 23:35:28', '2025-04-20 23:35:28');
+INSERT INTO `medical_history_diagnoses` (`id`, `tentative_diagnosis`, `final_diagnosis`, `prognosis`, `vaccine_given`, `prescribed_medication`, `medication_given`, `created_at`, `updated_at`) VALUES
+(1, 'asd', 'asd', 'Guarded', 'asd', 'asd', NULL, '2025-04-23 18:36:50', '2025-04-23 18:36:50'),
+(2, 'asd', 'asd', 'Guarded', 'asd', 'asd', NULL, '2025-04-23 18:49:55', '2025-04-23 18:49:55');
 
 -- --------------------------------------------------------
 
@@ -575,8 +596,8 @@ CREATE TABLE `medical_history_laboratory_exams` (
 --
 
 INSERT INTO `medical_history_laboratory_exams` (`id`, `blood_exam`, `blood_exam_result`, `blood_exam_files`, `distemper_test`, `distemper_test_result`, `distemper_test_files`, `ear_swabbing`, `ear_swabbing_result`, `ear_swabbing_files`, `ehrlichia_test`, `ehrlichia_test_result`, `ehrlichia_test_files`, `heartworm_test`, `heartworm_test_result`, `heartworm_test_files`, `parvo_test`, `parvo_test_result`, `parvo_test_files`, `skin_scraping`, `skin_scraping_result`, `skin_scraping_files`, `stool_exam`, `stool_exam_result`, `stool_exam_files`, `ultrasound`, `ultrasound_result`, `ultrasound_files`, `urine_exam`, `urine_exam_result`, `urine_exam_files`, `vaginal_smear`, `vaginal_smear_result`, `vaginal_smear_files`, `xray`, `xray_result`, `xray_files`, `eye_strain`, `eye_strain_result`, `eye_strain_files`, `other_test`, `other_test_result`, `other_test_files`, `created_at`, `updated_at`) VALUES
-(2, 1, NULL, '[{\"file\":\"zW0afrJl1MQzwQtJq2KM84Zy.jpg\",\"desc\":\"asd\"},{\"file\":\"cVC2ffLgPGMYRo07dgIDmp7r.jpg\",\"desc\":\"asd\"}]', 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 1, 'Negative', '[{\"file\":\"YtN0Zcaxi32NYsqSjfUEWmAm.jpg\",\"desc\":\"asd\"}]', 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2025-04-20 19:33:18', '2025-04-20 19:33:18'),
-(3, 1, 'asdasd', '[{\"file\":\"4QrGd9geztfuc1RR4Vyun5nh.jpg\",\"desc\":\"asdasd\"}]', 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 1, 'asdasd', '[{\"file\":\"TQAQgMlgVF9J4Y1Dv27h5pFr.jpg\",\"desc\":\"asdasd\"}]', 0, NULL, NULL, NULL, NULL, NULL, '2025-04-20 23:35:28', '2025-04-20 23:35:28');
+(1, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2025-04-23 18:36:50', '2025-04-23 18:36:50'),
+(2, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2025-04-23 18:49:55', '2025-04-23 18:49:55');
 
 -- --------------------------------------------------------
 
@@ -610,8 +631,8 @@ CREATE TABLE `medical_history_physical_exams` (
 --
 
 INSERT INTO `medical_history_physical_exams` (`id`, `general_condition`, `general_attitude`, `hydration`, `mucous_membrane`, `head_neck`, `eyes`, `ears`, `gastrointestinal`, `urogenitals`, `respiratory`, `circulatory`, `musculoskeleton`, `lymph_nodes`, `venous_return`, `integumentary_skin`, `created_at`, `updated_at`) VALUES
-(28, 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', '2025-04-20 19:33:18', '2025-04-20 19:33:18'),
-(34, 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', '2025-04-20 23:35:28', '2025-04-20 23:35:28');
+(1, 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', '2025-04-23 18:36:50', '2025-04-23 18:36:50'),
+(2, 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', '2025-04-23 18:49:55', '2025-04-23 18:49:55');
 
 -- --------------------------------------------------------
 
@@ -638,8 +659,6 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (22, '2024_10_18_040010_create_admin_roles_table', 13),
 (23, '2024_10_07_145653_create_user_admins_table', 14),
 (27, '2024_12_06_105705_create_appointment_assigned_staffs_table', 18),
-(34, '2024_12_21_052647_create_inventory_items_useds_table', 22),
-(36, '2024_12_14_141656_create_appointment_assigned_items_table', 24),
 (38, '2025_01_07_043223_create_sentiment_analyses_table', 26),
 (42, '2025_01_09_125629_create_feedbacks_table', 28),
 (46, '2025_03_13_144754_create_email_otps_table', 31),
@@ -647,9 +666,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (53, '2024_08_21_050816_create_user_clients_table', 35),
 (54, '2025_03_23_062355_create_sms_otps_table', 36),
 (56, '2025_03_28_100224_create_medical_history_physical_exams_table', 37),
-(58, '2025_03_28_102522_create_medical_history_diagnoses_table', 37),
 (62, '2025_04_05_144905_create_clinic_service_types_table', 40),
-(64, '2025_03_28_103210_create_medical_histories_table', 42),
 (65, '2025_04_11_050656_create_pet_types_table', 43),
 (66, '2025_03_23_143405_create_pet_breeds_table', 44),
 (68, '2024_10_01_032309_create_pets_table', 45),
@@ -659,7 +676,11 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (77, '2024_09_29_140328_create_inventories_table', 51),
 (78, '2024_09_30_090820_create_appointments_table', 52),
 (79, '2025_04_23_091208_create_appointment_pets_table', 53),
-(80, '2025_04_23_091502_create_appointment_pets_services_table', 54);
+(80, '2025_04_23_091502_create_appointment_pets_services_table', 54),
+(82, '2025_03_28_102522_create_medical_history_diagnoses_table', 56),
+(83, '2025_03_28_103210_create_medical_histories_table', 57),
+(85, '2024_12_14_141656_create_appointment_assigned_items_table', 59),
+(86, '2024_12_21_052647_create_inventory_items_useds_table', 60);
 
 -- --------------------------------------------------------
 
@@ -728,7 +749,7 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (129, 'App\\Models\\user_clients', 179411, 'main', '77560570a3d3a33952fe17047c86486521c60a085bc5eff578ceda6c7e464311', '[\"*\"]', '2025-04-11 07:52:52', NULL, '2025-04-11 07:47:44', '2025-04-11 07:52:52'),
 (146, 'App\\Models\\user_clients', 18533, 'main', '5f48423ad610b2706f1d5ab02b3d56ecb897dbd58ee5ddfbf892bfb3ada0183d', '[\"*\"]', '2025-04-15 06:35:12', NULL, '2025-04-15 06:35:12', '2025-04-15 06:35:12'),
 (147, 'App\\Models\\user_clients', 887421, 'main', 'b4b202cc0d02f89d28372ec46dd0e1dfd0dcbda17ffaf227285107e941732af9', '[\"*\"]', '2025-04-15 15:48:13', NULL, '2025-04-15 15:02:29', '2025-04-15 15:48:13'),
-(181, 'App\\Models\\user_clients', 936822, 'main', 'eae6807f265c1531862b6afb85d414f8924f21a64ecb72bd839604d9b95aa318', '[\"*\"]', '2025-04-23 02:08:52', NULL, '2025-04-22 22:16:50', '2025-04-23 02:08:52');
+(182, 'App\\Models\\user_admins', 111111, 'main', '5ec2741c5b392f7486fa028f1aa97632239f72159cdc1026332ca943db3f9f77', '[\"*\"]', '2025-04-23 18:51:09', NULL, '2025-04-23 02:47:38', '2025-04-23 18:51:09');
 
 -- --------------------------------------------------------
 
@@ -1393,7 +1414,7 @@ ALTER TABLE `appointments`
 --
 ALTER TABLE `appointment_assigned_items`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `appointment_assigned_items_appointment_foreign` (`appointment`),
+  ADD KEY `appointment_assigned_items_appointment_pet_foreign` (`appointment_pet`),
   ADD KEY `appointment_assigned_items_item_foreign` (`item`);
 
 --
@@ -1498,7 +1519,8 @@ ALTER TABLE `inventory_items`
 --
 ALTER TABLE `inventory_items_useds`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `inventory_items_useds_inventory_foreign` (`inventory`);
+  ADD KEY `inventory_items_useds_inventory_foreign` (`inventory`),
+  ADD KEY `inventory_items_useds_inventory_items_foreign` (`inventory_item_id`);
 
 --
 -- Indexes for table `jobs`
@@ -1520,7 +1542,8 @@ ALTER TABLE `medical_histories`
   ADD PRIMARY KEY (`id`),
   ADD KEY `medical_histories_physical_exams_foreign` (`physical_exams`),
   ADD KEY `medical_histories_laboratory_exams_foreign` (`laboratory_exams`),
-  ADD KEY `medical_histories_diagnosis_foreign` (`diagnosis`);
+  ADD KEY `medical_histories_diagnosis_foreign` (`diagnosis`),
+  ADD KEY `medical_histories_appointment_pet_foreign` (`appointment_pet`);
 
 --
 -- Indexes for table `medical_history_diagnoses`
@@ -1641,13 +1664,13 @@ ALTER TABLE `admin_roles`
 -- AUTO_INCREMENT for table `appointment_assigned_items`
 --
 ALTER TABLE `appointment_assigned_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `appointment_assigned_staffs`
 --
 ALTER TABLE `appointment_assigned_staffs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `appointment_pets`
@@ -1707,6 +1730,12 @@ ALTER TABLE `inventory_categories`
 -- AUTO_INCREMENT for table `inventory_histories`
 --
 ALTER TABLE `inventory_histories`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `inventory_items_useds`
+--
+ALTER TABLE `inventory_items_useds`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
@@ -1719,37 +1748,37 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `medical_histories`
 --
 ALTER TABLE `medical_histories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `medical_history_diagnoses`
 --
 ALTER TABLE `medical_history_diagnoses`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `medical_history_laboratory_exams`
 --
 ALTER TABLE `medical_history_laboratory_exams`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `medical_history_physical_exams`
 --
 ALTER TABLE `medical_history_physical_exams`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=182;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=183;
 
 --
 -- AUTO_INCREMENT for table `pet_breeds`
@@ -1795,7 +1824,7 @@ ALTER TABLE `appointments`
 -- Constraints for table `appointment_assigned_items`
 --
 ALTER TABLE `appointment_assigned_items`
-  ADD CONSTRAINT `appointment_assigned_items_appointment_foreign` FOREIGN KEY (`appointment`) REFERENCES `appointments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `appointment_assigned_items_appointment_pet_foreign` FOREIGN KEY (`appointment_pet`) REFERENCES `appointment_pets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `appointment_assigned_items_item_foreign` FOREIGN KEY (`item`) REFERENCES `inventory_items_useds` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
@@ -1849,12 +1878,14 @@ ALTER TABLE `inventory_items`
 -- Constraints for table `inventory_items_useds`
 --
 ALTER TABLE `inventory_items_useds`
-  ADD CONSTRAINT `inventory_items_useds_inventory_foreign` FOREIGN KEY (`inventory`) REFERENCES `inventories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `inventory_items_useds_inventory_foreign` FOREIGN KEY (`inventory`) REFERENCES `inventories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `inventory_items_useds_inventory_items_foreign` FOREIGN KEY (`inventory_item_id`) REFERENCES `inventory_items` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `medical_histories`
 --
 ALTER TABLE `medical_histories`
+  ADD CONSTRAINT `medical_histories_appointment_pet_foreign` FOREIGN KEY (`appointment_pet`) REFERENCES `appointment_pets` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `medical_histories_diagnosis_foreign` FOREIGN KEY (`diagnosis`) REFERENCES `medical_history_diagnoses` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `medical_histories_laboratory_exams_foreign` FOREIGN KEY (`laboratory_exams`) REFERENCES `medical_history_laboratory_exams` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `medical_histories_physical_exams_foreign` FOREIGN KEY (`physical_exams`) REFERENCES `medical_history_physical_exams` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;

@@ -79,7 +79,7 @@ export default function AdminDosageModal({item, petWeight, handleAssignItem, onC
                 type="primary"
                 size="large"
                 className="mar-top-1"
-                onClick={() => handleAssignItem(item, isCustomDosage, isCustomDosage ? parseFloat(customDosage) : selectedDosage.value)}
+                onClick={() => handleAssignItem(item, isCustomDosage, isCustomDosage ? parseFloat(customDosage) : selectedDosage)}
                 >
                     Add
                 </Button>
