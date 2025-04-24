@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { formatDate, formatDateTime } from "../../../assets/js/utils";
+import { formatDate, formatDateTime, formatTime } from "../../../assets/js/utils";
 import { Table } from "antd";
 
 export default function ClientAppointmentsApproved() {
@@ -27,16 +27,17 @@ export default function ClientAppointmentsApproved() {
             dataIndex: 'id',
         },
         {
-            title: "Pet Name",
-            render: (_, row) => row.pet.name
+            title: "Appointment Method",
+            render: (_, row) => row.type
         },
         {
-            title: "Appointment Type",
-            render: (_, row) => row.service.service
+            title: "Pets",
+            dataIndex: 'appointment_pets',
+            render: (pets) => pets.map(x => x.pet.name).join(', ')
         },
         {
             title: "Appointment Date",
-            render: (_, row) => formatDate(row.date_time)
+            render: (_, row) => `${formatDate(row.appointment_date)} at ${formatTime(row.appointment_time)}`
         },
         {
             title: "Date Approved",

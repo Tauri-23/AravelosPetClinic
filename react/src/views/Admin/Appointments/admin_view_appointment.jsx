@@ -2,13 +2,11 @@ import { useEffect, useState } from "react"
 import { fetchAppointmentDetails } from "../../../services/AppointmentServices";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import "../Appointments/css/admin_appointments.css";
-import * as Icon from "react-bootstrap-icons";
-import {Button, DatePicker, Spin, TimePicker} from "antd";
-import { formatDate, formatDateTime, formatTime, getAge, isEmptyOrSpaces, notify } from "../../../assets/js/utils";
+import {Button, DatePicker, Spin} from "antd";
+import { formatDateTime, formatTime, isEmptyOrSpaces, notify } from "../../../assets/js/utils";
 import { fetchAllStaffs } from "../../../services/StaffServices";
 import { fetchAllInventoryItems } from "../../../services/InventoryServices";
 import React from "react";
-import InventoryBox from "../../../components/inventory_box";
 import axiosClient from "../../../axios-client";
 import MedicalHistoryForm from "./components/medical_history_form";
 import { useModal } from "../../../contexts/ModalContext";
@@ -40,10 +38,6 @@ export default function AdminViewAppointment() {
     const [isMarkDoneDisabled, setMarkDoneDisabled] = useState(true);
 
     const [isApproving, setIsApproving] = useState(false);
-
-    //FOR DOSAGE SETTINGS
-    const [measurementRequired, setMeasurementRequired] = useState(false);
-    const [customMeasurementRequired, setCustomMeasurementRequired] = useState(false);
 
     const [activePetIndex, setActivePetIndex] = useState(0);
 
