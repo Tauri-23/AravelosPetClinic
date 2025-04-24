@@ -584,7 +584,7 @@ export default function MedicalHistoryForm({
      */
     return(
         <div className="appointment-cont1">
-            <h3 className="mar-bottom-1">Input Medical History</h3>
+            <h3 className="mar-bottom-1">Input Assessment Results</h3>
 
             <Steps
             current={step}

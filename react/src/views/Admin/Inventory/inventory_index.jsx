@@ -241,7 +241,7 @@ export default function AdminInventoryIndexOld() {
     return (
         <div className="content1 compressed">
             <div className="inventory-tracking">
-                <h1 className="anybody">Inventory Tracking</h1>
+                <h1 className="anybody">Medicine Inventory Tracking</h1>
 
                 <div className="d-flex-inventory">
 

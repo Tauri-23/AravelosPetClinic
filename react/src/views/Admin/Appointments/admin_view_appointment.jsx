@@ -152,7 +152,6 @@ export default function AdminViewAppointment() {
         const formData = new FormData();
         formData.append('appointmentId', appointmentId);
         formData.append('appointmentDate', `${aptDateConv.getFullYear()}-${aptDateConv.getMonth() + 1}-${aptDateConv.getDate()}`);
-        formData.append('appointmentTime', aptTime);
 
         selectedStaffs.forEach(staff => {
             formData.append('staffs[]', staff.id);
@@ -261,7 +260,7 @@ export default function AdminViewAppointment() {
                                 <Button
                                 size="large"
                                 type="primary"
-                                disabled={selectedStaffs.length < 1 || aptDate === null || aptTime === "" || isApproving}
+                                disabled={selectedStaffs.length < 1 || aptDate === null || isApproving}
                                 onClick={() => handleApproveAppointment(appointment.id)}
                                 >
                                     {isApproving ? "Approving..." : "Approve Appointment"}
@@ -274,7 +273,7 @@ export default function AdminViewAppointment() {
                                 className={`primary-btn-blue1 ${isMarkDoneDisabled ? "disabled" : ""}`}
                                 onClick={() => setMarkingComplete(true)}
                                 >
-                                    Mark as Complete
+                                    Diagnose
                                 </button>
                             )}
 
@@ -374,18 +373,6 @@ export default function AdminViewAppointment() {
                                     />
                                 </div>
 
-                                <div>
-                                    <label htmlFor="time">Time</label><br/>
-                                    <div className="d-flex gap3">
-                                        {aptAvailTime.map((time, index) => (
-                                            <Button
-                                            type={time === aptTime ? "primary" : "default"}
-                                            onClick={() => setAptTime(time)}>
-                                                {formatTime(time)}
-                                            </Button>
-                                        ))}
-                                    </div>
-                                </div>
                             </div>
 
                             <div className="d-flex gap1">

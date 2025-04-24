@@ -25,7 +25,7 @@ export default function AdminInventoryDefault() {
      */
     return(
         <div className="content1 compressed">
-            <h2 className="mar-bottom-1 fw-bold">Inventory Tracking</h2>
+            <h2 className="mar-bottom-1 fw-bold">Medicine Inventory Tracking</h2>
 
             <div className="d-flex align-items-center gap3 mar-bottom-1">
                 <Button

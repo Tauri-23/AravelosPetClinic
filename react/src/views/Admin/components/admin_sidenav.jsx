@@ -43,7 +43,7 @@ export default function AdminSideNav({activeNavLink}) {
 
                 <Link to={'/AdminIndex/InventoryTracking'} className={`admin-sidenav-link ${activeNavLink === "Inventory Tracking" ? "active" : ""}`}>
                     {activeNavLink === "Inventory Tracking" ? <MdInventory2  size={30}/> : <MdOutlineInventory2 size={30}/>}
-                    Inventory Tracking
+                    Medicine Inventory Tracking
                 </Link>
             </div>
         </aside>
