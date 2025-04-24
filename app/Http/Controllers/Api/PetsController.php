@@ -170,7 +170,7 @@ class PetsController extends Controller
     // GET
     public function GetPetsWhereClient($clientId)
     {
-        return response()->json(pets::with(["type", "breed"])->where('client', $clientId)->get());
+        return response()->json(pets::with(["type", "breed", "appointments"])->where('client', $clientId)->get());
     }
 
     public function GetPetInfoWhereId($petId)

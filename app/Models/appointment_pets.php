@@ -28,4 +28,9 @@ class appointment_pets extends Model
     {
         return $this->hasMany(appointment_assigned_items::class, "appointment_pet", "id")->with(["inventory_items_used"]);;
     }
+
+    public function appointment()
+    {
+        return $this->belongsTo(appointments::class, "appointment", "id");
+    }
 }

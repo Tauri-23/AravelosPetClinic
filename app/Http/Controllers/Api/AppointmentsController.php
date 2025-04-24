@@ -71,7 +71,7 @@ class AppointmentsController extends Controller
     {
         return response()->json(appointments::where("pet", $petId)
         ->where('status', $status)
-        ->with(["assigned_staffs", "feedback", "assigned_staffs", "appointment_pets"])
+        ->with(["assigned_staffs", "feedback", "appointment_pets"])
         ->orderBy("appointment_date", "desc")
         ->get());
     }

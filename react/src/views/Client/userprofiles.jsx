@@ -3,7 +3,7 @@
     import "../../assets/css/UserProfile.css";
     import { useModal } from '../../contexts/ModalContext';
     import axiosClient from '../../axios-client';
-    import { notify } from '../../assets/js/utils';
+    import { formatDate, formatTime, notify } from '../../assets/js/utils';
     import { useStateContext } from '../../contexts/ContextProvider';
     import { fetchAllPetsWhereClient, fetchAllPetTypesWithBreeds } from '../../services/PetServices';
     import { fetchAllAppointmentsWherePetandStatus } from "../../services/AppointmentServices";
@@ -40,6 +40,7 @@ const userprofiles = () => {
                     fetchAllPetsWhereClient(user.id),
                     fetchAllPetTypesWithBreeds()
                 ])
+                console.log(petsDb);
                 setPetTypes(petTypesDb)
                 setPets(petsDb);
             } catch (error) {
@@ -57,21 +58,18 @@ const userprofiles = () => {
      * PET Handlers
      */
     const handlePetClick = (pet) => {
-        setSelectedPet(pet);
-        fetchAllAppointmentsWherePetandStatus(pet.id, "Completed")
-        .then((appts) => {
-            console.log(appts);  // Log the fetched appointments for debugging
-            setHistory(appts);   // Set the fetched appointments to the history state
-        })
-        .catch((error) => console.error(error));
-        console.log(appts)
+        const appointment = pet.appointments.flatMap(apt => apt.appointment);
+        setHistory(appointment);
     };
 
     const handleEditPetClick = (pet) =>{
         showModal('EditPetModal1', { pet, setPets, petTypes });
     };
     const showVaccineCard = (pet) =>{
-        showModal('VaccineCardModal', { pet });
+        const medHists = pet.appointments.flatMap(apt => apt.medical_history);
+        console.log(pet);
+        console.log(medHists);
+        showModal('VaccineCardModal', { pet, medHists });
     };
 
 
@@ -135,12 +133,12 @@ const userprofiles = () => {
      */
     const historyColumns =[
         {
-            title: "Appointment Type",
-            render: (_, row) => row.service.service
+            title: "Appointment ID",
+            dataIndex: "id"
         },
         {
             title: "Appointment Date",
-            render: (_, row) => formatDateTime(row.date_time)
+            render: (_, row) => `${formatDate(row.appointment_date)} at ${formatTime(row.appointment_time)}`
         },
 
     ]

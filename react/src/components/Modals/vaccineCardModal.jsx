@@ -1,36 +1,18 @@
 import * as Icon from 'react-bootstrap-icons';
 import { Table } from "antd";
+import { useEffect, useState } from 'react';
+import { formatDate, getAge } from '../../assets/js/utils';
 
-export function VaccineCardModal({ pet, onClose }) {
-
-    const [pets, setPetAppts] = useState(null);
-
-
-    useEffect(() => {
-        setActiveNavLink("Profile");
-
-        const getAllAppts = async () => {
-            try {
-                const [petApptsDb] = await Promise.all([
-                    fetchAllAppointmentsWherePetandStatus(pet.id, "Completed"),
-                ])
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        getAllPets();
-
-
-    }, []);
+export function VaccineCardModal({ pet, medHists, onClose }) {
 
     const vaccineCardColumns = [
         {
             title: "Age",
-
+            dataIndex: "age"
         },
         {
             title: "Date Given",
-            dataIndex: "dateGiven",
+            render: (_, row) => formatDate(row.created_at)
         },
         {
             title: "Weight",
@@ -38,16 +20,13 @@ export function VaccineCardModal({ pet, onClose }) {
         },
         {
             title: "Vaccine/s",
-            dataIndex: "vaccines",
+            render: (_, row) => row.diagnosis.vaccine_given
         },
         {
             title: "Next Dose",
-            dataIndex: "nextDose",
+            render: (_, row) => row.next_appointment_date ? formatDate(row.next_appointment_date) : "N/A"
         },
     ];
-
-    // You can replace this with wherever your records are stored
-    const vaccineRecords = pet?.vaccineRecords || [];
 
     return (
         <div className="modal1">
@@ -60,7 +39,7 @@ export function VaccineCardModal({ pet, onClose }) {
 
                 <Table
                     columns={vaccineCardColumns}
-                    dataSource={vaccineRecords.map((item, index) => ({ ...item, key: index }))}
+                    dataSource={medHists.map((item, index) => ({ ...item, key: index, age: getAge(pet.dob)}))}
                     bordered
                 />
             </div>
