@@ -11,7 +11,7 @@
     import * as Icon from 'react-bootstrap-icons';
     import { Button,Spin,Table} from 'antd';
     import { useNavigate, useOutletContext } from 'react-router-dom';
-
+    import { Outlet } from 'react-router-dom';
 
 const userprofiles = () => {
     const navigate = useNavigate();
@@ -70,6 +70,10 @@ const userprofiles = () => {
     const handleEditPetClick = (pet) =>{
         showModal('EditPetModal1', { pet, setPets, petTypes });
     };
+    const showVaccineCard = (pet) =>{
+        showModal('VaccineCardModal', { pet });
+    };
+
 
     const handleAddPetPost = (data, petPic) => {
         const formData = new FormData();
@@ -271,6 +275,12 @@ const userprofiles = () => {
                                         src={`/assets/media/pets/${pet.picture || "petDefault.png"}`}
                                         alt={pet.name}
                                         className="pet-picture rounded-corners" />
+                                        <Icon.CardHeading size={18} style={{left:1}} className="peteditbtn shadow position-absolute p-1 rounded full text-white cursor-pointer"
+                                        onClick={(e)=>{
+                                            e.stopPropagation();
+                                            showVaccineCard(pet)}
+                                        }>
+                                        </Icon.CardHeading>
                                         <Icon.PencilFill size={18} className="peteditbtn shadow position-absolute p-1 rounded full text-white cursor-pointer"
                                         onClick={(e)=>{
                                             e.stopPropagation();
@@ -303,12 +313,16 @@ const userprofiles = () => {
                         </div>
 
                     </div>
+
+                    <Outlet context={{ selectedPet, setSelectedPet}}/>
                 </>
             )
             : (
                 <Spin size='large'/>
             )}
         </div>
+
+
     );
 };
 

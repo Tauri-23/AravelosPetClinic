@@ -35,6 +35,7 @@ import ViewMedicalHistoryFileModal from "../components/Modals/viewMedicalHistory
 import ClientBookAptAddPet from "../views/Client/BookAppointment/components/clientBookAptAddPet.jsx";
 import ClientBookAptAddPetService from "../views/Client/BookAppointment/components/clientBookAptAddPetService.jsx";
 import AdminDosageModal from "../components/Modals/adminDosageModal.jsx";
+import { VaccineCardModal } from "../components/Modals/vaccineCardModal.jsx";
 
 const ModalManager = () => {
     const {modalState, hideModal} = useModal();
@@ -88,23 +89,23 @@ const ModalManager = () => {
 
             case 'FeedbackModal1':
                 return <FeedbackModal1 {...modalState.props} onClose={hideModal}/>;
-            
+
             case 'AddItemConfirmationModal1':
                 return <AddItemConfirmationModal1 {...modalState.props} onClose={hideModal}/>;
-            
+
             case 'AddCategoryConfirmationModal1':
                 return <AddCategoryConfirmationModal1 {...modalState.props} onClose={hideModal}/>;
-            
+
             case 'TransactionDetailsModal1':
                 return <TransactionDetailsModal1 {...modalState.props} onClose={hideModal}/>;
-                
+
             case 'AdminShowAppointment':
                 return <AdminShowAppointment {...modalState.props} onClose={hideModal}/>;
 
 
 
 
-            
+
             /**
              * ADMIN MEDICAL HISTORY
              */
@@ -117,7 +118,7 @@ const ModalManager = () => {
 
 
 
-            
+
             /**
              * ADMIN MANAGE INVENTORIES
              */
@@ -143,7 +144,7 @@ const ModalManager = () => {
 
 
 
-            
+
             /**
              * ADMIN BOOK APT
              */
@@ -159,7 +160,7 @@ const ModalManager = () => {
                 return <ClientBookAptAddPet {...modalState.props} onClose={hideModal}/>;
             case "ClientBookAptAddPetService":
                 return <ClientBookAptAddPetService {...modalState.props} onClose={hideModal}/>;
-             
+
 
 
 
@@ -174,6 +175,8 @@ const ModalManager = () => {
                 return <AddPetMedicationsModal {...modalState.props} onClose={hideModal}/>;
             case 'AddPetDiseasesModal':
                 return <AddPetDiseasesModal {...modalState.props} onClose={hideModal}/>;
+            case 'VaccineCardModal':
+                return <VaccineCardModal {...modalState.props} onClose={hideModal}/>;
 
 
 
@@ -186,26 +189,26 @@ const ModalManager = () => {
                 return <VerifyPhoneModal {...modalState.props} onClose={hideModal}/>
             case 'VerifyEmailModal':
                 return <VerifyEmailModal {...modalState.props} onClose={hideModal}/>
-            
-            
-            
-            
+
+
+
+
             /**
              * Manage Accounts
              */
             case 'AdminViewAccountInfoModal1':
                 return <AdminViewAccountInfo {...modalState.props} onClose={hideModal}/>;
 
-            
 
-            
+
+
             /**
              * General
              */
             case 'GeneralConfirmationModal':
                 return <GeneralConfirmationModal {...modalState.props} onClose={hideModal}/>;
 
-                    
+
             /*
             |   DEFAULT
             */
