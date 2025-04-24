@@ -20,9 +20,37 @@ export default function MedicalHistoryForm({
     selectedItems,
     handleDeselectItem
 }) {
+
+
+
+
     const {showModal} = useModal();
     const navigate = useNavigate();
     const timeOptions = ["08:00:00", "09:00:00", "10:00:00", "11:00:00", "13:00:00", "14:00:00", "15:00:00", "16:00:00"];
+    const activePetIndex = appointment?.appointment_pets?.findIndex(p => p.id === activePet.id);
+    const vaccination = petServices?.find(s => s.service?.service === "Vaccination");
+    const vaccineGivenAuto = vaccination?.service_type?.service_type || "";
+    const [appointment, setAppointment] = useState(null);
+
+    useEffect(() => {
+        setActiveNavLink("Appointments");
+        const getAll = async() => {
+            const [appointmentDb, staffsDb, inventoryItemsDb] = await Promise.all([
+                fetchAppointmentDetails(appointmentId),
+                fetchAllStaffs(),
+                fetchAllInventoryItems()
+            ]);
+            setAppointment(appointmentDb);
+            setStaffs(staffsDb);
+            setInventoryItems(inventoryItemsDb);
+        }
+        getAll();
+    }, []);
+    useEffect(() => {
+        if (vaccination) {
+          setVaccineGiven(vaccination.service_type?.service_type);
+        }
+      }, [appointment, activePet]);
 
     /**
      * Basic Information
@@ -576,8 +604,6 @@ export default function MedicalHistoryForm({
             LabExamFields.find(x => x.title === title)?.removeFile(fileIndex);
         }
     };
-
-
 
     /**
      * Render
