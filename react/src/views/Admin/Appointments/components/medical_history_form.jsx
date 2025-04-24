@@ -355,7 +355,7 @@ export default function MedicalHistoryForm({
             removeFile: (index) => setOtherTestFiles(prev => prev.filter((_, i) => i !== index))
         }
     ];
-    
+
 
 
 
@@ -373,10 +373,10 @@ export default function MedicalHistoryForm({
                 respiratory === "" || circulatory === "" || musculoskeleton === "" ||
                 lymphNodes === "" || venousReturn === "" || integumentarySkin === "";
             case 3:
-                return isEmptyOrSpaces(tentativeDiagnosis) || isEmptyOrSpaces(finalDiagnosis) || 
+                return isEmptyOrSpaces(tentativeDiagnosis) || isEmptyOrSpaces(finalDiagnosis) ||
                 isEmptyOrSpaces(prognosis) || isEmptyOrSpaces(vaccineGiven) ||
                 isEmptyOrSpaces(prescribedMed);
-            default: 
+            default:
                 return false;
         }
     }
@@ -548,7 +548,7 @@ export default function MedicalHistoryForm({
         formData.append("procedure", isEmptyOrSpaces(procedure) ? "" : procedure);
         formData.append("selectedNextAptDate", selectedNextAptDate !== null ? `${appointmentDate.getFullYear()}-${appointmentDate.getMonth() + 1}-${appointmentDate.getDate()}` : "");
         formData.append("note", note);
-        
+
         formData.append("appointmentId", appointmentId);
 
         axiosClient.post("/create-med-history", formData)
@@ -561,7 +561,7 @@ export default function MedicalHistoryForm({
                 else {
                     window.location.reload();
                 }
-                
+
             }
         }).catch(error => console.error(error));
     }
@@ -824,7 +824,7 @@ export default function MedicalHistoryForm({
                         ? (
                             <div key={index} className="mar-bottom-2">
                                 <label htmlFor={`${index}-otherTest`}>Other Test: </label>
-                                <Input 
+                                <Input
                                 className="mar-bottom-3"
                                 id={`${index}-otherTest`}
                                 size="large"
@@ -833,7 +833,7 @@ export default function MedicalHistoryForm({
                                 placeholder="other"/>
 
                                 <label htmlFor={`${index}-otherTestResult`}>Other Test Result: </label>
-                                <Input 
+                                <Input
                                 className="mar-bottom-3"
                                 id={`${index}-otherTestResult`}
                                 size="large"
@@ -854,16 +854,16 @@ export default function MedicalHistoryForm({
                                 {lab.isChecked && !["Parvo Test", "Heartworm Test", "Distemper test"].some(test => lab.title.includes(test)) && (
                                     <>
                                         <label htmlFor={index}>Result: </label>
-                                        <Input 
+                                        <Input
                                         id={index}
                                         size="large"
-                                        value={lab.resultValue} 
+                                        value={lab.resultValue}
                                         onChange={lab.setValue}
                                         placeholder="result"
                                         className="mar-bottom-3"/>
                                     </>
                                 )}
-                                
+
                                 {lab.isChecked && ["Parvo Test", "Heartworm Test", "Distemper test"].some(test => lab.title.includes(test)) && (
                                     <>
                                         <label htmlFor={index}>Result: </label><br/>
@@ -881,10 +881,10 @@ export default function MedicalHistoryForm({
                                     <div>
                                         <h5>Photos</h5>
                                         <div className="d-flex gap1 align-items-center">
-                                            
+
                                             {lab.files?.map((file, index) => (
-                                                <MedicalHistoryFormFileBox 
-                                                file={file.file} 
+                                                <MedicalHistoryFormFileBox
+                                                file={file.file}
                                                 desc={file.desc}
                                                 handleAddRemoveFile={() => handleAddRemoveFile(lab.title, "remove", index)}/>
                                             ))
@@ -1044,7 +1044,7 @@ export default function MedicalHistoryForm({
             <div className="d-flex gap3 justify-content-end">
                 {step > 0 && (<Button type="default" size="large" onClick={() => setStep(prev => prev - 1)}>Back</Button>)}
                 {step > 2
-                ? (<Button type="primary" disabled={isNextBtnDisabled()} size="large" onClick={handleMarkAsCompletePost}>Mark as Complete</Button>)
+                ? (<Button type="primary" disabled={isNextBtnDisabled()} size="large" onClick={handleMarkAsCompletePost}>Finish Diagnosis</Button>)
                 : (<Button type="primary" disabled={isNextBtnDisabled()} size="large" onClick={() => setStep(prev => prev + 1)}>Next</Button>)}
             </div>
         </div>

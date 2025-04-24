@@ -263,7 +263,7 @@ export default function AdminViewAppointment() {
                                 className={`primary-btn-blue1 ${isMarkDoneDisabled ? "disabled" : ""}`}
                                 onClick={() => setMarkingComplete(true)}
                                 >
-                                    Mark as Complete
+                                    Diagnose
                                 </button>
                             )}
 

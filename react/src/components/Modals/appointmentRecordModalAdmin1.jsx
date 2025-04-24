@@ -12,7 +12,7 @@ export default function AppointmentRecordModalAdmin1({
         { id: "vaccination", label: "Vaccination" },
     ];
     const serviceLabel = serviceOptions?.find(option => option.id === record.service)?.label || "Unknown Service";
-    
+
     const renderDetails = () => {
         switch(record.status){
             case 'Pending':
@@ -70,7 +70,7 @@ export default function AppointmentRecordModalAdmin1({
                                 Cancel Appointment
                             </button>
                             <button className='primary-btn-blue1 left-margin-s w-100' onClick={(e) => {handleMComplete(record.id); onClose()}}>
-                                Mark as Completed
+                                Diagnose
                             </button>
                         </div>
                     </div>
