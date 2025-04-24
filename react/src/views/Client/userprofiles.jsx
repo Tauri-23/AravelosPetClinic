@@ -67,8 +67,6 @@ const userprofiles = () => {
     };
     const showVaccineCard = (pet) =>{
         const medHists = pet.appointments.flatMap(apt => apt.medical_history);
-        console.log(pet);
-        console.log(medHists);
         showModal('VaccineCardModal', { pet, medHists });
     };
 
