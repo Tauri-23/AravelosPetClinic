@@ -129,6 +129,26 @@ export const getAge = (date) => {
     return age;
 };
 
+export const getAgeAndMonth = (date) => {
+    const birthDate = new Date(date);
+    const today = new Date();
+
+    let years = today.getFullYear() - birthDate.getFullYear();
+    let months = today.getMonth() - birthDate.getMonth();
+    let days = today.getDate() - birthDate.getDate();
+
+    if (days < 0) {
+        months--; // haven't reached the birth day this month
+    }
+
+    if (months < 0) {
+        years--;
+        months += 12;
+    }
+
+    return `${years} year${years !== 1 ? 's' : ''} and ${months} month${months !== 1 ? 's' : ''}`;
+};
+
 export const formatTime = (time) => {
     const [hours, minutes, seconds] = time.split(':');
     
