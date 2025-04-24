@@ -37,6 +37,10 @@ body {
     font-style: normal;
 }
 
+.bg-red1 {
+    background: var(--red1);
+}
+
 
 
 

@@ -5,6 +5,8 @@ import { formatDate, getAge } from '../../assets/js/utils';
 
 export function VaccineCardModal({ pet, medHists, onClose }) {
 
+    console.log(medHists);
+
     const vaccineCardColumns = [
         {
             title: "Age",
@@ -21,6 +23,14 @@ export function VaccineCardModal({ pet, medHists, onClose }) {
         {
             title: "Vaccine/s",
             render: (_, row) => row.diagnosis.vaccine_given
+        },
+        {
+            title: "Prescribed Medications/s",
+            render: (_, row) => row.diagnosis.prescribed_medication
+        },
+        {
+            title: "Medicines Useds",
+            render: (_, row) => row.assignedItems
         },
         {
             title: "Next Dose",

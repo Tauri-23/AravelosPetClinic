@@ -85,6 +85,19 @@ class AppointmentsController extends Controller
         ->get());
     }
 
+    public function GetAllPendingApprovedAptsThisWeekWhereClient($clientId)
+    {
+        $appointments = Appointments::whereIn('status', ["Pending", "Approved"])
+        ->where("client", $clientId)
+        ->whereBetween('created_at', [
+            Carbon::now()->startOfWeek(), 
+            Carbon::now()->endOfWeek()
+        ])
+        ->get();
+
+        return response()->json($appointments);
+    }
+
 
 
 

@@ -29,6 +29,20 @@ export default function AdminViewInventory() {
         getAll();
     }, []);
 
+    /**
+     * 
+     */
+    const isExpired = (expDate) => {
+        const expiration = new Date(expDate);
+        const today = new Date();
+    
+        // Set the time to 00:00:00 for accurate date-only comparison
+        expiration.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+    
+        return expiration <= today;
+    };
+
 
 
     /**
@@ -155,13 +169,16 @@ export default function AdminViewInventory() {
                             )}
 
                             {inventory.inventory_items.length > 0 && inventory.inventory_items.map(item => (
-                                <tr key={item.id}>
+                                <tr className={`${isExpired(item.expiration_date) ? "bg-red1 color-white" : ""}`} key={item.id}>
                                     <td>{item.id}</td>
                                     <td>{formatDate(item.expiration_date)}</td>
                                     <td>{formatDate(item.created_at)}</td>
                                     <td className="d-flex">
                                         {/* <button className="primary-btn-blue1">Edit</button> */}
-                                        <button className="primary-btn-red1" onClick={() => handleDeleteInventoryItemsClick(item.id)}>Issue</button>
+                                        {isExpired(item.expiration_date) 
+                                        ? (<>Expired</>)
+                                        : (<button className="primary-btn-red1" onClick={() => handleDeleteInventoryItemsClick(item.id)}>Issue</button>)}
+                                        
                                     </td>
                                 </tr>
                             ))}

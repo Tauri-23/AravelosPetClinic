@@ -24,6 +24,14 @@ export default function AddPetModal1({ handleAddPetPost, petTypes, onClose }) {
         setPetIn({...petIn, [e.target.name]: e.target.value});
     }
 
+    const getMaxDate = () => {
+        const date = new Date();
+        date.setDate(date.getDate() - 3); // subtract 3 days
+        return date.toISOString().split("T")[0]; // format as YYYY-MM-DD
+      };
+    
+    const maxDate = getMaxDate();
+
 
 
     /**
@@ -90,7 +98,7 @@ export default function AddPetModal1({ handleAddPetPost, petTypes, onClose }) {
                 onChange={(e) => handleInputChange({target: {name: "gender", value: e}})}
                 />
 
-                <input type="date" name="dob" className="w-100 mar-bottom-3" onChange={handleInputChange}/>
+                <input type="date" name="dob" max={maxDate} className="w-100 mar-bottom-3" onChange={handleInputChange}/>
 
                 <input
                 className="w-100 mar-bottom-1"

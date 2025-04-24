@@ -2,12 +2,23 @@ import { useState } from "react";
 import * as Icon from "react-bootstrap-icons";
 
 export default function AddInventoryItemsModal1({handleAdd, onClose}) {
-    const nextWeek = new Date();
-    nextWeek.setDate(nextWeek.getDate() + 7);
-    const minDate = nextWeek.toISOString().split("T")[0];
-
     const [expiration, setExpiration] = useState("");
     const [qty, setQty] = useState(1);
+
+    // Calculate the date 3 months from now
+    const getMinDate = () => {
+        const today = new Date();
+        today.setMonth(today.getMonth() + 3);
+
+        // Adjust for month overflow (e.g., adding 3 months to Nov 30 could result in an invalid date)
+        if (today.getDate() !== new Date(today.getFullYear(), today.getMonth(), today.getDate()).getDate()) {
+        today.setDate(0); // Go back to the last day of the previous month
+        }
+
+        return today.toISOString().split("T")[0]; // Format as yyyy-mm-dd
+    };
+
+    const minDate = getMinDate();
 
 
     return(

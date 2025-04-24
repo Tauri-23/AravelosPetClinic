@@ -11,6 +11,7 @@ import axiosClient from "../../../axios-client";
 import MedicalHistoryForm from "./components/medical_history_form";
 import { useModal } from "../../../contexts/ModalContext";
 import MedicalHistoryFileBoxRead from "./components/medical_history_file_box_read";
+import dayjs from 'dayjs';
 
 
 export default function AdminViewAppointment() {
@@ -45,7 +46,30 @@ export default function AdminViewAppointment() {
     const selectedPetMedHist = appointment?.appointment_pets?.[activePetIndex].medical_history[0];
     const selectedPetAssItem = appointment?.appointment_pets?.[activePetIndex].assigned_items;
 
-    console.log(selectedPetAssItem);
+    // List of holidays (adjust as needed)
+    const holidays = [
+        dayjs('2025-01-01'), // New Year's Day
+        dayjs('2025-04-09'), // Araw ng Kagitingan
+        dayjs('2025-12-25'), // Christmas
+    ];
+  
+    const isHoliday = (date) => {
+        return holidays.some((holiday) => date.isSame(holiday, 'day'));
+    };
+  
+    // Disable past dates, today, Tuesdays, and holidays
+    const disableDate = (current) => {
+        if (!current || !dayjs.isDayjs(current)) return true;
+    
+        const today = dayjs().startOf('day');
+    
+        return (
+        current.isSame(today, 'day') ||     // today
+        current.isBefore(today, 'day') ||   // past dates
+        current.day() === 2 ||              // Tuesdays
+        isHoliday(current)                  // holidays
+        );
+    };
     
 
 
@@ -369,6 +393,7 @@ export default function AdminViewAppointment() {
                                     <DatePicker
                                     size="large"
                                     onChange={setAptDate}
+                                    disabledDate={disableDate}
                                     value={aptDate}
                                     />
                                 </div>

@@ -65,9 +65,22 @@ const userprofiles = () => {
     const handleEditPetClick = (pet) =>{
         showModal('EditPetModal1', { pet, setPets, petTypes });
     };
-    const showVaccineCard = (pet) =>{
+    const showVaccineCard = (pet) => {
         const medHists = pet.appointments.flatMap(apt => apt.medical_history);
-        showModal('VaccineCardModal', { pet, medHists });
+        const assignedItems = pet.appointments.flatMap(apt =>
+            apt.assigned_items.flatMap(assItem =>
+                assItem.inventory_items_used?.inventory?.name
+            )
+        );
+    
+        // Merge medHists with assignedItems based on their index
+        const combinedData = medHists.map((medHist, index) => ({
+            ...medHist,          // spread existing medical history
+            assignedItems: assignedItems[index], // append the corresponding assigned item
+        }));
+    
+        // Show the modal with combined data
+        showModal('VaccineCardModal', { pet, medHists: combinedData });
     };
 
 

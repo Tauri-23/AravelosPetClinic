@@ -108,6 +108,7 @@ Route::get('/get-appt-where-id/{appointmentId}', [AppointmentsController::class,
 Route::get('/get-all-appointments-where-status/{status}', [AppointmentsController::class,'GetAllAppointmentsWhereStatus']);
 Route::get('/get-all-appointments-where-pet-and-status/{petId}/{status}', [AppointmentsController::class,'GetAllAppointmentsWherePetAndStatus']);
 Route::get('/get-all-appointments-where-status-month-and-year/{status}/{month}/{year}', [AppointmentsController::class,'GetAllAppointmentsWhereStatusMonthAndYear']);
+Route::get('/get-all-pending-approved-apts-this-week-where-client/{clientId}', [AppointmentsController::class, 'GetAllPendingApprovedAptsThisWeekWhereClient']);
 
 Route::post('/book-appointment', [AppointmentsController::class,'createAppointment']);
 Route::post('/cancel-appointment', [AppointmentsController::class,'cancelAppointment']);

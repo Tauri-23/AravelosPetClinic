@@ -77,6 +77,18 @@ export const fetchAllAppointmentsWhereStatusMonthAndYear = async(status, month, 
 }
 
 
+
+export const fetchAllPendingApprovedAptsThisWeekWhereClient = async(clientId) => {
+    try {
+        const response = await axiosClient.get(`/get-all-pending-approved-apts-this-week-where-client/${clientId}`);
+        return response.data;
+    } catch(error) {
+        console.error(error)
+        throw error;
+    }
+}
+
+
 /**
  * 
  * @param {string} appointmentId

@@ -40,9 +40,4 @@ class appointments extends Model
     {
         return $this->hasMany(appointment_assigned_items::class, "appointment", "id")->with("inventory_items_used");
     }
-
-    // public function medical_history()
-    // {
-    //     return $this->belongsTo(medical_histories::class, "medical_history", "id")->with(["physical_exams", "laboratory_exams", "diagnosis"]);
-    // }
 }

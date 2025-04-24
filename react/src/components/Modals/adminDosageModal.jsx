@@ -8,10 +8,10 @@ export default function AdminDosageModal({item, petWeight, handleAssignItem, onC
     const [customDosage, setCustomDosage] = useState(0);
 
     const dosages = [
-        {label: "toy", value: item.toy_deduct}, 
-        {label: "small", value: item.sm_deduct}, 
-        {label: "medium", value: item.med_deduct}, 
-        {label: "large", value: item.lg_deduct}
+        {label: "toy", alterLabel: "2Kg - 4Kg", value: item.toy_deduct}, 
+        {label: "small", alterLabel: "4.1Kg - 10Kg", value: item.sm_deduct}, 
+        {label: "medium", alterLabel: "10.1Kg - 25Kg", value: item.med_deduct}, 
+        {label: "large", alterLabel: "above 25.1Kg", value: item.lg_deduct}
     ];
 
     const getWeight = () => {
@@ -69,7 +69,7 @@ export default function AdminDosageModal({item, petWeight, handleAssignItem, onC
                             key={index}
                             size="large"
                             type={selectedDosage.label === dosage.label ? "primary" : "default"}>
-                                {dosage.label}
+                                {dosage.alterLabel}
                             </Button>
                         ))}
                     </div>

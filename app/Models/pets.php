@@ -26,6 +26,6 @@ class pets extends Model
 
     public function appointments()
     {
-        return $this->hasMany(appointment_pets::class, "pet", "id")->with(["medical_history", "appointment"]);
+        return $this->hasMany(appointment_pets::class, "pet", "id")->with(["medical_history", "appointment", "assigned_items"]);
     }
 }

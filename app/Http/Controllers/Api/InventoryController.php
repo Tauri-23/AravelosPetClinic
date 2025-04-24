@@ -40,6 +40,17 @@ class InventoryController extends Controller
             DB::beginTransaction();
             $addMedIn = json_decode($request->input("addMedicineIn"));
 
+            // Check if name is existing
+            $existingMedName = inventory::where("name", $addMedIn->name)->exists();
+
+            if($existingMedName)
+            {
+                return response()->json([
+                    "status" => 401,
+                    "message" => "Name already exists!"
+                ]);
+            }
+
             if($request->hasMedPic === "true")
             {
                 $photo = $request->file('medPic');
