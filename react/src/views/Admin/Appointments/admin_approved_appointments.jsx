@@ -40,7 +40,7 @@ export default function AdminApprovedAppointments() {
         },
         {
             title: "Appointment Date",
-            render: (_, row) => `${formatDate(row.appointment_date)} at ${formatTime(row.appointment_time)}`
+            render: (_, row) => `${formatDate(row.appointment_date)}`
         },
         {
             title: "Date Approved",
@@ -56,7 +56,7 @@ export default function AdminApprovedAppointments() {
     const handleAppointmentRecordClick = (record) => {
         showModal('AppointmentRecordModalAdmin1', {record, handleCancel, handleMComplete});
     }
-    
+
     const handleCancel = (recordId) =>{
         console.log(recordId);
         const handleFunction = "handleCancelPost";

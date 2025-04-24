@@ -37,7 +37,7 @@ export default function ClientAppointmentsApproved() {
         },
         {
             title: "Appointment Date",
-            render: (_, row) => `${formatDate(row.appointment_date)} at ${formatTime(row.appointment_time)}`
+            render: (_, row) => `${formatDate(row.appointment_date)}`
         },
         {
             title: "Date Approved",
