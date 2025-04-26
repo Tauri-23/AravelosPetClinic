@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { fetchAppointmentDetails } from "../../../services/AppointmentServices";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import "../Appointments/css/admin_appointments.css";
-import {Button, DatePicker, Spin} from "antd";
+import {Button, DatePicker, Spin, Input} from "antd";
 import { formatDateTime, formatTime, isEmptyOrSpaces, notify } from "../../../assets/js/utils";
 import { fetchAllStaffs } from "../../../services/StaffServices";
 import { fetchAllInventoryItems } from "../../../services/InventoryServices";
@@ -11,7 +11,7 @@ import axiosClient from "../../../axios-client";
 import MedicalHistoryForm from "./components/medical_history_form";
 import { useModal } from "../../../contexts/ModalContext";
 import MedicalHistoryFileBoxRead from "./components/medical_history_file_box_read";
-import dayjs from 'dayjs';
+import dayjs from "dayjs"
 
 
 export default function AdminViewAppointment() {
@@ -46,23 +46,24 @@ export default function AdminViewAppointment() {
     const selectedPetMedHist = appointment?.appointment_pets?.[activePetIndex].medical_history[0];
     const selectedPetAssItem = appointment?.appointment_pets?.[activePetIndex].assigned_items;
 
+    console.log(selectedPetAssItem);
     // List of holidays (adjust as needed)
     const holidays = [
         dayjs('2025-01-01'), // New Year's Day
         dayjs('2025-04-09'), // Araw ng Kagitingan
         dayjs('2025-12-25'), // Christmas
     ];
-  
+
     const isHoliday = (date) => {
         return holidays.some((holiday) => date.isSame(holiday, 'day'));
     };
-  
+
     // Disable past dates, today, Tuesdays, and holidays
     const disableDate = (current) => {
         if (!current || !dayjs.isDayjs(current)) return true;
-    
+
         const today = dayjs().startOf('day');
-    
+
         return (
         current.isSame(today, 'day') ||     // today
         current.isBefore(today, 'day') ||   // past dates
@@ -70,7 +71,6 @@ export default function AdminViewAppointment() {
         isHoliday(current)                  // holidays
         );
     };
-    
 
 
     /**
@@ -141,7 +141,7 @@ export default function AdminViewAppointment() {
             return;
         }
         showModal("AdminDosageModal", {
-            item, 
+            item,
             petWeight: weight,
             handleAssignItem
         });
@@ -392,10 +392,15 @@ export default function AdminViewAppointment() {
                                     <label htmlFor="date">Date</label><br/>
                                     <DatePicker
                                     size="large"
-                                    onChange={setAptDate}
                                     disabledDate={disableDate}
+                                    onChange={setAptDate}
                                     value={aptDate}
                                     />
+                                    {aptDate && (
+                                        <>
+                                        <br></br>The grace period is until {aptDate ? dayjs(aptDate).add(7, 'day').format('YYYY-MM-DD') : ''}.
+                                        </>
+                                    )}
                                 </div>
 
                             </div>
@@ -633,10 +638,10 @@ export default function AdminViewAppointment() {
                                         <h5>Final Diagnosis</h5>
                                         <p>{selectedPetMedHist.diagnosis.final_diagnosis}</p>
                                     </div>
-                                    <div className="w-100">
+                                    {/* <div className="w-100">
                                         <h5>Prognosis</h5>
                                         <p>{selectedPetMedHist.diagnosis.prognosis}</p>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div className="d-flex gap1 mar-bottom-2">
                                     <div className="w-100">
@@ -656,11 +661,12 @@ export default function AdminViewAppointment() {
                      * Mark as Complete Form
                      */}
                     {isMarkingComplete && (
-                        <MedicalHistoryForm 
+                        <MedicalHistoryForm
                         appointmentId={appointment.id}
                         inventoryItems={inventoryItems}
                         handleDosage={handleDosage}
                         selectedItems={selectedItems}
+                        servicesList={appointment.appointment_pets[activePetIndex].appointment_pet_services?.flatMap(x => x.service_type?.service_type).join(", ")}
                         activePet={appointment.appointment_pets?.[activePetIndex]}
                         handleDeselectItem={handleDeselectItem}
                         />

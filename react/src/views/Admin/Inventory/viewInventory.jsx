@@ -30,16 +30,16 @@ export default function AdminViewInventory() {
     }, []);
 
     /**
-     * 
+     *
      */
     const isExpired = (expDate) => {
         const expiration = new Date(expDate);
         const today = new Date();
-    
+
         // Set the time to 00:00:00 for accurate date-only comparison
         expiration.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
-    
+
         return expiration <= today;
     };
 
@@ -59,7 +59,7 @@ export default function AdminViewInventory() {
             .then(({data}) => {
                 if(data.status === 200) {
                     setInventory(data.inventory);
-                }                
+                }
                 notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
             }).catch(error => console.error(error));
         }});
@@ -77,7 +77,7 @@ export default function AdminViewInventory() {
                 .then(({data}) => {
                     if(data.status === 200) {
                         setInventory(data.inventory);
-                    }                
+                    }
                     notify(data.status === 200 ? 'success' : 'error', data.message, 'top-center', 3000);
                 }).catch(error => console.error(error));
             },
@@ -133,12 +133,14 @@ export default function AdminViewInventory() {
                         <div className="view-inventory-cont1-info">
                             <h2>{inventory.name} {inventory.measurement_value}{inventory.measurement_unit}</h2>
                             <h4>{formatToPhilPeso(inventory.price)}</h4>
-                            <h4>Instock: {inventory.qty}</h4>
+                            <h4>Stock on Hand: {inventory.qty}</h4>
+                            <h4>Consumable: {inventory.inventory_items.filter(x => !isExpired(x.expiration_date)).length}</h4>
+                            <h4>Expired: {inventory.inventory_items.filter(x => isExpired(x.expiration_date)).length}</h4>
                             <p>{inventory.desc}</p>
                         </div>
                         <div className="view-inventory-btns">
-                            <button 
-                            className="primary-btn-blue1" 
+                            <button
+                            className="primary-btn-blue1"
                             onClick={handleEditMedicineClick}
                             >
                                 Edit
@@ -175,10 +177,10 @@ export default function AdminViewInventory() {
                                     <td>{formatDate(item.created_at)}</td>
                                     <td className="d-flex">
                                         {/* <button className="primary-btn-blue1">Edit</button> */}
-                                        {isExpired(item.expiration_date) 
+                                        {isExpired(item.expiration_date)
                                         ? (<>Expired</>)
                                         : (<button className="primary-btn-red1" onClick={() => handleDeleteInventoryItemsClick(item.id)}>Issue</button>)}
-                                        
+
                                     </td>
                                 </tr>
                             ))}

@@ -764,10 +764,10 @@ export default function AdminViewAppointment() {
                                     <h5>Final Diagnosis</h5>
                                     <p>{appointment.medical_history.diagnosis.final_diagnosis}</p>
                                 </div>
-                                <div className="w-100">
+                                {/* <div className="w-100">
                                     <h5>Prognosis</h5>
                                     <p>{appointment.medical_history.diagnosis.prognosis}</p>
-                                </div>
+                                </div> */}
                             </div>
                             <div className="d-flex gap1 mar-bottom-2">
                                 <div className="w-100">

@@ -41,7 +41,7 @@ export default function ClientViewAppointment() {
     const selectedPetAssItem = appointment?.appointment_pets?.[activePetIndex].assigned_items;
 
     console.log(selectedPetAssItem);
-    
+
 
 
     /**
@@ -111,14 +111,14 @@ export default function ClientViewAppointment() {
     // useEffect(() => {
     //     if (appointment) {
     //         const appointmentDate = new Date(appointment.date_time);
-    
+
     //         // Strip time from both dates by setting hours to 0
     //         const nowDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     //         const appointmentDateOnly = new Date(appointmentDate.getFullYear(), appointmentDate.getMonth(), appointmentDate.getDate());
-    
+
     //         const diff = appointmentDateOnly.getTime() - nowDateOnly.getTime();
     //         const diffInDays = diff / (1000 * 60 * 60 * 24); // convert ms to days
-    
+
     //         if (diffInDays > 1) {
     //             setIsCancellable(false);
     //         } else {
@@ -379,10 +379,10 @@ export default function ClientViewAppointment() {
                                         <h5>Final Diagnosis</h5>
                                         <p>{selectedPetMedHist.diagnosis.final_diagnosis}</p>
                                     </div>
-                                    <div className="w-100">
+                                    {/* <div className="w-100">
                                         <h5>Prognosis</h5>
                                         <p>{selectedPetMedHist.diagnosis.prognosis}</p>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div className="d-flex gap1 mar-bottom-2">
                                     <div className="w-100">

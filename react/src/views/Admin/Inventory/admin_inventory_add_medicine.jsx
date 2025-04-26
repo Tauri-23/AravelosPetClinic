@@ -26,12 +26,12 @@ export default function AdminInventoryAddMedicine() {
         medDeduct: 0,
         lgDeduct: 0,
     });
-    
+
     const deductionSizes = [
-        {name: "toyDeduct", size: "Toy"}, 
-        {name: "smDeduct", size: "Small"}, 
-        {name: "medDeduct", size: "Medium"}, 
-        {name: "lgDeduct", size: "Large"}
+        {name: "toyDeduct", size: "Toy", alterSize: "2kg-4kg"},
+        {name: "smDeduct", size: "Small", alterSize: "4.1kg-10kg"},
+        {name: "medDeduct", size: "Medium", alterSize: "10.1kg-25kg"},
+        {name: "lgDeduct", size: "Large", alterSize: "25.1kg+"}
     ];
 
 
@@ -124,7 +124,7 @@ export default function AdminInventoryAddMedicine() {
                 ]}
                 className="mar-bottom-1"
                 />
-                
+
                 {/* Medicine Basic Information */}
                 {step === 0 && (
                         <>
@@ -137,7 +137,7 @@ export default function AdminInventoryAddMedicine() {
                             value={addMedicineIn.name}
                             onChange={handleInputChange}
                             />
-                
+
                             <label htmlFor="price">Item Price</label>
                             <Input
                             size="large"
@@ -147,7 +147,7 @@ export default function AdminInventoryAddMedicine() {
                             value={addMedicineIn.price}
                             onChange={(e) => !isNaN(e.target.value) ? handleInputChange(e) : null}
                             />
-                
+
                             <label htmlFor="desc">Item Description</label>
                             <TextArea
                             rows={4}
@@ -163,18 +163,18 @@ export default function AdminInventoryAddMedicine() {
                             <input type="file" accept="image/*" onChange={handleImageUpload} name="photo" id="photo" />
                             {medicineImage && (
                                 <div>
-                                    <img 
+                                    <img
                                     className="mar-top-3"
                                     style={{width: 200, height: 200, borderRadius: 10}}
-                                    src={URL.createObjectURL(medicineImage)} 
-                                    alt="Item Preview" 
+                                    src={URL.createObjectURL(medicineImage)}
+                                    alt="Item Preview"
                                     />
                                 </div>
                             )}
                         </>
                 )}
-                
-        
+
+
                 {/* Dosage and Measurements */}
                 {step === 1 && (
                     <>
@@ -251,7 +251,7 @@ export default function AdminInventoryAddMedicine() {
                                 <div className="d-flex flex-direction-y gap3">
                                     {deductionSizes.map(fieldName => (
                                         <div className="d-flex align-items-center gap3">
-                                            <label style={{width: 100}} htmlFor={fieldName.name}>{fieldName.size}:</label>
+                                            <label style={{width: 200}} htmlFor={fieldName.name}>{fieldName.size}({fieldName.alterSize}):</label>
                                             <Input
                                             style={{width: 100}}
                                             id={fieldName.name}
@@ -263,7 +263,7 @@ export default function AdminInventoryAddMedicine() {
                                             <span>{addMedicineIn.dosageType}</span>
                                         </div>
                                     ))}
-                                    
+
                                 </div>
                             </>
                         )}
@@ -330,29 +330,29 @@ export default function AdminInventoryAddMedicine() {
                 {/* Button Group */}
                 <div className="d-flex align-items-center gap3 mar-top-1">
                     {step > 0 && (
-                        <Button 
+                        <Button
                         size="large"
-                        onClick={() => setStep(prev => --prev)} 
+                        onClick={() => setStep(prev => --prev)}
                         >
                             Back
                         </Button>
                     )}
                     {step < 2 && (
-                        <Button 
+                        <Button
                         size="large"
-                        type="primary" 
+                        type="primary"
                         disabled={isBtnDisabled()}
-                        onClick={() => setStep(prev => ++prev)} 
+                        onClick={() => setStep(prev => ++prev)}
                         >
                             Next
                         </Button>
                     )}
                     {step === 2 && (
-                        <Button 
+                        <Button
                         size="large"
-                        type="primary" 
+                        type="primary"
                         disabled={isBtnDisabled() || addingMed}
-                        onClick={handleAddPost} 
+                        onClick={handleAddPost}
                         >
                             {addingMed ? "Adding..." : "Add Medicine"}
                         </Button>

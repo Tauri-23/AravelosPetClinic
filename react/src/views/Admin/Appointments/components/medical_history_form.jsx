@@ -7,12 +7,14 @@ import TextArea from "antd/es/input/TextArea";
 import MedicalHistoryFormFileBox from "./medical_history_form_file_box";
 import { useModal } from "../../../../contexts/ModalContext";
 import InventoryBox from "../../../../components/inventory_box";
+import { useOutletContext } from "react-router-dom";
 
 export default function MedicalHistoryForm({
     appointmentId,
 
-    // Active Pet
+    // Active Pet,
     activePet,
+    servicesList,
 
     // For Assigning medicine
     inventoryItems,
@@ -24,14 +26,16 @@ export default function MedicalHistoryForm({
 
 
 
+    const [appointment, setAppointment] = useState(null);
+
+    const {setActiveNavLink} = useOutletContext();
     const {showModal} = useModal();
     const navigate = useNavigate();
     const timeOptions = ["08:00:00", "09:00:00", "10:00:00", "11:00:00", "13:00:00", "14:00:00", "15:00:00", "16:00:00"];
     const activePetIndex = appointment?.appointment_pets?.findIndex(p => p.id === activePet.id);
+    const petServices = appointment?.appointment_pets?.[activePetIndex]?.appointment_pet_services;
     const vaccination = petServices?.find(s => s.service?.service === "Vaccination");
     const vaccineGivenAuto = vaccination?.service_type?.service_type || "";
-    const [appointment, setAppointment] = useState(null);
-
     useEffect(() => {
         setActiveNavLink("Appointments");
         const getAll = async() => {
@@ -153,11 +157,11 @@ export default function MedicalHistoryForm({
      */
     const [tentativeDiagnosis, setTentativeDiagnosis] = useState("");
     const [finalDiagnosis, setFinalDiagnosis] = useState("");
-    const [prognosis, setPrognosis] = useState("");
-    const [vaccineGiven, setVaccineGiven] = useState("");
+    // const [prognosis, setPrognosis] = useState("");
+    const [vaccineGiven, setVaccineGiven] = useState(servicesList);
     const [prescribedMed, setPrescribedMed] = useState("");
 
-
+console.log(servicesList);
     const [step, setStep] = useState(0);
 
     /**
@@ -401,8 +405,8 @@ export default function MedicalHistoryForm({
                 respiratory === "" || circulatory === "" || musculoskeleton === "" ||
                 lymphNodes === "" || venousReturn === "" || integumentarySkin === "";
             case 3:
-                return isEmptyOrSpaces(tentativeDiagnosis) || isEmptyOrSpaces(finalDiagnosis) ||
-                isEmptyOrSpaces(prognosis) || isEmptyOrSpaces(vaccineGiven) ||
+                return isEmptyOrSpaces(tentativeDiagnosis) || isEmptyOrSpaces(finalDiagnosis) /*||
+                isEmptyOrSpaces(prognosis)*/ || isEmptyOrSpaces(vaccineGiven) ||
                 isEmptyOrSpaces(prescribedMed);
             default:
                 return false;
@@ -559,7 +563,7 @@ export default function MedicalHistoryForm({
 
         formData.append("tentativeDiagnosis", tentativeDiagnosis);
         formData.append("finalDiagnosis", finalDiagnosis);
-        formData.append("prognosis", prognosis);
+        // formData.append("prognosis", prognosis);
         formData.append("vaccineGiven", vaccineGiven);
         formData.append("prescribedMed", prescribedMed);
 
@@ -610,7 +614,7 @@ export default function MedicalHistoryForm({
      */
     return(
         <div className="appointment-cont1">
-            <h3 className="mar-bottom-1">Input Assessment Results</h3>
+            <h3 className="mar-bottom-1">Assessment/Diagnosis</h3>
 
             <Steps
             current={step}
@@ -957,7 +961,7 @@ export default function MedicalHistoryForm({
                         </div>
                     </div>
 
-                    <div className="d-flex gap1 mar-bottom-2">
+                    {/* <div className="d-flex gap1 mar-bottom-2">
                         <div className="d-flex flex-direction-y gap4 w-100">
                             <label htmlFor="resporatoryRate">Prognosis</label>
                             <Radio.Group
@@ -970,7 +974,7 @@ export default function MedicalHistoryForm({
                             onChange={(e) => setPrognosis(e.target.value)}
                             />
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="d-flex gap1 mar-bottom-1">
                         <div className="d-flex flex-direction-y gap4 w-100">
